@@ -1,0 +1,25 @@
+{
+    "C_Cpp.clang_format_style": "file",
+
+    "editor.formatOnSave": true,
+
+    "C_Cpp.clang_format_fallbackStyle": "Google",
+
+    "C_Cpp.default.includePath": [
+        "${workspaceFolder}/**"
+    ],
+
+    "C_Cpp.intelliSenseEngine": "Default",
+
+    "clangd.path": "clangd",
+    "clangd.arguments": [
+        "--compile-commands-dir=${workspaceFolder}",
+        "--header-insertion=never"
+    ],
+
+    "files.associations": {
+        "*.cpp": "cpp",
+        "*.hpp": "cpp",
+        "*.h": "cpp"
+    }
+}
