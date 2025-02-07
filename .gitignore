@@ -1,0 +1,6 @@
+# Ignore build directories
+/build/
+/out/
+
+# For Brian's clangd
+/.cache/
