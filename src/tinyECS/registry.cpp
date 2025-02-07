@@ -1,3 +1,3 @@
-#include "registry.hpp"
+#include "tinyECS/registry.hpp"
 
 ECSRegistry registry;

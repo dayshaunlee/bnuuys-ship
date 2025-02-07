@@ -1,4 +1,4 @@
-#include "components.hpp"
+#include "tinyECS/components.hpp"
 
 #include "render_system.hpp"  // for gl_has_errors
 
