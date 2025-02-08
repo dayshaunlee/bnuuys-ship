@@ -6,8 +6,8 @@ UseTab: Never
 ColumnLimit: 120
 BreakBeforeBraces: Attach
 AllowShortFunctionsOnASingleLine: InlineOnly
-DerivePointerAlignment: false       # Do not try to guess pointer alignment
-PointerAlignment: Left              # Keep pointers with the type
+DerivePointerAlignment: false
+PointerAlignment: Left
 SpacesInParentheses: false
 SpaceBeforeParens: ControlStatements
 SpaceAfterCStyleCast: true
