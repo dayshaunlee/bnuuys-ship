@@ -30,7 +30,8 @@ bool RenderSystem::init(GLFWwindow* window_arg) {
     // https://stackoverflow.com/questions/36672935/why-retina-screen-coordinate-value-is-twice-the-value-of-pixel-value
     int frame_buffer_width_px, frame_buffer_height_px;
     glfwGetFramebufferSize(
-        window, &frame_buffer_width_px,
+        window,
+        &frame_buffer_width_px,
         &frame_buffer_height_px);  // Note, this will be 2x the resolution given to glfwCreateWindow on retina displays
     if (frame_buffer_width_px != WINDOW_WIDTH_PX) {
         printf(
@@ -114,7 +115,9 @@ void RenderSystem::initializeGlMeshes() {
         // Initialize meshes
         GEOMETRY_BUFFER_ID geom_index = mesh_paths[i].first;
         std::string name = mesh_paths[i].second;
-        Mesh::loadFromOBJFile(name, meshes[(int) geom_index].vertices, meshes[(int) geom_index].vertex_indices,
+        Mesh::loadFromOBJFile(name,
+                              meshes[(int) geom_index].vertices,
+                              meshes[(int) geom_index].vertex_indices,
                               meshes[(int) geom_index].original_size);
 
         bindVBOandIBO(geom_index, meshes[(int) geom_index].vertices, meshes[(int) geom_index].vertex_indices);
@@ -240,7 +243,8 @@ bool RenderSystem::initScreenTexture() {
 
     int framebuffer_width, framebuffer_height;
     glfwGetFramebufferSize(
-        const_cast<GLFWwindow*>(window), &framebuffer_width,
+        const_cast<GLFWwindow*>(window),
+        &framebuffer_width,
         &framebuffer_height);  // Note, this will be 2x the resolution given to glfwCreateWindow on retina displays
 
     glGenTextures(1, &off_screen_render_buffer_color);

@@ -11,8 +11,6 @@
         "${workspaceFolder}/**"
     ],
 
-    "C_Cpp.intelliSenseEngine": "Default",
-
     "clangd.path": "clangd",
     "clangd.arguments": [
         "--compile-commands-dir=${workspaceFolder}",
@@ -23,5 +21,6 @@
         "*.cpp": "cpp",
         "*.hpp": "cpp",
         "*.h": "cpp"
-    }
+    },
+    "C_Cpp.default.compilerPath": "/usr/bin/clang++"
 }

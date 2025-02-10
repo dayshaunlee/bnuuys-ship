@@ -82,3 +82,14 @@ struct Transform {
 };
 
 bool gl_has_errors();
+
+// ==== PLAYER CONSTANTS ====
+
+// Character controls.
+const int MOVE_UP_BUTTON = GLFW_KEY_W;
+const int MOVE_RIGHT_BUTTON = GLFW_KEY_D;
+const int MOVE_DOWN_BUTTON = GLFW_KEY_S;
+const int MOVE_LEFT_BUTTON = GLFW_KEY_A;
+
+const float WALK_SPEED = 150.0f;
+const float ANIMATION_TIME = 250.0f;

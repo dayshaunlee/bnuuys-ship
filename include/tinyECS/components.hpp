@@ -5,9 +5,6 @@
 #include "../ext/stb_image/stb_image.h"
 #include "common.hpp"
 
-// Player component
-struct Player {};
-
 // Tower
 struct Tower {
     float range;   // for vision / detection
@@ -119,11 +116,33 @@ struct Mesh {
  */
 
 enum class TEXTURE_ASSET_ID {
-    INVADER = 0,
-    TOWER = INVADER + 1,
-    PROJECTILE = TOWER + 1,
-    TEXTURE_COUNT = PROJECTILE + 1
+    BUNNY_IDLE_UP0 = 0,
+    BUNNY_IDLE_UP1 = BUNNY_IDLE_UP0 + 1,
+
+    BUNNY_IDLE_RIGHT0 = BUNNY_IDLE_UP1 + 1,
+    BUNNY_IDLE_RIGHT1 = BUNNY_IDLE_RIGHT0 + 1,
+
+    BUNNY_IDLE_DOWN0 = BUNNY_IDLE_RIGHT1 + 1,
+    BUNNY_IDLE_DOWN1 = BUNNY_IDLE_DOWN0 + 1,
+
+    BUNNY_IDLE_LEFT0 = BUNNY_IDLE_DOWN1 + 1,
+    BUNNY_IDLE_LEFT1 = BUNNY_IDLE_LEFT0 + 1,
+
+    BUNNY_UP_WALK0 = BUNNY_IDLE_LEFT1 + 1,
+    BUNNY_UP_WALK1 = BUNNY_UP_WALK0 + 1,
+
+    BUNNY_RIGHT_WALK0 = BUNNY_UP_WALK1 + 1,
+    BUNNY_RIGHT_WALK1 = BUNNY_RIGHT_WALK0 + 1,
+
+    BUNNY_DOWN_WALK0 = BUNNY_RIGHT_WALK1 + 1,
+    BUNNY_DOWN_WALK1 = BUNNY_DOWN_WALK0 + 1,
+
+    BUNNY_LEFT_WALK0 = BUNNY_DOWN_WALK1 + 1,
+    BUNNY_LEFT_WALK1 = BUNNY_LEFT_WALK0 + 1,
+
+    TEXTURE_COUNT = BUNNY_LEFT_WALK1 + 1
 };
+
 const int texture_count = (int) TEXTURE_ASSET_ID::TEXTURE_COUNT;
 
 enum class EFFECT_ASSET_ID {
@@ -151,3 +170,32 @@ struct RenderRequest {
     EFFECT_ASSET_ID used_effect = EFFECT_ASSET_ID::EFFECT_COUNT;
     GEOMETRY_BUFFER_ID used_geometry = GEOMETRY_BUFFER_ID::GEOMETRY_COUNT;
 };
+
+enum DIRECTION { UP, RIGHT, DOWN, LEFT };
+
+// ========== PLAYER DETAILS ==========
+
+/*  
+ *  A PlayerAnimation will read the Player component
+ *  So be sure to add Player Component when adding PlayerAnimation
+ */
+
+enum PLAYERSTATE {
+    IDLE,
+    WALKING,
+    STATIONING,
+};
+
+// Player component
+struct Player {
+    std::string name;
+    DIRECTION direction;
+    PLAYERSTATE player_state;
+};
+
+struct PlayerAnimation {
+    TEXTURE_ASSET_ID curr_anim;
+    int timer_ms;   // How many ms before switching to the next frame.  
+};
+
+// ========== PLAYER DETAILS ==========

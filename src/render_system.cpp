@@ -129,7 +129,11 @@ void RenderSystem::drawTexturedMesh(Entity entity, const mat3& projection) {
         gl_has_errors();
 
         glEnableVertexAttribArray(in_texcoord_loc);
-        glVertexAttribPointer(in_texcoord_loc, 2, GL_FLOAT, GL_FALSE, sizeof(TexturedVertex),
+        glVertexAttribPointer(in_texcoord_loc,
+                              2,
+                              GL_FLOAT,
+                              GL_FALSE,
+                              sizeof(TexturedVertex),
                               (void*) sizeof(vec3));  // note the stride to skip the preceeding vertex position
 
         // Enabling and binding texture to slot 0
@@ -201,7 +205,8 @@ void RenderSystem::drawToScreen() {
 
     // Clearing backbuffer
     int w, h;
-    glfwGetFramebufferSize(window, &w,
+    glfwGetFramebufferSize(window,
+                           &w,
                            &h);  // Note, this will be 2x the resolution given to glfwCreateWindow on retina displays
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     glViewport(0, 0, w, h);
@@ -252,7 +257,9 @@ void RenderSystem::drawToScreen() {
     gl_has_errors();
 
     // Draw
-    glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_SHORT,
+    glDrawElements(GL_TRIANGLES,
+                   3,
+                   GL_UNSIGNED_SHORT,
                    nullptr);  // one triangle = 3 vertices; nullptr indicates that there is
                               // no offset from the bound index buffer
     gl_has_errors();
@@ -263,7 +270,8 @@ void RenderSystem::drawToScreen() {
 void RenderSystem::draw() {
     // Getting size of window
     int w, h;
-    glfwGetFramebufferSize(window, &w,
+    glfwGetFramebufferSize(window,
+                           &w,
                            &h);  // Note, this will be 2x the resolution given to glfwCreateWindow on retina displays
 
     // First render to the custom framebuffer

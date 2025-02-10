@@ -1,11 +1,18 @@
 // Header
 #include "world_system.hpp"
+#include "GLFW/glfw3.h"
+#include "common.hpp"
+#include "tinyECS/components.hpp"
+#include "tinyECS/registry.hpp"
 #include "world_init.hpp"
 
 // stlib
 #include <cassert>
-#include <sstream>
+#include <glm/ext/vector_float2.hpp>
 #include <iostream>
+#include <sstream>
+
+#include <deque>
 
 #include "physics_system.hpp"
 
@@ -43,7 +50,8 @@ void WorldSystem::close_window() {
 }
 
 // World initialization
-// Note, this has a lot of OpenGL specific things, could be moved to the renderer
+// Note, this has a lot of OpenGL specific things, could be moved to the
+// renderer
 GLFWwindow* WorldSystem::create_window() {
     ///////////////////////////////////////
     // Initialize GLFW
@@ -54,9 +62,9 @@ GLFWwindow* WorldSystem::create_window() {
     }
 
     //-------------------------------------------------------------------------
-    // If you are on Linux or Windows, you can change these 2 numbers to 4 and 3 and
-    // enable the glDebugMessageCallback to have OpenGL catch your mistakes for you.
-    // GLFW / OGL Initialization
+    // If you are on Linux or Windows, you can change these 2 numbers to 4 and 3
+    // and enable the glDebugMessageCallback to have OpenGL catch your mistakes
+    // for you. GLFW / OGL Initialization
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
@@ -65,8 +73,9 @@ GLFWwindow* WorldSystem::create_window() {
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 #endif
     glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
-    // CK: setting GLFW_SCALE_TO_MONITOR to true will rescale window but then you must handle different scalings
-    // glfwWindowHint(GLFW_SCALE_TO_MONITOR, GL_TRUE);		// GLFW 3.3+
+    // CK: setting GLFW_SCALE_TO_MONITOR to true will rescale window but then you
+    // must handle different scalings glfwWindowHint(GLFW_SCALE_TO_MONITOR,
+    // GL_TRUE);		// GLFW 3.3+
     glfwWindowHint(GLFW_SCALE_TO_MONITOR, GL_FALSE);  // GLFW 3.3+
 
     // Create the main window (for rendering, keyboard, and mouse input)
@@ -115,8 +124,11 @@ bool WorldSystem::start_and_load_sounds() {
     chicken_eat_sound = Mix_LoadWAV(audio_path("chicken_eat.wav").c_str());
 
     if (background_music == nullptr || chicken_dead_sound == nullptr || chicken_eat_sound == nullptr) {
-        fprintf(stderr, "Failed to load sounds\n %s\n %s\n %s\n make sure the data directory is present",
-                audio_path("music.wav").c_str(), audio_path("chicken_dead.wav").c_str(),
+        fprintf(stderr,
+                "Failed to load sounds\n %s\n %s\n %s\n make sure the data "
+                "directory is present",
+                audio_path("music.wav").c_str(),
+                audio_path("chicken_dead.wav").c_str(),
                 audio_path("chicken_eat.wav").c_str());
         return false;
     }
@@ -142,66 +154,8 @@ bool WorldSystem::step(float elapsed_ms_since_last_update) {
     title_ss << "Points: " << points;
     glfwSetWindowTitle(window, title_ss.str().c_str());
 
-    // Remove debug info from the last step
-    while (registry.debugComponents.entities.size() > 0)
-        registry.remove_all_components_of(registry.debugComponents.entities.back());
-
-    // Removing out of screen entities
-    auto& motions_registry = registry.motions;
-
-    // Remove entities that leave the screen on the left side
-    // Iterate backwards to be able to remove without unterfering with the next object to visit
-    // (the containers exchange the last element with the current)
-    for (int i = (int) motions_registry.components.size() - 1; i >= 0; --i) {
-        Motion& motion = motions_registry.components[i];
-        if (motion.position.x + abs(motion.scale.x) < 0.f) {
-            if (!registry.players.has(motions_registry.entities[i]))  // don't remove the player
-                registry.remove_all_components_of(motions_registry.entities[i]);
-        }
-    }
-
-    // spawn new invaders
-    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    // TODO A1: limit them to cells on the far-left, except (0, 0)
-    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    next_invader_spawn -= elapsed_ms_since_last_update * current_speed;
-    if (next_invader_spawn < 0.f) {
-        // reset timer
-        next_invader_spawn = (INVADER_SPAWN_RATE_MS / 2) + uniform_dist(rng) * (INVADER_SPAWN_RATE_MS / 2);
-
-        // create invader with random initial position
-        createInvader(renderer, vec2(50.f + uniform_dist(rng) * (WINDOW_WIDTH_PX - 100.f), 100.f));
-    }
-
-    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    // TODO A1: game over fade out
-    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     assert(registry.screenStates.components.size() <= 1);
     ScreenState& screen = registry.screenStates.components[0];
-
-    float min_counter_ms = 3000.f;
-    for (Entity entity : registry.deathTimers.entities) {
-        // progress timer
-        DeathTimer& counter = registry.deathTimers.get(entity);
-        counter.counter_ms -= elapsed_ms_since_last_update;
-        if (counter.counter_ms < min_counter_ms) {
-            min_counter_ms = counter.counter_ms;
-        }
-
-        /* for A1, let the user press "R" to restart instead
-        // restart the game once the death timer expires
-        if (counter.counter_ms < 0) {
-            registry.deathTimers.remove(entity);
-            screen.darken_screen_factor = 0;
-            restart_game();
-            return true;
-        }
-        */
-    }
-
-    // reduce window brightness if any of the present chickens is dying
-    screen.darken_screen_factor = 1 - min_counter_ms / 3000;
-
     return true;
 }
 
@@ -221,53 +175,22 @@ void WorldSystem::restart_game() {
     invader_spawn_rate_ms = INVADER_SPAWN_RATE_MS;
 
     // Remove all entities that we created
-    // All that have a motion, we could also iterate over all bug, eagles, ... but that would be more cumbersome
+    // All that have a motion, we could also iterate over all bug, eagles, ... but
+    // that would be more cumbersome
     while (registry.motions.entities.size() > 0) registry.remove_all_components_of(registry.motions.entities.back());
 
     // debugging for memory/component leaks
     registry.list_all_components();
 
-    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    // TODO A1: create grid lines
-    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    int grid_line_width = GRID_LINE_WIDTH_PX;
-
-    // create grid lines if they do not already exist
-    if (grid_lines.size() == 0) {
-        // vertical lines
-        int cell_width = GRID_CELL_WIDTH_PX;
-        for (int col = 0; col < 14 + 1; col++) {
-            // width of 2 to make the grid easier to see
-            grid_lines.push_back(
-                createGridLine(vec2(col * cell_width, 0), vec2(grid_line_width, 2 * WINDOW_HEIGHT_PX)));
-        }
-
-        // horizontal lines
-        int cell_height = GRID_CELL_HEIGHT_PX;
-        for (int col = 0; col < 10 + 1; col++) {
-            // width of 2 to make the grid easier to see
-            grid_lines.push_back(
-                createGridLine(vec2(0, col * cell_height), vec2(2 * WINDOW_WIDTH_PX, grid_line_width)));
-        }
-    }
+    // Now let's create our player.
+    createPlayer(renderer, {100, 100});
 }
 
 // Compute collisions between entities
 void WorldSystem::handle_collisions() {
-    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    // TODO A1: Loop over all collisions detected by the physics system
-    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     ComponentContainer<Collision>& collision_container = registry.collisions;
     for (uint i = 0; i < collision_container.components.size(); i++) {
-        // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        // TODO A1: handle collision between deadly (projectile) and invader
-        // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        // Mix_PlayChannel(-1, chicken_dead_sound, 0);
-
-        // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        // TODO A1: handle collision between tower and invader
-        // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        // Mix_PlayChannel(-1, chicken_eat_sound, 0);
+        // Handle collision here.
     }
 
     // Remove all collisions from this simulation step
@@ -277,6 +200,62 @@ void WorldSystem::handle_collisions() {
 // Should the game be over ?
 bool WorldSystem::is_over() const {
     return bool(glfwWindowShouldClose(window));
+}
+
+std::set<int> activeKeys;
+std::deque<int> keyOrder;
+void HandlePlayerMovement(int key, int, int action, int mod) {
+    Entity player = registry.players.entities[0];
+    Player& player_comp = registry.players.get(player);
+    Motion& mot = registry.motions.get(player);
+
+    // Prevent player from moving when they're stationing.
+    if (player_comp.player_state == PLAYERSTATE::STATIONING)
+        return;
+
+    if (action == GLFW_PRESS) {
+        if (!activeKeys.count(key)) {
+            keyOrder.push_back(key);
+        }
+        activeKeys.insert(key);
+    } else if (action == GLFW_RELEASE) {
+        activeKeys.erase(key);
+        keyOrder.erase(std::remove(keyOrder.begin(), keyOrder.end(), key), keyOrder.end());
+    }
+
+    float velocityX = 0.0f;
+    float velocityY = 0.0f;
+
+    if (activeKeys.count(MOVE_UP_BUTTON)) velocityY -= WALK_SPEED;
+    if (activeKeys.count(MOVE_DOWN_BUTTON)) velocityY += WALK_SPEED;
+    if (activeKeys.count(MOVE_LEFT_BUTTON)) velocityX -= WALK_SPEED;
+    if (activeKeys.count(MOVE_RIGHT_BUTTON)) velocityX += WALK_SPEED;
+
+    velocityX = std::clamp(velocityX, -WALK_SPEED, WALK_SPEED);
+    velocityY = std::clamp(velocityY, -WALK_SPEED, WALK_SPEED);
+
+    mot.velocity = vec2(velocityX, velocityY);
+
+    // Update the player state.
+    if (activeKeys.empty()) {
+        player_comp.player_state = PLAYERSTATE::IDLE;
+    } else {
+        player_comp.player_state = PLAYERSTATE::WALKING;
+
+        // Determine direction based on last key pressed
+        if (!keyOrder.empty()) {
+            int lastKey = keyOrder.back();
+            if (lastKey == MOVE_UP_BUTTON) {
+                player_comp.direction = UP;
+            } else if (lastKey == MOVE_DOWN_BUTTON) {
+                player_comp.direction = DOWN;
+            } else if (lastKey == MOVE_LEFT_BUTTON) {
+                player_comp.direction = LEFT;
+            } else if (lastKey == MOVE_RIGHT_BUTTON) {
+                player_comp.direction = RIGHT;
+            }
+        }
+    }
 }
 
 // on key callback
@@ -294,16 +273,7 @@ void WorldSystem::on_key(int key, int, int action, int mod) {
         restart_game();
     }
 
-    // Debugging - not used in A1, but left intact for the debug lines
-    if (key == GLFW_KEY_D) {
-        if (action == GLFW_RELEASE) {
-            if (debugging.in_debug_mode) {
-                debugging.in_debug_mode = false;
-            } else {
-                debugging.in_debug_mode = true;
-            }
-        }
-    }
+    HandlePlayerMovement(key, 0, action, mod);
 }
 
 void WorldSystem::on_mouse_move(vec2 mouse_position) {
@@ -313,10 +283,6 @@ void WorldSystem::on_mouse_move(vec2 mouse_position) {
 }
 
 void WorldSystem::on_mouse_button_pressed(int button, int action, int mods) {
-    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    // TODO A1: Handle mouse clicking for invader and tower placement.
-    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
     // on button press
     if (action == GLFW_PRESS) {
         int tile_x = (int) (mouse_pos_x / GRID_CELL_WIDTH_PX);
@@ -324,21 +290,5 @@ void WorldSystem::on_mouse_button_pressed(int button, int action, int mods) {
 
         std::cout << "mouse position: " << mouse_pos_x << ", " << mouse_pos_y << std::endl;
         std::cout << "mouse tile position: " << tile_x << ", " << tile_y << std::endl;
-
-        // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        // TODO A1: place invaders on the left, except top left spot
-        // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-        // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        // TODO A1: place a tower on the right, except top right spot
-        // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-        // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        // TODO A1: right-click removes towers
-        // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-        // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        // TODO A1: left-click adds new tower (removing any existing towers), up to max_towers
-        // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     }
 }

@@ -44,8 +44,14 @@ bool Mesh::loadFromOBJFile(std::string obj_path, std::vector<ColoredVertex>& out
 
         if (strcmp(lineHeader, "v") == 0) {
             ColoredVertex vertex;
-            int matches = fscanf(file, "%f %f %f %f %f %f\n", &vertex.position.x, &vertex.position.y,
-                                 &vertex.position.z, &vertex.color.x, &vertex.color.y, &vertex.color.z);
+            int matches = fscanf(file,
+                                 "%f %f %f %f %f %f\n",
+                                 &vertex.position.x,
+                                 &vertex.position.y,
+                                 &vertex.position.z,
+                                 &vertex.color.x,
+                                 &vertex.color.y,
+                                 &vertex.color.z);
             if (matches == 3) vertex.color = {1, 1, 1};
             out_vertices.push_back(vertex);
         } else if (strcmp(lineHeader, "vt") == 0) {
@@ -67,12 +73,25 @@ bool Mesh::loadFromOBJFile(std::string obj_path, std::vector<ColoredVertex>& out
             {
                 // Note first vertex index is already consumed by the first fscanf call (match ==1)
                 // since it aborts on the first error
-                matches = fscanf(file, "//%d %d//%d %d//%d\n", &normalIndex[0], &vertexIndex[1], &normalIndex[1],
-                                 &vertexIndex[2], &normalIndex[2]);
+                matches = fscanf(file,
+                                 "//%d %d//%d %d//%d\n",
+                                 &normalIndex[0],
+                                 &vertexIndex[1],
+                                 &normalIndex[1],
+                                 &vertexIndex[2],
+                                 &normalIndex[2]);
                 if (matches != 5)  // try again
                 {
-                    matches = fscanf(file, "%d/%d %d/%d/%d %d/%d/%d\n", &uvIndex[0], &normalIndex[0], &vertexIndex[1],
-                                     &uvIndex[1], &normalIndex[1], &vertexIndex[2], &uvIndex[2], &normalIndex[2]);
+                    matches = fscanf(file,
+                                     "%d/%d %d/%d/%d %d/%d/%d\n",
+                                     &uvIndex[0],
+                                     &normalIndex[0],
+                                     &vertexIndex[1],
+                                     &uvIndex[1],
+                                     &normalIndex[1],
+                                     &vertexIndex[2],
+                                     &uvIndex[2],
+                                     &normalIndex[2]);
                     if (matches != 8) {
                         printf(
                             "File can't be read by our simple parser :-( Try exporting with other "

@@ -27,6 +27,7 @@ class ECSRegistry {
     ComponentContainer<GridLine> gridLines;
     ComponentContainer<Invader> invaders;
     ComponentContainer<Projectile> projectiles;
+    ComponentContainer<PlayerAnimation> playerAnimations;
 
     // constructor that adds all containers for looping over them
     ECSRegistry() {
@@ -46,6 +47,7 @@ class ECSRegistry {
         registry_list.push_back(&gridLines);
         registry_list.push_back(&invaders);
         registry_list.push_back(&projectiles);
+        registry_list.push_back(&playerAnimations);
     }
 
     void clear_all_components() {

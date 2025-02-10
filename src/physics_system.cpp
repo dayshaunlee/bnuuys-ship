@@ -28,16 +28,13 @@ bool collides(const Motion& motion1, const Motion& motion2) {
 }
 
 void PhysicsSystem::step(float elapsed_ms) {
-    // Move each entity that has motion (invaders, projectiles, and even towers
-    // [they have 0 for velocity]) based on how much time has passed, this is to
-    // (partially) avoid having entities move at different speed based on the
-    // machine.
+    // Move each entity that has motion.
     auto& motion_registry = registry.motions;
     for (uint i = 0; i < motion_registry.size(); i++) {
         Motion& motion = motion_registry.components[i];
         Entity entity = motion_registry.entities[i];
         float step_seconds = elapsed_ms / 1000.f;
-        (void) elapsed_ms;  // placeholder to silence unused warning until implemented
+        motion.position += motion.velocity * step_seconds;
     }
 
     // check for collisions between all moving entities
