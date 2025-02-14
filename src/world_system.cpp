@@ -5,6 +5,7 @@
 #include "tinyECS/components.hpp"
 #include "tinyECS/registry.hpp"
 #include "world_init.hpp"
+#include "map_init.hpp"
 
 // stlib
 #include <cassert>
@@ -184,6 +185,8 @@ void WorldSystem::restart_game() {
 
     // Now let's create our player.
     createPlayer(renderer, {100, 100});
+
+    loadMap("m1.json");
 }
 
 // Compute collisions between entities
@@ -205,6 +208,7 @@ bool WorldSystem::is_over() const {
 std::set<int> activeKeys;
 std::deque<int> keyOrder;
 void HandlePlayerMovement(int key, int, int action, int mod) {
+    assert(registry.players.size() == 1);
     Entity player = registry.players.entities[0];
     Player& player_comp = registry.players.get(player);
     Motion& mot = registry.motions.get(player);
