@@ -1,6 +1,7 @@
 #include "world_init.hpp"
 #include "tinyECS/components.hpp"
 #include "tinyECS/registry.hpp"
+#include "tinyECS/entity.hpp"
 #include "../ext/tileson/tileson.hpp"
 #include <iostream>
 #include <filesystem>
@@ -69,16 +70,17 @@ void debugMap(std::unique_ptr<tson::Map>& map) {
     }
 };
 
-void loadMap(const std::string& name) {
-
+tson::Vector2<int> loadMap(const std::string& name) {
     fs::path path = fs::path(map_path(name));
     tson::Tileson t;
     std::unique_ptr<tson::Map> map = t.parse(path);
 
     if (map->getStatus() == tson::ParseStatus::OK) {
         debugMap(map);
+        return map->getSize();
     } else  // Error occured
     {
         std::cout << map->getStatusMessage();
+        return tson::Vector2<int>(0, 0);
     }
 }

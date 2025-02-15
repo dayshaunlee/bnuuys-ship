@@ -3,6 +3,7 @@
 #include <vector>
 
 #include "../ext/stb_image/stb_image.h"
+#include "../ext/tileson/tileson.hpp"
 #include "common.hpp"
 
 // Tower
@@ -40,6 +41,15 @@ struct Collision {
     // Note, the first object is stored in the ECS container.entities
     Entity other;  // the second object involved in the collision
     Collision(Entity& other) { this->other = other; };
+};
+
+struct Island {
+    tson::Vector2<int> polygon;
+};
+
+// Player base, in the future may add more attributes for upgrades functionality
+struct Base {
+    tson::Vector2<int> polygon;
 };
 
 // Data structure for toggling debug mode
@@ -199,3 +209,16 @@ struct PlayerAnimation {
 };
 
 // ========== PLAYER DETAILS ==========
+
+
+// ========== ENEMY DETAILS ==========
+
+// the enemy type stores information about enemy HP, damage, speed, etc..
+// TODO: ADD ENEMY TYPE INFORMATION IN COMMON
+enum ENEMY_TYPE { BASIC_GUNNER, FLYER };
+
+struct Enemy {
+    ENEMY_TYPE type;
+};
+
+// ========== ENEMY DETAILS ==========
