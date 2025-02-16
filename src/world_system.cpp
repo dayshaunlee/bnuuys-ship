@@ -234,8 +234,8 @@ void HandlePlayerMovement(int key, int, int action, int mod) {
     if (activeKeys.count(MOVE_LEFT_BUTTON)) velocityX -= WALK_SPEED;
     if (activeKeys.count(MOVE_RIGHT_BUTTON)) velocityX += WALK_SPEED;
 
-    velocityX = std::clamp(velocityX, -WALK_SPEED, WALK_SPEED);
-    velocityY = std::clamp(velocityY, -WALK_SPEED, WALK_SPEED);
+    velocityX = clamp(velocityX, -WALK_SPEED, WALK_SPEED);
+    velocityY = clamp(velocityY, -WALK_SPEED, WALK_SPEED);
 
     mot.velocity = vec2(velocityX, velocityY);
 

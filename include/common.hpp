@@ -23,21 +23,11 @@ using namespace glm;
 // audio_path("audio.ogg") -> data/audio/audio.ogg
 // Get defintion of PROJECT_SOURCE_DIR from:
 #include "../ext/project_path.hpp"
-inline std::string data_path() {
-    return std::string(PROJECT_SOURCE_DIR) + "data";
-};
-inline std::string shader_path(const std::string& name) {
-    return std::string(PROJECT_SOURCE_DIR) + "/shaders/" + name;
-};
-inline std::string textures_path(const std::string& name) {
-    return data_path() + "/textures/" + std::string(name);
-};
-inline std::string audio_path(const std::string& name) {
-    return data_path() + "/audio/" + std::string(name);
-};
-inline std::string mesh_path(const std::string& name) {
-    return data_path() + "/meshes/" + std::string(name);
-};
+inline std::string data_path() {return std::string(PROJECT_SOURCE_DIR) + "data";};
+inline std::string shader_path(const std::string& name) {return std::string(PROJECT_SOURCE_DIR) + "/shaders/" + name;};
+inline std::string textures_path(const std::string& name) {return data_path() + "/textures/" + std::string(name);};
+inline std::string audio_path(const std::string& name) {return data_path() + "/audio/" + std::string(name);};
+inline std::string mesh_path(const std::string& name) {return data_path() + "/meshes/" + std::string(name);};
 
 //
 // game constants
@@ -68,6 +58,7 @@ const float TOWER_BB_WIDTH = (float) GRID_CELL_WIDTH_PX;
 const float TOWER_BB_HEIGHT = (float) GRID_CELL_HEIGHT_PX;
 
 const int ENEMY_BASE_HEALTH = 1;
+const float ENEMY_BASE_SPEED = 50;
 
 #ifndef M_PI
 #define M_PI 3.14159265358979323846f
