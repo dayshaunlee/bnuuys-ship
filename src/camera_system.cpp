@@ -1,0 +1,42 @@
+#include "camera_system.hpp"
+#include "common.hpp"
+#include "tinyECS/registry.hpp"
+#include "tinyECS/components.hpp"
+
+CameraSystem* CameraSystem::camera = 0;
+
+CameraSystem* CameraSystem::GetInstance() {
+    if (camera == 0) {
+        camera = new CameraSystem();
+    }
+    return camera;
+}
+
+void CameraSystem::setCameraScreen(float accelerationX, float accelerationY) {
+    velocity.x += accelerationX;
+    velocity.y += accelerationY;
+
+    // Limit velocity to max speed
+    velocity.x = std::clamp(velocity.x, -SHIP_CAMERA_SPEED, SHIP_CAMERA_SPEED);
+    velocity.y = std::clamp(velocity.y, -SHIP_CAMERA_SPEED, SHIP_CAMERA_SPEED);
+}
+
+void CameraSystem::update(float deltaTime) {
+    velocity.x *= friction;
+    velocity.y *= friction;
+
+    // Stop when velocity is near zero
+    if (std::abs(velocity.x) < 0.01f) velocity.x = 0.0f;
+    if (std::abs(velocity.y) < 0.01f) velocity.y = 0.0f;
+
+    // Apply movement to background objects
+    for (Entity backObject : registry.backgroundObjects.entities) {
+        Motion& objectMotion = registry.motions.get(backObject);
+        objectMotion.velocity.x = velocity.x;
+        objectMotion.velocity.y = velocity.y;
+    }
+}
+
+// vec2 CameraSystem::GetCameraScreen() {
+//     return cameraScreen;
+// }

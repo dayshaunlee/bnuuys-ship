@@ -43,11 +43,19 @@ inline std::string mesh_path(const std::string& name) {
 // game constants
 //
 const int WINDOW_WIDTH_PX = 840;
-const int WINDOW_HEIGHT_PX = 600;
+// const int WINDOW_HEIGHT_PX = 600;
+// changes to this so we have odd number of grids both vertical and horizontal
+const int WINDOW_HEIGHT_PX = 616;
 
-const int GRID_CELL_WIDTH_PX = 60;
-const int GRID_CELL_HEIGHT_PX = 60;
+// const int GRID_CELL_WIDTH_PX = 60;
+// const int GRID_CELL_HEIGHT_PX = 60;
+const int GRID_CELL_WIDTH_PX = 56;
+const int GRID_CELL_HEIGHT_PX = 56;
 const int GRID_LINE_WIDTH_PX = 2;
+
+// middle grid for the center of the ship
+const int MIDDLE_GRID_X = 7;
+const int MIDDLE_GRID_Y = 5;
 
 const int TOWER_TIMER_MS = 1000;  // number of milliseconds between tower shots
 const int MAX_TOWERS_START = 5;
@@ -93,3 +101,4 @@ const int MOVE_LEFT_BUTTON = GLFW_KEY_A;
 
 const float WALK_SPEED = 150.0f;
 const float ANIMATION_TIME = 250.0f;
+const float SHIP_CAMERA_SPEED = 100.0f;

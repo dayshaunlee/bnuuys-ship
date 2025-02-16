@@ -15,6 +15,7 @@
 #include <deque>
 
 #include "physics_system.hpp"
+#include "camera_system.hpp"
 
 // create the world
 WorldSystem::WorldSystem()
@@ -182,8 +183,39 @@ void WorldSystem::restart_game() {
     // debugging for memory/component leaks
     registry.list_all_components();
 
+    // create the ocean background and then ship
+    createWaterBackground();
+    createShip();
     // Now let's create our player.
     createPlayer(renderer, {100, 100});
+
+    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    // TODO A1done: create grid lines
+    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    int grid_line_width = GRID_LINE_WIDTH_PX;
+    int CELL_WIDTH = WINDOW_WIDTH_PX / 15;
+    int CELL_HEIGHT = CELL_WIDTH;
+
+    // create grid lines if they do not already exist
+    if (grid_lines.size() == 0) {
+        // vertical lines
+        // int cell_width = GRID_CELL_WIDTH_PX;
+        int cell_width = CELL_WIDTH;
+        for (int col = 0; col < 15 + 1; col++) {
+            // width of 2 to make the grid easier to see
+            grid_lines.push_back(
+                createGridLine(vec2(col * cell_width, 0), vec2(grid_line_width, 2 * WINDOW_HEIGHT_PX)));
+        }
+
+        // horizontal lines
+        // int cell_height = GRID_CELL_HEIGHT_PX;
+        int cell_height = CELL_HEIGHT;
+        for (int col = 0; col < 11 + 1; col++) {
+            // width of 2 to make the grid easier to see
+            grid_lines.push_back(
+                createGridLine(vec2(0, col * cell_height), vec2(2 * WINDOW_WIDTH_PX, grid_line_width)));
+        }
+    }
 }
 
 // Compute collisions between entities
@@ -210,8 +242,7 @@ void HandlePlayerMovement(int key, int, int action, int mod) {
     Motion& mot = registry.motions.get(player);
 
     // Prevent player from moving when they're stationing.
-    if (player_comp.player_state == PLAYERSTATE::STATIONING)
-        return;
+    if (player_comp.player_state == PLAYERSTATE::STATIONING) return;
 
     if (action == GLFW_PRESS) {
         if (!activeKeys.count(key)) {
@@ -237,7 +268,8 @@ void HandlePlayerMovement(int key, int, int action, int mod) {
     mot.velocity = vec2(velocityX, velocityY);
 
     // Update the player state.
-    if (activeKeys.empty()) {
+    if (activeKeys.empty() || ((!activeKeys.count(MOVE_UP_BUTTON)) && (!activeKeys.count(MOVE_DOWN_BUTTON)) &&
+                               (!activeKeys.count(MOVE_LEFT_BUTTON)) && (!activeKeys.count(MOVE_RIGHT_BUTTON)))) {
         player_comp.player_state = PLAYERSTATE::IDLE;
     } else {
         player_comp.player_state = PLAYERSTATE::WALKING;
@@ -258,6 +290,32 @@ void HandlePlayerMovement(int key, int, int action, int mod) {
     }
 }
 
+std::set<int> activeShipKeys;
+std::deque<int> keyShipOrder;
+void HandleCameraMovement(int key, int, int action, int mod) {
+    if (!registry.players.components[0].is_sailing_ship) return;
+
+    if (action == GLFW_PRESS) {
+        if (!activeShipKeys.count(key)) {
+            keyShipOrder.push_back(key);
+        }
+        activeShipKeys.insert(key);
+    } else if (action == GLFW_RELEASE) {
+        activeShipKeys.erase(key);
+        keyShipOrder.erase(std::remove(keyShipOrder.begin(), keyShipOrder.end(), key), keyShipOrder.end());
+    }
+
+    float accelerationX = 0.0f;
+    float accelerationY = 0.0f;
+
+    if (activeShipKeys.count(MOVE_UP_BUTTON)) accelerationY += SHIP_CAMERA_SPEED;
+    if (activeShipKeys.count(MOVE_DOWN_BUTTON)) accelerationY -= SHIP_CAMERA_SPEED;
+    if (activeShipKeys.count(MOVE_LEFT_BUTTON)) accelerationX += SHIP_CAMERA_SPEED;
+    if (activeShipKeys.count(MOVE_RIGHT_BUTTON)) accelerationX -= SHIP_CAMERA_SPEED;
+
+    CameraSystem::GetInstance()->setCameraScreen(accelerationX, accelerationY);
+}
+
 // on key callback
 void WorldSystem::on_key(int key, int, int action, int mod) {
     // exit game w/ ESC
@@ -273,7 +331,29 @@ void WorldSystem::on_key(int key, int, int action, int mod) {
         restart_game();
     }
 
-    HandlePlayerMovement(key, 0, action, mod);
+    Entity player = registry.players.entities[0];
+    glm::vec2 playerPos = registry.motions.get(player).position;
+    int player_tile_x = (int) (playerPos.x / GRID_CELL_WIDTH_PX);
+    int player_tile_y = (int) (playerPos.y / GRID_CELL_HEIGHT_PX);
+
+    Player& playerToChangeState = registry.players.get(player);
+    // if player idle in the middle of the ship and press space then they are controling the ship movement/camera goes
+    // with the ship
+    if ((player_tile_x == MIDDLE_GRID_X) && (player_tile_y == MIDDLE_GRID_Y) && (action == GLFW_RELEASE) &&
+        (key == GLFW_KEY_SPACE) &&
+        (registry.players.get(player).player_state == IDLE ||
+         registry.players.get(player).player_state == STATIONING)) {
+        playerToChangeState.is_sailing_ship = !playerToChangeState.is_sailing_ship;
+        std::cout << "changed control state" << std::endl;
+    }
+
+    if (playerToChangeState.is_sailing_ship) {
+        playerToChangeState.player_state = STATIONING;
+        HandleCameraMovement(key, 0, action, mod);
+    } else {
+        playerToChangeState.player_state = IDLE;
+        HandlePlayerMovement(key, 0, action, mod);
+    }
 }
 
 void WorldSystem::on_mouse_move(vec2 mouse_position) {
