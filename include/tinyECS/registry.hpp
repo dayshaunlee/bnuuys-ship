@@ -28,6 +28,7 @@ class ECSRegistry {
     ComponentContainer<Invader> invaders;
     ComponentContainer<Projectile> projectiles;
     ComponentContainer<PlayerAnimation> playerAnimations;
+    ComponentContainer<Enemy> enemies;
 
     // constructor that adds all containers for looping over them
     ECSRegistry() {
@@ -48,6 +49,7 @@ class ECSRegistry {
         registry_list.push_back(&invaders);
         registry_list.push_back(&projectiles);
         registry_list.push_back(&playerAnimations);
+        registry_list.push_back(&enemies);
     }
 
     void clear_all_components() {

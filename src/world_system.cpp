@@ -184,6 +184,9 @@ void WorldSystem::restart_game() {
 
     // Now let's create our player.
     createPlayer(renderer, {100, 100});
+
+    // enemy creation
+    createEnemy(renderer, {150, 150});
 }
 
 // Compute collisions between entities

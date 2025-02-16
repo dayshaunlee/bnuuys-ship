@@ -67,6 +67,8 @@ const float INVADER_BB_HEIGHT = (float) GRID_CELL_HEIGHT_PX;
 const float TOWER_BB_WIDTH = (float) GRID_CELL_WIDTH_PX;
 const float TOWER_BB_HEIGHT = (float) GRID_CELL_HEIGHT_PX;
 
+const int ENEMY_BASE_HEALTH = 1;
+
 #ifndef M_PI
 #define M_PI 3.14159265358979323846f
 #endif

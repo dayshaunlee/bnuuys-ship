@@ -6,3 +6,6 @@
 
 // Player
 Entity createPlayer(RenderSystem* renderer, vec2 position);
+
+// Enemy
+Entity createEnemy(RenderSystem* renderer, vec2 position);

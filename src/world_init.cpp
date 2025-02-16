@@ -31,3 +31,30 @@ Entity createPlayer(RenderSystem* renderer, vec2 position) {
 
     return player;
 }
+
+Entity createEnemy(RenderSystem* renderer, vec2 position) {
+    auto entity = Entity();
+
+    Enemy& enemy = registry.enemies.emplace(entity);
+    enemy.health = ENEMY_BASE_HEALTH;
+    enemy.type = 0;
+    enemy.timer_ms = 0;
+
+    Motion& motion = registry.motions.emplace(entity);
+    motion.angle = 0.f;
+	motion.velocity = { 0.f, 0.f };
+	motion.position = position;
+    motion.scale = {40 ,40};
+
+    registry.renderRequests.insert(
+		entity,
+		{
+			TEXTURE_ASSET_ID::ENEMY0,
+			EFFECT_ASSET_ID::TEXTURED,
+			GEOMETRY_BUFFER_ID::SPRITE
+		}
+	);
+
+    return entity;
+}
+

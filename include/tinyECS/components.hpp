@@ -140,7 +140,9 @@ enum class TEXTURE_ASSET_ID {
     BUNNY_LEFT_WALK0 = BUNNY_DOWN_WALK1 + 1,
     BUNNY_LEFT_WALK1 = BUNNY_LEFT_WALK0 + 1,
 
-    TEXTURE_COUNT = BUNNY_LEFT_WALK1 + 1
+    ENEMY0 = BUNNY_LEFT_WALK1 + 1,
+
+    TEXTURE_COUNT = ENEMY0 + 1
 };
 
 const int texture_count = (int) TEXTURE_ASSET_ID::TEXTURE_COUNT;
@@ -198,4 +200,12 @@ struct PlayerAnimation {
     int timer_ms;   // How many ms before switching to the next frame.  
 };
 
-// ========== PLAYER DETAILS ==========
+// ========== ENEMY DETAILS ==========
+
+// Enemy component
+struct Enemy {
+    int health;
+    int type;
+	int timer_ms;
+};
+
