@@ -38,6 +38,9 @@ inline std::string audio_path(const std::string& name) {
 inline std::string mesh_path(const std::string& name) {
     return data_path() + "/meshes/" + std::string(name);
 };
+inline std::string map_path(const std::string& name) {
+    return data_path() + "/maps/" + std::string(name);
+};
 
 //
 // game constants
