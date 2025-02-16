@@ -43,12 +43,9 @@ inline std::string mesh_path(const std::string& name) {
 // game constants
 //
 const int WINDOW_WIDTH_PX = 840;
-// const int WINDOW_HEIGHT_PX = 600;
 // changes to this so we have odd number of grids both vertical and horizontal
 const int WINDOW_HEIGHT_PX = 616;
 
-// const int GRID_CELL_WIDTH_PX = 60;
-// const int GRID_CELL_HEIGHT_PX = 60;
 const int GRID_CELL_WIDTH_PX = 56;
 const int GRID_CELL_HEIGHT_PX = 56;
 const int GRID_LINE_WIDTH_PX = 2;
