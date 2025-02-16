@@ -5,6 +5,8 @@
 
 // internal
 #include "render_system.hpp"
+#include "bnuui/bnuui.hpp"
+#include "tinyECS/components.hpp"
 #include "tinyECS/registry.hpp"
 
 void RenderSystem::drawGridLine(Entity entity, const mat3& projection) {
@@ -144,11 +146,14 @@ void RenderSystem::drawTexturedMesh(Entity entity, const mat3& projection) {
         GLuint texture_id = texture_gl_handles[(GLuint) registry.renderRequests.get(entity).used_texture];
 
         glBindTexture(GL_TEXTURE_2D, texture_id);
+        // Brian: Disable smoothing
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
         gl_has_errors();
-    }
+        }
     // .obj entities
-    else if (render_request.used_effect == EFFECT_ASSET_ID::CHICKEN ||
-             render_request.used_effect == EFFECT_ASSET_ID::EGG) {
+    else if (render_request.used_effect == EFFECT_ASSET_ID::CHICKEN || render_request.used_effect == EFFECT_ASSET_ID::EGG) {
         GLint in_position_loc = glGetAttribLocation(program, "in_position");
         GLint in_color_loc = glGetAttribLocation(program, "in_color");
         gl_has_errors();
@@ -194,6 +199,78 @@ void RenderSystem::drawTexturedMesh(Entity entity, const mat3& projection) {
     gl_has_errors();
 }
 
+void RenderSystem::drawUIElement(bnuui::Element& element, const mat3& projection) {
+    if (!element.visible) return;
+
+    // UI elements do not need entity-based components like Motion, instead, they have their own properties
+    Transform transform;
+    transform.translate(element.position);
+    transform.scale(element.scale);
+    transform.rotate(radians(element.rotation));
+
+    // Use the assigned shader program
+    const GLuint program = (GLuint) effects[(GLuint) element.effect];
+    glUseProgram(program);
+    gl_has_errors();
+
+    // Bind the appropriate geometry buffers
+    const GLuint vbo = vertex_buffers[(GLuint) element.geometry];
+    const GLuint ibo = index_buffers[(GLuint) element.geometry];
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
+    gl_has_errors();
+
+    // Texture handling
+    if (element.effect == EFFECT_ASSET_ID::TEXTURED) {
+        GLint in_position_loc = glGetAttribLocation(program, "in_position");
+        GLint in_texcoord_loc = glGetAttribLocation(program, "in_texcoord");
+        glEnableVertexAttribArray(in_position_loc);
+        glVertexAttribPointer(in_position_loc, 3, GL_FLOAT, GL_FALSE, sizeof(TexturedVertex), (void*) 0);
+
+        glEnableVertexAttribArray(in_texcoord_loc);
+        glVertexAttribPointer(in_texcoord_loc, 2, GL_FLOAT, GL_FALSE, sizeof(TexturedVertex), (void*) sizeof(vec3));
+
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, (unsigned int) element.texture);
+        // Brian: Disable smoothing
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+        gl_has_errors();
+    } else {
+        // For solid-colored UI elements
+        GLint in_position_loc = glGetAttribLocation(program, "in_position");
+        glEnableVertexAttribArray(in_position_loc);
+        glVertexAttribPointer(in_position_loc, 3, GL_FLOAT, GL_FALSE, sizeof(ColoredVertex), (void*) 0);
+    }
+
+    // Set color uniform
+    GLint color_uloc = glGetUniformLocation(program, "fcolor");
+    glUniform3fv(color_uloc, 1, (float*)&element.color);
+    gl_has_errors();
+
+    // Set transformation uniforms
+    GLuint transform_loc = glGetUniformLocation(program, "transform");
+    glUniformMatrix3fv(transform_loc, 1, GL_FALSE, (float*)&transform.mat);
+    gl_has_errors();
+
+    GLuint projection_loc = glGetUniformLocation(program, "projection");
+    glUniformMatrix3fv(projection_loc, 1, GL_FALSE, (float*)&projection);
+    gl_has_errors();
+
+    // Draw the UI element
+    GLint size = 0;
+    glGetBufferParameteriv(GL_ELEMENT_ARRAY_BUFFER, GL_BUFFER_SIZE, &size);
+    GLsizei num_indices = size / sizeof(uint16_t);
+    glDrawElements(GL_TRIANGLES, num_indices, GL_UNSIGNED_SHORT, nullptr);
+    gl_has_errors();
+
+    // Recursively draw children
+    for (auto& child : element.children) {
+        drawUIElement(*child, projection);
+    }
+}
+
 // first draw to an intermediate texture,
 // apply the "vignette" texture, when requested
 // then draw the intermediate texture
@@ -205,8 +282,7 @@ void RenderSystem::drawToScreen() {
 
     // Clearing backbuffer
     int w, h;
-    glfwGetFramebufferSize(window,
-                           &w,
+    glfwGetFramebufferSize(window, &w,
                            &h);  // Note, this will be 2x the resolution given to glfwCreateWindow on retina displays
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     glViewport(0, 0, w, h);
@@ -222,10 +298,9 @@ void RenderSystem::drawToScreen() {
 
     // Draw the screen texture on the quad geometry
     glBindBuffer(GL_ARRAY_BUFFER, vertex_buffers[(GLuint) GEOMETRY_BUFFER_ID::SCREEN_TRIANGLE]);
-    glBindBuffer(
-        GL_ELEMENT_ARRAY_BUFFER,
-        index_buffers[(GLuint) GEOMETRY_BUFFER_ID::SCREEN_TRIANGLE]);  // Note, GL_ELEMENT_ARRAY_BUFFER associates
-                                                                       // indices to the bound GL_ARRAY_BUFFER
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,
+                 index_buffers[(GLuint) GEOMETRY_BUFFER_ID::SCREEN_TRIANGLE]);  // Note, GL_ELEMENT_ARRAY_BUFFER associates
+                                                                                // indices to the bound GL_ARRAY_BUFFER
     gl_has_errors();
 
     // add the "vignette" effect
@@ -270,8 +345,7 @@ void RenderSystem::drawToScreen() {
 void RenderSystem::draw() {
     // Getting size of window
     int w, h;
-    glfwGetFramebufferSize(window,
-                           &w,
+    glfwGetFramebufferSize(window, &w,
                            &h);  // Note, this will be 2x the resolution given to glfwCreateWindow on retina displays
 
     // First render to the custom framebuffer
@@ -309,6 +383,17 @@ void RenderSystem::draw() {
             drawGridLine(entity, projection_2D);
         }
     }
+
+    // Brian TODO: Add draw UI components here.
+    // TODO: remove later.
+    bnuui::Element k;
+    k.position = {250, 250};
+    k.scale = {500, 500};
+    k.rotation = 0;
+    k.texture = TEXTURE_ASSET_ID::BUNNY_LEFT_WALK1;
+    k.effect = EFFECT_ASSET_ID::TEXTURED;
+    k.geometry = GEOMETRY_BUFFER_ID::SPRITE;
+    drawUIElement(k, projection_2D);
 
     // draw framebuffer to screen
     // adding "vignette" effect when applied

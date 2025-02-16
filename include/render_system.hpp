@@ -3,6 +3,7 @@
 #include <array>
 #include <utility>
 
+#include "bnuui/bnuui.hpp"
 #include "common.hpp"
 #include "tinyECS/components.hpp"
 #include "tinyECS/tiny_ecs.hpp"
@@ -70,7 +71,7 @@ class RenderSystem {
         shader_path("egg"), 
         shader_path("chicken"), 
         shader_path("textured"), 
-        shader_path("vignette")
+        shader_path("vignette"),
     };
 
     std::array<GLuint, geometry_count> vertex_buffers;
@@ -114,6 +115,9 @@ class RenderSystem {
     void drawGridLine(Entity entity, const mat3& projection);
     void drawTexturedMesh(Entity entity, const mat3& projection);
     void drawToScreen();
+
+    // Drawing function for UI elements
+    void drawUIElement(bnuui::Element& element, const mat3& projection);
 
     // Window handle
     GLFWwindow* window;

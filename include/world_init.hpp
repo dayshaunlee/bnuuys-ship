@@ -6,3 +6,4 @@
 
 // Player
 Entity createPlayer(RenderSystem* renderer, vec2 position);
+Entity createPlayer(vec2 position);
