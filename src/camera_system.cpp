@@ -36,7 +36,3 @@ void CameraSystem::update(float deltaTime) {
         objectMotion.velocity.y = velocity.y;
     }
 }
-
-// vec2 CameraSystem::GetCameraScreen() {
-//     return cameraScreen;
-// }

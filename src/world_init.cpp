@@ -45,7 +45,6 @@ Entity createWaterBackground() {
     registry.backgroundObjects.emplace(waterbg);
     Motion& waterMotion = registry.motions.emplace(waterbg);
 
-    // TODO: setup the boat's position and the proper scale of the png
     waterMotion.position.x = WINDOW_WIDTH_PX / 2;
     waterMotion.position.y = WINDOW_HEIGHT_PX / 2;
     waterMotion.scale.x = WINDOW_WIDTH_PX * 1.5f;
@@ -76,15 +75,11 @@ Entity createShip() {
 Entity createGridLine(vec2 start_pos, vec2 end_pos) {
     Entity entity = Entity();
 
-    // TODO A1done: create a gridLine component
-    // re-use the "DEBUG_LINE" renderRequest
     GridLine& gridLine = registry.gridLines.emplace(entity);
     gridLine.start_pos = start_pos;
     gridLine.end_pos = end_pos;
-    // Mesh& mesh = renderer -> getMesh(GEOMETRY_BUFFER_ID::DEBUG_LINE);
     registry.renderRequests.insert(
         entity, {TEXTURE_ASSET_ID::TEXTURE_COUNT, EFFECT_ASSET_ID::EGG, GEOMETRY_BUFFER_ID::DEBUG_LINE});
-    // TODO A1done: grid line color (choose your own color)
     registry.colors.insert(entity, vec3(0.8f, 0.8f, 0.8f));
     return entity;
 }

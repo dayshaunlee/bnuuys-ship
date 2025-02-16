@@ -189,9 +189,6 @@ void WorldSystem::restart_game() {
     // Now let's create our player.
     createPlayer(renderer, {100, 100});
 
-    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    // TODO A1done: create grid lines
-    // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     int grid_line_width = GRID_LINE_WIDTH_PX;
     int CELL_WIDTH = WINDOW_WIDTH_PX / 15;
     int CELL_HEIGHT = CELL_WIDTH;
@@ -199,7 +196,6 @@ void WorldSystem::restart_game() {
     // create grid lines if they do not already exist
     if (grid_lines.size() == 0) {
         // vertical lines
-        // int cell_width = GRID_CELL_WIDTH_PX;
         int cell_width = CELL_WIDTH;
         for (int col = 0; col < 15 + 1; col++) {
             // width of 2 to make the grid easier to see
@@ -208,7 +204,6 @@ void WorldSystem::restart_game() {
         }
 
         // horizontal lines
-        // int cell_height = GRID_CELL_HEIGHT_PX;
         int cell_height = CELL_HEIGHT;
         for (int col = 0; col < 11 + 1; col++) {
             // width of 2 to make the grid easier to see
