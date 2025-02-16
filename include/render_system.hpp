@@ -61,17 +61,18 @@ class RenderSystem {
         // Walk Left
         textures_path("bunny/walk_left0.png"),  // BUNNY_LEFT_WALK0
         textures_path("bunny/walk_left1.png"),  // BUNNY_LEFT_WALK1
+
+        // water background
+        textures_path("background/water_background.png"),
     };
 
     std::array<GLuint, effect_count> effects;
     // Make sure these paths remain in sync with the associated enumerators.
-    const std::array<std::string, effect_count> effect_paths = {
-        shader_path("coloured"), 
-        shader_path("egg"), 
-        shader_path("chicken"), 
-        shader_path("textured"), 
-        shader_path("vignette")
-    };
+    const std::array<std::string, effect_count> effect_paths = {shader_path("coloured"),
+                                                                shader_path("egg"),
+                                                                shader_path("chicken"),
+                                                                shader_path("textured"),
+                                                                shader_path("vignette")};
 
     std::array<GLuint, geometry_count> vertex_buffers;
     std::array<GLuint, geometry_count> index_buffers;

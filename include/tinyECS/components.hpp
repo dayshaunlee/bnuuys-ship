@@ -150,7 +150,9 @@ enum class TEXTURE_ASSET_ID {
     BUNNY_LEFT_WALK0 = BUNNY_DOWN_WALK1 + 1,
     BUNNY_LEFT_WALK1 = BUNNY_LEFT_WALK0 + 1,
 
-    TEXTURE_COUNT = BUNNY_LEFT_WALK1 + 1
+    WATER_BACKGROUND = BUNNY_LEFT_WALK1 + 1,
+
+    TEXTURE_COUNT = WATER_BACKGROUND + 1
 };
 
 const int texture_count = (int) TEXTURE_ASSET_ID::TEXTURE_COUNT;
@@ -171,7 +173,8 @@ enum class GEOMETRY_BUFFER_ID {
     EGG = SPRITE + 1,
     DEBUG_LINE = EGG + 1,
     SCREEN_TRIANGLE = DEBUG_LINE + 1,
-    GEOMETRY_COUNT = SCREEN_TRIANGLE + 1
+    SHIP_SQUARE = SCREEN_TRIANGLE + 1,
+    GEOMETRY_COUNT = SHIP_SQUARE + 1
 };
 const int geometry_count = (int) GEOMETRY_BUFFER_ID::GEOMETRY_COUNT;
 
@@ -185,7 +188,7 @@ enum DIRECTION { UP, RIGHT, DOWN, LEFT };
 
 // ========== PLAYER DETAILS ==========
 
-/*  
+/*
  *  A PlayerAnimation will read the Player component
  *  So be sure to add Player Component when adding PlayerAnimation
  */
@@ -201,12 +204,19 @@ struct Player {
     std::string name;
     DIRECTION direction;
     PLAYERSTATE player_state;
+    bool is_sailing_ship;
 };
 
 struct PlayerAnimation {
     TEXTURE_ASSET_ID curr_anim;
-    int timer_ms;   // How many ms before switching to the next frame.  
+    int timer_ms;  // How many ms before switching to the next frame.
 };
+
+// Camera related componenet
+// used for updating the objects in the background as camera moves with ship
+// bachgroundObject is anything that doesn't move with the ship
+
+struct BackgroundObject {};
 
 // ========== PLAYER DETAILS ==========
 
