@@ -18,6 +18,8 @@ class ECSRegistry {
     ComponentContainer<Player> players;
     ComponentContainer<PlayerAnimation> playerAnimations;
 
+    ComponentContainer<Ship> ships;
+
     ComponentContainer<Motion> motions;
     ComponentContainer<Collision> collisions;
 
@@ -34,6 +36,8 @@ class ECSRegistry {
 
         registry_list.push_back(&players);
         registry_list.push_back(&playerAnimations);
+
+        registry_list.push_back(&ships);
         
         registry_list.push_back(&motions);
         registry_list.push_back(&collisions);
