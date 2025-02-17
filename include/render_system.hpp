@@ -70,6 +70,20 @@ class RenderSystem {
 
         textures_path("ui/buttons/play_neutral.png"),
         textures_path("ui/buttons/play_clicked.png"),
+
+        textures_path("ui/buttons/btn_neutral.png"),
+        textures_path("ui/buttons/btn_clicked.png"),
+
+        // Bunny UI Face Neutral
+        textures_path("ui/faces/face_long_anim010.png"),
+        textures_path("ui/faces/face_long_anim011.png"),
+        textures_path("ui/faces/face_long_anim012.png"),
+        textures_path("ui/faces/face_long_anim013.png"),
+        textures_path("ui/faces/face_long_anim014.png"),
+        textures_path("ui/faces/face_long_anim015.png"),
+        textures_path("ui/faces/face_long_anim016.png"),
+        textures_path("ui/faces/face_long_anim017.png"),
+        textures_path("ui/faces/face_long_anim018.png"),
     };
 
     std::array<GLuint, effect_count> effects;

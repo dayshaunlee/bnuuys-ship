@@ -3,7 +3,6 @@
 #include <glm/ext/vector_float2.hpp>
 #include "ai_system.hpp"
 #include "animation_system.hpp"
-#include "bnuui/bnuui.hpp"
 #include "physics_system.hpp"
 #include "sceneManager/scene.hpp"
 #include "world_system.hpp"
@@ -14,6 +13,8 @@ private:
     PhysicsSystem physics_system;
     AnimationSystem animation_system;
     WorldSystem world_system;
+
+    void InitializeUI();
 
 public:
     Level01();

@@ -57,9 +57,9 @@ public:
     // Function to be used for system.
     virtual void doUpdate(float dt) = 0;
 
-    bool isPointInside(const vec2& point) {
-        vec2 minBounds = position - scale * 0.5f;
-        vec2 maxBounds = position + scale * 0.5f;
+    bool isPointColliding(const vec2& point) {
+        vec2 minBounds = position - (scale + offset.x)*0.5f;
+        vec2 maxBounds = position + (scale - offset.y)*0.5f;
         return point.x >= minBounds.x && point.x <= maxBounds.x &&
                point.y >= minBounds.y && point.y <= maxBounds.y;
     }
@@ -67,6 +67,8 @@ public:
     void clickButton() {
         if (onClick) onClick(*this);
     }
+
+    virtual ~Element() = default;
 
 protected:
     std::function<void(Element&)> onHover;

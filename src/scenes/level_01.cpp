@@ -1,9 +1,10 @@
 #include "scenes/level_01.hpp"
 #include <deque>
-#include <iostream>
+#include <glm/ext/vector_float2.hpp>
 #include <memory>
 #include "GLFW/glfw3.h"
 #include "bnuui/bnuui.hpp"
+#include "tinyECS/registry.hpp"
 #include "world_init.hpp"
 #include "bnuui/buttons.hpp"
 
@@ -11,10 +12,27 @@ Level01::Level01() {
     this->name = "Level 1";
 }
 
-vec2 mPos;
 void Level01::Init() {
     // Probably where Dayshaun needs to preload the level 01 map.
     createPlayer({100, 100});
+    InitializeUI();
+}
+
+void Level01::InitializeUI() {
+    // Create Healthbar.
+    auto player_box = std::make_shared<bnuui::Box>(vec2(48*2,48*2), vec2(48*2,48*2), 0.0f);
+    auto player_status = std::make_shared<bnuui::PlayerStatus>(vec2(48*2, 48*2), 
+                                                               vec2(30*2, 30*2), 
+                                                               0.0f,
+                                                               registry.players.components[0].health
+                                                               );
+    auto slider_bg = std::make_shared<bnuui::LongBox>(vec2(48*5.5f, 48*2),
+                                                      vec2(48*5, 48*1.5f),
+                                                      0.0f
+                                                      );
+    player_box->children.push_back(slider_bg);
+    scene_ui.insert(player_box);
+    scene_ui.insert(player_status);
 }
 
 void Level01::Exit() {
@@ -81,11 +99,10 @@ void Level01::HandleInput(int key, int action, int mod) {
 }
 
 void Level01::HandleMouseMove(vec2 pos) {
-    mPos = pos;
     // Check if hovering over any UI components.
     std::vector<std::shared_ptr<bnuui::Element>> ui_elems = scene_ui.getElems();
     for (std::shared_ptr<bnuui::Element> ui_elem : ui_elems) {
-        if (ui_elem->isPointInside(pos)) {
+        if (ui_elem->isPointColliding(pos)) {
             ui_elem->hovering = true;
         } else {
             ui_elem->hovering = false;
