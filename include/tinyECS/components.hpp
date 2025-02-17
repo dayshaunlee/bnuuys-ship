@@ -6,28 +6,6 @@
 #include "../ext/tileson/tileson.hpp"
 #include "common.hpp"
 
-// Tower
-struct Tower {
-    float range;   // for vision / detection
-    int timer_ms;  // when to shoot - this could also be a separate timer component...
-};
-
-// Invader
-struct Invader {
-    int health;
-};
-
-// Projectile
-struct Projectile {
-    int damage;
-};
-
-// used for Entities that cause damage
-struct Deadly {};
-
-// used for edible entities
-struct Eatable {};
-
 // All data relevant to the shape and motion of entities
 struct Motion {
     vec2 position = {0, 0};
@@ -41,6 +19,13 @@ struct Collision {
     // Note, the first object is stored in the ECS container.entities
     Entity other;  // the second object involved in the collision
     Collision(Entity& other) { this->other = other; };
+};
+
+// Sets the brightness of the screen
+struct ScreenState
+{
+	float darken_screen_factor = -1;
+	float vignette_screen_factor = -1;
 };
 
 struct Island {
@@ -59,11 +44,6 @@ struct Debug {
 };
 extern Debug debugging;
 
-// Sets the brightness of the screen
-struct ScreenState {
-    float darken_screen_factor = -1;
-};
-
 // A struct to refer to debugging graphics in the ECS
 struct DebugComponent {
     // Note, an empty struct has size 1
@@ -73,11 +53,6 @@ struct DebugComponent {
 struct GridLine {
     vec2 start_pos = {0, 0};
     vec2 end_pos = {10, 10};  // default to diagonal line
-};
-
-// A timer that will be associated to dying chicken
-struct DeathTimer {
-    float counter_ms = 3000;
 };
 
 // Single Vertex Buffer element for non-textured meshes (coloured.vs.glsl & chicken.vs.glsl)

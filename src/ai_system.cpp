@@ -6,7 +6,4 @@
 
 void AISystem::step(float elapsed_ms) {
     (void) elapsed_ms;  // placeholder to silence unused warning until implemented
-    for (const Entity& tower_entity : registry.towers.entities) {
-        std::cout << "HELP";
-    }
 }

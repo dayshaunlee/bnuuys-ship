@@ -19,8 +19,7 @@
 #include "camera_system.hpp"
 
 // create the world
-WorldSystem::WorldSystem()
-    : points(0), max_towers(MAX_TOWERS_START), next_invader_spawn(0), invader_spawn_rate_ms(INVADER_SPAWN_RATE_MS) {
+WorldSystem::WorldSystem() {
     // seeding rng with random device
     rng = std::default_random_engine(std::random_device()());
 }
@@ -153,7 +152,6 @@ void WorldSystem::init(RenderSystem* renderer_arg) {
 bool WorldSystem::step(float elapsed_ms_since_last_update) {
     // Updating window title with points
     std::stringstream title_ss;
-    title_ss << "Points: " << points;
     glfwSetWindowTitle(window, title_ss.str().c_str());
 
     assert(registry.screenStates.components.size() <= 1);
@@ -167,14 +165,6 @@ void WorldSystem::restart_game() {
 
     // Debugging for memory/component leaks
     registry.list_all_components();
-
-    // Reset the game speed
-    current_speed = 1.f;
-
-    points = 0;
-    max_towers = MAX_TOWERS_START;
-    next_invader_spawn = 0;
-    invader_spawn_rate_ms = INVADER_SPAWN_RATE_MS;
 
     // Remove all entities that we created
     // All that have a motion, we could also iterate over all bug, eagles, ... but
