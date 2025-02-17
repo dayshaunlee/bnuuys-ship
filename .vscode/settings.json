@@ -1,26 +1,6 @@
 {
-    "C_Cpp.clang_format_style": "file",
-    
-    "C_Cpp.codeAnalysis.clangTidy.enabled": true,
-
-    "editor.formatOnSave": true,
-
-    "C_Cpp.clang_format_fallbackStyle": "Google",
-
-    "C_Cpp.default.includePath": [
-        "${workspaceFolder}/**"
-    ],
-
-    "clangd.path": "clangd",
-    "clangd.arguments": [
-        "--compile-commands-dir=${workspaceFolder}",
-        "--header-insertion=never"
-    ],
-
-    "files.associations": {
-        "*.cpp": "cpp",
-        "*.hpp": "cpp",
-        "*.h": "cpp"
-    },
-    "C_Cpp.default.compilerPath": "/usr/bin/clang++"
+  "files.associations": {
+    "*.gitignore": "cpp"
+  },
+  "C_Cpp.errorSquiggles": "disabled"
 }

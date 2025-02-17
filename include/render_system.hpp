@@ -84,6 +84,8 @@ class RenderSystem {
         textures_path("ui/faces/face_long_anim016.png"),
         textures_path("ui/faces/face_long_anim017.png"),
         textures_path("ui/faces/face_long_anim018.png"),
+        // water background
+        textures_path("background/water_background.png"),
     };
 
     std::array<GLuint, effect_count> effects;

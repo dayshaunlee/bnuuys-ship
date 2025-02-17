@@ -3,29 +3,8 @@
 #include <vector>
 
 #include "../ext/stb_image/stb_image.h"
+#include "../ext/tileson/tileson.hpp"
 #include "common.hpp"
-
-// Tower
-struct Tower {
-    float range;   // for vision / detection
-    int timer_ms;  // when to shoot - this could also be a separate timer component...
-};
-
-// Invader
-struct Invader {
-    int health;
-};
-
-// Projectile
-struct Projectile {
-    int damage;
-};
-
-// used for Entities that cause damage
-struct Deadly {};
-
-// used for edible entities
-struct Eatable {};
 
 // All data relevant to the shape and motion of entities
 struct Motion {
@@ -42,17 +21,28 @@ struct Collision {
     Collision(Entity& other) { this->other = other; };
 };
 
+// Sets the brightness of the screen
+struct ScreenState
+{
+	float darken_screen_factor = -1;
+	float vignette_screen_factor = -1;
+};
+
+struct Island {
+    tson::Vector2<int> polygon;
+};
+
+// Player base, in the future may add more attributes for upgrades functionality
+struct Base {
+    tson::Vector2<int> polygon;
+};
+
 // Data structure for toggling debug mode
 struct Debug {
     bool in_debug_mode = 0;
     bool in_freeze_mode = 0;
 };
 extern Debug debugging;
-
-// Sets the brightness of the screen
-struct ScreenState {
-    float darken_screen_factor = -1;
-};
 
 // A struct to refer to debugging graphics in the ECS
 struct DebugComponent {
@@ -63,11 +53,6 @@ struct DebugComponent {
 struct GridLine {
     vec2 start_pos = {0, 0};
     vec2 end_pos = {10, 10};  // default to diagonal line
-};
-
-// A timer that will be associated to dying chicken
-struct DeathTimer {
-    float counter_ms = 3000;
 };
 
 // Single Vertex Buffer element for non-textured meshes (coloured.vs.glsl & chicken.vs.glsl)
@@ -140,8 +125,10 @@ enum class TEXTURE_ASSET_ID {
     BUNNY_LEFT_WALK0 = BUNNY_DOWN_WALK1 + 1,
     BUNNY_LEFT_WALK1 = BUNNY_LEFT_WALK0 + 1,
 
+    WATER_BACKGROUND = BUNNY_LEFT_WALK1 + 1,
+
     // UI assets.
-    SQUARE_3_NORMAL = BUNNY_LEFT_WALK1 + 1,
+    SQUARE_3_NORMAL = WATER_BACKGROUND + 1,
     SQUARE_3_HOVER = SQUARE_3_NORMAL + 1,
     SQUARE_3_CLICKED = SQUARE_3_HOVER + 1,
 
@@ -183,7 +170,8 @@ enum class GEOMETRY_BUFFER_ID {
     EGG = SPRITE + 1,
     DEBUG_LINE = EGG + 1,
     SCREEN_TRIANGLE = DEBUG_LINE + 1,
-    GEOMETRY_COUNT = SCREEN_TRIANGLE + 1
+    SHIP_SQUARE = SCREEN_TRIANGLE + 1,
+    GEOMETRY_COUNT = SHIP_SQUARE + 1
 };
 const int geometry_count = (int) GEOMETRY_BUFFER_ID::GEOMETRY_COUNT;
 
@@ -197,7 +185,7 @@ enum DIRECTION { UP, RIGHT, DOWN, LEFT };
 
 // ========== PLAYER DETAILS ==========
 
-/*  
+/*
  *  A PlayerAnimation will read the Player component
  *  So be sure to add Player Component when adding PlayerAnimation
  */
@@ -214,11 +202,31 @@ struct Player {
     std::string name;
     DIRECTION direction;
     PLAYERSTATE player_state;
+    bool is_sailing_ship;
 };
 
 struct PlayerAnimation {
     TEXTURE_ASSET_ID curr_anim;
-    int timer_ms;   // How many ms before switching to the next frame.  
+    int timer_ms;  // How many ms before switching to the next frame.
 };
 
+// Camera related componenet
+// used for updating the objects in the background as camera moves with ship
+// bachgroundObject is anything that doesn't move with the ship
+
+struct BackgroundObject {};
+
 // ========== PLAYER DETAILS ==========
+
+
+// ========== ENEMY DETAILS ==========
+
+// the enemy type stores information about enemy HP, damage, speed, etc..
+// TODO: ADD ENEMY TYPE INFORMATION IN COMMON
+enum ENEMY_TYPE { BASIC_GUNNER, FLYER };
+
+struct Enemy {
+    ENEMY_TYPE type;
+};
+
+// ========== ENEMY DETAILS ==========
