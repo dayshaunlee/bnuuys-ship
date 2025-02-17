@@ -195,9 +195,6 @@ struct PlayerAnimation {
 
 struct BackgroundObject {};
 
-// ========== PLAYER DETAILS ==========
-
-
 // ========== ENEMY DETAILS ==========
 
 // the enemy type stores information about enemy HP, damage, speed, etc..
@@ -207,7 +204,6 @@ enum ENEMY_TYPE { BASIC_GUNNER, FLYER };
 struct Enemy {
     ENEMY_TYPE type;
     int health;
-    int type;
 	int timer_ms;
 };
 

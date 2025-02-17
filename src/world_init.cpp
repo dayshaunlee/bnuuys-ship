@@ -35,7 +35,7 @@ Entity createEnemy(RenderSystem* renderer, vec2 position) {
 
     Enemy& enemy = registry.enemies.emplace(entity);
     enemy.health = ENEMY_BASE_HEALTH;
-    enemy.type = 0;
+    enemy.type = BASIC_GUNNER;
     enemy.timer_ms = 0;
 
     Motion& motion = registry.motions.emplace(entity);
