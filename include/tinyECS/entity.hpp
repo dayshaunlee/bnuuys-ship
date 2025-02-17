@@ -11,13 +11,6 @@ class Entity {
         m_id = id_count++;  // assign and increment
     }
 
-    /*
-    Entity(Entity& e)
-    {
-        m_id = e.m_id;
-    }
-    */
-
     ~Entity() {}
 
     operator unsigned int() { return m_id; }  // enables automatic casting to int

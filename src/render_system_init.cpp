@@ -212,6 +212,30 @@ void RenderSystem::initializeGlGeometryBuffers() {
     // Counterclockwise as it's the default opengl front winding direction.
     const std::vector<uint16_t> screen_indices = {0, 1, 2};
     bindVBOandIBO(GEOMETRY_BUFFER_ID::SCREEN_TRIANGLE, screen_vertices, screen_indices);
+
+    ///////////////////////////////////////////////////////
+    // Initialize square geometry for the ship
+    std::vector<ColoredVertex> square_vertices;
+    std::vector<uint16_t> square_indices;
+
+    constexpr float square_depth = 0.0f;  // Adjust if needed
+
+    // Define the four corners of the square (centered at origin)
+    square_vertices = {
+        {{-0.5f, -0.5f, square_depth}, {0.6f, 0.3f, 0.1f}},  // Bottom-left (brown color)
+        {{0.5f, -0.5f, square_depth}, {0.6f, 0.3f, 0.1f}},   // Bottom-right
+        {{0.5f, 0.5f, square_depth}, {0.6f, 0.3f, 0.1f}},    // Top-right
+        {{-0.5f, 0.5f, square_depth}, {0.6f, 0.3f, 0.1f}},   // Top-left
+    };
+
+    // Define two triangles forming the square
+    square_indices = {0, 1, 3, 1, 2, 3};
+
+    // Store in the mesh system
+    int square_geom_index = (int) GEOMETRY_BUFFER_ID::SHIP_SQUARE;
+    meshes[square_geom_index].vertices = square_vertices;
+    meshes[square_geom_index].vertex_indices = square_indices;
+    bindVBOandIBO(GEOMETRY_BUFFER_ID::SHIP_SQUARE, square_vertices, square_indices);
 }
 
 RenderSystem::~RenderSystem() {

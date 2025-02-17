@@ -16,6 +16,7 @@
 #include "world_system.hpp"
 #include "animation_system.hpp"
 #include "bnuui/bnuui.hpp"
+#include "camera_system.hpp"
 
 using Clock = std::chrono::high_resolution_clock;
 
@@ -77,7 +78,8 @@ int main() {
         if (s != nullptr)
             s->Update(elapsed_ms);
 
-        renderer_system.draw();
+        CameraSystem::GetInstance()->update(elapsed_ms);
+        
     }
 
     delete(l1);

@@ -58,17 +58,8 @@ class WorldSystem {
     // OpenGL window handle
     GLFWwindow* window;
 
-    int next_invader_spawn;
-    int invader_spawn_rate_ms;  // see default value in common.hpp
-
-    int max_towers;  // see default value in common.hpp
-
-    // Number of invaders stopped by the towers, displayed in the window title
-    unsigned int points;
-
     // Game state
     RenderSystem* renderer;
-    float current_speed;
 
     // grid
     std::vector<Entity> grid_lines;

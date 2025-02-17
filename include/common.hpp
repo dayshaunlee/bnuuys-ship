@@ -38,6 +38,9 @@ inline std::string audio_path(const std::string& name) {
 inline std::string mesh_path(const std::string& name) {
     return data_path() + "/meshes/" + std::string(name);
 };
+inline std::string map_path(const std::string& name) {
+    return data_path() + "/maps/" + std::string(name);
+};
 
 //
 // game constants
@@ -45,27 +48,13 @@ inline std::string mesh_path(const std::string& name) {
 const int WINDOW_WIDTH_PX = 1280;
 const int WINDOW_HEIGHT_PX = 720;
 
-const int GRID_CELL_WIDTH_PX = 60;
-const int GRID_CELL_HEIGHT_PX = 60;
+const int GRID_CELL_WIDTH_PX = 56;
+const int GRID_CELL_HEIGHT_PX = 56;
 const int GRID_LINE_WIDTH_PX = 2;
 
-const int TOWER_TIMER_MS = 1000;  // number of milliseconds between tower shots
-const int MAX_TOWERS_START = 5;
-
-const int INVADER_HEALTH = 50;
-const int INVADER_SPAWN_RATE_MS = 2 * 1000;
-
-const int PROJECTILE_DAMAGE = 10;
-
-// These are hard coded to the dimensions of the entity's texture
-
-// invaders are 64x64 px, but cells are 60x60
-const float INVADER_BB_WIDTH = (float) GRID_CELL_WIDTH_PX;
-const float INVADER_BB_HEIGHT = (float) GRID_CELL_HEIGHT_PX;
-
-// towers are 64x64 px, but cells are 60x60
-const float TOWER_BB_WIDTH = (float) GRID_CELL_WIDTH_PX;
-const float TOWER_BB_HEIGHT = (float) GRID_CELL_HEIGHT_PX;
+// middle grid for the center of the ship
+const int MIDDLE_GRID_X = 7;
+const int MIDDLE_GRID_Y = 5;
 
 #ifndef M_PI
 #define M_PI 3.14159265358979323846f
@@ -93,3 +82,4 @@ const int MOVE_LEFT_BUTTON = GLFW_KEY_A;
 
 const float WALK_SPEED = 150.0f;
 const float ANIMATION_TIME = 250.0f;
+const float SHIP_CAMERA_SPEED = 100.0f;

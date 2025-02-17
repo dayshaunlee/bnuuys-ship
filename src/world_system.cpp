@@ -6,6 +6,7 @@
 #include "tinyECS/components.hpp"
 #include "tinyECS/registry.hpp"
 #include "world_init.hpp"
+#include "map_init.hpp"
 
 // stlib
 #include <cassert>
@@ -16,10 +17,10 @@
 #include <deque>
 
 #include "physics_system.hpp"
+#include "camera_system.hpp"
 
 // create the world
-WorldSystem::WorldSystem()
-    : points(0), max_towers(MAX_TOWERS_START), next_invader_spawn(0), invader_spawn_rate_ms(INVADER_SPAWN_RATE_MS) {
+WorldSystem::WorldSystem() {
     // seeding rng with random device
     rng = std::default_random_engine(std::random_device()());
 }
@@ -153,7 +154,6 @@ void WorldSystem::init(RenderSystem* renderer_arg) {
 bool WorldSystem::step(float elapsed_ms_since_last_update) {
     // Updating window title with points
     std::stringstream title_ss;
-    title_ss << "Points: " << points;
     glfwSetWindowTitle(window, title_ss.str().c_str());
 
     assert(registry.screenStates.components.size() <= 1);
@@ -168,14 +168,6 @@ void WorldSystem::restart_game() {
     // Debugging for memory/component leaks
     registry.list_all_components();
 
-    // Reset the game speed
-    current_speed = 1.f;
-
-    points = 0;
-    max_towers = MAX_TOWERS_START;
-    next_invader_spawn = 0;
-    invader_spawn_rate_ms = INVADER_SPAWN_RATE_MS;
-
     // Remove all entities that we created
     // All that have a motion, we could also iterate over all bug, eagles, ... but
     // that would be more cumbersome
@@ -183,6 +175,36 @@ void WorldSystem::restart_game() {
 
     // debugging for memory/component leaks
     registry.list_all_components();
+
+    // create the ocean background and then ship
+    createWaterBackground();
+    createShip();
+    // Now let's create our player.
+    createPlayer(renderer, {100, 100});
+
+    int grid_line_width = GRID_LINE_WIDTH_PX;
+    int CELL_WIDTH = WINDOW_WIDTH_PX / 15;
+    int CELL_HEIGHT = CELL_WIDTH;
+
+    // create grid lines if they do not already exist
+    if (grid_lines.size() == 0) {
+        // vertical lines
+        int cell_width = CELL_WIDTH;
+        for (int col = 0; col < 15 + 1; col++) {
+            // width of 2 to make the grid easier to see
+            grid_lines.push_back(
+                createGridLine(vec2(col * cell_width, 0), vec2(grid_line_width, 2 * WINDOW_HEIGHT_PX)));
+        }
+
+        // horizontal lines
+        int cell_height = CELL_HEIGHT;
+        for (int col = 0; col < 11 + 1; col++) {
+            // width of 2 to make the grid easier to see
+            grid_lines.push_back(
+                createGridLine(vec2(0, col * cell_height), vec2(2 * WINDOW_WIDTH_PX, grid_line_width)));
+        }
+    }
+    loadMap("m1.json");
 }
 
 // Compute collisions between entities
@@ -199,6 +221,89 @@ void WorldSystem::handle_collisions() {
 // Should the game be over ?
 bool WorldSystem::is_over() const {
     return bool(glfwWindowShouldClose(window));
+}
+
+std::set<int> activeKeys;
+std::deque<int> keyOrder;
+void HandlePlayerMovement(int key, int, int action, int mod) {
+    assert(registry.players.size() == 1);
+    Entity player = registry.players.entities[0];
+    Player& player_comp = registry.players.get(player);
+    Motion& mot = registry.motions.get(player);
+
+    // Prevent player from moving when they're stationing.
+    if (player_comp.player_state == PLAYERSTATE::STATIONING) return;
+
+    if (action == GLFW_PRESS) {
+        if (!activeKeys.count(key)) {
+            keyOrder.push_back(key);
+        }
+        activeKeys.insert(key);
+    } else if (action == GLFW_RELEASE) {
+        activeKeys.erase(key);
+        keyOrder.erase(std::remove(keyOrder.begin(), keyOrder.end(), key), keyOrder.end());
+    }
+
+    float velocityX = 0.0f;
+    float velocityY = 0.0f;
+
+    if (activeKeys.count(MOVE_UP_BUTTON)) velocityY -= WALK_SPEED;
+    if (activeKeys.count(MOVE_DOWN_BUTTON)) velocityY += WALK_SPEED;
+    if (activeKeys.count(MOVE_LEFT_BUTTON)) velocityX -= WALK_SPEED;
+    if (activeKeys.count(MOVE_RIGHT_BUTTON)) velocityX += WALK_SPEED;
+
+    velocityX = std::clamp(velocityX, -WALK_SPEED, WALK_SPEED);
+    velocityY = std::clamp(velocityY, -WALK_SPEED, WALK_SPEED);
+
+    mot.velocity = vec2(velocityX, velocityY);
+
+    // Update the player state.
+    if (activeKeys.empty() || ((!activeKeys.count(MOVE_UP_BUTTON)) && (!activeKeys.count(MOVE_DOWN_BUTTON)) &&
+                               (!activeKeys.count(MOVE_LEFT_BUTTON)) && (!activeKeys.count(MOVE_RIGHT_BUTTON)))) {
+        player_comp.player_state = PLAYERSTATE::IDLE;
+    } else {
+        player_comp.player_state = PLAYERSTATE::WALKING;
+
+        // Determine direction based on last key pressed
+        if (!keyOrder.empty()) {
+            int lastKey = keyOrder.back();
+            if (lastKey == MOVE_UP_BUTTON) {
+                player_comp.direction = UP;
+            } else if (lastKey == MOVE_DOWN_BUTTON) {
+                player_comp.direction = DOWN;
+            } else if (lastKey == MOVE_LEFT_BUTTON) {
+                player_comp.direction = LEFT;
+            } else if (lastKey == MOVE_RIGHT_BUTTON) {
+                player_comp.direction = RIGHT;
+            }
+        }
+    }
+}
+
+std::set<int> activeShipKeys;
+std::deque<int> keyShipOrder;
+void HandleCameraMovement(int key, int, int action, int mod) {
+    if (!registry.players.components[0].is_sailing_ship) return;
+
+    if (action == GLFW_PRESS) {
+        if (!activeShipKeys.count(key)) {
+            keyShipOrder.push_back(key);
+        }
+        activeShipKeys.insert(key);
+    } else if (action == GLFW_RELEASE) {
+        activeShipKeys.erase(key);
+        keyShipOrder.erase(std::remove(keyShipOrder.begin(), keyShipOrder.end(), key), keyShipOrder.end());
+    }
+
+    float accelerationX = 0.0f;
+    float accelerationY = 0.0f;
+
+    if (activeShipKeys.count(MOVE_UP_BUTTON)) accelerationY += SHIP_CAMERA_SPEED;
+    if (activeShipKeys.count(MOVE_DOWN_BUTTON)) accelerationY -= SHIP_CAMERA_SPEED;
+    if (activeShipKeys.count(MOVE_LEFT_BUTTON)) accelerationX += SHIP_CAMERA_SPEED;
+    if (activeShipKeys.count(MOVE_RIGHT_BUTTON)) accelerationX -= SHIP_CAMERA_SPEED;
+
+    CameraSystem::GetInstance()->setCameraScreen(accelerationX, accelerationY);
 }
 
 // on key callback
@@ -219,6 +324,29 @@ void WorldSystem::on_key(int key, int, int action, int mod) {
     Scene* scene = SceneManager::getInstance().getCurrentScene();
     if (scene) {
         scene->HandleInput(key, action, mod);
+
+    Entity player = registry.players.entities[0];
+    glm::vec2 playerPos = registry.motions.get(player).position;
+    int player_tile_x = (int) (playerPos.x / GRID_CELL_WIDTH_PX);
+    int player_tile_y = (int) (playerPos.y / GRID_CELL_HEIGHT_PX);
+
+    Player& playerToChangeState = registry.players.get(player);
+    // if player idle in the middle of the ship and press space then they are controling the ship movement/camera goes
+    // with the ship
+    if ((player_tile_x == MIDDLE_GRID_X) && (player_tile_y == MIDDLE_GRID_Y) && (action == GLFW_RELEASE) &&
+        (key == GLFW_KEY_SPACE) &&
+        (registry.players.get(player).player_state == IDLE ||
+         registry.players.get(player).player_state == STATIONING)) {
+        playerToChangeState.is_sailing_ship = !playerToChangeState.is_sailing_ship;
+        std::cout << "changed control state" << std::endl;
+    }
+
+    if (playerToChangeState.is_sailing_ship) {
+        playerToChangeState.player_state = STATIONING;
+        HandleCameraMovement(key, 0, action, mod);
+    } else {
+        playerToChangeState.player_state = IDLE;
+        HandlePlayerMovement(key, 0, action, mod);
     }
 }
 
