@@ -2,10 +2,13 @@
 #include <SDL.h>
 #include <glm/trigonometric.hpp>
 #include <iostream>
+#include <memory>
 
 // internal
 #include "render_system.hpp"
 #include "bnuui/bnuui.hpp"
+#include "common.hpp"
+#include "sceneManager/scene_manager.hpp"
 #include "tinyECS/components.hpp"
 #include "tinyECS/registry.hpp"
 
@@ -199,21 +202,19 @@ void RenderSystem::drawTexturedMesh(Entity entity, const mat3& projection) {
     gl_has_errors();
 }
 
+
 void RenderSystem::drawUIElement(bnuui::Element& element, const mat3& projection) {
     if (!element.visible) return;
 
-    // UI elements do not need entity-based components like Motion, instead, they have their own properties
     Transform transform;
     transform.translate(element.position);
     transform.scale(element.scale);
     transform.rotate(radians(element.rotation));
 
-    // Use the assigned shader program
     const GLuint program = (GLuint) effects[(GLuint) element.effect];
     glUseProgram(program);
     gl_has_errors();
 
-    // Bind the appropriate geometry buffers
     const GLuint vbo = vertex_buffers[(GLuint) element.geometry];
     const GLuint ibo = index_buffers[(GLuint) element.geometry];
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
@@ -231,7 +232,8 @@ void RenderSystem::drawUIElement(bnuui::Element& element, const mat3& projection
         glVertexAttribPointer(in_texcoord_loc, 2, GL_FLOAT, GL_FALSE, sizeof(TexturedVertex), (void*) sizeof(vec3));
 
         glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, (unsigned int) element.texture);
+        GLuint texture_id = texture_gl_handles[(GLuint) element.texture];
+        glBindTexture(GL_TEXTURE_2D, texture_id);
         // Brian: Disable smoothing
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -384,16 +386,16 @@ void RenderSystem::draw() {
         }
     }
 
-    // Brian TODO: Add draw UI components here.
-    // TODO: remove later.
-    bnuui::Element k;
-    k.position = {250, 250};
-    k.scale = {500, 500};
-    k.rotation = 0;
-    k.texture = TEXTURE_ASSET_ID::BUNNY_LEFT_WALK1;
-    k.effect = EFFECT_ASSET_ID::TEXTURED;
-    k.geometry = GEOMETRY_BUFFER_ID::SPRITE;
-    drawUIElement(k, projection_2D);
+    // Brian: Add draw UI components here.
+    SceneManager& sm = SceneManager::getInstance();
+    Scene* s =sm.getCurrentScene();
+    if (s) {
+        bnuui::SceneUI scene_ui = s->getUIElems();
+        std::vector<std::shared_ptr<bnuui::Element>> elems = scene_ui.getElems();
+        for (std::shared_ptr<bnuui::Element> elem : elems) {
+            drawUIElement(*elem, projection_2D);
+        }
+    }
 
     // draw framebuffer to screen
     // adding "vignette" effect when applied

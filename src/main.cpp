@@ -47,6 +47,8 @@ int main() {
 
     // variable timestep loop
     auto t = Clock::now();
+
+    
     SceneManager& sm = SceneManager::getInstance();
     Scene* l1 = new Level01();
     sm.registerScene(l1);

@@ -142,7 +142,8 @@ void WorldSystem::init(RenderSystem* renderer_arg) {
 
     // start playing background music indefinitely
     std::cout << "Starting music..." << std::endl;
-    Mix_PlayMusic(background_music, -1);
+    // TODO Brian: uncomment later
+    /*Mix_PlayMusic(background_music, -1);*/
 
     // Set all states to default
     restart_game();
@@ -225,6 +226,10 @@ void WorldSystem::on_mouse_move(vec2 mouse_position) {
     // record the current mouse position
     mouse_pos_x = mouse_position.x;
     mouse_pos_y = mouse_position.y;
+    Scene* scene = SceneManager::getInstance().getCurrentScene();
+    if (scene) {
+        scene->HandleMouseMove(mouse_position);
+    }
 }
 
 void WorldSystem::on_mouse_button_pressed(int button, int action, int mods) {
@@ -235,5 +240,9 @@ void WorldSystem::on_mouse_button_pressed(int button, int action, int mods) {
 
         std::cout << "mouse position: " << mouse_pos_x << ", " << mouse_pos_y << std::endl;
         std::cout << "mouse tile position: " << tile_x << ", " << tile_y << std::endl;
+    }
+    Scene* scene = SceneManager::getInstance().getCurrentScene();
+    if (scene) {
+        scene->HandleMouseClick(button, action, mods);
     }
 }

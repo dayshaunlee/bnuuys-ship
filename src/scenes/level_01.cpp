@@ -1,15 +1,37 @@
 #include "scenes/level_01.hpp"
 #include <deque>
+#include <iostream>
+#include <memory>
+#include "GLFW/glfw3.h"
+#include "bnuui/bnuui.hpp"
 #include "world_init.hpp"
-
+#include "bnuui/buttons.hpp"
 
 Level01::Level01() {
     this->name = "Level 1";
 }
 
+vec2 mPos;
 void Level01::Init() {
-    // Probably where Dayshaun needs to preload the level 01 map. 
+    // Probably where Dayshaun needs to preload the level 01 map.
     createPlayer({100,100});
+
+    // Initialize the UI.
+    std::shared_ptr<bnuui::SquareButton> button = std::make_shared<bnuui::SquareButton>(
+        vec2(100,100),  // Position
+        vec2(100,100),  // Scale
+        0.0f);          // Rotation
+
+    button->setOnClick([](bnuui::Element& e) {
+        std::cout << "Clicking the button\n";
+    });
+
+    button->setOnActive([](bnuui::Element&e) {
+        // Get curr mouse pos.
+        e.position = mPos;
+    });
+
+    scene_ui.insert(button);
 }
 
 void Level01::Exit() {
@@ -76,9 +98,46 @@ void Level01::HandleInput(int key, int action, int mod) {
     HandlePlayerMovement(key, action, mod);
 }
 
+void Level01::HandleMouseMove(vec2 pos) {
+    mPos = pos;
+    // Check if hovering over any UI components.
+    std::vector<std::shared_ptr<bnuui::Element>> ui_elems = scene_ui.getElems();
+    for (std::shared_ptr<bnuui::Element> ui_elem : ui_elems) {
+        if (ui_elem->isPointInside(pos)) {
+            ui_elem->hovering = true;
+        } else {
+            ui_elem->hovering = false;
+        }
+    }
+}
+
+void Level01::HandleMouseClick(int button, int action, int mods) {
+    // Check if hovering over any UI components.
+    std::vector<std::shared_ptr<bnuui::Element>> ui_elems = scene_ui.getElems();
+    if (action == GLFW_PRESS && button == GLFW_MOUSE_BUTTON_1) {
+        for (std::shared_ptr<bnuui::Element> ui_elem : ui_elems) {
+            if (ui_elem->hovering) {
+                ui_elem->active = true;
+            } else {
+                ui_elem->active = false;
+            }
+        }
+    } else if (action == GLFW_RELEASE) {
+        for (std::shared_ptr<bnuui::Element> ui_elem : ui_elems) {
+            if (ui_elem->active) {
+                ui_elem->clickButton();
+            }
+            ui_elem->active = false;
+        }
+    }
+    
+}
+
 void Level01::Update(float dt) {
     ai_system.step(dt);
     physics_system.step(dt);
     animation_system.step(dt);
+    
+    scene_ui.update(dt);
 }
 

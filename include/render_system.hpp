@@ -62,6 +62,11 @@ class RenderSystem {
         // Walk Left
         textures_path("bunny/walk_left0.png"),  // BUNNY_LEFT_WALK0
         textures_path("bunny/walk_left1.png"),  // BUNNY_LEFT_WALK1
+        
+        // UI Assets.
+        textures_path("ui/buttons/square3Normal.png"),
+        textures_path("ui/buttons/square3Hover.png"),
+        textures_path("ui/buttons/square3Clicked.png"),
     };
 
     std::array<GLuint, effect_count> effects;
