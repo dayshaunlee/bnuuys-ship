@@ -55,11 +55,6 @@ struct GridLine {
     vec2 end_pos = {10, 10};  // default to diagonal line
 };
 
-// A timer that will be associated to dying chicken
-struct DeathTimer {
-    float counter_ms = 3000;
-};
-
 // Single Vertex Buffer element for non-textured meshes (coloured.vs.glsl & chicken.vs.glsl)
 struct ColoredVertex {
     vec3 position;

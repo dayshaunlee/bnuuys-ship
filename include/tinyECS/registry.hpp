@@ -26,12 +26,17 @@ class ECSRegistry {
 
     // constructor that adds all containers for looping over them
     ECSRegistry() {
-        registry_list.push_back(&motions);
-        registry_list.push_back(&collisions);
-        registry_list.push_back(&players);
         registry_list.push_back(&renderRequests);
         registry_list.push_back(&gridLines);
+        registry_list.push_back(&screenStates);
+        registry_list.push_back(&colors);
+
+        registry_list.push_back(&players);
         registry_list.push_back(&playerAnimations);
+        
+        registry_list.push_back(&motions);
+        registry_list.push_back(&collisions);
+        
         registry_list.push_back(&backgroundObjects);
     }
 
