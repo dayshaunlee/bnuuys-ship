@@ -67,6 +67,9 @@ class RenderSystem {
         textures_path("ui/buttons/square3Normal.png"),
         textures_path("ui/buttons/square3Hover.png"),
         textures_path("ui/buttons/square3Clicked.png"),
+
+        textures_path("ui/buttons/play_neutral.png"),
+        textures_path("ui/buttons/play_clicked.png"),
     };
 
     std::array<GLuint, effect_count> effects;

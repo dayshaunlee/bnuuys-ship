@@ -2,6 +2,7 @@
 #include "sceneManager/scene.hpp"
 #include "sceneManager/scene_manager.hpp"
 #include "scenes/level_01.hpp"
+#include "scenes/main_menu.hpp"
 #define GL3W_IMPLEMENTATION
 #include <gl3w.h>
 
@@ -28,7 +29,6 @@ int main() {
     PhysicsSystem physics_system;
     AnimationSystem animation_system;
 
-
     // initialize window
     GLFWwindow* window = world_system.create_window();
 
@@ -48,39 +48,30 @@ int main() {
     // variable timestep loop
     auto t = Clock::now();
 
-    
-    SceneManager& sm = SceneManager::getInstance();
+    SceneManager& scene_manager = SceneManager::getInstance();
+
+    Scene* mm = new MainMenuScene();
     Scene* l1 = new Level01();
-    sm.registerScene(l1);
-    sm.switchScene("Level 1");
+
+    scene_manager.registerScene(mm);
+    scene_manager.registerScene(l1);
+    scene_manager.switchScene("Main Menu");
 
     while (!world_system.is_over()) {
-        // processes system messages, if this wasn't present the window would
-        // become unresponsive
         glfwPollEvents();
 
-        // calculate elapsed times in milliseconds from the previous iteration
         auto now = Clock::now();
         float elapsed_ms = (float) (std::chrono::duration_cast<std::chrono::microseconds>(now - t)).count() / 1000;
         t = now;
+        scene_manager.checkSceneSwitch();
 
-        // CK: be mindful of the order of your systems and rearrange this list
-        // only if necessary
-        /*
-        world_system.step(elapsed_ms);
-        ai_system.step(elapsed_ms);
-        physics_system.step(elapsed_ms);
-        world_system.handle_collisions();
-        animation_system.step(elapsed_ms);
-        */
-        Scene* s = SceneManager::getInstance().getCurrentScene();
-        if (s != nullptr)
-            s->Update(elapsed_ms);
+        Scene* s = scene_manager.getCurrentScene();
+        if (s != nullptr) s->Update(elapsed_ms);
 
         renderer_system.draw();
     }
 
-    delete(l1);
+    delete (l1);
 
     return EXIT_SUCCESS;
 }

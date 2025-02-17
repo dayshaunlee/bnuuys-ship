@@ -215,7 +215,7 @@ void WorldSystem::on_key(int key, int, int action, int mod) {
 
         restart_game();
     }
-    
+
     Scene* scene = SceneManager::getInstance().getCurrentScene();
     if (scene) {
         scene->HandleInput(key, action, mod);

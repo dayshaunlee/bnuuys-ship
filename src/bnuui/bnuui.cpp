@@ -12,8 +12,7 @@ bool SceneUI::insert(std::shared_ptr<Element> e) {
 }
 
 bool SceneUI::remove(int idx) {
-    if (idx < 0 || idx >= ui_elems.size())
-        return false;
+    if (idx < 0 || idx >= ui_elems.size()) return false;
 
     ui_elems.erase(ui_elems.begin() + idx);
     return true;
@@ -29,4 +28,4 @@ void SceneUI::update(float dt) {
     }
 }
 
-};
+};  // namespace bnuui

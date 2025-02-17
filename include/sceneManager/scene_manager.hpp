@@ -15,6 +15,7 @@ class SceneManager {
 private:
     std::unordered_map<std::string, Scene*> scenes;
     Scene* currScene = nullptr;
+    Scene* nextScene = nullptr;
 
     SceneManager() = default;
     ~SceneManager() = default;
@@ -29,6 +30,8 @@ public:
     }
 
     void registerScene(Scene* s);
+
+    void checkSceneSwitch();
 
     void switchScene(const std::string& name);
 

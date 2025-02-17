@@ -14,24 +14,7 @@ Level01::Level01() {
 vec2 mPos;
 void Level01::Init() {
     // Probably where Dayshaun needs to preload the level 01 map.
-    createPlayer({100,100});
-
-    // Initialize the UI.
-    std::shared_ptr<bnuui::SquareButton> button = std::make_shared<bnuui::SquareButton>(
-        vec2(100,100),  // Position
-        vec2(100,100),  // Scale
-        0.0f);          // Rotation
-
-    button->setOnClick([](bnuui::Element& e) {
-        std::cout << "Clicking the button\n";
-    });
-
-    button->setOnActive([](bnuui::Element&e) {
-        // Get curr mouse pos.
-        e.position = mPos;
-    });
-
-    scene_ui.insert(button);
+    createPlayer({100, 100});
 }
 
 void Level01::Exit() {
@@ -46,8 +29,7 @@ void HandlePlayerMovement(int key, int action, int mod) {
     Motion& mot = registry.motions.get(player);
 
     // Prevent player from moving when they're stationing.
-    if (player_comp.player_state == PLAYERSTATE::STATIONING)
-        return;
+    if (player_comp.player_state == PLAYERSTATE::STATIONING) return;
 
     if (action == GLFW_PRESS) {
         if (!activeKeys.count(key)) {
@@ -130,14 +112,12 @@ void Level01::HandleMouseClick(int button, int action, int mods) {
             ui_elem->active = false;
         }
     }
-    
 }
 
 void Level01::Update(float dt) {
     ai_system.step(dt);
     physics_system.step(dt);
     animation_system.step(dt);
-    
+
     scene_ui.update(dt);
 }
-

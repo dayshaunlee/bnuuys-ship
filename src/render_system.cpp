@@ -154,9 +154,10 @@ void RenderSystem::drawTexturedMesh(Entity entity, const mat3& projection) {
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
         gl_has_errors();
-        }
+    }
     // .obj entities
-    else if (render_request.used_effect == EFFECT_ASSET_ID::CHICKEN || render_request.used_effect == EFFECT_ASSET_ID::EGG) {
+    else if (render_request.used_effect == EFFECT_ASSET_ID::CHICKEN ||
+             render_request.used_effect == EFFECT_ASSET_ID::EGG) {
         GLint in_position_loc = glGetAttribLocation(program, "in_position");
         GLint in_color_loc = glGetAttribLocation(program, "in_color");
         gl_has_errors();
@@ -201,7 +202,6 @@ void RenderSystem::drawTexturedMesh(Entity entity, const mat3& projection) {
     glDrawElements(GL_TRIANGLES, num_indices, GL_UNSIGNED_SHORT, nullptr);
     gl_has_errors();
 }
-
 
 void RenderSystem::drawUIElement(bnuui::Element& element, const mat3& projection) {
     if (!element.visible) return;
@@ -248,16 +248,16 @@ void RenderSystem::drawUIElement(bnuui::Element& element, const mat3& projection
 
     // Set color uniform
     GLint color_uloc = glGetUniformLocation(program, "fcolor");
-    glUniform3fv(color_uloc, 1, (float*)&element.color);
+    glUniform3fv(color_uloc, 1, (float*) &element.color);
     gl_has_errors();
 
     // Set transformation uniforms
     GLuint transform_loc = glGetUniformLocation(program, "transform");
-    glUniformMatrix3fv(transform_loc, 1, GL_FALSE, (float*)&transform.mat);
+    glUniformMatrix3fv(transform_loc, 1, GL_FALSE, (float*) &transform.mat);
     gl_has_errors();
 
     GLuint projection_loc = glGetUniformLocation(program, "projection");
-    glUniformMatrix3fv(projection_loc, 1, GL_FALSE, (float*)&projection);
+    glUniformMatrix3fv(projection_loc, 1, GL_FALSE, (float*) &projection);
     gl_has_errors();
 
     // Draw the UI element
@@ -284,7 +284,8 @@ void RenderSystem::drawToScreen() {
 
     // Clearing backbuffer
     int w, h;
-    glfwGetFramebufferSize(window, &w,
+    glfwGetFramebufferSize(window,
+                           &w,
                            &h);  // Note, this will be 2x the resolution given to glfwCreateWindow on retina displays
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     glViewport(0, 0, w, h);
@@ -300,9 +301,10 @@ void RenderSystem::drawToScreen() {
 
     // Draw the screen texture on the quad geometry
     glBindBuffer(GL_ARRAY_BUFFER, vertex_buffers[(GLuint) GEOMETRY_BUFFER_ID::SCREEN_TRIANGLE]);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,
-                 index_buffers[(GLuint) GEOMETRY_BUFFER_ID::SCREEN_TRIANGLE]);  // Note, GL_ELEMENT_ARRAY_BUFFER associates
-                                                                                // indices to the bound GL_ARRAY_BUFFER
+    glBindBuffer(
+        GL_ELEMENT_ARRAY_BUFFER,
+        index_buffers[(GLuint) GEOMETRY_BUFFER_ID::SCREEN_TRIANGLE]);  // Note, GL_ELEMENT_ARRAY_BUFFER associates
+                                                                       // indices to the bound GL_ARRAY_BUFFER
     gl_has_errors();
 
     // add the "vignette" effect
@@ -347,7 +349,8 @@ void RenderSystem::drawToScreen() {
 void RenderSystem::draw() {
     // Getting size of window
     int w, h;
-    glfwGetFramebufferSize(window, &w,
+    glfwGetFramebufferSize(window,
+                           &w,
                            &h);  // Note, this will be 2x the resolution given to glfwCreateWindow on retina displays
 
     // First render to the custom framebuffer
@@ -388,7 +391,7 @@ void RenderSystem::draw() {
 
     // Brian: Add draw UI components here.
     SceneManager& sm = SceneManager::getInstance();
-    Scene* s =sm.getCurrentScene();
+    Scene* s = sm.getCurrentScene();
     if (s) {
         bnuui::SceneUI scene_ui = s->getUIElems();
         std::vector<std::shared_ptr<bnuui::Element>> elems = scene_ui.getElems();

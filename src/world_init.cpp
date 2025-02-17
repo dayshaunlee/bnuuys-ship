@@ -18,10 +18,7 @@ Entity createPlayer(vec2 position) {
     registry.motions.emplace(player, comp_motion);
 
     RenderRequest comp_render_request = {
-        TEXTURE_ASSET_ID::BUNNY_IDLE_DOWN0, 
-        EFFECT_ASSET_ID::TEXTURED, 
-        GEOMETRY_BUFFER_ID::SPRITE
-    };
+        TEXTURE_ASSET_ID::BUNNY_IDLE_DOWN0, EFFECT_ASSET_ID::TEXTURED, GEOMETRY_BUFFER_ID::SPRITE};
     registry.renderRequests.emplace(player, comp_render_request);
 
     PlayerAnimation comp_anim;
@@ -48,10 +45,7 @@ Entity createPlayer(RenderSystem* renderer, vec2 position) {
     registry.motions.emplace(player, comp_motion);
 
     RenderRequest comp_render_request = {
-        TEXTURE_ASSET_ID::BUNNY_IDLE_DOWN0, 
-        EFFECT_ASSET_ID::TEXTURED, 
-        GEOMETRY_BUFFER_ID::SPRITE
-    };
+        TEXTURE_ASSET_ID::BUNNY_IDLE_DOWN0, EFFECT_ASSET_ID::TEXTURED, GEOMETRY_BUFFER_ID::SPRITE};
     registry.renderRequests.emplace(player, comp_render_request);
 
     PlayerAnimation comp_anim;
