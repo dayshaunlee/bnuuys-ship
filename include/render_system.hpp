@@ -63,6 +63,9 @@ class RenderSystem {
         textures_path("bunny/walk_left0.png"),  // BUNNY_LEFT_WALK0
         textures_path("bunny/walk_left1.png"),  // BUNNY_LEFT_WALK1
         
+        // water background
+        textures_path("background/water_background.png"),
+        
         // UI Assets.
         textures_path("ui/buttons/square3Normal.png"),
         textures_path("ui/buttons/square3Hover.png"),
@@ -84,8 +87,13 @@ class RenderSystem {
         textures_path("ui/faces/face_long_anim016.png"),
         textures_path("ui/faces/face_long_anim017.png"),
         textures_path("ui/faces/face_long_anim018.png"),
-        // water background
-        textures_path("background/water_background.png"),
+
+        // Bunny UI Angry face
+        textures_path("ui/faces/face_angry01.png"),
+        textures_path("ui/faces/face_angry02.png"),
+        textures_path("ui/faces/face_angry03.png"),
+        textures_path("ui/faces/face_angry04.png"),
+        textures_path("ui/faces/face_angry05.png"),
     };
 
     std::array<GLuint, effect_count> effects;

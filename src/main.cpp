@@ -67,10 +67,9 @@ int main() {
         scene_manager.checkSceneSwitch();
 
         Scene* s = scene_manager.getCurrentScene();
-        if (s != nullptr) s->Update(elapsed_ms);
+        if (s != nullptr) s->Update(elapsed_ms); 
 
-        CameraSystem::GetInstance()->update(elapsed_ms);
-        
+        renderer_system.draw();
     }
 
     delete (l1);

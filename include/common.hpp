@@ -1,6 +1,7 @@
 #pragma once
 
 // stlib
+#include <unistd.h>
 #include <fstream>  // stdout, stderr..
 #include <string>
 #include <tuple>
@@ -45,8 +46,11 @@ inline std::string map_path(const std::string& name) {
 //
 // game constants
 //
-const int WINDOW_WIDTH_PX = 1280;
-const int WINDOW_HEIGHT_PX = 720;
+
+const int BLOCK = 80;
+
+const int WINDOW_WIDTH_PX = 840;
+const int WINDOW_HEIGHT_PX = 616;
 
 const int GRID_CELL_WIDTH_PX = 56;
 const int GRID_CELL_HEIGHT_PX = 56;

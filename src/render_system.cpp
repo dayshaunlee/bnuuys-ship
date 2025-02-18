@@ -240,10 +240,17 @@ void RenderSystem::drawUIElement(bnuui::Element& element, const mat3& projection
 
         gl_has_errors();
     } else {
-        // For solid-colored UI elements
         GLint in_position_loc = glGetAttribLocation(program, "in_position");
+        GLint in_color_loc = glGetAttribLocation(program, "in_color");
+        gl_has_errors();
+
         glEnableVertexAttribArray(in_position_loc);
         glVertexAttribPointer(in_position_loc, 3, GL_FLOAT, GL_FALSE, sizeof(ColoredVertex), (void*) 0);
+        gl_has_errors();
+
+        glEnableVertexAttribArray(in_color_loc);
+        glVertexAttribPointer(in_color_loc, 3, GL_FLOAT, GL_FALSE, sizeof(ColoredVertex), (void*) sizeof(vec3));
+        gl_has_errors();
     }
 
     // Set color uniform

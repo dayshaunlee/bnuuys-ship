@@ -4,6 +4,8 @@
 #include <memory>
 #include "GLFW/glfw3.h"
 #include "bnuui/bnuui.hpp"
+#include "camera_system.hpp"
+#include "common.hpp"
 #include "tinyECS/registry.hpp"
 #include "world_init.hpp"
 #include "bnuui/buttons.hpp"
@@ -14,25 +16,29 @@ Level01::Level01() {
 
 void Level01::Init() {
     // Probably where Dayshaun needs to preload the level 01 map.
-    createPlayer({100, 100});
+
+    // create the ocean background and then ship
+    createWaterBackground();
+    createShip();
+    // Now let's create our player.
+    createPlayer({250, 250}); 
+    registry.players.components[0].health = 100.0f;
     InitializeUI();
 }
 
 void Level01::InitializeUI() {
     // Create Healthbar.
-    auto player_box = std::make_shared<bnuui::Box>(vec2(48*2,48*2), vec2(48*2,48*2), 0.0f);
-    auto player_status = std::make_shared<bnuui::PlayerStatus>(vec2(48*2, 48*2), 
-                                                               vec2(30*2, 30*2), 
-                                                               0.0f,
-                                                               registry.players.components[0].health
-                                                               );
-    auto slider_bg = std::make_shared<bnuui::LongBox>(vec2(48*5.5f, 48*2),
-                                                      vec2(48*5, 48*1.5f),
-                                                      0.0f
-                                                      );
+
+    auto player_box = std::make_shared<bnuui::Box>(vec2(96,96), vec2(96,96), 0.0f);
+    auto player_status = std::make_shared<bnuui::PlayerStatus>(vec2(96, 96), vec2(60, 60), 0.0f, 
+                                                               registry.players.components[0].health, 100);
+    auto slider_bg = std::make_shared<bnuui::LongBox>(vec2(256, 96), vec2(240, 72),0.0f);
+    auto progress_bar = std::make_shared<bnuui::ProgressBar>(vec2(256, 93), vec2(180, 24), 0.0f,
+                                                             registry.players.components[0].health, 100);
     player_box->children.push_back(slider_bg);
     scene_ui.insert(player_box);
     scene_ui.insert(player_status);
+    scene_ui.insert(progress_bar);
 }
 
 void Level01::Exit() {
@@ -42,6 +48,7 @@ void Level01::Exit() {
 std::set<int> activeKeys;
 std::deque<int> keyOrder;
 void HandlePlayerMovement(int key, int action, int mod) {
+    assert(registry.players.size() == 1);
     Entity player = registry.players.entities[0];
     Player& player_comp = registry.players.get(player);
     Motion& mot = registry.motions.get(player);
@@ -73,7 +80,8 @@ void HandlePlayerMovement(int key, int action, int mod) {
     mot.velocity = vec2(velocityX, velocityY);
 
     // Update the player state.
-    if (activeKeys.empty()) {
+    if (activeKeys.empty() || ((!activeKeys.count(MOVE_UP_BUTTON)) && (!activeKeys.count(MOVE_DOWN_BUTTON)) &&
+                               (!activeKeys.count(MOVE_LEFT_BUTTON)) && (!activeKeys.count(MOVE_RIGHT_BUTTON)))) {
         player_comp.player_state = PLAYERSTATE::IDLE;
     } else {
         player_comp.player_state = PLAYERSTATE::WALKING;
@@ -94,8 +102,56 @@ void HandlePlayerMovement(int key, int action, int mod) {
     }
 }
 
+std::set<int> activeShipKeys;
+std::deque<int> keyShipOrder;
+void HandleCameraMovement(int key, int action, int mod) {
+    if (!registry.players.components[0].is_sailing_ship) return;
+
+    if (action == GLFW_PRESS) {
+        if (!activeShipKeys.count(key)) {
+            keyShipOrder.push_back(key);
+        }
+        activeShipKeys.insert(key);
+    } else if (action == GLFW_RELEASE) {
+        activeShipKeys.erase(key);
+        keyShipOrder.erase(std::remove(keyShipOrder.begin(), keyShipOrder.end(), key), keyShipOrder.end());
+    }
+
+    float accelerationX = 0.0f;
+    float accelerationY = 0.0f;
+
+    if (activeShipKeys.count(MOVE_UP_BUTTON)) accelerationY += SHIP_CAMERA_SPEED;
+    if (activeShipKeys.count(MOVE_DOWN_BUTTON)) accelerationY -= SHIP_CAMERA_SPEED;
+    if (activeShipKeys.count(MOVE_LEFT_BUTTON)) accelerationX += SHIP_CAMERA_SPEED;
+    if (activeShipKeys.count(MOVE_RIGHT_BUTTON)) accelerationX -= SHIP_CAMERA_SPEED;
+
+    CameraSystem::GetInstance()->setCameraScreen(accelerationX, accelerationY);
+}
+
 void Level01::HandleInput(int key, int action, int mod) {
-    HandlePlayerMovement(key, action, mod);
+    Entity player = registry.players.entities[0];
+    glm::vec2 playerPos = registry.motions.get(player).position;
+    int player_tile_x = (int) (playerPos.x / GRID_CELL_WIDTH_PX);
+    int player_tile_y = (int) (playerPos.y / GRID_CELL_HEIGHT_PX);
+
+    Player& playerToChangeState = registry.players.get(player);
+    // if player idle in the middle of the ship and press space then they are controling the ship movement/camera goes
+    // with the ship
+    if ((player_tile_x == MIDDLE_GRID_X) && (player_tile_y == MIDDLE_GRID_Y) && (action == GLFW_RELEASE) &&
+        (key == GLFW_KEY_SPACE) &&
+        (registry.players.get(player).player_state == IDLE ||
+         registry.players.get(player).player_state == STATIONING)) {
+        playerToChangeState.is_sailing_ship = !playerToChangeState.is_sailing_ship;
+        std::cout << "changed control state" << std::endl;
+    }
+
+    if (playerToChangeState.is_sailing_ship) {
+        playerToChangeState.player_state = STATIONING;
+        HandleCameraMovement(key, action, mod);
+    } else {
+        playerToChangeState.player_state = IDLE;
+        HandlePlayerMovement(key, action, mod);
+    }
 }
 
 void Level01::HandleMouseMove(vec2 pos) {
@@ -135,6 +191,11 @@ void Level01::Update(float dt) {
     ai_system.step(dt);
     physics_system.step(dt);
     animation_system.step(dt);
+    CameraSystem::GetInstance()->update(dt);
+
+    if (registry.players.components[0].health <= 0.0f)
+        registry.players.components[0].health = 100.0f;
+    registry.players.components[0].health -= 0.1f;
 
     scene_ui.update(dt);
 }
