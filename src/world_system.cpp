@@ -361,5 +361,7 @@ void WorldSystem::on_mouse_button_pressed(int button, int action, int mods) {
 
         std::cout << "mouse position: " << mouse_pos_x << ", " << mouse_pos_y << std::endl;
         std::cout << "mouse tile position: " << tile_x << ", " << tile_y << std::endl;
+
+        createObstacle(renderer, {tile_x * GRID_CELL_WIDTH_PX + GRID_CELL_WIDTH_PX/2, tile_y * GRID_CELL_HEIGHT_PX + GRID_CELL_HEIGHT_PX/2});
     }
 }

@@ -66,7 +66,10 @@ class RenderSystem {
         textures_path("background/water_background.png"),
 
         // enemy (stationary)
-        textures_path("enemies/chicken0.png")
+        textures_path("enemies/chicken0.png"),
+
+        // obstacle
+        textures_path("path-testing/obstacle.png")
     };
 
     std::array<GLuint, effect_count> effects;

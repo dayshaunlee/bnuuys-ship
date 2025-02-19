@@ -56,6 +56,29 @@ Entity createEnemy(RenderSystem* renderer, vec2 position) {
     return entity;
 }
 
+Entity createObstacle(RenderSystem* renderer, vec2 position) {
+    auto entity = Entity();
+
+    Obstacle& obstacle = registry.obstacles.emplace(entity);
+
+    Motion& motion = registry.motions.emplace(entity);
+    motion.angle = 0.f;
+	motion.velocity = { 0.f, 0.f };
+	motion.position = position;
+    motion.scale = {GRID_CELL_WIDTH_PX ,GRID_CELL_HEIGHT_PX};
+
+    registry.renderRequests.insert(
+		entity,
+		{
+			TEXTURE_ASSET_ID::OBSTACLE,
+			EFFECT_ASSET_ID::TEXTURED,
+			GEOMETRY_BUFFER_ID::SPRITE
+		}
+	);
+
+    return entity;
+}
+
 
 Entity setupCamera(RenderSystem* renderer, vec2 ship_position) {
     // loop through each backgroundObjects

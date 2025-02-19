@@ -26,6 +26,7 @@ class ECSRegistry {
     // backgrounObject component for camera
     ComponentContainer<BackgroundObject> backgroundObjects;
     ComponentContainer<Enemy> enemies;
+    ComponentContainer<Obstacle> obstacles;
 
     // constructor that adds all containers for looping over them
     ECSRegistry() {
@@ -44,6 +45,7 @@ class ECSRegistry {
         
         registry_list.push_back(&backgroundObjects);
         registry_list.push_back(&enemies);
+        registry_list.push_back(&obstacles);
     }
 
     void clear_all_components() {
