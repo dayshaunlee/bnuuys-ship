@@ -58,8 +58,8 @@ Entity createEnemy(RenderSystem* renderer, vec2 position) {
 
 Entity createObstacle(RenderSystem* renderer, vec2 position) {
     auto entity = Entity();
-
-    Obstacle& obstacle = registry.obstacles.emplace(entity);
+    registry.backgroundObjects.emplace(entity);
+    registry.obstacles.emplace(entity);
 
     Motion& motion = registry.motions.emplace(entity);
     motion.angle = 0.f;

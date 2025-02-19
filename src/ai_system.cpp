@@ -11,7 +11,6 @@ void AISystem::step(float elapsed_ms) {
         vec2& ship_position = ship_motion.position;
 
         for (const Entity& enemy : registry.enemies.entities) {
-            Enemy& enemy_comp = registry.enemies.get(enemy);
             Motion& enemy_motion = registry.motions.get(enemy);
             vec2& enemy_position = enemy_motion.position;
 
