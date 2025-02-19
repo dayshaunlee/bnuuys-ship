@@ -28,6 +28,10 @@ class ECSRegistry {
     ComponentContainer<Enemy> enemies;
     ComponentContainer<Obstacle> obstacles;
 
+    ComponentContainer<Enemy> enemies;
+    ComponentContainer<Island> islands;
+    ComponentContainer<Base> base;
+
     // constructor that adds all containers for looping over them
     ECSRegistry() {
         registry_list.push_back(&renderRequests);
@@ -46,6 +50,8 @@ class ECSRegistry {
         registry_list.push_back(&backgroundObjects);
         registry_list.push_back(&enemies);
         registry_list.push_back(&obstacles);
+        registry_list.push_back(&islands);
+        registry_list.push_back(&base);
     }
 
     void clear_all_components() {
