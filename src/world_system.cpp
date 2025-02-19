@@ -210,9 +210,74 @@ void WorldSystem::restart_game() {
 
 // Compute collisions between entities
 void WorldSystem::handle_collisions() {
-    ComponentContainer<Collision>& collision_container = registry.collisions;
-    for (uint i = 0; i < collision_container.components.size(); i++) {
-        // Handle collision here.
+    //ComponentContainer<Collision>& collision_container = registry.collisions;
+    //for (uint i = 0; i < collision_container.components.size(); i++) {
+    //    // Handle collision here.
+    //}
+
+    ComponentContainer<Island>& island_container = registry.islands;
+    int player_x = registry.motions.get(registry.players.entities[0]).position.x;
+    int player_y = registry.motions.get(registry.players.entities[0]).position.y;
+    DIRECTION player_direction = registry.players.get(registry.players.entities[0]).direction;
+    PLAYERSTATE player_state = registry.players.get(registry.players.entities[0]).player_state;
+
+    if (player_state == WALKING) {
+        if (player_direction == UP || player_direction == DOWN) {
+            for (uint i = 0; i < island_container.components.size(); i++) {
+                Island& island = island_container.components[i];
+                if (island.polygon.size() > 0) {
+                    for (uint j = 0; j < island.polygon.size() - 1; j++) {
+                        if (island.polygon[j].x == island.polygon[j + 1].x) {
+                            if (((player_x >= island.polygon[j].x && player_x <= island.polygon[j + 1].x) ||
+                                 (player_x >= island.polygon[j + 1].x && player_x <= island.polygon[j].x)) &&
+                                player_y == island.polygon[j].y) {
+                                registry.motions.get(registry.players.entities[0]).velocity = {0, 0};
+                                registry.players.get(registry.players.entities[0]).player_state = IDLE;
+                                break;
+                            }
+                        }
+                    }
+
+                    if (island.polygon[island.polygon.size() - 1].x == island.polygon[0].x) {
+                        if (((player_x >= island.polygon[island.polygon.size() - 1].x &&
+                             player_x <= island.polygon[0].x) ||
+                            (player_x <= island.polygon[island.polygon.size() - 1].x &&
+                             player_x >= island.polygon[0].x)) &&
+                            player_y == island.polygon[0].y) {
+                            registry.motions.get(registry.players.entities[0]).velocity = {0, 0};
+                            registry.players.get(registry.players.entities[0]).player_state = IDLE;
+                            break;
+                        }
+                    }
+                }
+            }
+        } else if (player_direction == LEFT || player_direction == RIGHT) {
+            for (uint i = 0; i < island_container.components.size(); i++) {
+                Island& island = island_container.components[i];
+                if (island.polygon.size() > 0) {
+                    for (uint j = 0; j < island.polygon.size() - 1; j++) {
+                        if (island.polygon[j].y == island.polygon[j + 1].y) {
+                            if (((player_y >= island.polygon[j].y && player_y <= island.polygon[j + 1].y) ||
+                                (player_y >= island.polygon[j + 1].y && player_y <= island.polygon[j].y)) &&
+                                player_x == island.polygon[j].x) {
+                                registry.motions.get(registry.players.entities[0]).velocity = {0, 0};
+                                registry.players.get(registry.players.entities[0]).player_state = IDLE;
+                                break;
+                            }
+                        }
+                    }
+                    if (island.polygon[island.polygon.size() - 1].y == island.polygon[0].y) {
+                        if (((player_y >= island.polygon[island.polygon.size() - 1].y && player_y <= island.polygon[0].y) ||
+                            (player_y <= island.polygon[island.polygon.size() - 1].y && player_y >= island.polygon[0].y)) &&
+                                player_x == island.polygon[0].x) {
+                            registry.motions.get(registry.players.entities[0]).velocity = {0, 0};
+                            registry.players.get(registry.players.entities[0]).player_state = IDLE;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
     }
 
     // Remove all collisions from this simulation step
