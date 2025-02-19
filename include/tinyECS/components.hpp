@@ -193,11 +193,13 @@ struct PlayerAnimation {
 
 struct BackgroundObject {};
 
-// ========== PLAYER DETAILS ==========
-
+// ========== SHIP DETAILS ==========
+struct Ship {
+    float health;
+    int num_weapon;
+};
 
 // ========== ENEMY DETAILS ==========
-
 // the enemy type stores information about enemy HP, damage, speed, etc..
 // TODO: ADD ENEMY TYPE INFORMATION IN COMMON
 enum ENEMY_TYPE { BASIC_GUNNER = 0, FLYER };
