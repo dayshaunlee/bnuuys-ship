@@ -194,7 +194,7 @@ void Level01::Update(float dt) {
     CameraSystem::GetInstance()->update(dt);
 
     if (registry.players.components[0].health <= 0.0f)
-        registry.players.components[0].health = 100.0f;
+        registry.players.components[0].health = 100;
     registry.players.components[0].health -= 0.1f;
 
     scene_ui.update(dt);

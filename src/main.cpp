@@ -3,6 +3,7 @@
 #include "sceneManager/scene_manager.hpp"
 #include "scenes/level_01.hpp"
 #include "scenes/main_menu.hpp"
+#include "scenes/ui_editor.hpp"
 #define GL3W_IMPLEMENTATION
 #include <gl3w.h>
 
@@ -53,9 +54,12 @@ int main() {
 
     Scene* mm = new MainMenuScene();
     Scene* l1 = new Level01();
+    Scene* ui_editor = new EditorUI();
 
     scene_manager.registerScene(mm);
     scene_manager.registerScene(l1);
+    scene_manager.registerScene(ui_editor);
+
     scene_manager.switchScene("Main Menu");
 
     while (!world_system.is_over()) {
