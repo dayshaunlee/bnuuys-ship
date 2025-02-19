@@ -206,6 +206,7 @@ void WorldSystem::restart_game() {
     std::cout << "loading map..." << std::endl;
     loadMap("m1.json");
     registry.list_all_components();
+    createEnemy(renderer, {150, 150});
 }
 
 // Compute collisions between entities
@@ -253,8 +254,8 @@ void HandlePlayerMovement(int key, int, int action, int mod) {
     if (activeKeys.count(MOVE_LEFT_BUTTON)) velocityX -= WALK_SPEED;
     if (activeKeys.count(MOVE_RIGHT_BUTTON)) velocityX += WALK_SPEED;
 
-    velocityX = std::clamp(velocityX, -WALK_SPEED, WALK_SPEED);
-    velocityY = std::clamp(velocityY, -WALK_SPEED, WALK_SPEED);
+    velocityX = clamp(velocityX, -WALK_SPEED, WALK_SPEED);
+    velocityY = clamp(velocityY, -WALK_SPEED, WALK_SPEED);
 
     mot.velocity = vec2(velocityX, velocityY);
 
@@ -361,5 +362,7 @@ void WorldSystem::on_mouse_button_pressed(int button, int action, int mods) {
 
         std::cout << "mouse position: " << mouse_pos_x << ", " << mouse_pos_y << std::endl;
         std::cout << "mouse tile position: " << tile_x << ", " << tile_y << std::endl;
+
+        createObstacle(renderer, {tile_x * GRID_CELL_WIDTH_PX + GRID_CELL_WIDTH_PX/2, tile_y * GRID_CELL_HEIGHT_PX + GRID_CELL_HEIGHT_PX/2});
     }
 }

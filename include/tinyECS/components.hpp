@@ -127,7 +127,11 @@ enum class TEXTURE_ASSET_ID {
 
     WATER_BACKGROUND = BUNNY_LEFT_WALK1 + 1,
 
-    TEXTURE_COUNT = WATER_BACKGROUND + 1
+    ENEMY0 = WATER_BACKGROUND + 1,
+
+    OBSTACLE = ENEMY0 + 1,
+
+    TEXTURE_COUNT = OBSTACLE + 1
 };
 
 const int texture_count = (int) TEXTURE_ASSET_ID::TEXTURE_COUNT;
@@ -206,7 +210,13 @@ enum ENEMY_TYPE { BASIC_GUNNER = 0, FLYER };
 
 struct Enemy {
     ENEMY_TYPE type;
+    int health;
+	  int timer_ms;
     int home_island;
+};
+
+// temperary component for land for enemy path finding testing
+struct Obstacle {
 };
 
 // ========== ENEMY DETAILS ==========

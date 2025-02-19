@@ -25,6 +25,8 @@ class ECSRegistry {
 
     // backgrounObject component for camera
     ComponentContainer<BackgroundObject> backgroundObjects;
+    ComponentContainer<Enemy> enemies;
+    ComponentContainer<Obstacle> obstacles;
 
     ComponentContainer<Enemy> enemies;
     ComponentContainer<Island> islands;
@@ -46,8 +48,8 @@ class ECSRegistry {
         registry_list.push_back(&collisions);
         
         registry_list.push_back(&backgroundObjects);
-
         registry_list.push_back(&enemies);
+        registry_list.push_back(&obstacles);
         registry_list.push_back(&islands);
         registry_list.push_back(&base);
     }

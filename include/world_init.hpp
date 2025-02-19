@@ -14,3 +14,8 @@ Entity createWaterBackground();
 Entity createShip();
 
 Entity createGridLine(vec2 start_pos, vec2 end_pos);
+
+// Enemy
+Entity createEnemy(RenderSystem* renderer, vec2 position);
+// Obstacle for enemy path finding testing
+Entity createObstacle(RenderSystem* renderer, vec2 position);
