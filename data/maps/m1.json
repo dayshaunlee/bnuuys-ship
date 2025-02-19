@@ -75,7 +75,7 @@
             78, 0, 0, 0, 78, 0, 0, 0, 78, 0, 0, 0, 78, 0, 0, 0, 78, 0, 0, 0, 78, 0, 0, 0, 78, 0, 0, 0, 78, 0, 0, 0, 78, 0, 0, 0, 78, 0, 0, 0, 78, 0, 0, 0, 78, 0, 0, 0, 78, 0, 0, 0, 78, 0, 0, 0, 78, 0, 0, 0, 78, 0, 0, 0, 78, 0, 0, 0, 78, 0, 0, 0, 78, 0, 0, 0, 78, 0, 0, 0, 78, 0, 0, 0, 78, 0, 0, 0, 78, 0, 0, 0, 78, 0, 0, 0, 78, 0, 0, 0, 78, 0, 0, 0],
          "height":70,
          "id":2,
-         "name":"water",
+         "name":"water_tiles",
          "opacity":1,
          "type":"tilelayer",
          "visible":true,
@@ -156,10 +156,10 @@
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
          "height":70,
          "id":8,
-         "name":"base",
+         "name":"base_tiles",
          "opacity":1,
          "type":"tilelayer",
-         "visible":false,
+         "visible":true,
          "width":104,
          "x":0,
          "y":0
@@ -237,10 +237,10 @@
             66, 66, 66, 66, 66, 66, 66, 66, 66, 66, 66, 66, 66, 66, 66, 66, 66, 66, 66, 66, 66, 66, 66, 66, 66, 66, 66, 66, 66, 66, 66, 66, 66, 66, 66, 66, 66, 66, 66, 66, 66, 66, 66, 66, 66, 66, 66, 66, 66, 66, 66, 66, 66, 66, 66, 66, 66, 66, 66, 66, 66, 66, 66, 66, 66, 66, 66, 66, 66, 66, 66, 66, 66, 66, 66, 66, 66, 66, 66, 66, 66, 66, 66, 66, 66, 66, 66, 66, 66, 66, 66, 66, 66, 66, 66, 66, 66, 66, 66, 66, 0, 0, 0, 0],
          "height":70,
          "id":1,
-         "name":"islands",
+         "name":"islands_tiles",
          "opacity":1,
          "type":"tilelayer",
-         "visible":false,
+         "visible":true,
          "width":104,
          "x":0,
          "y":0
@@ -912,7 +912,7 @@
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }, 
@@ -921,160 +921,6 @@
          "id":7,
          "name":"spawnpoints",
          "objects":[
-                {
-                 "height":0,
-                 "id":25,
-                 "name":"",
-                 "point":true,
-                 "properties":[
-                        {
-                         "name":"home_island",
-                         "type":"object",
-                         "value":3
-                        }, 
-                        {
-                         "name":"type",
-                         "type":"string",
-                         "value":"flyer"
-                        }],
-                 "rotation":0,
-                 "type":"enemy",
-                 "visible":true,
-                 "width":0,
-                 "x":230,
-                 "y":196
-                }, 
-                {
-                 "height":0,
-                 "id":26,
-                 "name":"",
-                 "point":true,
-                 "properties":[
-                        {
-                         "name":"home_island",
-                         "type":"object",
-                         "value":5
-                        }],
-                 "rotation":0,
-                 "type":"enemy",
-                 "visible":true,
-                 "width":0,
-                 "x":846,
-                 "y":94
-                }, 
-                {
-                 "height":0,
-                 "id":27,
-                 "name":"",
-                 "point":true,
-                 "properties":[
-                        {
-                         "name":"home_island",
-                         "type":"object",
-                         "value":8
-                        }],
-                 "rotation":0,
-                 "type":"enemy",
-                 "visible":true,
-                 "width":0,
-                 "x":1382,
-                 "y":448
-                }, 
-                {
-                 "height":0,
-                 "id":28,
-                 "name":"",
-                 "point":true,
-                 "properties":[
-                        {
-                         "name":"home_island",
-                         "type":"object",
-                         "value":11
-                        }],
-                 "rotation":0,
-                 "type":"enemy",
-                 "visible":true,
-                 "width":0,
-                 "x":1330,
-                 "y":844
-                }, 
-                {
-                 "height":0,
-                 "id":29,
-                 "name":"",
-                 "point":true,
-                 "properties":[
-                        {
-                         "name":"home_island",
-                         "type":"object",
-                         "value":9
-                        }],
-                 "rotation":0,
-                 "type":"enemy",
-                 "visible":true,
-                 "width":0,
-                 "x":264,
-                 "y":872
-                }, 
-                {
-                 "height":0,
-                 "id":30,
-                 "name":"",
-                 "point":true,
-                 "properties":[
-                        {
-                         "name":"home_island",
-                         "type":"object",
-                         "value":9
-                        }],
-                 "rotation":0,
-                 "type":"enemy",
-                 "visible":true,
-                 "width":0,
-                 "x":350,
-                 "y":834
-                }, 
-                {
-                 "height":0,
-                 "id":31,
-                 "name":"",
-                 "point":true,
-                 "properties":[
-                        {
-                         "name":"home_island",
-                         "type":"object",
-                         "value":9
-                        }],
-                 "rotation":0,
-                 "type":"enemy",
-                 "visible":true,
-                 "width":0,
-                 "x":452,
-                 "y":868
-                }, 
-                {
-                 "height":0,
-                 "id":34,
-                 "name":"",
-                 "point":true,
-                 "properties":[
-                        {
-                         "name":"home_island",
-                         "type":"object",
-                         "value":3
-                        }, 
-                        {
-                         "name":"type",
-                         "type":"string",
-                         "value":"basic_gunner"
-                        }],
-                 "rotation":0,
-                 "type":"enemy",
-                 "visible":true,
-                 "width":0,
-                 "x":350,
-                 "y":170
-                }, 
                 {
                  "height":0,
                  "id":36,
@@ -1086,15 +932,207 @@
                  "width":0,
                  "x":869.177,
                  "y":546.191
+                }, 
+                {
+                 "height":0,
+                 "id":68,
+                 "name":"",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"enemy_type_enum",
+                         "propertytype":"enemy_type",
+                         "type":"string",
+                         "value":"flyer"
+                        }, 
+                        {
+                         "name":"home_island",
+                         "type":"object",
+                         "value":3
+                        }],
+                 "rotation":0,
+                 "type":"enemy",
+                 "visible":true,
+                 "width":0,
+                 "x":208.252243512006,
+                 "y":192.108658743633
+                }, 
+                {
+                 "height":0,
+                 "id":69,
+                 "name":"",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"enemy_type_enum",
+                         "propertytype":"enemy_type",
+                         "type":"string",
+                         "value":"flyer"
+                        }, 
+                        {
+                         "name":"home_island",
+                         "type":"object",
+                         "value":3
+                        }],
+                 "rotation":0,
+                 "type":"enemy",
+                 "visible":true,
+                 "width":0,
+                 "x":356.773223381033,
+                 "y":179.193790928935
+                }, 
+                {
+                 "height":0,
+                 "id":70,
+                 "name":"",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"enemy_type_enum",
+                         "propertytype":"enemy_type",
+                         "type":"string",
+                         "value":"basic_gunner"
+                        }, 
+                        {
+                         "name":"home_island",
+                         "type":"object",
+                         "value":5
+                        }],
+                 "rotation":0,
+                 "type":"enemy",
+                 "visible":true,
+                 "width":0,
+                 "x":853.995634246908,
+                 "y":72.6461314576764
+                }, 
+                {
+                 "height":0,
+                 "id":71,
+                 "name":"",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"enemy_type_enum",
+                         "propertytype":"enemy_type",
+                         "type":"string",
+                         "value":"basic_gunner"
+                        }, 
+                        {
+                         "name":"home_island",
+                         "type":"object",
+                         "value":8
+                        }],
+                 "rotation":0,
+                 "type":"enemy",
+                 "visible":true,
+                 "width":0,
+                 "x":1386.7339316032,
+                 "y":413.275770070337
+                }, 
+                {
+                 "height":0,
+                 "id":72,
+                 "name":"",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"enemy_type_enum",
+                         "propertytype":"enemy_type",
+                         "type":"string",
+                         "value":"basic_gunner"
+                        }, 
+                        {
+                         "name":"home_island",
+                         "type":"object",
+                         "value":11
+                        }],
+                 "rotation":0,
+                 "type":"enemy",
+                 "visible":true,
+                 "width":0,
+                 "x":1323.77395100655,
+                 "y":842.695124909047
+                }, 
+                {
+                 "height":0,
+                 "id":75,
+                 "name":"",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"enemy_type_enum",
+                         "propertytype":"enemy_type",
+                         "type":"string",
+                         "value":"flyer"
+                        }, 
+                        {
+                         "name":"home_island",
+                         "type":"object",
+                         "value":9
+                        }],
+                 "rotation":0,
+                 "type":"enemy",
+                 "visible":true,
+                 "width":0,
+                 "x":431.033713315547,
+                 "y":860.453068154257
+                }, 
+                {
+                 "height":0,
+                 "id":76,
+                 "name":"",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"enemy_type_enum",
+                         "propertytype":"enemy_type",
+                         "type":"string",
+                         "value":"flyer"
+                        }, 
+                        {
+                         "name":"home_island",
+                         "type":"object",
+                         "value":9
+                        }],
+                 "rotation":0,
+                 "type":"enemy",
+                 "visible":true,
+                 "width":0,
+                 "x":246.9968469561,
+                 "y":874.982294445792
+                }, 
+                {
+                 "height":0,
+                 "id":77,
+                 "name":"",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"enemy_type_enum",
+                         "propertytype":"enemy_type",
+                         "type":"string",
+                         "value":"flyer"
+                        }, 
+                        {
+                         "name":"home_island",
+                         "type":"object",
+                         "value":9
+                        }],
+                 "rotation":0,
+                 "type":"enemy",
+                 "visible":true,
+                 "width":0,
+                 "x":361.616298811545,
+                 "y":828.165898617512
                 }],
          "opacity":1,
          "type":"objectgroup",
-         "visible":false,
+         "visible":true,
          "x":0,
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":44,
+ "nextobjectid":78,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.2",
@@ -1102,18 +1140,18 @@
  "tilesets":[
         {
          "firstgid":1,
-         "source":"..\/textures\/tilesets\/Grass.json"
+         "source":"tilesets\/Grass.json"
         }, 
         {
          "firstgid":78,
-         "source":"..\/textures\/tilesets\/Water.json"
+         "source":"tilesets\/Water.json"
         }, 
         {
          "firstgid":79,
-         "source":"..\/textures\/tilesets\/Tilled_Dirt_v2.json"
+         "source":"tilesets\/Tilled_Dirt_v2.json"
         }],
  "tilewidth":16,
  "type":"map",
- "version":"1.10",
+ "version":"1.11",
  "width":104
 }
