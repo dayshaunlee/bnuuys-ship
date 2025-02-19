@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="104" height="70" tilewidth="16" tileheight="16" infinite="0" nextlayerid="9" nextobjectid="44">
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="104" height="70" tilewidth="16" tileheight="16" infinite="0" nextlayerid="9" nextobjectid="78">
  <editorsettings>
-  <export target="m1_test.json" format="json"/>
+  <export target="m1.json" format="json"/>
  </editorsettings>
- <tileset firstgid="1" source="../textures/tilesets/Grass.tsx"/>
- <tileset firstgid="78" source="../textures/tilesets/Water.tsx"/>
- <tileset firstgid="79" source="../textures/tilesets/Tilled_Dirt_v2.tsx"/>
- <layer id="2" name="water" width="104" height="70">
+ <tileset firstgid="1" source="tilesets/Grass.json"/>
+ <tileset firstgid="78" source="tilesets/Water.json"/>
+ <tileset firstgid="79" source="tilesets/Tilled_Dirt_v2.json"/>
+ <layer id="2" name="water_tiles" width="104" height="70">
   <data encoding="csv">
 78,0,0,0,78,0,0,0,78,0,0,0,78,0,0,0,78,0,0,0,78,0,0,0,78,0,0,0,78,0,0,0,78,0,0,0,78,0,0,0,78,0,0,0,78,0,0,0,78,0,0,0,78,0,0,0,78,0,0,0,78,0,0,0,78,0,0,0,78,0,0,0,78,0,0,0,78,0,0,0,78,0,0,0,78,0,0,0,78,0,0,0,78,0,0,0,78,0,0,0,78,0,0,0,
 78,0,0,0,78,0,0,0,78,0,0,0,78,0,0,0,78,0,0,0,78,0,0,0,78,0,0,0,78,0,0,0,78,0,0,0,78,0,0,0,78,0,0,0,78,0,0,0,78,0,0,0,78,0,0,0,78,0,0,0,78,0,0,0,78,0,0,0,78,0,0,0,78,0,0,0,78,0,0,0,78,0,0,0,78,0,0,0,78,0,0,0,78,0,0,0,78,0,0,0,78,0,0,0,
@@ -80,7 +80,7 @@
 78,0,0,0,78,0,0,0,78,0,0,0,78,0,0,0,78,0,0,0,78,0,0,0,78,0,0,0,78,0,0,0,78,0,0,0,78,0,0,0,78,0,0,0,78,0,0,0,78,0,0,0,78,0,0,0,78,0,0,0,78,0,0,0,78,0,0,0,78,0,0,0,78,0,0,0,78,0,0,0,78,0,0,0,78,0,0,0,78,0,0,0,78,0,0,0,78,0,0,0,78,0,0,0
 </data>
  </layer>
- <layer id="8" name="base" width="104" height="70" visible="0">
+ <layer id="8" name="base_tiles" width="104" height="70">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -154,7 +154,7 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <layer id="1" name="islands" width="104" height="70" visible="0">
+ <layer id="1" name="islands_tiles" width="104" height="70">
   <data encoding="csv">
 66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,0,0,0,0,
 66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,1,2,2,3,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,0,0,0,0,
@@ -228,7 +228,7 @@
 66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,0,0,0,0
 </data>
  </layer>
- <objectgroup id="6" name="islands" visible="0">
+ <objectgroup id="6" name="islands">
   <object id="3" type="island" x="112" y="160">
    <polygon points="0,0 0,80 304,80 304,48 336,48 336,-32 320,-32 320,-64 112,-64 112,-48 48,-48 48,-32 16,-32 16,0"/>
   </object>
@@ -257,58 +257,64 @@
    <polygon points="0,0 156.5,0 156.5,92 0,92"/>
   </object>
  </objectgroup>
- <objectgroup id="7" name="spawnpoints" visible="0">
-  <object id="25" type="enemy" x="230" y="196">
+ <objectgroup id="7" name="spawnpoints">
+  <object id="36" name="player spawn" type="player" x="869.177" y="546.191">
+   <point/>
+  </object>
+  <object id="68" type="enemy" x="208.252" y="192.109">
    <properties>
+    <property name="enemy_type_enum" propertytype="enemy_type" value="flyer"/>
     <property name="home_island" type="object" value="3"/>
-    <property name="type" value="flyer"/>
    </properties>
    <point/>
   </object>
-  <object id="26" type="enemy" x="846" y="94">
+  <object id="69" type="enemy" x="356.773" y="179.194">
    <properties>
+    <property name="enemy_type_enum" propertytype="enemy_type" value="flyer"/>
+    <property name="home_island" type="object" value="3"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="70" type="enemy" x="853.996" y="72.6461">
+   <properties>
+    <property name="enemy_type_enum" propertytype="enemy_type" value="basic_gunner"/>
     <property name="home_island" type="object" value="5"/>
    </properties>
    <point/>
   </object>
-  <object id="27" type="enemy" x="1382" y="448">
+  <object id="71" type="enemy" x="1386.73" y="413.276">
    <properties>
+    <property name="enemy_type_enum" propertytype="enemy_type" value="basic_gunner"/>
     <property name="home_island" type="object" value="8"/>
    </properties>
    <point/>
   </object>
-  <object id="28" type="enemy" x="1330" y="844">
+  <object id="72" type="enemy" x="1323.77" y="842.695">
    <properties>
+    <property name="enemy_type_enum" propertytype="enemy_type" value="basic_gunner"/>
     <property name="home_island" type="object" value="11"/>
    </properties>
    <point/>
   </object>
-  <object id="29" type="enemy" x="264" y="872">
+  <object id="75" type="enemy" x="431.034" y="860.453">
    <properties>
+    <property name="enemy_type_enum" propertytype="enemy_type" value="flyer"/>
     <property name="home_island" type="object" value="9"/>
    </properties>
    <point/>
   </object>
-  <object id="30" type="enemy" x="350" y="834">
+  <object id="76" type="enemy" x="246.997" y="874.982">
    <properties>
+    <property name="enemy_type_enum" propertytype="enemy_type" value="flyer"/>
     <property name="home_island" type="object" value="9"/>
    </properties>
    <point/>
   </object>
-  <object id="31" type="enemy" x="452" y="868">
+  <object id="77" type="enemy" x="361.616" y="828.166">
    <properties>
+    <property name="enemy_type_enum" propertytype="enemy_type" value="flyer"/>
     <property name="home_island" type="object" value="9"/>
    </properties>
-   <point/>
-  </object>
-  <object id="34" type="enemy" x="350" y="170">
-   <properties>
-    <property name="home_island" type="object" value="3"/>
-    <property name="type" value="basic_gunner"/>
-   </properties>
-   <point/>
-  </object>
-  <object id="36" name="player spawn" type="player" x="869.177" y="546.191">
    <point/>
   </object>
  </objectgroup>
