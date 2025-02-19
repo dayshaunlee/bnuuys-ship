@@ -303,6 +303,23 @@ void WorldSystem::handle_collisions() {
         }
     }
 
+    //ComponentContainer<Collision>& collision_container = registry.collisions;
+    //for (uint i = 0; i < collision_container.components.size(); i++) {
+    //    Collision& collision = collision_container.components[i];
+    //    Entity entity1 = collision_container.entities[i];
+    //    Entity entity2 = collision.other;
+    //    // Handle collision between player and enemy
+    //    if (registry.players.entities[0] == entity1 || registry.players.entities[0] == entity2) {
+    //        if (registry.ships.entities[0] == entity1 || registry.ships.entities[0] == entity2) {
+    //            registry.motions.get(registry.players.entities[0]).velocity = {0, 0};
+    //            registry.players.get(registry.players.entities[0]).player_state = IDLE;
+    //        }
+    //    }
+    //}
+    //if (collision_container.has(registry.players.entities[0])) {
+    //    registry.motions.get(registry.players.entities[0]).velocity = {0, 0};
+    //}
+
     // Remove all collisions from this simulation step
     registry.collisions.clear();
 }
@@ -310,6 +327,74 @@ void WorldSystem::handle_collisions() {
 // Should the game be over ?
 bool WorldSystem::is_over() const {
     return bool(glfwWindowShouldClose(window));
+}
+
+bool is_player_near_ship_right() {
+    int player_x = registry.motions.get(registry.players.entities[0]).position.x;
+    int player_y = registry.motions.get(registry.players.entities[0]).position.y;
+    int player_width = 16;
+    int player_height = 16;
+    int ship_x = registry.motions.get(registry.ships.entities[0]).position.x;
+    int ship_y = registry.motions.get(registry.ships.entities[0]).position.y;
+    int ship_width = registry.motions.get(registry.ships.entities[0]).scale.x;
+    int ship_height = registry.motions.get(registry.ships.entities[0]).scale.y;
+
+    if (player_x + (player_width / 2) <= ship_x + (ship_width / 2)) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+bool is_player_near_ship_left() {
+    int player_x = registry.motions.get(registry.players.entities[0]).position.x;
+    int player_y = registry.motions.get(registry.players.entities[0]).position.y;
+    int player_width = 16;
+    int player_height = 16;
+    int ship_x = registry.motions.get(registry.ships.entities[0]).position.x;
+    int ship_y = registry.motions.get(registry.ships.entities[0]).position.y;
+    int ship_width = registry.motions.get(registry.ships.entities[0]).scale.x;
+    int ship_height = registry.motions.get(registry.ships.entities[0]).scale.y;
+
+    if (player_x - (player_width / 2) >= ship_x - (ship_width / 2)) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+bool is_player_near_ship_up() {
+    int player_x = registry.motions.get(registry.players.entities[0]).position.x;
+    int player_y = registry.motions.get(registry.players.entities[0]).position.y;
+    int player_width = 16;
+    int player_height = 16;
+    int ship_x = registry.motions.get(registry.ships.entities[0]).position.x;
+    int ship_y = registry.motions.get(registry.ships.entities[0]).position.y;
+    int ship_width = registry.motions.get(registry.ships.entities[0]).scale.x;
+    int ship_height = registry.motions.get(registry.ships.entities[0]).scale.y;
+
+    if (player_y - (player_height / 2) >= ship_y - (ship_height / 2)) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+bool is_player_near_ship_down() {
+    int player_x = registry.motions.get(registry.players.entities[0]).position.x;
+    int player_y = registry.motions.get(registry.players.entities[0]).position.y;
+    int player_width = 16;
+    int player_height = 16;
+    int ship_x = registry.motions.get(registry.ships.entities[0]).position.x;
+    int ship_y = registry.motions.get(registry.ships.entities[0]).position.y;
+    int ship_width = registry.motions.get(registry.ships.entities[0]).scale.x;
+    int ship_height = registry.motions.get(registry.ships.entities[0]).scale.y;
+
+    if (player_y + (player_height / 2) <= ship_y + (ship_height / 2)) {
+        return true;
+    } else {
+        return false;
+    }
 }
 
 std::set<int> activeKeys;
@@ -336,10 +421,27 @@ void HandlePlayerMovement(int key, int, int action, int mod) {
     float velocityX = 0.0f;
     float velocityY = 0.0f;
 
-    if (activeKeys.count(MOVE_UP_BUTTON)) velocityY -= WALK_SPEED;
-    if (activeKeys.count(MOVE_DOWN_BUTTON)) velocityY += WALK_SPEED;
-    if (activeKeys.count(MOVE_LEFT_BUTTON)) velocityX -= WALK_SPEED;
-    if (activeKeys.count(MOVE_RIGHT_BUTTON)) velocityX += WALK_SPEED;
+    if (!is_player_near_ship_up()) {
+        std::cout << mot.position.x << ", " << mot.position.y << std::endl;
+        std::cout << registry.motions.get(registry.ships.entities[0]).position.x << ", "
+                  << registry.motions.get(registry.ships.entities[0]).position.y << std::endl;
+        if (activeKeys.count(MOVE_DOWN_BUTTON)) velocityY += WALK_SPEED;
+    }
+    if (!is_player_near_ship_down()) {
+        if (activeKeys.count(MOVE_UP_BUTTON)) velocityY -= WALK_SPEED;
+    }
+    if (!is_player_near_ship_left()) {
+        if (activeKeys.count(MOVE_RIGHT_BUTTON)) velocityX += WALK_SPEED;
+    }
+    if (!is_player_near_ship_right()) {
+        if (activeKeys.count(MOVE_LEFT_BUTTON)) velocityX -= WALK_SPEED;
+    }
+    if (is_player_near_ship_up() && is_player_near_ship_down() && is_player_near_ship_left() && is_player_near_ship_right()) {
+        if (activeKeys.count(MOVE_UP_BUTTON)) velocityY -= WALK_SPEED;
+        if (activeKeys.count(MOVE_DOWN_BUTTON)) velocityY += WALK_SPEED;
+        if (activeKeys.count(MOVE_LEFT_BUTTON)) velocityX -= WALK_SPEED;
+        if (activeKeys.count(MOVE_RIGHT_BUTTON)) velocityX += WALK_SPEED;
+    }
 
     velocityX = std::clamp(velocityX, -WALK_SPEED, WALK_SPEED);
     velocityY = std::clamp(velocityY, -WALK_SPEED, WALK_SPEED);
