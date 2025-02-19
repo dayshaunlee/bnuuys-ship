@@ -1,0 +1,115 @@
+{
+    "automappingRulesFile": "",
+    "commands": [
+    ],
+    "extensionsPath": "extensions",
+    "folders": [
+        "."
+    ],
+    "properties": [
+    ],
+    "propertyTypes": [
+        {
+            "color": "#ffff00ff",
+            "drawFill": true,
+            "id": 5,
+            "members": [
+            ],
+            "name": "base",
+            "type": "class",
+            "useAs": [
+                "property",
+                "map",
+                "layer",
+                "object",
+                "tile",
+                "tileset",
+                "wangcolor",
+                "wangset",
+                "project"
+            ]
+        },
+        {
+            "color": "#ffff0000",
+            "drawFill": false,
+            "id": 1,
+            "members": [
+                {
+                    "name": "enemy_type_enum",
+                    "propertyType": "enemy_type",
+                    "type": "string",
+                    "value": "basic_gunner"
+                },
+                {
+                    "name": "home_island",
+                    "type": "object",
+                    "value": 0
+                }
+            ],
+            "name": "enemy",
+            "type": "class",
+            "useAs": [
+                "property",
+                "map",
+                "layer",
+                "object",
+                "tile",
+                "tileset",
+                "wangcolor",
+                "wangset",
+                "project"
+            ]
+        },
+        {
+            "id": 7,
+            "name": "enemy_type",
+            "storageType": "string",
+            "type": "enum",
+            "values": [
+                "basic_gunner",
+                "flyer"
+            ],
+            "valuesAsFlags": false
+        },
+        {
+            "color": "#ff00ff00",
+            "drawFill": true,
+            "id": 3,
+            "members": [
+            ],
+            "name": "island",
+            "type": "class",
+            "useAs": [
+                "property",
+                "map",
+                "layer",
+                "object",
+                "tile",
+                "tileset",
+                "wangcolor",
+                "wangset",
+                "project"
+            ]
+        },
+        {
+            "color": "#ffffff00",
+            "drawFill": true,
+            "id": 4,
+            "members": [
+            ],
+            "name": "player",
+            "type": "class",
+            "useAs": [
+                "property",
+                "map",
+                "layer",
+                "object",
+                "tile",
+                "tileset",
+                "wangcolor",
+                "wangset",
+                "project"
+            ]
+        }
+    ]
+}

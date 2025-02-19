@@ -83,8 +83,13 @@ Entity createWaterBackground() {
 }
 
 Entity createShip() {
-    Entity ship = Entity();
-    Motion& shipMotion = registry.motions.emplace(ship);
+    Entity entity = Entity();
+
+    Ship& ship = registry.ships.emplace(entity);
+    ship.health = 1;
+    ship.num_weapon = 0;
+
+    Motion& shipMotion = registry.motions.emplace(entity);
     // registry.collisions.emplace(ship);
 
     // need to add a componet for ship like dieable or something
@@ -94,9 +99,9 @@ Entity createShip() {
     shipMotion.scale.y = 56 * 3;
 
     registry.renderRequests.insert(
-        ship, {TEXTURE_ASSET_ID::TEXTURE_COUNT, EFFECT_ASSET_ID::EGG, GEOMETRY_BUFFER_ID::SHIP_SQUARE});
+        entity, {TEXTURE_ASSET_ID::TEXTURE_COUNT, EFFECT_ASSET_ID::EGG, GEOMETRY_BUFFER_ID::SHIP_SQUARE});
 
-    return ship;
+    return entity;
 }
 
 Entity createGridLine(vec2 start_pos, vec2 end_pos) {
