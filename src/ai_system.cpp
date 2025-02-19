@@ -6,17 +6,17 @@
 
 void AISystem::step(float elapsed_ms) {
     (void) elapsed_ms;
-    for (const Entity& player : registry.players.entities) {
-        Motion& player_motion = registry.motions.get(player);
-        vec2& player_position = player_motion.position;
+    for (const Entity& ship : registry.ships.entities) {
+        Motion& ship_motion = registry.motions.get(ship);
+        vec2& ship_position = ship_motion.position;
 
         for (const Entity& enemy : registry.enemies.entities) {
             Enemy& enemy_comp = registry.enemies.get(enemy);
             Motion& enemy_motion = registry.motions.get(enemy);
             vec2& enemy_position = enemy_motion.position;
 
-            if (enemy_position != player_position) {
-                vec2 direction = player_position - enemy_position;
+            if (enemy_position != ship_position) {
+                vec2 direction = ship_position - enemy_position;
 
                 // unit vector for direction
                 float length = sqrt(direction.x * direction.x + direction.y * direction.y);
