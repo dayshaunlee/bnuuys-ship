@@ -70,13 +70,78 @@ void debugMap(std::unique_ptr<tson::Map>& map) {
     }
 };
 
+
+/* TODO (X=COMPLETE):
+ *	- loop through all layers. if it is of type 'objectgroup' then:
+ *		- loop through "island" layer and:
+ *			- if it is of class 'island' -> create Entities with Island and Motion
+ *			- if it is of class 'base' -> create Entity with Base and Motion
+ *		- loop through "spawnpoints" layer and:
+ *			- if it is of class 'enemy' -> create Entities with Enemy and Motion
+ *			- if it is of class 'player' -> update Player position (if exists)
+ *	X return map size as tson::Vector2<int>
+ */
 tson::Vector2<int> loadMap(const std::string& name) {
+    // delete stuff from previous maps
+    registry.enemies.clear();
+    registry.islands.clear();
+    registry.base.clear();
+
+    // load project to retrieve custom properties
+    tson::Project project = tson::Project{fs::path(map_path("bnunny_savers.tiled-project"))};
+
+    // load map from file
     fs::path path = fs::path(map_path(name));
-    tson::Tileson t;
+    tson::Tileson t{&project};
     std::unique_ptr<tson::Map> map = t.parse(path);
 
     if (map->getStatus() == tson::ParseStatus::OK) {
-        debugMap(map);
+        //debugMap(map);
+        tson::Layer* islands_layer = map->getLayer("islands");
+        assert(islands_layer != nullptr); // ensure layer exists
+        assert(islands_layer->getType() == tson::LayerType::ObjectGroup); // ensure it is object layer
+        for (auto& obj : islands_layer->getObjects()) {
+            if (obj.getClassType() == "island") {
+                Entity e = Entity();
+                Island& isl = registry.islands.emplace(e);
+                isl.polygon = obj.getPolygons();
+                Motion& mot = registry.motions.emplace(e);
+                mot.position = {obj.getPosition().x, obj.getPosition().y};
+                mot.scale = {obj.getSize().x, obj.getSize().y};
+            } else if (obj.getClassType() == "base") {
+                Entity e = Entity();
+                Base& bas = registry.base.emplace(e);
+                bas.polygon = obj.getPolygons();
+                Motion& mot = registry.motions.emplace(e);
+                mot.position = {obj.getPosition().x, obj.getPosition().y};
+                mot.scale = {obj.getSize().x, obj.getSize().y};
+            }
+        }
+
+        tson::Layer* spawns_layer = map->getLayer("spawnpoints");
+        assert(spawns_layer != nullptr);                                   // ensure layer exists
+        assert(spawns_layer->getType() == tson::LayerType::ObjectGroup);  // ensure it is object layer
+
+        for (auto& obj : spawns_layer->getObjects()) {
+            if (obj.getClassType() == "enemy") {
+                Entity e = Entity();
+                Enemy& ene = registry.enemies.emplace(e);
+                tson::EnumValue ene_type = obj.get<tson::EnumValue>("enemy_type_enum");
+                ene.type = static_cast<ENEMY_TYPE>(ene_type.getValue());
+                tson::Object eneh_type = obj.get<tson::Object>("home_island");
+                ene.home_island = obj.get<uint32_t>("home_island");
+                Motion& mot = registry.motions.emplace(e);
+                mot.position = {obj.getPosition().x, obj.getPosition().y};
+                mot.scale = {obj.getSize().x, obj.getSize().y};
+            } else if (obj.getClassType() == "player") {
+                if (registry.players.size() == 1) {
+                    Entity e = registry.players.entities[0];
+                    Motion& mot = registry.motions.get(e);
+                    mot.position = {obj.getPosition().x, obj.getPosition().y};
+                }
+            }
+        }
+
         return map->getSize();
     } else  // Error occured
     {

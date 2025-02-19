@@ -202,7 +202,10 @@ void WorldSystem::restart_game() {
                 createGridLine(vec2(0, col * cell_height), vec2(2 * WINDOW_WIDTH_PX, grid_line_width)));
         }
     }
+    registry.list_all_components();
+    std::cout << "loading map..." << std::endl;
     loadMap("m1.json");
+    registry.list_all_components();
 }
 
 // Compute collisions between entities
