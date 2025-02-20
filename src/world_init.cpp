@@ -1,5 +1,11 @@
 #include "world_init.hpp"
+#include <cmath>
+#include <glm/geometric.hpp>
+#include <glm/trigonometric.hpp>
+#include <vector>
+#include "common.hpp"
 #include "tinyECS/components.hpp"
+#include "tinyECS/entity.hpp"
 #include "tinyECS/registry.hpp"
 
 Entity createPlayer(vec2 position) {
@@ -82,24 +88,112 @@ Entity createWaterBackground() {
     return waterbg;
 }
 
+Entity createCannonProjectile(vec2 orig, vec2 dest) {
+    Entity e;
+    Motion& m = registry.motions.emplace(e);
+    m.position = orig;
+    m.scale = {GRID_CELL_WIDTH_PX/2, GRID_CELL_HEIGHT_PX/2};
+    m.angle = degrees(atan2(dest.y - dest.x, dest.x - orig.x));
+    vec2 velVec = dest - orig;
+    m.velocity = normalize(velVec) * 150.0f;
+
+    registry.renderRequests.insert(
+        e, {TEXTURE_ASSET_ID::BUNNY_FACE_ANGRY05, EFFECT_ASSET_ID::TEXTURED, GEOMETRY_BUFFER_ID::SPRITE});
+
+    Projectile& proj = registry.projectiles.emplace(e);
+    proj.damage = SIMPLE_CANNON_DAMAGE;
+    proj.alive_time_ms = PROJECTILE_LIFETIME;
+
+    return e;
+}
+
+// Creates a steering wheel at specified
+Entity createSteeringWheel(vec2 tile_pos) {
+    Entity entity;
+    SteeringWheel& steering_wheel = registry.steeringWheels.emplace(entity);
+    steering_wheel.is_automated = false;
+
+    Motion& motion = registry.motions.emplace(entity);
+    vec2 world_pos = TileToVector2(tile_pos.x, tile_pos.y);
+    motion.position.x = world_pos.x;
+    motion.position.y = world_pos.y;
+
+    motion.scale = {GRID_CELL_WIDTH_PX, GRID_CELL_HEIGHT_PX};
+
+    registry.renderRequests.insert(
+        entity, {TEXTURE_ASSET_ID::SQUARE_3_CLICKED, EFFECT_ASSET_ID::TEXTURED, GEOMETRY_BUFFER_ID::SPRITE});
+
+    return entity;
+}
+
+Entity createCannon(vec2 tile_pos) {
+    Entity cannon;
+    SimpleCannon& simple_cannon = registry.simpleCannons.emplace(cannon);
+    simple_cannon.is_automated = false;
+    simple_cannon.timer_ms = 0;
+
+    Motion& motion = registry.motions.emplace(cannon);
+    vec2 world_pos = TileToVector2(tile_pos.x, tile_pos.y);
+    motion.position.x = world_pos.x;
+    motion.position.y = world_pos.y;
+
+    motion.scale = {GRID_CELL_WIDTH_PX, GRID_CELL_HEIGHT_PX};
+
+    registry.renderRequests.insert(
+        cannon, {TEXTURE_ASSET_ID::SIMPLE_CANNON01, EFFECT_ASSET_ID::TEXTURED, GEOMETRY_BUFFER_ID::SPRITE});
+
+    return cannon;
+}
+
+void initializeShipModules(Ship& ship) { 
+    auto tmp_modules = std::vector<std::vector<MODULE_TYPES>>(ROW_COUNT, std::vector<MODULE_TYPES>(COL_COUNT, EMPTY));
+
+    // This will make a ROW_COUNT * COL_COUNT new entities, which is fine i guess as they are just numbers.
+    auto tmp_entities = std::vector<std::vector<Entity>>(ROW_COUNT, std::vector<Entity>(COL_COUNT));
+    
+    // Make a 3x3 platform from the middle. 
+    for (int i = MIDDLE_GRID_Y-1; i <= MIDDLE_GRID_Y+1; i++) {
+        for (int j = MIDDLE_GRID_X-1; j <= MIDDLE_GRID_X+1; j++) {
+            tmp_modules[i][j] = PLATFORM;
+        }
+    }
+
+    vec2 SteeringWheelGridPos = {MIDDLE_GRID_X, MIDDLE_GRID_Y};
+    tmp_modules[SteeringWheelGridPos.y][SteeringWheelGridPos.x] = STEERING_WHEEL;
+
+    Entity wheel_entity = createSteeringWheel(SteeringWheelGridPos);
+    tmp_entities[SteeringWheelGridPos.y][SteeringWheelGridPos.x] = wheel_entity;
+
+    vec2 SimpleCannonGridPos = {MIDDLE_GRID_X, MIDDLE_GRID_Y-1};
+    tmp_modules[SimpleCannonGridPos.y][SimpleCannonGridPos.x] = SIMPLE_CANNON;
+
+    Entity cannon_entity = createCannon(SimpleCannonGridPos);
+    tmp_entities[SimpleCannonGridPos.y][SimpleCannonGridPos.x] = cannon_entity;
+
+    ship.ship_modules = tmp_modules;
+    ship.ship_modules_entity = tmp_entities;
+}
+
 Entity createShip() {
     Entity entity = Entity();
+
+    // registry.collisions.emplace(ship);
+
+    Motion& shipMotion = registry.motions.emplace(entity);
+    // need to add a componet for ship like dieable or something
+    shipMotion.position.x = WINDOW_WIDTH_PX / 2;
+    shipMotion.position.y = WINDOW_HEIGHT_PX / 2;
+    shipMotion.scale.x = GRID_CELL_WIDTH_PX * 3;  // the temporary grid height and width is 56
+    shipMotion.scale.y = GRID_CELL_HEIGHT_PX * 3;
+
+    registry.renderRequests.insert(
+       entity, {TEXTURE_ASSET_ID::TEXTURE_COUNT, EFFECT_ASSET_ID::EGG, GEOMETRY_BUFFER_ID::SHIP_SQUARE});
 
     Ship& ship = registry.ships.emplace(entity);
     ship.health = 1;
     ship.num_weapon = 0;
 
-    Motion& shipMotion = registry.motions.emplace(entity);
-    // registry.collisions.emplace(ship);
-
-    // need to add a componet for ship like dieable or something
-    shipMotion.position.x = WINDOW_WIDTH_PX / 2;
-    shipMotion.position.y = WINDOW_HEIGHT_PX / 2;
-    shipMotion.scale.x = 56 * 3;  // the temporary grid height and width is 56
-    shipMotion.scale.y = 56 * 3;
-
-    registry.renderRequests.insert(
-        entity, {TEXTURE_ASSET_ID::TEXTURE_COUNT, EFFECT_ASSET_ID::EGG, GEOMETRY_BUFFER_ID::SHIP_SQUARE});
+    initializeShipModules(ship);
 
     return entity;
 }

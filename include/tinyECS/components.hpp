@@ -156,7 +156,18 @@ enum class TEXTURE_ASSET_ID {
     BUNNY_FACE_ANGRY04 = BUNNY_FACE_ANGRY03 + 1,
     BUNNY_FACE_ANGRY05 = BUNNY_FACE_ANGRY04 + 1,
 
-    TEXTURE_COUNT = BUNNY_FACE_ANGRY05 + 1
+    // Tile Cursor
+    TILE_CURSOR = BUNNY_FACE_ANGRY05 + 1,
+
+    // Simple Cannon
+    SIMPLE_CANNON01 = TILE_CURSOR + 1,
+    SIMPLE_CANNON02 = SIMPLE_CANNON01 + 1,
+    SIMPLE_CANNON03 = SIMPLE_CANNON02 + 1,
+    SIMPLE_CANNON04 = SIMPLE_CANNON03 + 1,
+    SIMPLE_CANNON05 = SIMPLE_CANNON04 + 1,
+    SIMPLE_CANNON06 = SIMPLE_CANNON05 + 1,
+
+    TEXTURE_COUNT = SIMPLE_CANNON06 + 1
 };
 
 const int texture_count = (int) TEXTURE_ASSET_ID::TEXTURE_COUNT;
@@ -225,9 +236,35 @@ struct PlayerAnimation {
 struct BackgroundObject {};
 
 // ========== SHIP DETAILS ==========
+
+enum MODULE_TYPES {
+    EMPTY,
+    PLATFORM,
+    STEERING_WHEEL,
+    SIMPLE_CANNON,
+    FAST_CANNON,
+};
+
+struct SteeringWheel {
+    bool is_automated;
+};
+
+struct Projectile {
+    float damage;
+    float alive_time_ms; // How long before we remove this projectile.
+};
+
+struct SimpleCannon {
+    bool is_automated;
+    float timer_ms; // The cooldown period before another shot.
+};
+
 struct Ship {
     float health;
     int num_weapon;
+    // This defines what the module is AND the corresponding entity.
+    std::vector<std::vector<MODULE_TYPES>> ship_modules;
+    std::vector<std::vector<Entity>> ship_modules_entity;
 };
 
 // ========== ENEMY DETAILS ==========

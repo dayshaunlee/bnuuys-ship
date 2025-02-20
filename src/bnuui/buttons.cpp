@@ -295,4 +295,19 @@ void ProgressBar::doUpdate(float dt) {
     }
 }
 
+Cursor::Cursor(vec2 pos, vec2 scale, float rot) {
+    this->position = pos;
+    this->scale = scale;
+    this->rotation = rot;
+
+    this->offset = {0, 0};
+    this->color =  {1.0f, 1.0f, 1.0f};
+    this->texture = TEXTURE_ASSET_ID::TILE_CURSOR;
+    this->effect = EFFECT_ASSET_ID::TEXTURED;
+    this->geometry = GEOMETRY_BUFFER_ID::SPRITE;
+    this->visible = true; 
+}
+
+void Cursor::doUpdate(float dt) {}
+
 }  // namespace bnuui

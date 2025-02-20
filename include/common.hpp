@@ -60,6 +60,9 @@ const int GRID_LINE_WIDTH_PX = 2;
 const int MIDDLE_GRID_X = 7;
 const int MIDDLE_GRID_Y = 5;
 
+const int COL_COUNT = WINDOW_WIDTH_PX/GRID_CELL_WIDTH_PX;
+const int ROW_COUNT = WINDOW_HEIGHT_PX/GRID_CELL_HEIGHT_PX;
+
 #ifndef M_PI
 #define M_PI 3.14159265358979323846f
 #endif
@@ -76,6 +79,11 @@ struct Transform {
 
 bool gl_has_errors();
 
+inline vec2 TileToVector2(int tile_x, int tile_y) {
+  return vec2((int)tile_x * GRID_CELL_WIDTH_PX + 30,
+              (int)tile_y * GRID_CELL_HEIGHT_PX + 30);
+}
+
 // ==== PLAYER CONSTANTS ====
 
 // Character controls.
@@ -87,3 +95,7 @@ const int MOVE_LEFT_BUTTON = GLFW_KEY_A;
 const float WALK_SPEED = 150.0f;
 const float ANIMATION_TIME = 250.0f;
 const float SHIP_CAMERA_SPEED = 100.0f;
+
+const float SIMPLE_CANNON_COOLDOWN = 1000.0f;   // 1 second
+const float SIMPLE_CANNON_DAMAGE = 10.0f;
+const float PROJECTILE_LIFETIME = 2000.0f;      // Bullets have 5 seconds before getting removed.

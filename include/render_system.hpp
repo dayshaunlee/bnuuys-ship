@@ -94,6 +94,17 @@ class RenderSystem {
         textures_path("ui/faces/face_angry03.png"),
         textures_path("ui/faces/face_angry04.png"),
         textures_path("ui/faces/face_angry05.png"),
+
+        // Cursor UI
+        textures_path("ui/cursor.png"),
+
+        // Simple Cannon
+        textures_path("cannons/simple_cannon000.png"),
+        textures_path("cannons/simple_cannon001.png"),
+        textures_path("cannons/simple_cannon002.png"),
+        textures_path("cannons/simple_cannon003.png"),
+        textures_path("cannons/simple_cannon004.png"),
+        textures_path("cannons/simple_cannon005.png"),
     };
 
     std::array<GLuint, effect_count> effects;

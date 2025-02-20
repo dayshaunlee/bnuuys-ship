@@ -60,4 +60,11 @@ public:
     void doUpdate(float dt) override;
 };
 
+class Cursor : public Element {
+public:
+    Cursor(vec2 pos, vec2 scale, float rot);
+    ~Cursor() = default;
+    void doUpdate(float dt) override;
+};
+
 }
