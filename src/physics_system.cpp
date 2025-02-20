@@ -2,7 +2,7 @@
 #include "physics_system.hpp"
 
 #include <iostream>
-
+#include <optional>
 
 #include "world_init.hpp"
 
@@ -62,10 +62,11 @@ bool polyLine(std::vector<tson::Vector2i> vertices, int x1, int y1, int x2, int 
 
 // POLYGON/POLYGON: all of this along with helpers from
 // (https://www.jeffreythompson.org/collision-detection/poly-poly.php)
-bool polyPoly(std::vector<tson::Vector2i> p1, std::vector<tson::Vector2i> p2) {
+std::optional<std::vector<tson::Vector2i>> polyPoly(std::vector<tson::Vector2i> p1, std::vector<tson::Vector2i> p2) {
     // go through each of the vertices, plus the next
     // vertex in the list
     int next = 0;
+    std::vector<tson::Vector2i> collision_points;
     for (int current = 0; current < p1.size(); current++) {
         // get next vertex in list
         // if we've hit the end, wrap around to 0
@@ -80,10 +81,13 @@ bool polyPoly(std::vector<tson::Vector2i> p1, std::vector<tson::Vector2i> p2) {
         // now we can use these two points (a line) to compare
         // to the other polygon's vertices using polyLine()
         bool collision = polyLine(p2, vc.x, vc.y, vn.x, vn.y);
-        if (collision) return true;
+        if (collision) {
+            collision_points.push_back(vc);
+            collision_points.push_back(vn);
+            return collision_points;
+        }
     }
-
-    return false;
+    return std::nullopt;
 }
 
 std::vector<tson::Vector2i> get_poly_from_motion(const Motion& motion) {
@@ -121,7 +125,7 @@ bool collidesSpherical(const Motion& motion1, const Motion& motion2) {
 }
 
 // Polygon - Polygon collision
-bool collidesPoly(const Entity e1, const Entity e2) {
+std::optional<std::vector<tson::Vector2i>> collidesPoly(const Entity e1, const Entity e2) {
     if ((registry.islands.has(e1) && registry.ships.has(e2)) || (registry.islands.has(e2) && registry.ships.has(e1))) {
         Motion& e1_mot = registry.motions.get(e1);
         Motion& e2_mot = registry.motions.get(e2);
@@ -144,7 +148,7 @@ bool collidesPoly(const Entity e1, const Entity e2) {
         }
         return polyPoly(islandPolygon, shipPolygon);
     }
-    return false;
+    return std::nullopt;
 }
 
 void PhysicsSystem::step(float elapsed_ms) {
@@ -179,7 +183,8 @@ void PhysicsSystem::step(float elapsed_ms) {
         for (uint j = i + 1; j < motion_container.components.size(); j++) {
             Entity entity_j = motion_container.entities[j];
             Motion& motion_j = motion_container.components[j];
-            if (collidesPoly(entity_i, entity_j)) {
+            auto collision = collidesPoly(entity_i, entity_j);
+            if (collision) {
                 registry.collisions.emplace_with_duplicates(entity_i, entity_j);
             }
         }

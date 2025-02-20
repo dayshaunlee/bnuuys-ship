@@ -36,3 +36,11 @@ void CameraSystem::update(float deltaTime) {
         objectMotion.velocity.y = velocity.y;
     }
 }
+
+void CameraSystem::inverse_velocity_x(tson::Vector2f nnorm) {
+    velocity.x = velocity.x - 2 * ((velocity.x * nnorm.x) + (velocity.y * nnorm.y)) * nnorm.x;
+}
+
+void CameraSystem::inverse_velocity_y(tson::Vector2f nnorm) {
+    velocity.y = velocity.y - 2 * ((velocity.x * nnorm.x) + (velocity.y * nnorm.y)) * nnorm.y;
+}

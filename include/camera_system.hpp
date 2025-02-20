@@ -11,6 +11,8 @@ class CameraSystem {
     static CameraSystem* GetInstance();
     void setCameraScreen(float accelerationX, float accelerationY);
     void update(float deltaTime);
+    void inverse_velocity_x(tson::Vector2f nnorm);
+    void inverse_velocity_y(tson::Vector2f nnorm);
 
    private:
     static CameraSystem* camera;

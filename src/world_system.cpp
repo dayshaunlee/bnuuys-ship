@@ -344,26 +344,43 @@ void WorldSystem::handle_collisions() {
             // debugging only right now
             int ship_x;
             int ship_y;
-            int island_x;
-            int island_y;
+            int island_x1;
+            int island_y1;
+            int island_x2;
+            int island_y2;
             if (registry.ships.has(e1)) {  // e1 is the ship
                 collisions_to_remove.push_back(e1);
                 collisions_to_remove.push_back(e2);
                 ship_x = registry.motions.get(e1).position.x;
                 ship_y = registry.motions.get(e1).position.y;
-                island_x = registry.motions.get(e2).position.x;
-                island_y = registry.motions.get(e2).position.y;
-                std::cout << "SHIP ISLAND COLLISION WITH SHIP AT " << ship_x << ", " << ship_y << " AND ISLAND AT "
-                          << island_x << ", " << island_x << std::endl;
+                island_x1 = registry.collisions.get(e1).collision_points[0].x;
+                island_y1 = registry.collisions.get(e1).collision_points[0].y;
+                island_x2 = registry.collisions.get(e1).collision_points[1].x;
+                island_y2 = registry.collisions.get(e1).collision_points[1].y;
+
+                tson::Vector2i norm = tson::Vector2i(island_y1 - island_y1, island_x2 - island_x1);
+                tson::Vector2f nnorm = tson::Vector2f(norm.x / sqrt((norm.x ^ 2) + (norm.y ^ 2)),
+                                                    norm.y / sqrt((norm.x ^ 2) + (norm.y ^ 2)));
+
+
+                CameraSystem::GetInstance()->inverse_velocity_x(nnorm);
+                CameraSystem::GetInstance()->inverse_velocity_y(nnorm);
             } else {  // e2 is the ship
                 collisions_to_remove.push_back(e1);
                 collisions_to_remove.push_back(e2);
                 ship_x = registry.motions.get(e2).position.x;
                 ship_y = registry.motions.get(e2).position.y;
-                island_x = registry.motions.get(e1).position.x;
-                island_y = registry.motions.get(e1).position.y;
-                std::cout << "SHIP ISLAND COLLISION WITH SHIP AT " << ship_x << ", " << ship_y << " AND ISLAND AT "
-                          << island_x << ", " << island_x << std::endl;
+                island_x1 = registry.collisions.get(e1).collision_points[0].x;
+                island_y1 = registry.collisions.get(e1).collision_points[0].y;
+                island_x2 = registry.collisions.get(e1).collision_points[1].x;
+                island_y2 = registry.collisions.get(e1).collision_points[1].y;
+
+                tson::Vector2i norm = tson::Vector2i(island_y1 - island_y1, island_x2 - island_x1);
+                tson::Vector2f nnorm = tson::Vector2f(norm.x / sqrt((norm.x ^ 2) + (norm.y ^ 2)),
+                                                      norm.y / sqrt((norm.x ^ 2) + (norm.y ^ 2)));
+
+                CameraSystem::GetInstance()->inverse_velocity_x(nnorm);
+                CameraSystem::GetInstance()->inverse_velocity_y(nnorm);
             }
         }
     }
