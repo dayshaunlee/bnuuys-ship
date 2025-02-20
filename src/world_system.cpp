@@ -349,15 +349,21 @@ void WorldSystem::handle_collisions() {
             if (registry.ships.has(e1)) {  // e1 is the ship
                 collisions_to_remove.push_back(e1);
                 collisions_to_remove.push_back(e2);
+                ship_x = registry.motions.get(e1).position.x;
+                ship_y = registry.motions.get(e1).position.y;
+                island_x = registry.motions.get(e2).position.x;
+                island_y = registry.motions.get(e2).position.y;
+                std::cout << "SHIP ISLAND COLLISION WITH SHIP AT " << ship_x << ", " << ship_y << " AND ISLAND AT "
+                          << island_x << ", " << island_x << std::endl;
             } else {  // e2 is the ship
                 collisions_to_remove.push_back(e1);
                 collisions_to_remove.push_back(e2);
-                /*ship_x = registry.motions.get(e2).position.x;
+                ship_x = registry.motions.get(e2).position.x;
                 ship_y = registry.motions.get(e2).position.y;
                 island_x = registry.motions.get(e1).position.x;
                 island_y = registry.motions.get(e1).position.y;
                 std::cout << "SHIP ISLAND COLLISION WITH SHIP AT " << ship_x << ", " << ship_y << " AND ISLAND AT "
-                          << island_x << ", " << island_x << std::endl;*/
+                          << island_x << ", " << island_x << std::endl;
             }
         }
     }

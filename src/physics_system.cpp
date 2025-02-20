@@ -142,17 +142,7 @@ bool collidesPoly(const Entity e1, const Entity e2) {
                 p.y += e2_mot.position.y;
             }
         }
-        if (polyPoly(islandPolygon, shipPolygon)) {
-            int ship_x = registry.motions.get(e1).position.x;
-            int ship_y = registry.motions.get(e1).position.y;
-            int island_x = registry.motions.get(e2).position.x;
-            int island_y = registry.motions.get(e2).position.y;
-            std::cout << "SHIP ISLAND COLLISION WITH SHIP AT " << ship_x << ", " << ship_y << " AND ISLAND AT "
-                      << island_x << ", " << island_x << std::endl;
-            return true;
-        }
-        return false;
-        //return polyPoly(islandPolygon, shipPolygon);
+        return polyPoly(islandPolygon, shipPolygon);
     }
     return false;
 }
