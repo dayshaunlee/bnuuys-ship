@@ -182,7 +182,7 @@ void WorldSystem::restart_game() {
     std::cout << mapSize.x << ", " << mapSize.y << std::endl;
     // create the ocean background and then ship
     createIslandBackground(mapSize.x, mapSize.y);
-    //createWaterBackground();
+    // createWaterBackground();
     createShip();
     // Now let's create our player.
     createPlayer(renderer, {WINDOW_WIDTH_PX / 2, WINDOW_HEIGHT_PX / 2});
@@ -219,22 +219,22 @@ void WorldSystem::handle_collisions() {
     DIRECTION player_direction = registry.players.get(registry.players.entities[0]).direction;
     PLAYERSTATE player_state = registry.players.get(registry.players.entities[0]).player_state;
 
-    //if (player_state == WALKING) {
-    //    if (player_direction == UP || player_direction == DOWN) {
-    //        for (uint i = 0; i < island_container.components.size(); i++) {
-    //            Island& island = island_container.components[i];
-    //            if (island.polygon.size() > 0) {
-    //                for (uint j = 0; j < island.polygon.size() - 1; j++) {
-    //                    if (island.polygon[j].x == island.polygon[j + 1].x) {
-    //                        if (((player_x >= island.polygon[j].x && player_x <= island.polygon[j + 1].x) ||
-    //                             (player_x >= island.polygon[j + 1].x && player_x <= island.polygon[j].x)) &&
-    //                            player_y == island.polygon[j].y) {
-    //                            registry.motions.get(registry.players.entities[0]).velocity.y -= WALK_SPEED;
-    //                            registry.players.get(registry.players.entities[0]).player_state = IDLE;
-    //                            break;
-    //                        }
-    //                    }
-    //                }
+    // if (player_state == WALKING) {
+    //     if (player_direction == UP || player_direction == DOWN) {
+    //         for (uint i = 0; i < island_container.components.size(); i++) {
+    //             Island& island = island_container.components[i];
+    //             if (island.polygon.size() > 0) {
+    //                 for (uint j = 0; j < island.polygon.size() - 1; j++) {
+    //                     if (island.polygon[j].x == island.polygon[j + 1].x) {
+    //                         if (((player_x >= island.polygon[j].x && player_x <= island.polygon[j + 1].x) ||
+    //                              (player_x >= island.polygon[j + 1].x && player_x <= island.polygon[j].x)) &&
+    //                             player_y == island.polygon[j].y) {
+    //                             registry.motions.get(registry.players.entities[0]).velocity.y -= WALK_SPEED;
+    //                             registry.players.get(registry.players.entities[0]).player_state = IDLE;
+    //                             break;
+    //                         }
+    //                     }
+    //                 }
 
     //                if (island.polygon[island.polygon.size() - 1].x == island.polygon[0].x) {
     //                    if (((player_x >= island.polygon[island.polygon.size() - 1].x &&
@@ -281,30 +281,30 @@ void WorldSystem::handle_collisions() {
     //}
 
     //// Check if player is on the base
-    //ComponentContainer<Base>& base_container = registry.base;
-    //for (uint i = 0; i < base_container.components.size(); i++) {
-    //    Base& base = base_container.components[i];
-    //    if (base.polygon.size() > 0) {
-    //        if (base.polygon[0].x < player_x && base.polygon[0].y > player_y && base.polygon[1].x > player_x &&
-    //            base.polygon[1].y > player_y && base.polygon[2].x > player_x && base.polygon[2].y < player_y &&
-    //            base.polygon[3].x < player_x && base.polygon[3].y < player_y && player_state == WALKING) {
-    //            // handle collision on the ship
-    //            if (player_direction == UP && player_y == base.polygon[0].y) {
-    //                registry.motions.get(registry.players.entities[0]).velocity.y -= WALK_SPEED;
-    //                registry.players.get(registry.players.entities[0]).player_state = IDLE;
-    //            } else if (player_direction == DOWN && player_y == base.polygon[2].y) {
-    //                registry.motions.get(registry.players.entities[0]).velocity.y -= WALK_SPEED;
-    //                registry.players.get(registry.players.entities[0]).player_state = IDLE;
-    //            } else if (player_direction == LEFT && player_x == base.polygon[3].x) {
-    //                registry.motions.get(registry.players.entities[0]).velocity.x -= WALK_SPEED;
-    //                registry.players.get(registry.players.entities[0]).player_state = IDLE;
-    //            } else if (player_direction == RIGHT && player_x == base.polygon[1].x) {
-    //                registry.motions.get(registry.players.entities[0]).velocity.x -= WALK_SPEED;
-    //                registry.players.get(registry.players.entities[0]).player_state = IDLE;
-    //            }
-    //        }
-    //    }
-    //}
+    // ComponentContainer<Base>& base_container = registry.base;
+    // for (uint i = 0; i < base_container.components.size(); i++) {
+    //     Base& base = base_container.components[i];
+    //     if (base.polygon.size() > 0) {
+    //         if (base.polygon[0].x < player_x && base.polygon[0].y > player_y && base.polygon[1].x > player_x &&
+    //             base.polygon[1].y > player_y && base.polygon[2].x > player_x && base.polygon[2].y < player_y &&
+    //             base.polygon[3].x < player_x && base.polygon[3].y < player_y && player_state == WALKING) {
+    //             // handle collision on the ship
+    //             if (player_direction == UP && player_y == base.polygon[0].y) {
+    //                 registry.motions.get(registry.players.entities[0]).velocity.y -= WALK_SPEED;
+    //                 registry.players.get(registry.players.entities[0]).player_state = IDLE;
+    //             } else if (player_direction == DOWN && player_y == base.polygon[2].y) {
+    //                 registry.motions.get(registry.players.entities[0]).velocity.y -= WALK_SPEED;
+    //                 registry.players.get(registry.players.entities[0]).player_state = IDLE;
+    //             } else if (player_direction == LEFT && player_x == base.polygon[3].x) {
+    //                 registry.motions.get(registry.players.entities[0]).velocity.x -= WALK_SPEED;
+    //                 registry.players.get(registry.players.entities[0]).player_state = IDLE;
+    //             } else if (player_direction == RIGHT && player_x == base.polygon[1].x) {
+    //                 registry.motions.get(registry.players.entities[0]).velocity.x -= WALK_SPEED;
+    //                 registry.players.get(registry.players.entities[0]).player_state = IDLE;
+    //             }
+    //         }
+    //     }
+    // }
 
     ComponentContainer<Collision>& collision_container = registry.collisions;
     std::vector<Entity> collisions_to_remove;
@@ -327,12 +327,11 @@ void WorldSystem::handle_collisions() {
 
         // Enemy - Ship collision
         if ((registry.enemies.has(e1) && registry.ships.has(e2)) ||
-                 (registry.enemies.has(e2) && registry.ships.has(e1))) {
-            if (registry.ships.has(e1)) { // e1 is the ship
+            (registry.enemies.has(e2) && registry.ships.has(e1))) {
+            if (registry.ships.has(e1)) {  // e1 is the ship
                 registry.ships.get(e1).health -= 10;
                 registry.remove_all_components_of(e2);
-            }
-            else {  // e2 is the ship
+            } else {  // e2 is the ship
                 registry.ships.get(e2).health -= 10;
                 registry.remove_all_components_of(e1);
             }
@@ -344,44 +343,28 @@ void WorldSystem::handle_collisions() {
             // debugging only right now
             int ship_x;
             int ship_y;
-            int island_x1;
-            int island_y1;
-            int island_x2;
-            int island_y2;
+            int island_x;
+            int island_y;
+
+            collisions_to_remove.push_back(e1);
+            collisions_to_remove.push_back(e2);
             if (registry.ships.has(e1)) {  // e1 is the ship
-                collisions_to_remove.push_back(e1);
-                collisions_to_remove.push_back(e2);
                 ship_x = registry.motions.get(e1).position.x;
                 ship_y = registry.motions.get(e1).position.y;
-                island_x1 = registry.collisions.get(e1).collision_points[0].x;
-                island_y1 = registry.collisions.get(e1).collision_points[0].y;
-                island_x2 = registry.collisions.get(e1).collision_points[1].x;
-                island_y2 = registry.collisions.get(e1).collision_points[1].y;
-
-                tson::Vector2i norm = tson::Vector2i(island_y1 - island_y1, island_x2 - island_x1);
-                tson::Vector2f nnorm = tson::Vector2f(norm.x / sqrt((norm.x ^ 2) + (norm.y ^ 2)),
-                                                    norm.y / sqrt((norm.x ^ 2) + (norm.y ^ 2)));
-
-
-                CameraSystem::GetInstance()->inverse_velocity_x(nnorm);
-                CameraSystem::GetInstance()->inverse_velocity_y(nnorm);
+                island_x = registry.motions.get(e2).position.x;
+                island_y = registry.motions.get(e2).position.y;
+                std::cout << "SHIP ISLAND COLLISION WITH SHIP AT " << ship_x << ", " << ship_y << " AND ISLAND AT "
+                          << island_x << ", " << island_x << std::endl;
             } else {  // e2 is the ship
-                collisions_to_remove.push_back(e1);
-                collisions_to_remove.push_back(e2);
                 ship_x = registry.motions.get(e2).position.x;
                 ship_y = registry.motions.get(e2).position.y;
-                island_x1 = registry.collisions.get(e1).collision_points[0].x;
-                island_y1 = registry.collisions.get(e1).collision_points[0].y;
-                island_x2 = registry.collisions.get(e1).collision_points[1].x;
-                island_y2 = registry.collisions.get(e1).collision_points[1].y;
-
-                tson::Vector2i norm = tson::Vector2i(island_y1 - island_y1, island_x2 - island_x1);
-                tson::Vector2f nnorm = tson::Vector2f(norm.x / sqrt((norm.x ^ 2) + (norm.y ^ 2)),
-                                                      norm.y / sqrt((norm.x ^ 2) + (norm.y ^ 2)));
-
-                CameraSystem::GetInstance()->inverse_velocity_x(nnorm);
-                CameraSystem::GetInstance()->inverse_velocity_y(nnorm);
+                island_x = registry.motions.get(e1).position.x;
+                island_y = registry.motions.get(e1).position.y;
+                std::cout << "SHIP ISLAND COLLISION WITH SHIP AT " << ship_x << ", " << ship_y << " AND ISLAND AT "
+                          << island_x << ", " << island_x << std::endl;
             }
+            //CameraSystem::GetInstance()->inverse_velocity(ship_x, ship_y, island_x, island_y);
+            CameraSystem::GetInstance()->inverse_velocity();
         }
     }
 

@@ -18,17 +18,13 @@ struct Motion {
 struct Collision {
     // Note, the first object is stored in the ECS container.entities
     Entity other;  // the second object involved in the collision
-    std::vector<tson::Vector2i> collision_points;
-    Collision(Entity& other, std::vector<tson::Vector2i>& collision_points) { this->other = other;
-        this->collision_points = collision_points;
-    }
+    Collision(Entity& other) { this->other = other; };
 };
 
 // Sets the brightness of the screen
-struct ScreenState
-{
-	float darken_screen_factor = -1;
-	float vignette_screen_factor = -1;
+struct ScreenState {
+    float darken_screen_factor = -1;
+    float vignette_screen_factor = -1;
 };
 
 struct Island {
