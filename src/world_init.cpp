@@ -55,6 +55,23 @@ Entity createWaterBackground() {
     return waterbg;
 }
 
+Entity createIslandBackground(int width, int height) {
+    // create the island background entity
+    Entity islandbg = Entity();
+    registry.backgroundObjects.emplace(islandbg);
+    Motion& islMotion = registry.motions.emplace(islandbg);
+
+    islMotion.position.x = width / 2;
+    islMotion.position.y = height / 2;
+    islMotion.scale.x = width;
+    islMotion.scale.y = height;
+
+    registry.renderRequests.insert(
+        islandbg, {TEXTURE_ASSET_ID::ISLAND_BACKGROUND, EFFECT_ASSET_ID::TEXTURED, GEOMETRY_BUFFER_ID::SPRITE});
+    return islandbg;
+}
+
+
 Entity createShip() {
     Entity entity = Entity();
 
