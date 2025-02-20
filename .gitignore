@@ -8,4 +8,5 @@
 .vs/
 .vscode/
 /ext/project_path.hpp
+/ext/project_path.hpp.in
 /data/maps/bnunny_savers.tiled-session

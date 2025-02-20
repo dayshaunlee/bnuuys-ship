@@ -13,28 +13,19 @@ vec2 get_bounding_box(const Motion& motion) {
     return {abs(motion.scale.x), abs(motion.scale.y)};
 }
 
-// POLYGON/POLYGON: all of this along with helpers from (https://www.jeffreythompson.org/collision-detection/poly-poly.php)
-bool polyPoly(std::vector<tson::Vector2i> p1, std::vector<tson::Vector2i> p2) {
-    // go through each of the vertices, plus the next
-    // vertex in the list
-    int next = 0;
-    for (int current = 0; current < p1.size(); current++) {
-        // get next vertex in list
-        // if we've hit the end, wrap around to 0
-        next = current + 1;
-        if (next == p1.size()) next = 0;
+// LINE/LINE
+bool lineLine(int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4) {
+    float denom = (y4 - y3) * (x2 - x1) - (x4 - x3) * (y2 - y1);
+    if (denom == 0) return false;
 
-        // get the tson::Vector2i at our current position
-        // this makes our if statement a little cleaner
-        tson::Vector2i vc = p1[current];  // c for "current"
-        tson::Vector2i vn = p1[next];     // n for "next"
+    // calculate the direction of the lines
+    float uA = ((x4 - x3) * (y1 - y3) - (y4 - y3) * (x1 - x3)) / denom;
+    float uB = ((x2 - x1) * (y1 - y3) - (y2 - y1) * (x1 - x3)) / denom;
 
-        // now we can use these two points (a line) to compare
-        // to the other polygon's vertices using polyLine()
-        bool collision = polyLine(p2, vc.x, vc.y, vn.x, vn.y);
-        if (collision) return true;
+    // if uA and uB are between 0-1, lines are colliding
+    if (uA >= 0 && uA <= 1 && uB >= 0 && uB <= 1) {
+        return true;
     }
-
     return false;
 }
 
@@ -69,16 +60,29 @@ bool polyLine(std::vector<tson::Vector2i> vertices, int x1, int y1, int x2, int 
     return false;
 }
 
-// LINE/LINE
-bool lineLine(int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4) {
-    // calculate the direction of the lines
-    float uA = ((x4 - x3) * (y1 - y3) - (y4 - y3) * (x1 - x3)) / ((y4 - y3) * (x2 - x1) - (x4 - x3) * (y2 - y1));
-    float uB = ((x2 - x1) * (y1 - y3) - (y2 - y1) * (x1 - x3)) / ((y4 - y3) * (x2 - x1) - (x4 - x3) * (y2 - y1));
+// POLYGON/POLYGON: all of this along with helpers from
+// (https://www.jeffreythompson.org/collision-detection/poly-poly.php)
+bool polyPoly(std::vector<tson::Vector2i> p1, std::vector<tson::Vector2i> p2) {
+    // go through each of the vertices, plus the next
+    // vertex in the list
+    int next = 0;
+    for (int current = 0; current < p1.size(); current++) {
+        // get next vertex in list
+        // if we've hit the end, wrap around to 0
+        next = current + 1;
+        if (next == p1.size()) next = 0;
 
-    // if uA and uB are between 0-1, lines are colliding
-    if (uA >= 0 && uA <= 1 && uB >= 0 && uB <= 1) {
-        return true;
+        // get the tson::Vector2i at our current position
+        // this makes our if statement a little cleaner
+        tson::Vector2i vc = p1[current];  // c for "current"
+        tson::Vector2i vn = p1[next];     // n for "next"
+
+        // now we can use these two points (a line) to compare
+        // to the other polygon's vertices using polyLine()
+        bool collision = polyLine(p2, vc.x, vc.y, vn.x, vn.y);
+        if (collision) return true;
     }
+
     return false;
 }
 
@@ -126,11 +130,29 @@ bool collidesPoly(const Entity e1, const Entity e2) {
         if (registry.islands.has(e1)) { // e1 is the Island, e2 is the Ship
             islandPolygon = registry.islands.get(e1).polygon;
             shipPolygon = get_poly_from_motion(e2_mot);
+            for (auto& p : islandPolygon) { // account for camera affecting position
+                p.x += e1_mot.position.x;
+                p.y += e1_mot.position.y;
+            }
         } else {  // e2 is the Island, e1 is the Ship
             islandPolygon = registry.islands.get(e2).polygon;
             shipPolygon = get_poly_from_motion(e1_mot);
+            for (auto& p : islandPolygon) {  // account for camera affecting position
+                p.x += e2_mot.position.x;
+                p.y += e2_mot.position.y;
+            }
         }
-        return polyPoly(islandPolygon, shipPolygon);
+        if (polyPoly(islandPolygon, shipPolygon)) {
+            int ship_x = registry.motions.get(e1).position.x;
+            int ship_y = registry.motions.get(e1).position.y;
+            int island_x = registry.motions.get(e2).position.x;
+            int island_y = registry.motions.get(e2).position.y;
+            std::cout << "SHIP ISLAND COLLISION WITH SHIP AT " << ship_x << ", " << ship_y << " AND ISLAND AT "
+                      << island_x << ", " << island_x << std::endl;
+            return true;
+        }
+        return false;
+        //return polyPoly(islandPolygon, shipPolygon);
     }
     return false;
 }

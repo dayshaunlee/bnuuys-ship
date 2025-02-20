@@ -64,6 +64,9 @@ class RenderSystem {
 
         // water background
         textures_path("background/water_background.png"),
+
+        // island background
+        map_path("m1.png"),
     };
 
     std::array<GLuint, effect_count> effects;
