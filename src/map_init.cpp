@@ -137,7 +137,7 @@ tson::Vector2<int> loadMap(const std::string& name) {
                 if (registry.players.size() == 1) {
                     Entity e = registry.players.entities[0];
                     Motion& mot = registry.motions.get(e);
-                    mot.position = {obj.getPosition().x, obj.getPosition().y};
+                    //mot.position = {obj.getPosition().x, obj.getPosition().y};
                 }
             }
         }

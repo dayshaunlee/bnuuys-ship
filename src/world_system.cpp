@@ -178,7 +178,7 @@ void WorldSystem::restart_game() {
     createWaterBackground();
     createShip();
     // Now let's create our player.
-    createPlayer(renderer, {100, 100});
+    createPlayer(renderer, {WINDOW_WIDTH_PX / 2, WINDOW_HEIGHT_PX / 2});
 
     int grid_line_width = GRID_LINE_WIDTH_PX;
     int CELL_WIDTH = WINDOW_WIDTH_PX / 15;
@@ -216,109 +216,132 @@ void WorldSystem::handle_collisions() {
     DIRECTION player_direction = registry.players.get(registry.players.entities[0]).direction;
     PLAYERSTATE player_state = registry.players.get(registry.players.entities[0]).player_state;
 
-    if (player_state == WALKING) {
-        if (player_direction == UP || player_direction == DOWN) {
-            for (uint i = 0; i < island_container.components.size(); i++) {
-                Island& island = island_container.components[i];
-                if (island.polygon.size() > 0) {
-                    for (uint j = 0; j < island.polygon.size() - 1; j++) {
-                        if (island.polygon[j].x == island.polygon[j + 1].x) {
-                            if (((player_x >= island.polygon[j].x && player_x <= island.polygon[j + 1].x) ||
-                                 (player_x >= island.polygon[j + 1].x && player_x <= island.polygon[j].x)) &&
-                                player_y == island.polygon[j].y) {
-                                registry.motions.get(registry.players.entities[0]).velocity.y -= WALK_SPEED;
-                                registry.players.get(registry.players.entities[0]).player_state = IDLE;
-                                break;
-                            }
-                        }
-                    }
+    //if (player_state == WALKING) {
+    //    if (player_direction == UP || player_direction == DOWN) {
+    //        for (uint i = 0; i < island_container.components.size(); i++) {
+    //            Island& island = island_container.components[i];
+    //            if (island.polygon.size() > 0) {
+    //                for (uint j = 0; j < island.polygon.size() - 1; j++) {
+    //                    if (island.polygon[j].x == island.polygon[j + 1].x) {
+    //                        if (((player_x >= island.polygon[j].x && player_x <= island.polygon[j + 1].x) ||
+    //                             (player_x >= island.polygon[j + 1].x && player_x <= island.polygon[j].x)) &&
+    //                            player_y == island.polygon[j].y) {
+    //                            registry.motions.get(registry.players.entities[0]).velocity.y -= WALK_SPEED;
+    //                            registry.players.get(registry.players.entities[0]).player_state = IDLE;
+    //                            break;
+    //                        }
+    //                    }
+    //                }
 
-                    if (island.polygon[island.polygon.size() - 1].x == island.polygon[0].x) {
-                        if (((player_x >= island.polygon[island.polygon.size() - 1].x &&
-                              player_x <= island.polygon[0].x) ||
-                             (player_x <= island.polygon[island.polygon.size() - 1].x &&
-                              player_x >= island.polygon[0].x)) &&
-                            player_y == island.polygon[0].y) {
-                            registry.motions.get(registry.players.entities[0]).velocity.y -= WALK_SPEED;
-                            registry.players.get(registry.players.entities[0]).player_state = IDLE;
-                            break;
-                        }
-                    }
-                }
-            }
-        } else if (player_direction == LEFT || player_direction == RIGHT) {
-            for (uint i = 0; i < island_container.components.size(); i++) {
-                Island& island = island_container.components[i];
-                if (island.polygon.size() > 0) {
-                    for (uint j = 0; j < island.polygon.size() - 1; j++) {
-                        if (island.polygon[j].y == island.polygon[j + 1].y) {
-                            if (((player_y >= island.polygon[j].y && player_y <= island.polygon[j + 1].y) ||
-                                 (player_y >= island.polygon[j + 1].y && player_y <= island.polygon[j].y)) &&
-                                player_x == island.polygon[j].x) {
-                                registry.motions.get(registry.players.entities[0]).velocity.x -= WALK_SPEED;
-                                registry.players.get(registry.players.entities[0]).player_state = IDLE;
-                                break;
-                            }
-                        }
-                    }
-                    if (island.polygon[island.polygon.size() - 1].y == island.polygon[0].y) {
-                        if (((player_y >= island.polygon[island.polygon.size() - 1].y &&
-                              player_y <= island.polygon[0].y) ||
-                             (player_y <= island.polygon[island.polygon.size() - 1].y &&
-                              player_y >= island.polygon[0].y)) &&
-                            player_x == island.polygon[0].x) {
-                            registry.motions.get(registry.players.entities[0]).velocity.x -= WALK_SPEED;
-                            registry.players.get(registry.players.entities[0]).player_state = IDLE;
-                            break;
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    // Check if player is on the base
-    ComponentContainer<Base>& base_container = registry.base;
-    for (uint i = 0; i < base_container.components.size(); i++) {
-        Base& base = base_container.components[i];
-        if (base.polygon.size() > 0) {
-            if (base.polygon[0].x < player_x && base.polygon[0].y > player_y && base.polygon[1].x > player_x &&
-                base.polygon[1].y > player_y && base.polygon[2].x > player_x && base.polygon[2].y < player_y &&
-                base.polygon[3].x < player_x && base.polygon[3].y < player_y && player_state == WALKING) {
-                // handle collision on the ship
-                if (player_direction == UP && player_y == base.polygon[0].y) {
-                    registry.motions.get(registry.players.entities[0]).velocity.y -= WALK_SPEED;
-                    registry.players.get(registry.players.entities[0]).player_state = IDLE;
-                } else if (player_direction == DOWN && player_y == base.polygon[2].y) {
-                    registry.motions.get(registry.players.entities[0]).velocity.y -= WALK_SPEED;
-                    registry.players.get(registry.players.entities[0]).player_state = IDLE;
-                } else if (player_direction == LEFT && player_x == base.polygon[3].x) {
-                    registry.motions.get(registry.players.entities[0]).velocity.x -= WALK_SPEED;
-                    registry.players.get(registry.players.entities[0]).player_state = IDLE;
-                } else if (player_direction == RIGHT && player_x == base.polygon[1].x) {
-                    registry.motions.get(registry.players.entities[0]).velocity.x -= WALK_SPEED;
-                    registry.players.get(registry.players.entities[0]).player_state = IDLE;
-                }
-            }
-        }
-    }
-
-    //ComponentContainer<Collision>& collision_container = registry.collisions;
-    //for (uint i = 0; i < collision_container.components.size(); i++) {
-    //    Collision& collision = collision_container.components[i];
-    //    Entity entity1 = collision_container.entities[i];
-    //    Entity entity2 = collision.other;
-    //    // Handle collision between player and enemy
-    //    if (registry.players.entities[0] == entity1 || registry.players.entities[0] == entity2) {
-    //        if (registry.ships.entities[0] == entity1 || registry.ships.entities[0] == entity2) {
-    //            registry.motions.get(registry.players.entities[0]).velocity = {0, 0};
-    //            registry.players.get(registry.players.entities[0]).player_state = IDLE;
+    //                if (island.polygon[island.polygon.size() - 1].x == island.polygon[0].x) {
+    //                    if (((player_x >= island.polygon[island.polygon.size() - 1].x &&
+    //                          player_x <= island.polygon[0].x) ||
+    //                         (player_x <= island.polygon[island.polygon.size() - 1].x &&
+    //                          player_x >= island.polygon[0].x)) &&
+    //                        player_y == island.polygon[0].y) {
+    //                        registry.motions.get(registry.players.entities[0]).velocity.y -= WALK_SPEED;
+    //                        registry.players.get(registry.players.entities[0]).player_state = IDLE;
+    //                        break;
+    //                    }
+    //                }
+    //            }
+    //        }
+    //    } else if (player_direction == LEFT || player_direction == RIGHT) {
+    //        for (uint i = 0; i < island_container.components.size(); i++) {
+    //            Island& island = island_container.components[i];
+    //            if (island.polygon.size() > 0) {
+    //                for (uint j = 0; j < island.polygon.size() - 1; j++) {
+    //                    if (island.polygon[j].y == island.polygon[j + 1].y) {
+    //                        if (((player_y >= island.polygon[j].y && player_y <= island.polygon[j + 1].y) ||
+    //                             (player_y >= island.polygon[j + 1].y && player_y <= island.polygon[j].y)) &&
+    //                            player_x == island.polygon[j].x) {
+    //                            registry.motions.get(registry.players.entities[0]).velocity.x -= WALK_SPEED;
+    //                            registry.players.get(registry.players.entities[0]).player_state = IDLE;
+    //                            break;
+    //                        }
+    //                    }
+    //                }
+    //                if (island.polygon[island.polygon.size() - 1].y == island.polygon[0].y) {
+    //                    if (((player_y >= island.polygon[island.polygon.size() - 1].y &&
+    //                          player_y <= island.polygon[0].y) ||
+    //                         (player_y <= island.polygon[island.polygon.size() - 1].y &&
+    //                          player_y >= island.polygon[0].y)) &&
+    //                        player_x == island.polygon[0].x) {
+    //                        registry.motions.get(registry.players.entities[0]).velocity.x -= WALK_SPEED;
+    //                        registry.players.get(registry.players.entities[0]).player_state = IDLE;
+    //                        break;
+    //                    }
+    //                }
+    //            }
     //        }
     //    }
     //}
-    //if (collision_container.has(registry.players.entities[0])) {
-    //    registry.motions.get(registry.players.entities[0]).velocity = {0, 0};
+
+    //// Check if player is on the base
+    //ComponentContainer<Base>& base_container = registry.base;
+    //for (uint i = 0; i < base_container.components.size(); i++) {
+    //    Base& base = base_container.components[i];
+    //    if (base.polygon.size() > 0) {
+    //        if (base.polygon[0].x < player_x && base.polygon[0].y > player_y && base.polygon[1].x > player_x &&
+    //            base.polygon[1].y > player_y && base.polygon[2].x > player_x && base.polygon[2].y < player_y &&
+    //            base.polygon[3].x < player_x && base.polygon[3].y < player_y && player_state == WALKING) {
+    //            // handle collision on the ship
+    //            if (player_direction == UP && player_y == base.polygon[0].y) {
+    //                registry.motions.get(registry.players.entities[0]).velocity.y -= WALK_SPEED;
+    //                registry.players.get(registry.players.entities[0]).player_state = IDLE;
+    //            } else if (player_direction == DOWN && player_y == base.polygon[2].y) {
+    //                registry.motions.get(registry.players.entities[0]).velocity.y -= WALK_SPEED;
+    //                registry.players.get(registry.players.entities[0]).player_state = IDLE;
+    //            } else if (player_direction == LEFT && player_x == base.polygon[3].x) {
+    //                registry.motions.get(registry.players.entities[0]).velocity.x -= WALK_SPEED;
+    //                registry.players.get(registry.players.entities[0]).player_state = IDLE;
+    //            } else if (player_direction == RIGHT && player_x == base.polygon[1].x) {
+    //                registry.motions.get(registry.players.entities[0]).velocity.x -= WALK_SPEED;
+    //                registry.players.get(registry.players.entities[0]).player_state = IDLE;
+    //            }
+    //        }
+    //    }
     //}
+
+    ComponentContainer<Collision>& collision_container = registry.collisions;
+    for (uint i = 0; i < collision_container.components.size(); i++) {
+        Entity e1 = collision_container.entities[i];
+        Entity e2 = collision_container.components[i].other;
+
+        /* TODO: implement projectiles from weapons
+        if ((registry.projectiles.has(e1) && registry.enemies.has(e2)) ||
+            (registry.projectiles.has(e2) && registry.enemies.has(e1))) {
+            // do damage to enemies
+            registry.remove_all_components_of(e1);
+            registry.remove_all_components_of(e2);
+        }
+        */
+
+        // Enemy - Ship collision
+        if ((registry.enemies.has(e1) && registry.ships.has(e2)) ||
+                 (registry.enemies.has(e2) && registry.ships.has(e1))) {
+            if (registry.ships.has(e1)) { // e1 is the ship
+                registry.ships.get(e1).health -= 10;
+                registry.remove_all_components_of(e2);
+            }
+            else {  // e2 is the ship
+                registry.ships.get(e2).health -= 10;
+                registry.remove_all_components_of(e1);
+            }
+        }
+
+        // Ship - Island collision
+        if ((registry.ships.has(e1) && registry.islands.has(e2)) ||
+            (registry.ships.has(e2) && registry.islands.has(e1))) {
+            if (registry.ships.has(e1)) {  // e1 is the ship
+                registry.ships.get(e1).health -= 10;
+                registry.remove_all_components_of(e2);
+            } else {  // e2 is the ship
+                registry.ships.get(e2).health -= 10;
+                registry.remove_all_components_of(e1);
+            }
+        }
+    }
 
     // Remove all collisions from this simulation step
     registry.collisions.clear();
@@ -327,74 +350,6 @@ void WorldSystem::handle_collisions() {
 // Should the game be over ?
 bool WorldSystem::is_over() const {
     return bool(glfwWindowShouldClose(window));
-}
-
-bool is_player_near_ship_right() {
-    int player_x = registry.motions.get(registry.players.entities[0]).position.x;
-    int player_y = registry.motions.get(registry.players.entities[0]).position.y;
-    int player_width = 16;
-    int player_height = 16;
-    int ship_x = registry.motions.get(registry.ships.entities[0]).position.x;
-    int ship_y = registry.motions.get(registry.ships.entities[0]).position.y;
-    int ship_width = registry.motions.get(registry.ships.entities[0]).scale.x;
-    int ship_height = registry.motions.get(registry.ships.entities[0]).scale.y;
-
-    if (player_x + (player_width / 2) <= ship_x + (ship_width / 2)) {
-        return true;
-    } else {
-        return false;
-    }
-}
-
-bool is_player_near_ship_left() {
-    int player_x = registry.motions.get(registry.players.entities[0]).position.x;
-    int player_y = registry.motions.get(registry.players.entities[0]).position.y;
-    int player_width = 16;
-    int player_height = 16;
-    int ship_x = registry.motions.get(registry.ships.entities[0]).position.x;
-    int ship_y = registry.motions.get(registry.ships.entities[0]).position.y;
-    int ship_width = registry.motions.get(registry.ships.entities[0]).scale.x;
-    int ship_height = registry.motions.get(registry.ships.entities[0]).scale.y;
-
-    if (player_x - (player_width / 2) >= ship_x - (ship_width / 2)) {
-        return true;
-    } else {
-        return false;
-    }
-}
-
-bool is_player_near_ship_up() {
-    int player_x = registry.motions.get(registry.players.entities[0]).position.x;
-    int player_y = registry.motions.get(registry.players.entities[0]).position.y;
-    int player_width = 16;
-    int player_height = 16;
-    int ship_x = registry.motions.get(registry.ships.entities[0]).position.x;
-    int ship_y = registry.motions.get(registry.ships.entities[0]).position.y;
-    int ship_width = registry.motions.get(registry.ships.entities[0]).scale.x;
-    int ship_height = registry.motions.get(registry.ships.entities[0]).scale.y;
-
-    if (player_y - (player_height / 2) >= ship_y - (ship_height / 2)) {
-        return true;
-    } else {
-        return false;
-    }
-}
-
-bool is_player_near_ship_down() {
-    int player_x = registry.motions.get(registry.players.entities[0]).position.x;
-    int player_y = registry.motions.get(registry.players.entities[0]).position.y;
-    int player_width = 16;
-    int player_height = 16;
-    int ship_x = registry.motions.get(registry.ships.entities[0]).position.x;
-    int ship_y = registry.motions.get(registry.ships.entities[0]).position.y;
-    int ship_width = registry.motions.get(registry.ships.entities[0]).scale.x;
-    int ship_height = registry.motions.get(registry.ships.entities[0]).scale.y;
-
-    if (player_y + (player_height / 2) <= ship_y + (ship_height / 2)) {
-        return true;
-    } else {
-        return false;
-    }
 }
 
 std::set<int> activeKeys;
@@ -421,27 +376,10 @@ void HandlePlayerMovement(int key, int, int action, int mod) {
     float velocityX = 0.0f;
     float velocityY = 0.0f;
 
-    if (!is_player_near_ship_up()) {
-        std::cout << mot.position.x << ", " << mot.position.y << std::endl;
-        std::cout << registry.motions.get(registry.ships.entities[0]).position.x << ", "
-                  << registry.motions.get(registry.ships.entities[0]).position.y << std::endl;
-        if (activeKeys.count(MOVE_DOWN_BUTTON)) velocityY += WALK_SPEED;
-    }
-    if (!is_player_near_ship_down()) {
-        if (activeKeys.count(MOVE_UP_BUTTON)) velocityY -= WALK_SPEED;
-    }
-    if (!is_player_near_ship_left()) {
-        if (activeKeys.count(MOVE_RIGHT_BUTTON)) velocityX += WALK_SPEED;
-    }
-    if (!is_player_near_ship_right()) {
-        if (activeKeys.count(MOVE_LEFT_BUTTON)) velocityX -= WALK_SPEED;
-    }
-    if (is_player_near_ship_up() && is_player_near_ship_down() && is_player_near_ship_left() && is_player_near_ship_right()) {
-        if (activeKeys.count(MOVE_UP_BUTTON)) velocityY -= WALK_SPEED;
-        if (activeKeys.count(MOVE_DOWN_BUTTON)) velocityY += WALK_SPEED;
-        if (activeKeys.count(MOVE_LEFT_BUTTON)) velocityX -= WALK_SPEED;
-        if (activeKeys.count(MOVE_RIGHT_BUTTON)) velocityX += WALK_SPEED;
-    }
+    if (activeKeys.count(MOVE_UP_BUTTON)) velocityY -= WALK_SPEED;
+    if (activeKeys.count(MOVE_DOWN_BUTTON)) velocityY += WALK_SPEED;
+    if (activeKeys.count(MOVE_LEFT_BUTTON)) velocityX -= WALK_SPEED;
+    if (activeKeys.count(MOVE_RIGHT_BUTTON)) velocityX += WALK_SPEED;
 
     velocityX = std::clamp(velocityX, -WALK_SPEED, WALK_SPEED);
     velocityY = std::clamp(velocityY, -WALK_SPEED, WALK_SPEED);
