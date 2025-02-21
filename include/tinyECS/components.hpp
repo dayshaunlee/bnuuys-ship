@@ -173,8 +173,9 @@ enum class TEXTURE_ASSET_ID {
     SIMPLE_CANNON05 = SIMPLE_CANNON04 + 1,
     SIMPLE_CANNON06 = SIMPLE_CANNON05 + 1,
 
-    TEXTURE_COUNT = SIMPLE_CANNON06 + 1
-
+    BUNNY_JAILED = SIMPLE_CANNON06 + 1,
+    BUNNY_NOT_JAILED = BUNNY_JAILED + 1,
+    TEXTURE_COUNT = BUNNY_NOT_JAILED + 1
 };
 
 const int texture_count = (int) TEXTURE_ASSET_ID::TEXTURE_COUNT;
@@ -288,8 +289,20 @@ struct Enemy {
     int health;
 	  int timer_ms;
     int home_island;
+    int health;
+	int timer_ms;
 };
 
 // temperary component for land for enemy path finding testing
 struct Obstacle {
+};
+
+// ========== BUNNY DETAILS ==========
+struct Bunny {
+    bool on_island;
+    bool is_jailed;
+    bool on_ship;
+
+    float jail_health;  // 0 if is_jailed is false
+    int timer_ms;   // field reserved for animation 
 };

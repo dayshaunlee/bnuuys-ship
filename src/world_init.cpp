@@ -64,6 +64,58 @@ Entity createPlayer(RenderSystem* renderer, vec2 position) {
     return player;
 }
 
+Entity createEnemy(vec2 position) {
+    auto entity = Entity();
+
+    Enemy& enemy = registry.enemies.emplace(entity);
+    enemy.health = ENEMY_BASE_HEALTH;
+    enemy.type = BASIC_GUNNER;
+    enemy.timer_ms = 0;
+
+    Motion& motion = registry.motions.emplace(entity);
+    motion.angle = 0.f;
+	motion.velocity = { 0.f, 0.f };
+	motion.position = position;
+    motion.scale = {40 ,40};
+
+    registry.renderRequests.insert(
+		entity,
+		{
+			TEXTURE_ASSET_ID::ENEMY0,
+			EFFECT_ASSET_ID::TEXTURED,
+			GEOMETRY_BUFFER_ID::SPRITE
+		}
+	);
+
+    return entity;
+}
+
+Entity createBunny(vec2 position) {
+    auto entity = Entity();
+
+    Bunny& bunny = registry.bunnies.emplace(entity);
+    bunny.on_island = true;
+    bunny.is_jailed = true;
+    bunny.on_ship = false;
+
+    Motion& motion = registry.motions.emplace(entity);
+    motion.angle = 0.f;
+	motion.velocity = { 0.f, 0.f };
+	motion.position = position;
+    motion.scale = {40 ,40};
+
+    registry.renderRequests.insert(
+		entity,
+		{
+			TEXTURE_ASSET_ID::BUNNY_JAILED,
+			EFFECT_ASSET_ID::TEXTURED,
+			GEOMETRY_BUFFER_ID::SPRITE
+		}
+	);
+
+    return entity;
+}
+
 Entity createEnemy(RenderSystem* renderer, vec2 position) {
     auto entity = Entity();
 
@@ -82,6 +134,59 @@ Entity createEnemy(RenderSystem* renderer, vec2 position) {
 		entity,
 		{
 			TEXTURE_ASSET_ID::ENEMY0,
+			EFFECT_ASSET_ID::TEXTURED,
+			GEOMETRY_BUFFER_ID::SPRITE
+		}
+	);
+
+    return entity;
+}
+
+Entity createBunny(RenderSystem* renderer, vec2 position) {
+    auto entity = Entity();
+    registry.backgroundObjects.emplace(entity);
+
+    Bunny& bunny = registry.bunnies.emplace(entity);
+    bunny.on_island = true;
+    bunny.is_jailed = true;
+    bunny.on_ship = false;
+
+    bunny.jail_health = 10;
+    bunny.timer_ms = 10000;
+
+    Motion& motion = registry.motions.emplace(entity);
+    motion.angle = 0.f;
+	motion.velocity = { 0.f, 0.f };
+	motion.position = position;
+    motion.scale = {40 ,40};
+
+    registry.renderRequests.insert(
+		entity,
+		{
+			TEXTURE_ASSET_ID::BUNNY_JAILED,
+			EFFECT_ASSET_ID::TEXTURED,
+			GEOMETRY_BUFFER_ID::SPRITE
+		}
+	);
+
+    return entity;
+}
+
+Entity createObstacle(RenderSystem* renderer, vec2 position) {
+    auto entity = Entity();
+    registry.backgroundObjects.emplace(entity);
+    registry.obstacles.emplace(entity);
+
+    Motion& motion = registry.motions.emplace(entity);
+    motion.angle = 0.f;
+	motion.velocity = { 0.f, 0.f };
+	motion.position = position;
+    motion.scale = {GRID_CELL_WIDTH_PX ,GRID_CELL_HEIGHT_PX};
+
+    registry.renderRequests.insert(
+		entity,
+		{
+			TEXTURE_ASSET_ID::OBSTACLE,
 			EFFECT_ASSET_ID::TEXTURED,
 			GEOMETRY_BUFFER_ID::SPRITE
 		}

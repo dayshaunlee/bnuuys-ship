@@ -115,6 +115,9 @@ class RenderSystem {
         textures_path("cannons/simple_cannon004.png"),
         textures_path("cannons/simple_cannon005.png"),
 
+        // Bunny (not jailed/jailed)
+        textures_path("bunny/invert_idle_down1.png"),
+        textures_path("bunny/invert_idle_down0.png")
     };
 
     std::array<GLuint, effect_count> effects;

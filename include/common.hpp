@@ -78,7 +78,6 @@ const int ROW_COUNT = WINDOW_HEIGHT_PX/GRID_CELL_HEIGHT_PX;
 const int ENEMY_BASE_HEALTH = 1;
 const float ENEMY_BASE_SPEED = 50;
 
-
 #ifndef M_PI
 #define M_PI 3.14159265358979323846f
 #endif

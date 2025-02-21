@@ -48,6 +48,12 @@ void Level01::Init() {
     // Now let's create our player.
     createPlayer({250, 250}); 
 
+    // enemy creation
+    createEnemy({150, 150});
+
+    // bunny creation
+    createBunny({200, 200});
+
     registry.players.components[0].health = 100.0f;
     InitializeUI();
 }
@@ -331,6 +337,8 @@ void Level01::Update(float dt) {
     ai_system.step(dt);
     physics_system.step(dt);
     animation_system.step(dt);
+    world_system.handle_collisions();
+    CameraSystem::GetInstance()->update(dt);
 
     // Simple cannon system. make this its own system later.
     for (SimpleCannon& sc : registry.simpleCannons.components) {
