@@ -1,4 +1,3 @@
-
 #include <SDL.h>
 #include <glm/trigonometric.hpp>
 #include <iostream>

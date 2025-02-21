@@ -68,6 +68,9 @@ const int GRID_LINE_WIDTH_PX = 2;
 const int MIDDLE_GRID_X = 7;
 const int MIDDLE_GRID_Y = 5;
 
+const int ENEMY_BASE_HEALTH = 1;
+const float ENEMY_BASE_SPEED = 50;
+
 #ifndef M_PI
 #define M_PI 3.14159265358979323846f
 #endif
