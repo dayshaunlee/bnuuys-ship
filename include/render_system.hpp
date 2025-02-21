@@ -69,7 +69,11 @@ class RenderSystem {
         textures_path("enemies/chicken0.png"),
 
         // obstacle
-        textures_path("path-testing/obstacle.png")
+        textures_path("path-testing/obstacle.png"),
+
+        // Bunny (not jailed/jailed)
+        textures_path("bunny/invert_idle_down1.png"),
+        textures_path("bunny/invert_idle_down0.png")
     };
 
     std::array<GLuint, effect_count> effects;

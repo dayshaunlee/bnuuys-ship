@@ -131,7 +131,11 @@ enum class TEXTURE_ASSET_ID {
 
     OBSTACLE = ENEMY0 + 1,
 
-    TEXTURE_COUNT = OBSTACLE + 1
+    BUNNY_JAILED = OBSTACLE + 1,
+
+    BUNNY_NOT_JAILED = BUNNY_JAILED + 1,
+
+    TEXTURE_COUNT = BUNNY_NOT_JAILED + 1
 };
 
 const int texture_count = (int) TEXTURE_ASSET_ID::TEXTURE_COUNT;
@@ -219,4 +223,10 @@ struct Obstacle {
 
 };
 
-// ========== ENEMY DETAILS ==========
+// ========== BUNNY DETAILS ==========
+struct Bunny {
+    bool on_island;
+    bool is_jailed;
+    bool on_ship;
+    int timer_ms;   // field reserved for animation 
+};

@@ -206,6 +206,9 @@ void WorldSystem::restart_game() {
 
     // enemy creation
     createEnemy(renderer, {150, 150});
+
+    // bunny creation
+    createBunny(renderer, {200, 200});
 }
 
 // Compute collisions between entities
