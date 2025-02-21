@@ -66,6 +66,15 @@ class RenderSystem {
         // water background
         textures_path("background/water_background.png"),
         
+        // island background
+        map_path("m1.png"),
+      
+        // enemy (stationary)
+        textures_path("enemies/chicken0.png"),
+
+        // obstacle
+        textures_path("path-testing/obstacle.png")
+        
         // UI Assets.
         textures_path("ui/buttons/square3Normal.png"),
         textures_path("ui/buttons/square3Hover.png"),
@@ -105,12 +114,6 @@ class RenderSystem {
         textures_path("cannons/simple_cannon003.png"),
         textures_path("cannons/simple_cannon004.png"),
         textures_path("cannons/simple_cannon005.png"),
-
-        // enemy (stationary)
-        textures_path("enemies/chicken0.png"),
-
-        // obstacle
-        textures_path("path-testing/obstacle.png"),
 
         // Bunny (not jailed/jailed)
         textures_path("bunny/invert_idle_down1.png"),

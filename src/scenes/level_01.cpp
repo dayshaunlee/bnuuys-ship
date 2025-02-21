@@ -44,6 +44,7 @@ void Level01::Init() {
     // create the ocean background and then ship
     createWaterBackground();
     createShip();
+    createCamera();
     // Now let's create our player.
     createPlayer({250, 250}); 
 
@@ -144,13 +145,15 @@ void HandleCameraMovement(int key, int action, int mod) {
 
     float accelerationX = 0.0f;
     float accelerationY = 0.0f;
-
     if (activeShipKeys.count(MOVE_UP_BUTTON)) accelerationY += SHIP_CAMERA_SPEED * 2;
     if (activeShipKeys.count(MOVE_DOWN_BUTTON)) accelerationY -= SHIP_CAMERA_SPEED * 2;
     if (activeShipKeys.count(MOVE_LEFT_BUTTON)) accelerationX += SHIP_CAMERA_SPEED * 2;
     if (activeShipKeys.count(MOVE_RIGHT_BUTTON)) accelerationX -= SHIP_CAMERA_SPEED * 2;
 
-    CameraSystem::GetInstance()->setCameraScreen(accelerationX, accelerationY);
+    Camera& c = registry.cameras.components[0];
+    c.acceleration.x = accelerationX;
+    c.acceleration.y = accelerationY;
+    // CameraSystem::GetInstance()->setCameraScreen(accelerationX, accelerationY);
 }
 
 // tile_pos is the player's tile position when pressing SPACE.

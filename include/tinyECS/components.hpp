@@ -22,10 +22,9 @@ struct Collision {
 };
 
 // Sets the brightness of the screen
-struct ScreenState
-{
-	float darken_screen_factor = -1;
-	float vignette_screen_factor = -1;
+struct ScreenState {
+    float darken_screen_factor = -1;
+    float vignette_screen_factor = -1;
 };
 
 struct Island {
@@ -126,9 +125,16 @@ enum class TEXTURE_ASSET_ID {
     BUNNY_LEFT_WALK1 = BUNNY_LEFT_WALK0 + 1,
 
     WATER_BACKGROUND = BUNNY_LEFT_WALK1 + 1,
+  
+    // TODO: figure out which background to use
+    ISLAND_BACKGROUND = WATER_BACKGROUND + 1,
+
+    ENEMY0 = ISLAND_BACKGROUND + 1,
+
+    OBSTACLE = ENEMY0 + 1,
 
     // UI assets.
-    SQUARE_3_NORMAL = WATER_BACKGROUND + 1,
+    SQUARE_3_NORMAL = OBSTACLE + 1,
     SQUARE_3_HOVER = SQUARE_3_NORMAL + 1,
     SQUARE_3_CLICKED = SQUARE_3_HOVER + 1,
 
@@ -167,14 +173,8 @@ enum class TEXTURE_ASSET_ID {
     SIMPLE_CANNON05 = SIMPLE_CANNON04 + 1,
     SIMPLE_CANNON06 = SIMPLE_CANNON05 + 1,
 
-    ENEMY0 = SIMPLE_CANNON06 + 1,
-
-    OBSTACLE = ENEMY0 + 1,
-
-    BUNNY_JAILED = OBSTACLE + 1,
-
+    BUNNY_JAILED = SIMPLE_CANNON06 + 1,
     BUNNY_NOT_JAILED = BUNNY_JAILED + 1,
-
     TEXTURE_COUNT = BUNNY_NOT_JAILED + 1
 };
 
@@ -237,11 +237,15 @@ struct PlayerAnimation {
     int timer_ms;  // How many ms before switching to the next frame.
 };
 
-// Camera related componenet
+// ========= Camera related componenet ======================
 // used for updating the objects in the background as camera moves with ship
 // bachgroundObject is anything that doesn't move with the ship
 
 struct BackgroundObject {};
+struct Camera{
+    vec2 acceleration = {0,0};
+};
+
 
 // ========== SHIP DETAILS ==========
 
@@ -282,6 +286,8 @@ enum ENEMY_TYPE { BASIC_GUNNER = 0, FLYER };
 
 struct Enemy {
     ENEMY_TYPE type;
+    int health;
+	  int timer_ms;
     int home_island;
     int health;
 	int timer_ms;
@@ -289,7 +295,6 @@ struct Enemy {
 
 // temperary component for land for enemy path finding testing
 struct Obstacle {
-
 };
 
 // ========== BUNNY DETAILS ==========
