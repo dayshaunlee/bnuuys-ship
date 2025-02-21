@@ -141,22 +141,23 @@ void HandlePlayerMovement(int key, int action, int mod) {
 
 void HandleCameraMovement(int key, int action, int mod) {
     if (action == GLFW_PRESS) {
+        if (!activeShipKeys.count(key)) {
+            keyShipOrder.push_back(key);
+        }
         activeShipKeys.insert(key);
     } else if (action == GLFW_RELEASE) {
         activeShipKeys.erase(key);
+        keyShipOrder.erase(std::remove(keyShipOrder.begin(), keyShipOrder.end(), key), keyShipOrder.end());
     }
 
     float accelerationX = 0.0f;
     float accelerationY = 0.0f;
-    if (activeShipKeys.count(MOVE_UP_BUTTON)) accelerationY += SHIP_CAMERA_SPEED * 2;
-    if (activeShipKeys.count(MOVE_DOWN_BUTTON)) accelerationY -= SHIP_CAMERA_SPEED * 2;
-    if (activeShipKeys.count(MOVE_LEFT_BUTTON)) accelerationX += SHIP_CAMERA_SPEED * 2;
-    if (activeShipKeys.count(MOVE_RIGHT_BUTTON)) accelerationX -= SHIP_CAMERA_SPEED * 2;
+    if (activeShipKeys.count(MOVE_UP_BUTTON)) accelerationY += SHIP_CAMERA_SPEED;
+    if (activeShipKeys.count(MOVE_DOWN_BUTTON)) accelerationY -= SHIP_CAMERA_SPEED;
+    if (activeShipKeys.count(MOVE_LEFT_BUTTON)) accelerationX += SHIP_CAMERA_SPEED;
+    if (activeShipKeys.count(MOVE_RIGHT_BUTTON)) accelerationX -= SHIP_CAMERA_SPEED;
 
-    Camera& c = registry.cameras.components[0];
-    c.acceleration.x = accelerationX;
-    c.acceleration.y = accelerationY;
-    // CameraSystem::GetInstance()->setCameraScreen(accelerationX, accelerationY);
+    CameraSystem::GetInstance()->setCameraScreen(accelerationX, accelerationY);
 }
 
 // tile_pos is the player's tile position when pressing SPACE.
@@ -336,10 +337,11 @@ void Level01::HandleMouseClick(int button, int action, int mods) {
 }
 
 void Level01::Update(float dt) {
+    CameraSystem::GetInstance()->update(dt);
     ai_system.step(dt);
     physics_system.step(dt);
     animation_system.step(dt);
-
+    
     world_system.handle_collisions();
     /*std::cout << CameraSystem::GetInstance()->velocity.x << " " << CameraSystem::GetInstance()->velocity.y << std::endl;*/
 

@@ -1,6 +1,4 @@
 #include "bnuui/bnuui.hpp"
-#include <OpenGL/gl.h>
-#include <OpenGL/gltypes.h>
 #include <glm/ext/vector_float2.hpp>
 #include <memory>
 
