@@ -5,7 +5,7 @@
 
 #include "world_init.hpp"
 
-#include "camera_system.hpp"
+// #include "camera_system.hpp"
 
 // Returns the local bounding coordinates scaled by the current size of the
 // entity
@@ -149,12 +149,7 @@ bool collidesPoly(const Entity e1, const Entity e2) {
 }
 
 void PhysicsSystem::step(float elapsed_ms) {
-    // Updates camera and move all the background objects
-
-    vec2 accleration = registry.cameras.components[0].acceleration;
-    CameraSystem::GetInstance()->addToCameraVelocity(accleration);
-    // Limit velocity to max speed
-    CameraSystem::GetInstance()->update(elapsed_ms);
+    // TODO: Updates camera and move all the background objects
 
     // Move each entity that has motion.
     auto& motion_registry = registry.motions;
