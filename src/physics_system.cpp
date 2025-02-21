@@ -149,14 +149,12 @@ bool collidesPoly(const Entity e1, const Entity e2) {
 }
 
 void PhysicsSystem::step(float elapsed_ms) {
-
     // Updates camera and move all the background objects
 
     vec2 accleration = registry.cameras.components[0].acceleration;
     CameraSystem::GetInstance()->addToCameraVelocity(accleration);
-    // Limit velocity to max speed 
+    // Limit velocity to max speed
     CameraSystem::GetInstance()->update(elapsed_ms);
-    
 
     // Move each entity that has motion.
     auto& motion_registry = registry.motions;

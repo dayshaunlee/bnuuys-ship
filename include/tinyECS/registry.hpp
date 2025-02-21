@@ -36,7 +36,6 @@ class ECSRegistry {
     ComponentContainer<SimpleCannon> simpleCannons;
 
     ComponentContainer<Projectile> projectiles;
-    ComponentContainer<Obstacle> obstacles;
     ComponentContainer<Bunny> bunnies;
 
     // constructor that adds all containers for looping over them

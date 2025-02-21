@@ -25,11 +25,10 @@ void AISystem::step(float elapsed_ms) {
                 enemy_motion.velocity = direction * ENEMY_BASE_SPEED;
 
                 if (enemy_motion.velocity.x < 0) {
-                    vec2 flip = {-1 ,1};
+                    vec2 flip = {-1, 1};
                     enemy_motion.scale *= flip;
                 }
             }
         };
     }
-
 }

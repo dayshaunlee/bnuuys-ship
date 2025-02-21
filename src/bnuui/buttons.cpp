@@ -109,7 +109,7 @@ void Box::doUpdate(float dt) {
 
     if (this->active && this->onActive) {
         this->onActive(*this);
-    } 
+    }
 
     if (this->onUpdate) {
         this->onUpdate(*this, dt);
@@ -137,14 +137,15 @@ void LongBox::doUpdate(float dt) {
 
     if (this->active && this->onActive) {
         this->onActive(*this);
-    } 
+    }
 
     if (this->onUpdate) {
         this->onUpdate(*this, dt);
     }
 }
 
-PlayerStatus::PlayerStatus(vec2 pos, vec2 scale, float rot, float& val, float max_val) : max_health(max_val), curr_health(&val) {
+PlayerStatus::PlayerStatus(vec2 pos, vec2 scale, float rot, float& val, float max_val)
+    : max_health(max_val), curr_health(&val) {
     this->position = pos;
     this->scale = scale;
     this->rotation = rot;
@@ -171,26 +172,23 @@ inline bool isAngryUIFace(TEXTURE_ASSET_ID anim) {
 TEXTURE_ASSET_ID GetNextFaceTexture(TEXTURE_ASSET_ID currAnim, float percentage) {
     if (percentage > 0.5f) {
         if (isAngryUIFace(currAnim)) return TEXTURE_ASSET_ID::BUNNY_FACE_NEUTRAL01;
-        if (currAnim == TEXTURE_ASSET_ID::BUNNY_FACE_NEUTRAL09)
-            return TEXTURE_ASSET_ID::BUNNY_FACE_NEUTRAL01;
-        return (TEXTURE_ASSET_ID)((int) currAnim + 1);
+        if (currAnim == TEXTURE_ASSET_ID::BUNNY_FACE_NEUTRAL09) return TEXTURE_ASSET_ID::BUNNY_FACE_NEUTRAL01;
+        return (TEXTURE_ASSET_ID) ((int) currAnim + 1);
     } else {
         if (isNeutralUIFace(currAnim)) return TEXTURE_ASSET_ID::BUNNY_FACE_ANGRY01;
         // Angry face.
-        if (currAnim == TEXTURE_ASSET_ID::BUNNY_FACE_ANGRY05)
-            return TEXTURE_ASSET_ID::BUNNY_FACE_ANGRY01;
-        return (TEXTURE_ASSET_ID)((int) currAnim + 1);
+        if (currAnim == TEXTURE_ASSET_ID::BUNNY_FACE_ANGRY05) return TEXTURE_ASSET_ID::BUNNY_FACE_ANGRY01;
+        return (TEXTURE_ASSET_ID) ((int) currAnim + 1);
     }
-
 }
 
 void PlayerStatus::doUpdate(float dt) {
     // Change to next animation.
-    float percentage = *curr_health/max_health;
+    float percentage = *curr_health / max_health;
 
     if (time_ms <= 0) {
         this->texture = GetNextFaceTexture(this->texture, percentage);
-        time_ms = ANIMATION_TIME/1.5f;
+        time_ms = ANIMATION_TIME / 1.5f;
     }
 
     if (this->hovering && this->onHover) {
@@ -199,7 +197,7 @@ void PlayerStatus::doUpdate(float dt) {
 
     if (this->active && this->onActive) {
         this->onActive(*this);
-    } 
+    }
 
     if (this->onUpdate) {
         this->onUpdate(*this, dt);
@@ -215,7 +213,7 @@ SimpleBox::SimpleBox(vec2 pos, vec2 scale, float rot) {
     this->rotation = rot;
 
     this->offset = {0, 0};
-    this->color =  {0, 0, 0};
+    this->color = {0, 0, 0};
     this->texture = TEXTURE_ASSET_ID::TEXTURE_COUNT;
     this->effect = EFFECT_ASSET_ID::EGG;
     this->geometry = GEOMETRY_BUFFER_ID::UI_SQUARE;
@@ -229,21 +227,22 @@ void SimpleBox::doUpdate(float dt) {
 
     if (this->active && this->onActive) {
         this->onActive(*this);
-    } 
+    }
 
     if (this->onUpdate) {
         this->onUpdate(*this, dt);
     }
 }
 
-ProgressBar::ProgressBar(vec2 pos, vec2 scale, float rot, float& val, float max_val) : max_val(max_val), curr_val(&val) {
+ProgressBar::ProgressBar(vec2 pos, vec2 scale, float rot, float& val, float max_val)
+    : max_val(max_val), curr_val(&val) {
     // Creating the background for progress bar.
     this->position = pos;
     this->scale = scale;
     this->rotation = rot;
 
     this->offset = {0, 0};
-    this->color =  {0.25f, 0.25f, 0.25f};   // Background color.
+    this->color = {0.25f, 0.25f, 0.25f};  // Background color.
     this->texture = TEXTURE_ASSET_ID::TEXTURE_COUNT;
     this->effect = EFFECT_ASSET_ID::EGG;
     this->geometry = GEOMETRY_BUFFER_ID::UI_SQUARE;
@@ -251,7 +250,7 @@ ProgressBar::ProgressBar(vec2 pos, vec2 scale, float rot, float& val, float max_
 
     // Now create a child component for the ACTUAL progress bar.
     auto progress_bar = std::make_shared<SimpleBox>(pos, scale, rot);
-    progress_bar->color = {0,1.0f,0};   // Change later.
+    progress_bar->color = {0, 1.0f, 0};  // Change later.
 
     this->children.push_back(progress_bar);
 };
@@ -270,7 +269,7 @@ glm::vec3 interpolateColor(float t) {
 void ProgressBar::doUpdate(float dt) {
     auto progress_bar = this->children[0];
     // First calculate the actual progress.
-    float percentage = *curr_val/max_val;
+    float percentage = *curr_val / max_val;
 
     // Rescale the progress_bar to percentage * background.
     float new_x = percentage * this->scale.x;
@@ -280,7 +279,7 @@ void ProgressBar::doUpdate(float dt) {
     progress_bar->color = interpolateColor(percentage);
 
     // Then move the position by that difference.
-    progress_bar->position.x = (this->position.x - diff/2);
+    progress_bar->position.x = (this->position.x - diff / 2);
 
     if (this->hovering && this->onHover) {
         this->onHover(*this);
@@ -288,7 +287,7 @@ void ProgressBar::doUpdate(float dt) {
 
     if (this->active && this->onActive) {
         this->onActive(*this);
-    } 
+    }
 
     if (this->onUpdate) {
         this->onUpdate(*this, dt);
@@ -301,13 +300,14 @@ Cursor::Cursor(vec2 pos, vec2 scale, float rot) {
     this->rotation = rot;
 
     this->offset = {0, 0};
-    this->color =  {1.0f, 1.0f, 1.0f};
+    this->color = {1.0f, 1.0f, 1.0f};
     this->texture = TEXTURE_ASSET_ID::TILE_CURSOR;
     this->effect = EFFECT_ASSET_ID::TEXTURED;
     this->geometry = GEOMETRY_BUFFER_ID::SPRITE;
-    this->visible = true; 
+    this->visible = true;
 }
 
-void Cursor::doUpdate(float dt) {}
+void Cursor::doUpdate(float dt) {
+}
 
 }  // namespace bnuui

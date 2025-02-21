@@ -287,10 +287,8 @@ enum ENEMY_TYPE { BASIC_GUNNER = 0, FLYER };
 struct Enemy {
     ENEMY_TYPE type;
     int health;
-	  int timer_ms;
-    int home_island;
-    int health;
 	int timer_ms;
+    int home_island;
 };
 
 // temperary component for land for enemy path finding testing

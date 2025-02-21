@@ -70,7 +70,6 @@ void debugMap(std::unique_ptr<tson::Map>& map) {
     }
 };
 
-
 /* TODO (X=COMPLETE):
  *	- loop through all layers. if it is of type 'objectgroup' then:
  *		- loop through "island" layer and:
@@ -96,10 +95,10 @@ tson::Vector2<int> loadMap(const std::string& name) {
     std::unique_ptr<tson::Map> map = t.parse(path);
 
     if (map->getStatus() == tson::ParseStatus::OK) {
-        //debugMap(map);
+        // debugMap(map);
         tson::Layer* islands_layer = map->getLayer("islands");
-        assert(islands_layer != nullptr); // ensure layer exists
-        assert(islands_layer->getType() == tson::LayerType::ObjectGroup); // ensure it is object layer
+        assert(islands_layer != nullptr);                                  // ensure layer exists
+        assert(islands_layer->getType() == tson::LayerType::ObjectGroup);  // ensure it is object layer
         for (auto& obj : islands_layer->getObjects()) {
             if (obj.getClassType() == "island") {
                 Entity e = Entity();
@@ -107,7 +106,7 @@ tson::Vector2<int> loadMap(const std::string& name) {
                 mot.position = {obj.getPosition().x, obj.getPosition().y};
                 mot.scale = {obj.getSize().x, obj.getSize().y};
                 Island& isl = registry.islands.emplace(e);
-                isl.polygon = obj.getPolygons(); // first point is always (0, 0)
+                isl.polygon = obj.getPolygons();  // first point is always (0, 0)
                 registry.backgroundObjects.emplace(e);
             } else if (obj.getClassType() == "base") {
                 Entity e = Entity();
@@ -121,7 +120,7 @@ tson::Vector2<int> loadMap(const std::string& name) {
         }
 
         tson::Layer* spawns_layer = map->getLayer("spawnpoints");
-        assert(spawns_layer != nullptr);                                   // ensure layer exists
+        assert(spawns_layer != nullptr);                                  // ensure layer exists
         assert(spawns_layer->getType() == tson::LayerType::ObjectGroup);  // ensure it is object layer
 
         for (auto& obj : spawns_layer->getObjects()) {
@@ -140,7 +139,7 @@ tson::Vector2<int> loadMap(const std::string& name) {
                 if (registry.players.size() == 1) {
                     Entity e = registry.players.entities[0];
                     Motion& mot = registry.motions.get(e);
-                    //mot.position = {obj.getPosition().x, obj.getPosition().y};
+                    // mot.position = {obj.getPosition().x, obj.getPosition().y};
                 }
             }
         }
