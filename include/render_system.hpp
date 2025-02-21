@@ -3,6 +3,7 @@
 #include <array>
 #include <utility>
 
+#include "bnuui/bnuui.hpp"
 #include "common.hpp"
 #include "tinyECS/components.hpp"
 #include "tinyECS/tiny_ecs.hpp"
@@ -61,9 +62,49 @@ class RenderSystem {
         // Walk Left
         textures_path("bunny/walk_left0.png"),  // BUNNY_LEFT_WALK0
         textures_path("bunny/walk_left1.png"),  // BUNNY_LEFT_WALK1
-
+        
         // water background
         textures_path("background/water_background.png"),
+        
+        // UI Assets.
+        textures_path("ui/buttons/square3Normal.png"),
+        textures_path("ui/buttons/square3Hover.png"),
+        textures_path("ui/buttons/square3Clicked.png"),
+
+        textures_path("ui/buttons/play_neutral.png"),
+        textures_path("ui/buttons/play_clicked.png"),
+
+        textures_path("ui/buttons/btn_neutral.png"),
+        textures_path("ui/buttons/btn_clicked.png"),
+
+        // Bunny UI Face Neutral
+        textures_path("ui/faces/face_long_anim010.png"),
+        textures_path("ui/faces/face_long_anim011.png"),
+        textures_path("ui/faces/face_long_anim012.png"),
+        textures_path("ui/faces/face_long_anim013.png"),
+        textures_path("ui/faces/face_long_anim014.png"),
+        textures_path("ui/faces/face_long_anim015.png"),
+        textures_path("ui/faces/face_long_anim016.png"),
+        textures_path("ui/faces/face_long_anim017.png"),
+        textures_path("ui/faces/face_long_anim018.png"),
+
+        // Bunny UI Angry face
+        textures_path("ui/faces/face_angry01.png"),
+        textures_path("ui/faces/face_angry02.png"),
+        textures_path("ui/faces/face_angry03.png"),
+        textures_path("ui/faces/face_angry04.png"),
+        textures_path("ui/faces/face_angry05.png"),
+
+        // Cursor UI
+        textures_path("ui/cursor.png"),
+
+        // Simple Cannon
+        textures_path("cannons/simple_cannon000.png"),
+        textures_path("cannons/simple_cannon001.png"),
+        textures_path("cannons/simple_cannon002.png"),
+        textures_path("cannons/simple_cannon003.png"),
+        textures_path("cannons/simple_cannon004.png"),
+        textures_path("cannons/simple_cannon005.png"),
 
         // enemy (stationary)
         textures_path("enemies/chicken0.png"),
@@ -78,11 +119,13 @@ class RenderSystem {
 
     std::array<GLuint, effect_count> effects;
     // Make sure these paths remain in sync with the associated enumerators.
-    const std::array<std::string, effect_count> effect_paths = {shader_path("coloured"),
-                                                                shader_path("egg"),
-                                                                shader_path("chicken"),
-                                                                shader_path("textured"),
-                                                                shader_path("vignette")};
+    const std::array<std::string, effect_count> effect_paths = {
+        shader_path("coloured"), 
+        shader_path("egg"), 
+        shader_path("chicken"), 
+        shader_path("textured"), 
+        shader_path("vignette"),
+    };
 
     std::array<GLuint, geometry_count> vertex_buffers;
     std::array<GLuint, geometry_count> index_buffers;
@@ -125,6 +168,9 @@ class RenderSystem {
     void drawGridLine(Entity entity, const mat3& projection);
     void drawTexturedMesh(Entity entity, const mat3& projection);
     void drawToScreen();
+
+    // Drawing function for UI elements
+    void drawUIElement(bnuui::Element& element, const mat3& projection);
 
     // Window handle
     GLFWwindow* window;

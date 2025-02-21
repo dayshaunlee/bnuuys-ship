@@ -1,6 +1,7 @@
 #pragma once
 
 // stlib
+#include <unistd.h>
 #include <fstream>  // stdout, stderr..
 #include <string>
 #include <tuple>
@@ -45,8 +46,10 @@ inline std::string map_path(const std::string& name) {
 //
 // game constants
 //
+
+const int BLOCK = 80;
+
 const int WINDOW_WIDTH_PX = 840;
-// changes to this so we have odd number of grids both vertical and horizontal
 const int WINDOW_HEIGHT_PX = 616;
 
 const int GRID_CELL_WIDTH_PX = 56;
@@ -56,6 +59,9 @@ const int GRID_LINE_WIDTH_PX = 2;
 // middle grid for the center of the ship
 const int MIDDLE_GRID_X = 7;
 const int MIDDLE_GRID_Y = 5;
+
+const int COL_COUNT = WINDOW_WIDTH_PX/GRID_CELL_WIDTH_PX;
+const int ROW_COUNT = WINDOW_HEIGHT_PX/GRID_CELL_HEIGHT_PX;
 
 const int ENEMY_BASE_HEALTH = 1;
 const float ENEMY_BASE_SPEED = 50;
@@ -76,6 +82,11 @@ struct Transform {
 
 bool gl_has_errors();
 
+inline vec2 TileToVector2(int tile_x, int tile_y) {
+  return vec2((int)tile_x * GRID_CELL_WIDTH_PX + 30,
+              (int)tile_y * GRID_CELL_HEIGHT_PX + 30);
+}
+
 // ==== PLAYER CONSTANTS ====
 
 // Character controls.
@@ -87,3 +98,7 @@ const int MOVE_LEFT_BUTTON = GLFW_KEY_A;
 const float WALK_SPEED = 150.0f;
 const float ANIMATION_TIME = 250.0f;
 const float SHIP_CAMERA_SPEED = 100.0f;
+
+const float SIMPLE_CANNON_COOLDOWN = 1000.0f;   // 1 second
+const float SIMPLE_CANNON_DAMAGE = 10.0f;
+const float PROJECTILE_LIFETIME = 2000.0f;      // Bullets have 5 seconds before getting removed.

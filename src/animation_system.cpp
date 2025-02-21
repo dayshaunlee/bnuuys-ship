@@ -1,52 +1,45 @@
 // internal
 #include "animation_system.hpp"
+#include <ios>
 #include "common.hpp"
 #include "tinyECS/components.hpp"
 #include "tinyECS/registry.hpp"
 #include "iostream"
 
 bool isIdleAnim(TEXTURE_ASSET_ID currAnim) {
-    return  (currAnim == TEXTURE_ASSET_ID::BUNNY_IDLE_UP0)    || 
-            (currAnim == TEXTURE_ASSET_ID::BUNNY_IDLE_UP1)    ||
-            (currAnim == TEXTURE_ASSET_ID::BUNNY_IDLE_DOWN0)  ||
-            (currAnim == TEXTURE_ASSET_ID::BUNNY_IDLE_DOWN1)  ||
-            (currAnim == TEXTURE_ASSET_ID::BUNNY_IDLE_LEFT0)  ||
-            (currAnim == TEXTURE_ASSET_ID::BUNNY_IDLE_LEFT1)  ||
-            (currAnim == TEXTURE_ASSET_ID::BUNNY_IDLE_RIGHT0) ||
-            (currAnim == TEXTURE_ASSET_ID::BUNNY_IDLE_RIGHT1);
+    return (currAnim == TEXTURE_ASSET_ID::BUNNY_IDLE_UP0) || (currAnim == TEXTURE_ASSET_ID::BUNNY_IDLE_UP1) ||
+           (currAnim == TEXTURE_ASSET_ID::BUNNY_IDLE_DOWN0) || (currAnim == TEXTURE_ASSET_ID::BUNNY_IDLE_DOWN1) ||
+           (currAnim == TEXTURE_ASSET_ID::BUNNY_IDLE_LEFT0) || (currAnim == TEXTURE_ASSET_ID::BUNNY_IDLE_LEFT1) ||
+           (currAnim == TEXTURE_ASSET_ID::BUNNY_IDLE_RIGHT0) || (currAnim == TEXTURE_ASSET_ID::BUNNY_IDLE_RIGHT1);
 }
 
 bool isWalkAnim(TEXTURE_ASSET_ID currAnim) {
-    return  (currAnim == TEXTURE_ASSET_ID::BUNNY_UP_WALK0) ||
-            (currAnim == TEXTURE_ASSET_ID::BUNNY_UP_WALK1) ||
-            (currAnim == TEXTURE_ASSET_ID::BUNNY_RIGHT_WALK0) ||
-            (currAnim == TEXTURE_ASSET_ID::BUNNY_RIGHT_WALK1) ||
-            (currAnim == TEXTURE_ASSET_ID::BUNNY_DOWN_WALK0) ||
-            (currAnim == TEXTURE_ASSET_ID::BUNNY_DOWN_WALK1) ||
-            (currAnim == TEXTURE_ASSET_ID::BUNNY_LEFT_WALK0) ||
-            (currAnim == TEXTURE_ASSET_ID::BUNNY_LEFT_WALK1);
+    return (currAnim == TEXTURE_ASSET_ID::BUNNY_UP_WALK0) || (currAnim == TEXTURE_ASSET_ID::BUNNY_UP_WALK1) ||
+           (currAnim == TEXTURE_ASSET_ID::BUNNY_RIGHT_WALK0) || (currAnim == TEXTURE_ASSET_ID::BUNNY_RIGHT_WALK1) ||
+           (currAnim == TEXTURE_ASSET_ID::BUNNY_DOWN_WALK0) || (currAnim == TEXTURE_ASSET_ID::BUNNY_DOWN_WALK1) ||
+           (currAnim == TEXTURE_ASSET_ID::BUNNY_LEFT_WALK0) || (currAnim == TEXTURE_ASSET_ID::BUNNY_LEFT_WALK1);
 }
 
-DIRECTION getAnimDirection (TEXTURE_ASSET_ID currAnim) {
+DIRECTION getAnimDirection(TEXTURE_ASSET_ID currAnim) {
     switch (currAnim) {
         case TEXTURE_ASSET_ID::BUNNY_IDLE_UP0:
         case TEXTURE_ASSET_ID::BUNNY_IDLE_UP1:
         case TEXTURE_ASSET_ID::BUNNY_UP_WALK0:
         case TEXTURE_ASSET_ID::BUNNY_UP_WALK1:
             return UP;
-        
+
         case TEXTURE_ASSET_ID::BUNNY_IDLE_RIGHT0:
         case TEXTURE_ASSET_ID::BUNNY_IDLE_RIGHT1:
         case TEXTURE_ASSET_ID::BUNNY_RIGHT_WALK0:
         case TEXTURE_ASSET_ID::BUNNY_RIGHT_WALK1:
             return RIGHT;
-        
+
         case TEXTURE_ASSET_ID::BUNNY_IDLE_DOWN0:
         case TEXTURE_ASSET_ID::BUNNY_IDLE_DOWN1:
         case TEXTURE_ASSET_ID::BUNNY_DOWN_WALK0:
         case TEXTURE_ASSET_ID::BUNNY_DOWN_WALK1:
             return DOWN;
-        
+
         case TEXTURE_ASSET_ID::BUNNY_IDLE_LEFT0:
         case TEXTURE_ASSET_ID::BUNNY_IDLE_LEFT1:
         case TEXTURE_ASSET_ID::BUNNY_LEFT_WALK0:
@@ -61,24 +54,24 @@ TEXTURE_ASSET_ID GetFirstPlayerAnimation(Player player) {
     if (player.player_state == IDLE) {
         switch (player.direction) {
             case UP:
-            return TEXTURE_ASSET_ID::BUNNY_IDLE_UP0;
+                return TEXTURE_ASSET_ID::BUNNY_IDLE_UP0;
             case RIGHT:
-            return TEXTURE_ASSET_ID::BUNNY_IDLE_RIGHT0;
+                return TEXTURE_ASSET_ID::BUNNY_IDLE_RIGHT0;
             case DOWN:
-            return TEXTURE_ASSET_ID::BUNNY_IDLE_DOWN0;
+                return TEXTURE_ASSET_ID::BUNNY_IDLE_DOWN0;
             case LEFT:
-            return TEXTURE_ASSET_ID::BUNNY_IDLE_LEFT0;
+                return TEXTURE_ASSET_ID::BUNNY_IDLE_LEFT0;
         }
     } else if (player.player_state == WALKING) {
         switch (player.direction) {
             case UP:
-            return TEXTURE_ASSET_ID::BUNNY_UP_WALK0;
+                return TEXTURE_ASSET_ID::BUNNY_UP_WALK0;
             case RIGHT:
-            return TEXTURE_ASSET_ID::BUNNY_RIGHT_WALK0;
+                return TEXTURE_ASSET_ID::BUNNY_RIGHT_WALK0;
             case DOWN:
-            return TEXTURE_ASSET_ID::BUNNY_DOWN_WALK0;
+                return TEXTURE_ASSET_ID::BUNNY_DOWN_WALK0;
             case LEFT:
-            return TEXTURE_ASSET_ID::BUNNY_LEFT_WALK0;
+                return TEXTURE_ASSET_ID::BUNNY_LEFT_WALK0;
         }
     }
     return TEXTURE_ASSET_ID::BUNNY_IDLE_DOWN0;
@@ -92,14 +85,14 @@ TEXTURE_ASSET_ID GetNextPlayerAnimation(TEXTURE_ASSET_ID currAnim, Player player
         if (currAnim == TEXTURE_ASSET_ID::BUNNY_IDLE_DOWN0)
             return TEXTURE_ASSET_ID::BUNNY_IDLE_DOWN1;
         else if (currAnim == TEXTURE_ASSET_ID::BUNNY_IDLE_DOWN1)
-            return TEXTURE_ASSET_ID::BUNNY_IDLE_DOWN0; 
+            return TEXTURE_ASSET_ID::BUNNY_IDLE_DOWN0;
 
         // For Facing Up.
         else if (currAnim == TEXTURE_ASSET_ID::BUNNY_IDLE_UP0)
             return TEXTURE_ASSET_ID::BUNNY_IDLE_UP1;
         else if (currAnim == TEXTURE_ASSET_ID::BUNNY_IDLE_UP1)
             return TEXTURE_ASSET_ID::BUNNY_IDLE_UP0;
-        
+
         // For Facing Right.
         else if (currAnim == TEXTURE_ASSET_ID::BUNNY_IDLE_RIGHT0)
             return TEXTURE_ASSET_ID::BUNNY_IDLE_RIGHT1;
@@ -120,13 +113,13 @@ TEXTURE_ASSET_ID GetNextPlayerAnimation(TEXTURE_ASSET_ID currAnim, Player player
             return TEXTURE_ASSET_ID::BUNNY_DOWN_WALK1;
         else if (currAnim == TEXTURE_ASSET_ID::BUNNY_DOWN_WALK1)
             return TEXTURE_ASSET_ID::BUNNY_DOWN_WALK0;
-        
+
         // For Facing Up.
         else if (currAnim == TEXTURE_ASSET_ID::BUNNY_UP_WALK0)
             return TEXTURE_ASSET_ID::BUNNY_UP_WALK1;
         else if (currAnim == TEXTURE_ASSET_ID::BUNNY_UP_WALK1)
             return TEXTURE_ASSET_ID::BUNNY_UP_WALK0;
-        
+
         // For Facing Right.
         else if (currAnim == TEXTURE_ASSET_ID::BUNNY_RIGHT_WALK0)
             return TEXTURE_ASSET_ID::BUNNY_RIGHT_WALK1;
@@ -139,7 +132,7 @@ TEXTURE_ASSET_ID GetNextPlayerAnimation(TEXTURE_ASSET_ID currAnim, Player player
         else if (currAnim == TEXTURE_ASSET_ID::BUNNY_LEFT_WALK1)
             return TEXTURE_ASSET_ID::BUNNY_LEFT_WALK0;
     }
-    
+
     return TEXTURE_ASSET_ID::BUNNY_IDLE_DOWN0;
 }
 
@@ -149,10 +142,9 @@ void HandlePlayerAnimation(float elapsed_ms) {
         PlayerAnimation& player_anim = registry.playerAnimations.get(player);
 
         auto currAnim = player_anim.curr_anim;
-        if ((player_comp.player_state == IDLE && !isIdleAnim(currAnim))    || 
+        if ((player_comp.player_state == IDLE && !isIdleAnim(currAnim)) ||
             (player_comp.player_state == WALKING && !isWalkAnim(currAnim)) ||
             (player_comp.direction != getAnimDirection(currAnim))) {
-            
             // Update their animation.
             TEXTURE_ASSET_ID newAnim = GetFirstPlayerAnimation(player_comp);
             RenderRequest& rr = registry.renderRequests.get(player);
@@ -162,9 +154,8 @@ void HandlePlayerAnimation(float elapsed_ms) {
             return;
         }
 
-
         // Change animation for idle.
-        if (player_anim.timer_ms <= 0) {  
+        if (player_anim.timer_ms <= 0) {
             // Update their animation.
             TEXTURE_ASSET_ID newAnim = GetNextPlayerAnimation(currAnim, player_comp);
             RenderRequest& rr = registry.renderRequests.get(player);

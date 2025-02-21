@@ -25,7 +25,15 @@ class ECSRegistry {
 
     // backgrounObject component for camera
     ComponentContainer<BackgroundObject> backgroundObjects;
+
     ComponentContainer<Enemy> enemies;
+    ComponentContainer<Island> islands;
+    ComponentContainer<Base> base;
+
+    ComponentContainer<SteeringWheel> steeringWheels;
+    ComponentContainer<SimpleCannon> simpleCannons;
+
+    ComponentContainer<Projectile> projectiles;
     ComponentContainer<Obstacle> obstacles;
     ComponentContainer<Bunny> bunnies;
 
@@ -45,6 +53,13 @@ class ECSRegistry {
         registry_list.push_back(&collisions);
         
         registry_list.push_back(&backgroundObjects);
+
+        registry_list.push_back(&enemies);
+        registry_list.push_back(&islands);
+        registry_list.push_back(&base);
+
+        registry_list.push_back(&steeringWheels);
+        registry_list.push_back(&simpleCannons);
         registry_list.push_back(&enemies);
         registry_list.push_back(&obstacles);
 

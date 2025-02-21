@@ -29,12 +29,12 @@ struct ScreenState
 };
 
 struct Island {
-    tson::Vector2<int> polygon;
+    std::vector<tson::Vector2i> polygon;
 };
 
 // Player base, in the future may add more attributes for upgrades functionality
 struct Base {
-    tson::Vector2<int> polygon;
+    std::vector<tson::Vector2i> polygon;
 };
 
 // Data structure for toggling debug mode
@@ -127,7 +127,47 @@ enum class TEXTURE_ASSET_ID {
 
     WATER_BACKGROUND = BUNNY_LEFT_WALK1 + 1,
 
-    ENEMY0 = WATER_BACKGROUND + 1,
+    // UI assets.
+    SQUARE_3_NORMAL = WATER_BACKGROUND + 1,
+    SQUARE_3_HOVER = SQUARE_3_NORMAL + 1,
+    SQUARE_3_CLICKED = SQUARE_3_HOVER + 1,
+
+    PLAY_BUTTON_NORMAL = SQUARE_3_CLICKED + 1,
+    PLAY_BUTTON_CLICKED = PLAY_BUTTON_NORMAL + 1,
+
+    LONG_BOX = PLAY_BUTTON_CLICKED + 1,
+    LONG_BOX_CLICKED = LONG_BOX + 1,
+
+    // Bunny UI Neutral Face.
+    BUNNY_FACE_NEUTRAL01 = LONG_BOX_CLICKED + 1,
+    BUNNY_FACE_NEUTRAL02 = BUNNY_FACE_NEUTRAL01 + 1,
+    BUNNY_FACE_NEUTRAL03 = BUNNY_FACE_NEUTRAL02 + 1,
+    BUNNY_FACE_NEUTRAL04 = BUNNY_FACE_NEUTRAL03 + 1,
+    BUNNY_FACE_NEUTRAL05 = BUNNY_FACE_NEUTRAL04 + 1,
+    BUNNY_FACE_NEUTRAL06 = BUNNY_FACE_NEUTRAL05 + 1,
+    BUNNY_FACE_NEUTRAL07 = BUNNY_FACE_NEUTRAL06 + 1,
+    BUNNY_FACE_NEUTRAL08 = BUNNY_FACE_NEUTRAL07 + 1,
+    BUNNY_FACE_NEUTRAL09 = BUNNY_FACE_NEUTRAL08 + 1,
+
+    // Bunny UI Angry Face.
+    BUNNY_FACE_ANGRY01 = BUNNY_FACE_NEUTRAL09 + 1,
+    BUNNY_FACE_ANGRY02 = BUNNY_FACE_ANGRY01 + 1,
+    BUNNY_FACE_ANGRY03 = BUNNY_FACE_ANGRY02 + 1,
+    BUNNY_FACE_ANGRY04 = BUNNY_FACE_ANGRY03 + 1,
+    BUNNY_FACE_ANGRY05 = BUNNY_FACE_ANGRY04 + 1,
+
+    // Tile Cursor
+    TILE_CURSOR = BUNNY_FACE_ANGRY05 + 1,
+
+    // Simple Cannon
+    SIMPLE_CANNON01 = TILE_CURSOR + 1,
+    SIMPLE_CANNON02 = SIMPLE_CANNON01 + 1,
+    SIMPLE_CANNON03 = SIMPLE_CANNON02 + 1,
+    SIMPLE_CANNON04 = SIMPLE_CANNON03 + 1,
+    SIMPLE_CANNON05 = SIMPLE_CANNON04 + 1,
+    SIMPLE_CANNON06 = SIMPLE_CANNON05 + 1,
+
+    ENEMY0 = SIMPLE_CANNON06 + 1,
 
     OBSTACLE = ENEMY0 + 1,
 
@@ -157,7 +197,8 @@ enum class GEOMETRY_BUFFER_ID {
     DEBUG_LINE = EGG + 1,
     SCREEN_TRIANGLE = DEBUG_LINE + 1,
     SHIP_SQUARE = SCREEN_TRIANGLE + 1,
-    GEOMETRY_COUNT = SHIP_SQUARE + 1
+    UI_SQUARE = SHIP_SQUARE + 1,
+    GEOMETRY_COUNT = UI_SQUARE + 1
 };
 const int geometry_count = (int) GEOMETRY_BUFFER_ID::GEOMETRY_COUNT;
 
@@ -184,6 +225,7 @@ enum PLAYERSTATE {
 
 // Player component
 struct Player {
+    float health;
     std::string name;
     DIRECTION direction;
     PLAYERSTATE player_state;
@@ -202,18 +244,45 @@ struct PlayerAnimation {
 struct BackgroundObject {};
 
 // ========== SHIP DETAILS ==========
+
+enum MODULE_TYPES {
+    EMPTY,
+    PLATFORM,
+    STEERING_WHEEL,
+    SIMPLE_CANNON,
+    FAST_CANNON,
+};
+
+struct SteeringWheel {
+    bool is_automated;
+};
+
+struct Projectile {
+    float damage;
+    float alive_time_ms; // How long before we remove this projectile.
+};
+
+struct SimpleCannon {
+    bool is_automated;
+    float timer_ms; // The cooldown period before another shot.
+};
+
 struct Ship {
     float health;
     int num_weapon;
+    // This defines what the module is AND the corresponding entity.
+    std::vector<std::vector<MODULE_TYPES>> ship_modules;
+    std::vector<std::vector<Entity>> ship_modules_entity;
 };
 
 // ========== ENEMY DETAILS ==========
 // the enemy type stores information about enemy HP, damage, speed, etc..
 // TODO: ADD ENEMY TYPE INFORMATION IN COMMON
-enum ENEMY_TYPE { BASIC_GUNNER, FLYER };
+enum ENEMY_TYPE { BASIC_GUNNER = 0, FLYER };
 
 struct Enemy {
     ENEMY_TYPE type;
+    int home_island;
     int health;
 	int timer_ms;
 };

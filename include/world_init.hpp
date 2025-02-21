@@ -6,6 +6,10 @@
 
 // Player
 Entity createPlayer(RenderSystem* renderer, vec2 position);
+Entity createPlayer(vec2 position);
+Entity createCannonProjectile(vec2 orig, vec2 dest);
+Entity createSteeringWheel(vec2 tile_pos);
+Entity createCannon(vec2 tile_pos);
 
 Entity setupCamera(RenderSystem* renderer, vec2 shipPosiiton);
 
@@ -17,9 +21,11 @@ Entity createGridLine(vec2 start_pos, vec2 end_pos);
 
 // Enemy
 Entity createEnemy(RenderSystem* renderer, vec2 position);
+Entity createEnemy(vec2 position);
 
 // Obstacle for enemy path finding testing
 Entity createObstacle(RenderSystem* renderer, vec2 position);
 
 //Bunny
 Entity createBunny(RenderSystem* renderer, vec2 position);
+Entity createBunny(vec2 position);
