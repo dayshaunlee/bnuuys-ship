@@ -25,12 +25,17 @@ class ECSRegistry {
 
     // backgrounObject component for camera
     ComponentContainer<BackgroundObject> backgroundObjects;
+    ComponentContainer<Camera> cameras;
     ComponentContainer<Enemy> enemies;
     ComponentContainer<Obstacle> obstacles;
 
-    ComponentContainer<Enemy> enemies;
     ComponentContainer<Island> islands;
     ComponentContainer<Base> base;
+
+    ComponentContainer<SteeringWheel> steeringWheels;
+    ComponentContainer<SimpleCannon> simpleCannons;
+
+    ComponentContainer<Projectile> projectiles;
 
     // constructor that adds all containers for looping over them
     ECSRegistry() {
@@ -48,10 +53,15 @@ class ECSRegistry {
         registry_list.push_back(&collisions);
         
         registry_list.push_back(&backgroundObjects);
+        registry_list.push_back(&cameras);
+
         registry_list.push_back(&enemies);
         registry_list.push_back(&obstacles);
         registry_list.push_back(&islands);
         registry_list.push_back(&base);
+
+        registry_list.push_back(&steeringWheels);
+        registry_list.push_back(&simpleCannons);
     }
 
     void clear_all_components() {

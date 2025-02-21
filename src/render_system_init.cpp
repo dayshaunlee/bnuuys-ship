@@ -222,10 +222,10 @@ void RenderSystem::initializeGlGeometryBuffers() {
 
     // Define the four corners of the square (centered at origin)
     square_vertices = {
-        {{-0.5f, -0.5f, square_depth}, {0.6f, 0.3f, 0.1f}},  // Bottom-left (brown color)
-        {{0.5f, -0.5f, square_depth}, {0.6f, 0.3f, 0.1f}},   // Bottom-right
-        {{0.5f, 0.5f, square_depth}, {0.6f, 0.3f, 0.1f}},    // Top-right
-        {{-0.5f, 0.5f, square_depth}, {0.6f, 0.3f, 0.1f}},   // Top-left
+        {{-0.5f, -0.5f, square_depth}, {0.6f, 0.3f, 0.1f}}, // Bottom-left (brown color)
+        {{0.5f, -0.5f,  square_depth}, {0.6f, 0.3f, 0.1f}}, // Bottom-right
+        {{0.5f, 0.5f,   square_depth}, {0.6f, 0.3f, 0.1f}}, // Top-right
+        {{-0.5f, 0.5f,  square_depth}, {0.6f, 0.3f, 0.1f}}, // Top-left
     };
 
     // Define two triangles forming the square
@@ -236,6 +236,29 @@ void RenderSystem::initializeGlGeometryBuffers() {
     meshes[square_geom_index].vertices = square_vertices;
     meshes[square_geom_index].vertex_indices = square_indices;
     bindVBOandIBO(GEOMETRY_BUFFER_ID::SHIP_SQUARE, square_vertices, square_indices);
+
+    ///////////////////////////////////////////////////////
+    // Square Geom for Progressbar.
+    std::vector<ColoredVertex> UISquare_vertices;
+    std::vector<uint16_t> UISquare_indices;
+
+    constexpr float UISquare_depth = 0.0f;
+
+    // Define the four corners of the square (centered at origin)
+    UISquare_vertices = {
+        {{-0.5f, -0.5f,  UISquare_depth}, {1.0f, 1.0f, 1.0f}},
+        {{ 0.5f, -0.5f,  UISquare_depth}, {1.0f, 1.0f, 1.0f}},
+        {{ 0.5f,  0.5f,  UISquare_depth}, {1.0f, 1.0f, 1.0f}},
+        {{-0.5f,  0.5f,  UISquare_depth}, {1.0f, 1.0f, 1.0f}},
+    };
+
+    // Define two triangles forming the square
+    UISquare_indices = {0, 1, 3, 1, 2, 3};
+
+    int UISquare_geom_index = (int) GEOMETRY_BUFFER_ID::UI_SQUARE;
+    meshes[UISquare_geom_index].vertices = UISquare_vertices;
+    meshes[UISquare_geom_index].vertex_indices = UISquare_indices;
+    bindVBOandIBO(GEOMETRY_BUFFER_ID::UI_SQUARE, UISquare_vertices, UISquare_indices);
 }
 
 RenderSystem::~RenderSystem() {

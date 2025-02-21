@@ -1,9 +1,14 @@
 #include <SDL.h>
 #include <glm/trigonometric.hpp>
 #include <iostream>
+#include <memory>
 
 // internal
 #include "render_system.hpp"
+#include "bnuui/bnuui.hpp"
+#include "common.hpp"
+#include "sceneManager/scene_manager.hpp"
+#include "tinyECS/components.hpp"
 #include "tinyECS/registry.hpp"
 
 void RenderSystem::drawGridLine(Entity entity, const mat3& projection) {
@@ -143,6 +148,10 @@ void RenderSystem::drawTexturedMesh(Entity entity, const mat3& projection) {
         GLuint texture_id = texture_gl_handles[(GLuint) registry.renderRequests.get(entity).used_texture];
 
         glBindTexture(GL_TEXTURE_2D, texture_id);
+        // Brian: Disable smoothing
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
         gl_has_errors();
     }
     // .obj entities
@@ -191,6 +200,83 @@ void RenderSystem::drawTexturedMesh(Entity entity, const mat3& projection) {
     // Drawing of num_indices/3 triangles specified in the index buffer
     glDrawElements(GL_TRIANGLES, num_indices, GL_UNSIGNED_SHORT, nullptr);
     gl_has_errors();
+}
+
+void RenderSystem::drawUIElement(bnuui::Element& element, const mat3& projection) {
+    if (!element.visible) return;
+
+    Transform transform;
+    transform.translate(element.position);
+    transform.scale(element.scale);
+    transform.rotate(radians(element.rotation));
+
+    const GLuint program = (GLuint) effects[(GLuint) element.effect];
+    glUseProgram(program);
+    gl_has_errors();
+
+    const GLuint vbo = vertex_buffers[(GLuint) element.geometry];
+    const GLuint ibo = index_buffers[(GLuint) element.geometry];
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
+    gl_has_errors();
+
+    // Texture handling
+    if (element.effect == EFFECT_ASSET_ID::TEXTURED) {
+        GLint in_position_loc = glGetAttribLocation(program, "in_position");
+        GLint in_texcoord_loc = glGetAttribLocation(program, "in_texcoord");
+        glEnableVertexAttribArray(in_position_loc);
+        glVertexAttribPointer(in_position_loc, 3, GL_FLOAT, GL_FALSE, sizeof(TexturedVertex), (void*) 0);
+
+        glEnableVertexAttribArray(in_texcoord_loc);
+        glVertexAttribPointer(in_texcoord_loc, 2, GL_FLOAT, GL_FALSE, sizeof(TexturedVertex), (void*) sizeof(vec3));
+
+        glActiveTexture(GL_TEXTURE0);
+        GLuint texture_id = texture_gl_handles[(GLuint) element.texture];
+        glBindTexture(GL_TEXTURE_2D, texture_id);
+        // Brian: Disable smoothing
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+        gl_has_errors();
+    } else {
+        GLint in_position_loc = glGetAttribLocation(program, "in_position");
+        GLint in_color_loc = glGetAttribLocation(program, "in_color");
+        gl_has_errors();
+
+        glEnableVertexAttribArray(in_position_loc);
+        glVertexAttribPointer(in_position_loc, 3, GL_FLOAT, GL_FALSE, sizeof(ColoredVertex), (void*) 0);
+        gl_has_errors();
+
+        glEnableVertexAttribArray(in_color_loc);
+        glVertexAttribPointer(in_color_loc, 3, GL_FLOAT, GL_FALSE, sizeof(ColoredVertex), (void*) sizeof(vec3));
+        gl_has_errors();
+    }
+
+    // Set color uniform
+    GLint color_uloc = glGetUniformLocation(program, "fcolor");
+    glUniform3fv(color_uloc, 1, (float*) &element.color);
+    gl_has_errors();
+
+    // Set transformation uniforms
+    GLuint transform_loc = glGetUniformLocation(program, "transform");
+    glUniformMatrix3fv(transform_loc, 1, GL_FALSE, (float*) &transform.mat);
+    gl_has_errors();
+
+    GLuint projection_loc = glGetUniformLocation(program, "projection");
+    glUniformMatrix3fv(projection_loc, 1, GL_FALSE, (float*) &projection);
+    gl_has_errors();
+
+    // Draw the UI element
+    GLint size = 0;
+    glGetBufferParameteriv(GL_ELEMENT_ARRAY_BUFFER, GL_BUFFER_SIZE, &size);
+    GLsizei num_indices = size / sizeof(uint16_t);
+    glDrawElements(GL_TRIANGLES, num_indices, GL_UNSIGNED_SHORT, nullptr);
+    gl_has_errors();
+
+    // Recursively draw children
+    for (auto& child : element.children) {
+        drawUIElement(*child, projection);
+    }
 }
 
 // first draw to an intermediate texture,
@@ -306,6 +392,17 @@ void RenderSystem::draw() {
         // draw grid lines separately, as they do not have motion but need to be rendered
         else if (registry.gridLines.has(entity)) {
             drawGridLine(entity, projection_2D);
+        }
+    }
+
+    // Brian: Add draw UI components here.
+    SceneManager& sm = SceneManager::getInstance();
+    Scene* s = sm.getCurrentScene();
+    if (s) {
+        bnuui::SceneUI scene_ui = s->getUIElems();
+        std::vector<std::shared_ptr<bnuui::Element>> elems = scene_ui.getElems();
+        for (std::shared_ptr<bnuui::Element> elem : elems) {
+            drawUIElement(*elem, projection_2D);
         }
     }
 
