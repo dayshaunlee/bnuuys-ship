@@ -143,11 +143,15 @@ Entity createEnemy(RenderSystem* renderer, vec2 position) {
 
 Entity createBunny(RenderSystem* renderer, vec2 position) {
     auto entity = Entity();
+    registry.backgroundObjects.emplace(entity);
 
     Bunny& bunny = registry.bunnies.emplace(entity);
     bunny.on_island = true;
     bunny.is_jailed = true;
     bunny.on_ship = false;
+
+    bunny.jail_health = 10;
+    bunny.timer_ms = 10000;
 
     Motion& motion = registry.motions.emplace(entity);
     motion.angle = 0.f;

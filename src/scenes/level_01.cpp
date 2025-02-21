@@ -334,6 +334,7 @@ void Level01::Update(float dt) {
     ai_system.step(dt);
     physics_system.step(dt);
     animation_system.step(dt);
+    world_system.handle_collisions();
     CameraSystem::GetInstance()->update(dt);
 
     // Simple cannon system. make this its own system later.

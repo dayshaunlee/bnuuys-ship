@@ -297,5 +297,7 @@ struct Bunny {
     bool on_island;
     bool is_jailed;
     bool on_ship;
+
+    float jail_health;  // 0 if is_jailed is false
     int timer_ms;   // field reserved for animation 
 };

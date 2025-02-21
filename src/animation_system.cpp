@@ -168,7 +168,35 @@ void HandlePlayerAnimation(float elapsed_ms) {
     }
 }
 
+void HandleBunnyAnimation(float elapsed_ms) {
+    for (Entity entity : registry.bunnies.entities) {
+        Bunny& bunny = registry.bunnies.get(entity);
+        // Bunny saving animation.
+        Motion& bunny_motion = registry.motions.get(entity);
+        if (!bunny.is_jailed && !bunny.on_ship) {
+            vec2& bunny_position = bunny_motion.position;
+            vec2 empty_ship_location = {364, 252};      // hard coded to one specific tile
+
+            if (round(bunny_position) != empty_ship_location) {
+                vec2 direction = empty_ship_location - bunny_position;
+
+                // unit vector for direction
+                float length = sqrt(direction.x * direction.x + direction.y * direction.y);
+                direction.x /= length;
+                direction.y /= length;
+
+                bunny_motion.velocity = direction * 100.f;
+            } else {
+                bunny.on_island = false;
+                bunny.on_ship = true;
+                bunny_motion.velocity = {0, 0};
+            }
+        } 
+    }
+}
+
 void AnimationSystem::step(float elapsed_ms) {
     // Move each entity that has motion.
     HandlePlayerAnimation(elapsed_ms);
+    HandleBunnyAnimation(elapsed_ms);
 }
