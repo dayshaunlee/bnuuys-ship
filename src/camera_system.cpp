@@ -66,4 +66,8 @@ void CameraSystem::update(float deltaTime) {
 void CameraSystem::inverse_velocity() {
     velocity.x = -velocity.x;
     velocity.y = -velocity.y;
+
+    Camera& c = registry.cameras.components[0];
+    c.acceleration.x = -c.acceleration.x;
+    c.acceleration.y = -c.acceleration.y;
 }
