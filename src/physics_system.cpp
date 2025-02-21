@@ -182,7 +182,7 @@ void PhysicsSystem::step(float elapsed_ms) {
         for (uint j = i + 1; j < motion_container.components.size(); j++) {
             Entity entity_j = motion_container.entities[j];
             Motion& motion_j = motion_container.components[j];
-            if (collidesPoly(entity_i, entity_j)) {
+            if (collidesPoly(entity_i, entity_j) || collidesSpherical(motion_i, motion_j)) {
                 registry.collisions.emplace_with_duplicates(entity_i, entity_j);
             }
         }
