@@ -11,10 +11,8 @@ Entity createCannonProjectile(vec2 orig, vec2 dest);
 Entity createSteeringWheel(vec2 tile_pos);
 Entity createCannon(vec2 tile_pos);
 
-Entity setupCamera(RenderSystem* renderer, vec2 shipPosiiton);
-
 Entity createWaterBackground();
 
 Entity createShip();
-
+Entity createCamera();
 Entity createGridLine(vec2 start_pos, vec2 end_pos);

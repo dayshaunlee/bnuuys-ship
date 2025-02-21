@@ -229,11 +229,15 @@ struct PlayerAnimation {
     int timer_ms;  // How many ms before switching to the next frame.
 };
 
-// Camera related componenet
+// ========= Camera related componenet ======================
 // used for updating the objects in the background as camera moves with ship
 // bachgroundObject is anything that doesn't move with the ship
 
 struct BackgroundObject {};
+struct Camera{
+    vec2 acceleration = {0,0};
+};
+
 
 // ========== SHIP DETAILS ==========
 

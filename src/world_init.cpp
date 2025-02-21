@@ -63,15 +63,6 @@ Entity createPlayer(RenderSystem* renderer, vec2 position) {
     return player;
 }
 
-Entity setupCamera(RenderSystem* renderer, vec2 ship_position) {
-    // loop through each backgroundObjects
-    Entity game_camera = Entity();
-    for (Entity i : registry.backgroundObjects.entities) {
-    }
-
-    return game_camera;
-}
-
 Entity createWaterBackground() {
     // create the water entity
     Entity waterbg = Entity();
@@ -174,6 +165,7 @@ void initializeShipModules(Ship& ship) {
     ship.ship_modules_entity = tmp_entities;
 }
 
+// also create the camera component
 Entity createShip() {
     Entity entity = Entity();
 
@@ -195,6 +187,13 @@ Entity createShip() {
 
     initializeShipModules(ship);
 
+    return entity;
+}
+
+Entity createCamera(){
+    Entity entity = Entity();
+
+    registry.cameras.emplace(entity);
     return entity;
 }
 

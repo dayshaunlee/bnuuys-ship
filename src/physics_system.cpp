@@ -5,6 +5,8 @@
 
 #include "world_init.hpp"
 
+#include "camera_system.hpp"
+
 // Returns the local bounding coordinates scaled by the current size of the
 // entity
 vec2 get_bounding_box(const Motion& motion) {
@@ -28,6 +30,15 @@ bool collides(const Motion& motion1, const Motion& motion2) {
 }
 
 void PhysicsSystem::step(float elapsed_ms) {
+
+    // Updates camera and move all the background objects
+
+    vec2 accleration = registry.cameras.components[0].acceleration;
+    CameraSystem::GetInstance()->addToCameraVelocity(accleration);
+    // Limit velocity to max speed 
+    CameraSystem::GetInstance()->update(elapsed_ms);
+    
+
     // Move each entity that has motion.
     auto& motion_registry = registry.motions;
     for (uint i = 0; i < motion_registry.size(); i++) {

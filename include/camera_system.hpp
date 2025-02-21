@@ -9,8 +9,9 @@
 class CameraSystem {
    public:
     static CameraSystem* GetInstance();
-    void setCameraScreen(float accelerationX, float accelerationY);
+    // void setCameraScreen(float accelerationX, float accelerationY);
     void update(float deltaTime);
+    void addToCameraVelocity (vec2 cameraVelocity);
 
    private:
     static CameraSystem* camera;
