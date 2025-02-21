@@ -13,6 +13,7 @@
 #include <cassert>
 #include <glm/ext/vector_float2.hpp>
 #include <iostream>
+#include <ostream>
 #include <sstream>
 
 // create the world
@@ -234,15 +235,14 @@ void WorldSystem::handle_collisions() {
         */
 
         // Enemy - Ship collision
-        if ((registry.enemies.has(e1) && registry.ships.has(e2)) ||
-            (registry.enemies.has(e2) && registry.ships.has(e1))) {
-            if (registry.ships.has(e1)) {  // e1 is the ship
-                registry.ships.get(e1).health -= 10;
-                registry.remove_all_components_of(e2);
-            } else {  // e2 is the ship
-                registry.ships.get(e2).health -= 10;
-                registry.remove_all_components_of(e1);
-            }
+        if (registry.enemies.has(e1) && registry.ships.has(e2)) {
+            registry.ships.get(e2).health -= 10.0f;
+            registry.remove_all_components_of(e1);
+            continue;
+        } else if (registry.enemies.has(e2) && registry.ships.has(e1)) {
+            registry.ships.get(e1).health -= 10.0f;
+            registry.remove_all_components_of(e2);
+            continue;
         }
 
         // Ship - Island collision
@@ -262,14 +262,14 @@ void WorldSystem::handle_collisions() {
                 island_x = registry.motions.get(e2).position.x;
                 island_y = registry.motions.get(e2).position.y;
                 /*std::cout << "SHIP ISLAND COLLISION WITH SHIP AT " << ship_x << ", " << ship_y << " AND ISLAND AT "*/
-                          /*<< island_x << ", " << island_x << std::endl;*/
+                /*<< island_x << ", " << island_x << std::endl;*/
             } else {  // e2 is the ship
                 ship_x = registry.motions.get(e2).position.x;
                 ship_y = registry.motions.get(e2).position.y;
                 island_x = registry.motions.get(e1).position.x;
                 island_y = registry.motions.get(e1).position.y;
                 /*std::cout << "SHIP ISLAND COLLISION WITH SHIP AT " << ship_x << ", " << ship_y << " AND ISLAND AT "*/
-                          /*<< island_x << ", " << island_x << std::endl;*/
+                /*<< island_x << ", " << island_x << std::endl;*/
             }
             // CameraSystem::GetInstance()->inverse_velocity(ship_x, ship_y, island_x, island_y);
             CameraSystem::GetInstance()->inverse_velocity();
