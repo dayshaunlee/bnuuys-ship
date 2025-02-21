@@ -103,11 +103,12 @@ tson::Vector2<int> loadMap(const std::string& name) {
         for (auto& obj : islands_layer->getObjects()) {
             if (obj.getClassType() == "island") {
                 Entity e = Entity();
-                Island& isl = registry.islands.emplace(e);
-                isl.polygon = obj.getPolygons();
                 Motion& mot = registry.motions.emplace(e);
                 mot.position = {obj.getPosition().x, obj.getPosition().y};
                 mot.scale = {obj.getSize().x, obj.getSize().y};
+                Island& isl = registry.islands.emplace(e);
+                isl.polygon = obj.getPolygons(); // first point is always (0, 0)
+                registry.backgroundObjects.emplace(e);
             } else if (obj.getClassType() == "base") {
                 Entity e = Entity();
                 Base& bas = registry.base.emplace(e);
@@ -115,6 +116,7 @@ tson::Vector2<int> loadMap(const std::string& name) {
                 Motion& mot = registry.motions.emplace(e);
                 mot.position = {obj.getPosition().x, obj.getPosition().y};
                 mot.scale = {obj.getSize().x, obj.getSize().y};
+                registry.backgroundObjects.emplace(e);
             }
         }
 
@@ -133,16 +135,16 @@ tson::Vector2<int> loadMap(const std::string& name) {
                 Motion& mot = registry.motions.emplace(e);
                 mot.position = {obj.getPosition().x, obj.getPosition().y};
                 mot.scale = {obj.getSize().x, obj.getSize().y};
+                registry.backgroundObjects.emplace(e);
             } else if (obj.getClassType() == "player") {
                 if (registry.players.size() == 1) {
                     Entity e = registry.players.entities[0];
                     Motion& mot = registry.motions.get(e);
-                    mot.position = {obj.getPosition().x, obj.getPosition().y};
+                    //mot.position = {obj.getPosition().x, obj.getPosition().y};
                 }
             }
         }
-
-        return map->getSize();
+        return {map->getSize().x * map->getTileSize().x, map->getSize().y * map->getTileSize().y};
     } else  // Error occured
     {
         std::cout << map->getStatusMessage();

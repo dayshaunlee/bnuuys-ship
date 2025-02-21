@@ -105,6 +105,23 @@ Entity createWaterBackground() {
     return waterbg;
 }
 
+Entity createIslandBackground(int width, int height) {
+    // create the island background entity
+    Entity islandbg = Entity();
+    registry.backgroundObjects.emplace(islandbg);
+    Motion& islMotion = registry.motions.emplace(islandbg);
+
+    islMotion.position.x = width / 2;
+    islMotion.position.y = height / 2;
+    islMotion.scale.x = width;
+    islMotion.scale.y = height;
+
+    registry.renderRequests.insert(
+        islandbg, {TEXTURE_ASSET_ID::ISLAND_BACKGROUND, EFFECT_ASSET_ID::TEXTURED, GEOMETRY_BUFFER_ID::SPRITE});
+    return islandbg;
+}
+
+
 Entity createShip() {
     Entity entity = Entity();
 
@@ -118,8 +135,8 @@ Entity createShip() {
     // need to add a componet for ship like dieable or something
     shipMotion.position.x = WINDOW_WIDTH_PX / 2;
     shipMotion.position.y = WINDOW_HEIGHT_PX / 2;
-    shipMotion.scale.x = 56 * 3;  // the temporary grid height and width is 56
-    shipMotion.scale.y = 56 * 3;
+    shipMotion.scale.x = GRID_CELL_WIDTH_PX * 3;  // the temporary grid height and width is 56
+    shipMotion.scale.y = GRID_CELL_HEIGHT_PX * 3;
 
     registry.renderRequests.insert(
         entity, {TEXTURE_ASSET_ID::TEXTURE_COUNT, EFFECT_ASSET_ID::EGG, GEOMETRY_BUFFER_ID::SHIP_SQUARE});

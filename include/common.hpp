@@ -42,6 +42,17 @@ inline std::string map_path(const std::string& name) {
     return data_path() + "/maps/" + std::string(name);
 };
 
+// TODO: do this for all enemy stuff later
+//int enemyDamage(ENEMY_TYPE type) {
+//    switch (type) { 
+//    case ENEMY_TYPE::BASIC_GUNNER:
+//        return 10;
+//        break;
+//    default:
+//        return 10;
+//    }
+//}
+
 //
 // game constants
 //

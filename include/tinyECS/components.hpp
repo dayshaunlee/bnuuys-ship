@@ -22,10 +22,9 @@ struct Collision {
 };
 
 // Sets the brightness of the screen
-struct ScreenState
-{
-	float darken_screen_factor = -1;
-	float vignette_screen_factor = -1;
+struct ScreenState {
+    float darken_screen_factor = -1;
+    float vignette_screen_factor = -1;
 };
 
 struct Island {
@@ -126,12 +125,16 @@ enum class TEXTURE_ASSET_ID {
     BUNNY_LEFT_WALK1 = BUNNY_LEFT_WALK0 + 1,
 
     WATER_BACKGROUND = BUNNY_LEFT_WALK1 + 1,
+  
+    // TODO: figure out which background to use
+    ISLAND_BACKGROUND = WATER_BACKGROUND + 1,
 
-    ENEMY0 = WATER_BACKGROUND + 1,
+    ENEMY0 = ISLAND_BACKGROUND + 1,
 
     OBSTACLE = ENEMY0 + 1,
 
     TEXTURE_COUNT = OBSTACLE + 1
+
 };
 
 const int texture_count = (int) TEXTURE_ASSET_ID::TEXTURE_COUNT;

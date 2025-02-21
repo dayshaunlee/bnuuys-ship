@@ -11,6 +11,8 @@ class CameraSystem {
     static CameraSystem* GetInstance();
     void setCameraScreen(float accelerationX, float accelerationY);
     void update(float deltaTime);
+    //void inverse_velocity(int ship_x, int ship_y, int island_x, int island_y);
+    void inverse_velocity();
 
    private:
     static CameraSystem* camera;
