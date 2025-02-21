@@ -43,6 +43,17 @@ inline std::string map_path(const std::string& name) {
     return data_path() + "/maps/" + std::string(name);
 };
 
+// TODO: do this for all enemy stuff later
+//int enemyDamage(ENEMY_TYPE type) {
+//    switch (type) { 
+//    case ENEMY_TYPE::BASIC_GUNNER:
+//        return 10;
+//        break;
+//    default:
+//        return 10;
+//    }
+//}
+
 //
 // game constants
 //
@@ -60,8 +71,13 @@ const int GRID_LINE_WIDTH_PX = 2;
 const int MIDDLE_GRID_X = 7;
 const int MIDDLE_GRID_Y = 5;
 
+
 const int COL_COUNT = WINDOW_WIDTH_PX/GRID_CELL_WIDTH_PX;
 const int ROW_COUNT = WINDOW_HEIGHT_PX/GRID_CELL_HEIGHT_PX;
+
+const int ENEMY_BASE_HEALTH = 1;
+const float ENEMY_BASE_SPEED = 50;
+
 
 #ifndef M_PI
 #define M_PI 3.14159265358979323846f

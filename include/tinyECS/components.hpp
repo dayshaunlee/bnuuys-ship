@@ -22,10 +22,9 @@ struct Collision {
 };
 
 // Sets the brightness of the screen
-struct ScreenState
-{
-	float darken_screen_factor = -1;
-	float vignette_screen_factor = -1;
+struct ScreenState {
+    float darken_screen_factor = -1;
+    float vignette_screen_factor = -1;
 };
 
 struct Island {
@@ -126,9 +125,16 @@ enum class TEXTURE_ASSET_ID {
     BUNNY_LEFT_WALK1 = BUNNY_LEFT_WALK0 + 1,
 
     WATER_BACKGROUND = BUNNY_LEFT_WALK1 + 1,
+  
+    // TODO: figure out which background to use
+    ISLAND_BACKGROUND = WATER_BACKGROUND + 1,
+
+    ENEMY0 = ISLAND_BACKGROUND + 1,
+
+    OBSTACLE = ENEMY0 + 1,
 
     // UI assets.
-    SQUARE_3_NORMAL = WATER_BACKGROUND + 1,
+    SQUARE_3_NORMAL = OBSTACLE + 1,
     SQUARE_3_HOVER = SQUARE_3_NORMAL + 1,
     SQUARE_3_CLICKED = SQUARE_3_HOVER + 1,
 
@@ -168,6 +174,7 @@ enum class TEXTURE_ASSET_ID {
     SIMPLE_CANNON06 = SIMPLE_CANNON05 + 1,
 
     TEXTURE_COUNT = SIMPLE_CANNON06 + 1
+
 };
 
 const int texture_count = (int) TEXTURE_ASSET_ID::TEXTURE_COUNT;
@@ -278,7 +285,11 @@ enum ENEMY_TYPE { BASIC_GUNNER = 0, FLYER };
 
 struct Enemy {
     ENEMY_TYPE type;
+    int health;
+	  int timer_ms;
     int home_island;
 };
 
-// ========== ENEMY DETAILS ==========
+// temperary component for land for enemy path finding testing
+struct Obstacle {
+};

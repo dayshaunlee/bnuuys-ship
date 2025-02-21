@@ -168,8 +168,18 @@ void WorldSystem::restart_game() {
     // that would be more cumbersome
     while (registry.motions.entities.size() > 0) registry.remove_all_components_of(registry.motions.entities.back());
 
-    // debugging for memory/component leaks
+    // load map
     registry.list_all_components();
+    std::cout << "loading map..." << std::endl;
+    tson::Vector2i mapSize = loadMap("m1.json");
+    registry.list_all_components();
+    std::cout << mapSize.x << ", " << mapSize.y << std::endl;
+    // create the ocean background and then ship
+    createIslandBackground(mapSize.x, mapSize.y);
+    // createWaterBackground();
+    createShip();
+    // Now let's create our player.
+    createPlayer(renderer, {WINDOW_WIDTH_PX / 2, WINDOW_HEIGHT_PX / 2});
 
     int grid_line_width = GRID_LINE_WIDTH_PX;
     int CELL_WIDTH = WINDOW_WIDTH_PX / 15;
@@ -197,9 +207,78 @@ void WorldSystem::restart_game() {
 
 // Compute collisions between entities
 void WorldSystem::handle_collisions() {
+    ComponentContainer<Island>& island_container = registry.islands;
+    int player_x = registry.motions.get(registry.players.entities[0]).position.x;
+    int player_y = registry.motions.get(registry.players.entities[0]).position.y;
+    DIRECTION player_direction = registry.players.get(registry.players.entities[0]).direction;
+    PLAYERSTATE player_state = registry.players.get(registry.players.entities[0]).player_state;
+
     ComponentContainer<Collision>& collision_container = registry.collisions;
+    std::vector<Entity> collisions_to_remove;
     for (uint i = 0; i < collision_container.components.size(); i++) {
-        // Handle collision here.
+        Entity e1 = collision_container.entities[i];
+        Entity e2 = collision_container.components[i].other;
+        if (!registry.motions.has(e1) || !registry.motions.has(e2)) {
+            collisions_to_remove.push_back(e1);
+            collisions_to_remove.push_back(e2);
+            continue;
+        }
+        /* TODO: implement projectiles from weapons
+        if ((registry.projectiles.has(e1) && registry.enemies.has(e2)) ||
+            (registry.projectiles.has(e2) && registry.enemies.has(e1))) {
+            // do damage to enemies
+            registry.remove_all_components_of(e1);
+            registry.remove_all_components_of(e2);
+        }
+        */
+
+        // Enemy - Ship collision
+        if ((registry.enemies.has(e1) && registry.ships.has(e2)) ||
+            (registry.enemies.has(e2) && registry.ships.has(e1))) {
+            if (registry.ships.has(e1)) {  // e1 is the ship
+                registry.ships.get(e1).health -= 10;
+                registry.remove_all_components_of(e2);
+            } else {  // e2 is the ship
+                registry.ships.get(e2).health -= 10;
+                registry.remove_all_components_of(e1);
+            }
+        }
+
+        // Ship - Island collision
+        if ((registry.ships.has(e1) && registry.islands.has(e2)) ||
+            (registry.ships.has(e2) && registry.islands.has(e1))) {
+            // debugging only right now
+            int ship_x;
+            int ship_y;
+            int island_x;
+            int island_y;
+
+            collisions_to_remove.push_back(e1);
+            collisions_to_remove.push_back(e2);
+            if (registry.ships.has(e1)) {  // e1 is the ship
+                ship_x = registry.motions.get(e1).position.x;
+                ship_y = registry.motions.get(e1).position.y;
+                island_x = registry.motions.get(e2).position.x;
+                island_y = registry.motions.get(e2).position.y;
+                std::cout << "SHIP ISLAND COLLISION WITH SHIP AT " << ship_x << ", " << ship_y << " AND ISLAND AT "
+                          << island_x << ", " << island_x << std::endl;
+            } else {  // e2 is the ship
+                ship_x = registry.motions.get(e2).position.x;
+                ship_y = registry.motions.get(e2).position.y;
+                island_x = registry.motions.get(e1).position.x;
+                island_y = registry.motions.get(e1).position.y;
+                std::cout << "SHIP ISLAND COLLISION WITH SHIP AT " << ship_x << ", " << ship_y << " AND ISLAND AT "
+                          << island_x << ", " << island_x << std::endl;
+            }
+            //CameraSystem::GetInstance()->inverse_velocity(ship_x, ship_y, island_x, island_y);
+            CameraSystem::GetInstance()->inverse_velocity();
+        }
+    }
+
+    for (Entity entity : collisions_to_remove) {
+        if (registry.collisions.has(entity)) {
+            registry.collisions.remove(entity);
+        }
     }
 
     // Remove all collisions from this simulation step
@@ -250,6 +329,8 @@ void WorldSystem::on_mouse_button_pressed(int button, int action, int mods) {
 
         std::cout << "mouse position: " << mouse_pos_x << ", " << mouse_pos_y << std::endl;
         std::cout << "mouse tile position: " << tile_x << ", " << tile_y << std::endl;
+
+        createObstacle(renderer, {tile_x * GRID_CELL_WIDTH_PX + GRID_CELL_WIDTH_PX/2, tile_y * GRID_CELL_HEIGHT_PX + GRID_CELL_HEIGHT_PX/2});
     }
     Scene* scene = SceneManager::getInstance().getCurrentScene();
     if (scene) {

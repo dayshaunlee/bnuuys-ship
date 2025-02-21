@@ -13,6 +13,13 @@ Entity createCannon(vec2 tile_pos);
 
 Entity createWaterBackground();
 
+Entity createIslandBackground(int width, int height);
+
 Entity createShip();
 Entity createCamera();
 Entity createGridLine(vec2 start_pos, vec2 end_pos);
+
+// Enemy
+Entity createEnemy(RenderSystem* renderer, vec2 position);
+// Obstacle for enemy path finding testing
+Entity createObstacle(RenderSystem* renderer, vec2 position);

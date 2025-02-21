@@ -35,6 +35,7 @@ Entity createPlayer(vec2 position) {
     return player;
 }
 
+// Seems like it's broken.
 Entity createPlayer(RenderSystem* renderer, vec2 position) {
     Entity player;
 
@@ -61,6 +62,55 @@ Entity createPlayer(RenderSystem* renderer, vec2 position) {
     registry.playerAnimations.emplace(player, comp_anim);
 
     return player;
+}
+
+Entity createEnemy(RenderSystem* renderer, vec2 position) {
+    auto entity = Entity();
+
+    Enemy& enemy = registry.enemies.emplace(entity);
+    enemy.health = ENEMY_BASE_HEALTH;
+    enemy.type = BASIC_GUNNER;
+    enemy.timer_ms = 0;
+
+    Motion& motion = registry.motions.emplace(entity);
+    motion.angle = 0.f;
+	motion.velocity = { 0.f, 0.f };
+	motion.position = position;
+    motion.scale = {40 ,40};
+
+    registry.renderRequests.insert(
+		entity,
+		{
+			TEXTURE_ASSET_ID::ENEMY0,
+			EFFECT_ASSET_ID::TEXTURED,
+			GEOMETRY_BUFFER_ID::SPRITE
+		}
+	);
+
+    return entity;
+}
+
+Entity createObstacle(RenderSystem* renderer, vec2 position) {
+    auto entity = Entity();
+    registry.backgroundObjects.emplace(entity);
+    registry.obstacles.emplace(entity);
+
+    Motion& motion = registry.motions.emplace(entity);
+    motion.angle = 0.f;
+	motion.velocity = { 0.f, 0.f };
+	motion.position = position;
+    motion.scale = {GRID_CELL_WIDTH_PX ,GRID_CELL_HEIGHT_PX};
+
+    registry.renderRequests.insert(
+		entity,
+		{
+			TEXTURE_ASSET_ID::OBSTACLE,
+			EFFECT_ASSET_ID::TEXTURED,
+			GEOMETRY_BUFFER_ID::SPRITE
+		}
+	);
+
+    return entity;
 }
 
 Entity createWaterBackground() {
@@ -166,13 +216,30 @@ void initializeShipModules(Ship& ship) {
 }
 
 // also create the camera component
+Entity createIslandBackground(int width, int height) {
+    // create the island background entity
+    Entity islandbg = Entity();
+    registry.backgroundObjects.emplace(islandbg);
+    Motion& islMotion = registry.motions.emplace(islandbg);
+
+    islMotion.position.x = width / 2;
+    islMotion.position.y = height / 2;
+    islMotion.scale.x = width;
+    islMotion.scale.y = height;
+
+    registry.renderRequests.insert(
+        islandbg, {TEXTURE_ASSET_ID::ISLAND_BACKGROUND, EFFECT_ASSET_ID::TEXTURED, GEOMETRY_BUFFER_ID::SPRITE});
+    return islandbg;
+}
+
+
 Entity createShip() {
     Entity entity = Entity();
 
     // registry.collisions.emplace(ship);
 
     Motion& shipMotion = registry.motions.emplace(entity);
-    // need to add a componet for ship like dieable or something
+    // need to add a component for ship like dieable or something
     shipMotion.position.x = WINDOW_WIDTH_PX / 2;
     shipMotion.position.y = WINDOW_HEIGHT_PX / 2;
     shipMotion.scale.x = GRID_CELL_WIDTH_PX * 3;  // the temporary grid height and width is 56

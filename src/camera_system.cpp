@@ -44,3 +44,26 @@ void CameraSystem::update(float deltaTime) {
         objectMotion.velocity.y = velocity.y;
     }
 }
+
+//void CameraSystem::inverse_velocity(int ship_x, int ship_y, int island_x, int island_y) {
+//    if (ship_x <= island_x) {
+//        if (velocity.x <= 0) {
+//            velocity.y = -velocity.y;
+//        } else {
+//            velocity.x = -velocity.x;
+//            velocity.y = -velocity.y;
+//        }
+//    } else {
+//        if (velocity.x >= 0) {
+//            velocity.y = -velocity.y;
+//        } else {
+//            velocity.x = -velocity.x;
+//            velocity.y = -velocity.y;
+//        }
+//    }
+//}
+
+void CameraSystem::inverse_velocity() {
+    velocity.x = -velocity.x;
+    velocity.y = -velocity.y;
+}
