@@ -19,7 +19,7 @@ Entity createPlayer(vec2 position) {
 
     Motion comp_motion;
     comp_motion.angle = 0.0f;
-    comp_motion.scale = {120, 120};
+    comp_motion.scale = {100, 100};
     comp_motion.position = position;
     registry.motions.emplace(player, comp_motion);
 
