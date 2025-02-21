@@ -17,8 +17,8 @@
 #include "map_init.hpp"
 
 /*
-*   Place 'local' scene vars here just so it's easy to manage.
-*/
+ *   Place 'local' scene vars here just so it's easy to manage.
+ */
 
 // Just to make my life easier. (TODO: REFACTOR LATER)
 std::shared_ptr<bnuui::Cursor> tile_cursor;
@@ -35,18 +35,21 @@ Level01::Level01() {
 }
 
 void Level01::Init() {
-    // Probably where Dayshaun needs to preload the level 01 map.
+    // load map
     registry.list_all_components();
     std::cout << "loading map..." << std::endl;
-    loadMap("m1.json");
+    tson::Vector2i mapSize = loadMap("m1.json");
     registry.list_all_components();
+    std::cout << mapSize.x << ", " << mapSize.y << std::endl;
 
     // create the ocean background and then ship
-    createWaterBackground();
+    createIslandBackground(mapSize.x, mapSize.y);
     createShip();
-    createCamera();
+
     // Now let's create our player.
-    createPlayer({250, 250}); 
+    createPlayer({WINDOW_WIDTH_PX / 2, WINDOW_HEIGHT_PX / 2});
+
+    createCamera();
 
     // enemy creation
     createEnemy({150, 150});
@@ -61,15 +64,15 @@ void Level01::Init() {
 void Level01::InitializeUI() {
     // Create Healthbar.
 
-    auto player_box = std::make_shared<bnuui::Box>(vec2(96,96), vec2(96,96), 0.0f);
-    auto player_status = std::make_shared<bnuui::PlayerStatus>(vec2(96, 96), vec2(60, 60), 0.0f, 
-                                                               registry.players.components[0].health, 100);
-    auto slider_bg = std::make_shared<bnuui::LongBox>(vec2(256, 96), vec2(240, 72),0.0f);
-    auto progress_bar = std::make_shared<bnuui::ProgressBar>(vec2(256, 93), vec2(180, 24), 0.0f,
-                                                             registry.players.components[0].health, 100);
+    auto player_box = std::make_shared<bnuui::Box>(vec2(96, 96), vec2(96, 96), 0.0f);
+    auto player_status = std::make_shared<bnuui::PlayerStatus>(
+        vec2(96, 96), vec2(60, 60), 0.0f, registry.players.components[0].health, 100);
+    auto slider_bg = std::make_shared<bnuui::LongBox>(vec2(256, 96), vec2(240, 72), 0.0f);
+    auto progress_bar = std::make_shared<bnuui::ProgressBar>(
+        vec2(256, 93), vec2(180, 24), 0.0f, registry.players.components[0].health, 100);
     player_box->children.push_back(slider_bg);
 
-    tile_cursor = std::make_shared<bnuui::Cursor>(vec2(0,0), vec2(GRID_CELL_WIDTH_PX, GRID_CELL_HEIGHT_PX), 0.0f);
+    tile_cursor = std::make_shared<bnuui::Cursor>(vec2(0, 0), vec2(GRID_CELL_WIDTH_PX, GRID_CELL_HEIGHT_PX), 0.0f);
     tile_cursor->visible = false;
     scene_ui.insert(player_box);
     scene_ui.insert(player_status);
@@ -158,8 +161,7 @@ void HandleCameraMovement(int key, int action, int mod) {
 
 // tile_pos is the player's tile position when pressing SPACE.
 void HandlePlayerStationing(vec2 tile_pos) {
-    if (tile_pos.x < 0 || tile_pos.x >= COL_COUNT || tile_pos.y < 0 || tile_pos.y >= ROW_COUNT)
-        return;
+    if (tile_pos.x < 0 || tile_pos.x >= COL_COUNT || tile_pos.y < 0 || tile_pos.y >= ROW_COUNT) return;
 
     Player& player_comp = registry.players.components[0];
     if (player_comp.player_state == STATIONING) {
@@ -180,7 +182,6 @@ void HandlePlayerStationing(vec2 tile_pos) {
             player_comp.player_state = STATIONING;
     }
     player_comp.player_state = STATIONING;
-
 }
 
 void Level01::HandleInput(int key, int action, int mod) {
@@ -191,13 +192,13 @@ void Level01::HandleInput(int key, int action, int mod) {
 
     Player& player_comp = registry.players.get(player);
 
-    if ((action == GLFW_RELEASE) && (key == GLFW_KEY_SPACE) && 
+    if ((action == GLFW_RELEASE) && (key == GLFW_KEY_SPACE) &&
         (player_comp.player_state == IDLE || player_comp.player_state == STATIONING)) {
         HandlePlayerStationing(vec2(player_tile_x, player_tile_y));
     }
 
     if (player_comp.player_state == STATIONING) {
-        // Check what module the player is on.    
+        // Check what module the player is on.
         Ship& ship = registry.ships.components[0];
         MODULE_TYPES module = ship.ship_modules[player_tile_y][player_tile_x];
         switch (module) {
@@ -217,12 +218,11 @@ void Level01::HandleInput(int key, int action, int mod) {
             case FAST_CANNON: {
                 player_comp.player_state = IDLE;
                 return;
-            }
-            break;
+            } break;
         }
     } else {
         HandlePlayerMovement(key, action, mod);
-    } 
+    }
 }
 
 void Level01::HandleMouseMove(vec2 pos) {
@@ -261,7 +261,7 @@ void Level01::HandleMouseMove(vec2 pos) {
     Player& player_comp = registry.players.get(player_entity);
 
     if (player_comp.player_state == STATIONING) {
-        // Check what module the player is on.    
+        // Check what module the player is on.
         Ship& ship = registry.ships.components[0];
         MODULE_TYPES module = ship.ship_modules[player_tile_y][player_tile_x];
         switch (module) {
@@ -269,16 +269,17 @@ void Level01::HandleMouseMove(vec2 pos) {
                 // Rotate the simple cannon.
                 Entity cannon_entity = ship.ship_modules_entity[player_tile_y][player_tile_x];
                 Motion& m = registry.motions.get(cannon_entity);
-                m.angle = degrees(atan2(pos.y-m.position.y, pos.x-m.position.x)) + 90.0f;
+                m.angle = degrees(atan2(pos.y - m.position.y, pos.x - m.position.x)) + 90.0f;
                 return;
             }
             case FAST_CANNON: {
                 player_comp.player_state = IDLE;
                 return;
             }
-            default: return;
+            default:
+                return;
         }
-    } 
+    }
 }
 
 void Level01::HandleMouseClick(int button, int action, int mods) {
@@ -309,7 +310,7 @@ void Level01::HandleMouseClick(int button, int action, int mods) {
     Player& player_comp = registry.players.get(player_entity);
 
     if (player_comp.player_state == STATIONING) {
-        // Check what module the player is on.    
+        // Check what module the player is on.
         Ship& ship = registry.ships.components[0];
         MODULE_TYPES module = ship.ship_modules[player_tile_y][player_tile_x];
         switch (module) {
@@ -328,7 +329,8 @@ void Level01::HandleMouseClick(int button, int action, int mods) {
                 player_comp.player_state = IDLE;
                 return;
             }
-            default: return;
+            default:
+                return;
         }
     }
 }
@@ -337,14 +339,16 @@ void Level01::Update(float dt) {
     ai_system.step(dt);
     physics_system.step(dt);
     animation_system.step(dt);
+
     world_system.handle_collisions();
-    CameraSystem::GetInstance()->update(dt);
+    /*std::cout << CameraSystem::GetInstance()->velocity.x << " " << CameraSystem::GetInstance()->velocity.y << std::endl;*/
 
     // Simple cannon system. make this its own system later.
     for (SimpleCannon& sc : registry.simpleCannons.components) {
         if (sc.timer_ms > 0)
             sc.timer_ms -= dt;
-        else sc.timer_ms = 0;
+        else
+            sc.timer_ms = 0;
     }
 
     // Remove projectiles.
@@ -359,8 +363,7 @@ void Level01::Update(float dt) {
         }
     }
 
-    if (registry.players.components[0].health <= 0.0f)
-        registry.players.components[0].health = 100;
+    if (registry.players.components[0].health <= 0.0f) registry.players.components[0].health = 100;
     registry.players.components[0].health -= 0.1f;
 
     scene_ui.update(dt);

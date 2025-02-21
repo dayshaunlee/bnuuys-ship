@@ -1,6 +1,7 @@
 // Header
 #include "world_system.hpp"
 #include "GLFW/glfw3.h"
+#include "camera_system.hpp"
 #include "common.hpp"
 #include "sceneManager/scene_manager.hpp"
 #include "tinyECS/components.hpp"
@@ -167,94 +168,55 @@ void WorldSystem::restart_game() {
     // All that have a motion, we could also iterate over all bug, eagles, ... but
     // that would be more cumbersome
     while (registry.motions.entities.size() > 0) registry.remove_all_components_of(registry.motions.entities.back());
-
-    // load map
-    registry.list_all_components();
-    std::cout << "loading map..." << std::endl;
-    tson::Vector2i mapSize = loadMap("m1.json");
-    registry.list_all_components();
-    std::cout << mapSize.x << ", " << mapSize.y << std::endl;
-    // create the ocean background and then ship
-    createIslandBackground(mapSize.x, mapSize.y);
-    // createWaterBackground();
-    createShip();
-    // Now let's create our player.
-    createPlayer(renderer, {WINDOW_WIDTH_PX / 2, WINDOW_HEIGHT_PX / 2});
-
-    int grid_line_width = GRID_LINE_WIDTH_PX;
-    int CELL_WIDTH = WINDOW_WIDTH_PX / 15;
-    int CELL_HEIGHT = CELL_WIDTH;
-
-    // create grid lines if they do not already exist
-    if (grid_lines.size() == 0) {
-        // vertical lines
-        int cell_width = CELL_WIDTH;
-        for (int col = 0; col < 15 + 1; col++) {
-            // width of 2 to make the grid easier to see
-            grid_lines.push_back(
-                createGridLine(vec2(col * cell_width, 0), vec2(grid_line_width, 2 * WINDOW_HEIGHT_PX)));
-        }
-
-        // horizontal lines
-        int cell_height = CELL_HEIGHT;
-        for (int col = 0; col < 11 + 1; col++) {
-            // width of 2 to make the grid easier to see
-            grid_lines.push_back(
-                createGridLine(vec2(0, col * cell_height), vec2(2 * WINDOW_WIDTH_PX, grid_line_width)));
-        }
-    }
 }
 
 // Compute collisions between entities
 void WorldSystem::handle_collisions() {
-    ComponentContainer<Island>& island_container = registry.islands;
-    int player_x = registry.motions.get(registry.players.entities[0]).position.x;
-    int player_y = registry.motions.get(registry.players.entities[0]).position.y;
-    DIRECTION player_direction = registry.players.get(registry.players.entities[0]).direction;
-    PLAYERSTATE player_state = registry.players.get(registry.players.entities[0]).player_state;
-
     ComponentContainer<Collision>& collision_container = registry.collisions;
     std::vector<Entity> collisions_to_remove;
+
     for (uint i = 0; i < collision_container.components.size(); i++) {
         // Handle collision here.
         Entity entity_i = collision_container.entities[i];
-		    Entity entity_j = collision_container.components[i].other;
+        Entity entity_j = collision_container.components[i].other;
 
         Entity bunny_entity;
 
         if (registry.bunnies.has(entity_i)) {
-          bunny_entity = entity_i;
+            bunny_entity = entity_i;
         } else if (registry.bunnies.has(entity_j)) {
-          bunny_entity = entity_j;
+            bunny_entity = entity_j;
         } else {
-          continue;
+            continue;
         }
 
         Entity other_entity = (bunny_entity == entity_i) ? entity_j : entity_i;
-		
-		Bunny& bunny = registry.bunnies.get(bunny_entity);
+
+        Bunny& bunny = registry.bunnies.get(bunny_entity);
 
         if (registry.projectiles.has(other_entity)) {
-			Projectile& projectile = registry.projectiles.get(other_entity);
-			float bunny_hit = bunny.jail_health - projectile.damage;
+            Projectile& projectile = registry.projectiles.get(other_entity);
+            float bunny_hit = bunny.jail_health - projectile.damage;
 
             if (bunny.is_jailed) {
                 if (bunny_hit <= 0) {
                     TEXTURE_ASSET_ID& texture = registry.renderRequests.get(bunny_entity).used_texture;
                     texture = TEXTURE_ASSET_ID::BUNNY_NOT_JAILED;
                     bunny.is_jailed = false;
-                    
+
                     registry.remove_all_components_of(other_entity);
                     registry.backgroundObjects.remove(bunny_entity);
                 } else {
                     registry.remove_all_components_of(other_entity);
                     bunny.jail_health = bunny_hit;
                     std::cout << "projectile hit" << std::endl;
-                    std::cout << "bunny jail health is now "<< bunny_hit << std::endl;
+                    std::cout << "bunny jail health is now " << bunny_hit << std::endl;
                 }
             }
         }
+    }
 
+    for (uint i = 0; i < collision_container.components.size(); i++) {
         Entity e1 = collision_container.entities[i];
         Entity e2 = collision_container.components[i].other;
         if (!registry.motions.has(e1) || !registry.motions.has(e2)) {
@@ -299,17 +261,17 @@ void WorldSystem::handle_collisions() {
                 ship_y = registry.motions.get(e1).position.y;
                 island_x = registry.motions.get(e2).position.x;
                 island_y = registry.motions.get(e2).position.y;
-                std::cout << "SHIP ISLAND COLLISION WITH SHIP AT " << ship_x << ", " << ship_y << " AND ISLAND AT "
-                          << island_x << ", " << island_x << std::endl;
+                /*std::cout << "SHIP ISLAND COLLISION WITH SHIP AT " << ship_x << ", " << ship_y << " AND ISLAND AT "*/
+                          /*<< island_x << ", " << island_x << std::endl;*/
             } else {  // e2 is the ship
                 ship_x = registry.motions.get(e2).position.x;
                 ship_y = registry.motions.get(e2).position.y;
                 island_x = registry.motions.get(e1).position.x;
                 island_y = registry.motions.get(e1).position.y;
-                std::cout << "SHIP ISLAND COLLISION WITH SHIP AT " << ship_x << ", " << ship_y << " AND ISLAND AT "
-                          << island_x << ", " << island_x << std::endl;
+                /*std::cout << "SHIP ISLAND COLLISION WITH SHIP AT " << ship_x << ", " << ship_y << " AND ISLAND AT "*/
+                          /*<< island_x << ", " << island_x << std::endl;*/
             }
-            //CameraSystem::GetInstance()->inverse_velocity(ship_x, ship_y, island_x, island_y);
+            // CameraSystem::GetInstance()->inverse_velocity(ship_x, ship_y, island_x, island_y);
             CameraSystem::GetInstance()->inverse_velocity();
         }
     }
@@ -346,7 +308,7 @@ void WorldSystem::on_key(int key, int, int action, int mod) {
 
     Scene* scene = SceneManager::getInstance().getCurrentScene();
     if (scene) {
-        scene->HandleInput(key, action, mod); 
+        scene->HandleInput(key, action, mod);
     }
 }
 
@@ -362,15 +324,6 @@ void WorldSystem::on_mouse_move(vec2 mouse_position) {
 
 void WorldSystem::on_mouse_button_pressed(int button, int action, int mods) {
     // on button press
-    if (action == GLFW_PRESS) {
-        int tile_x = (int) (mouse_pos_x / GRID_CELL_WIDTH_PX);
-        int tile_y = (int) (mouse_pos_y / GRID_CELL_HEIGHT_PX);
-
-        std::cout << "mouse position: " << mouse_pos_x << ", " << mouse_pos_y << std::endl;
-        std::cout << "mouse tile position: " << tile_x << ", " << tile_y << std::endl;
-
-        createObstacle(renderer, {tile_x * GRID_CELL_WIDTH_PX + GRID_CELL_WIDTH_PX/2, tile_y * GRID_CELL_HEIGHT_PX + GRID_CELL_HEIGHT_PX/2});
-    }
     Scene* scene = SceneManager::getInstance().getCurrentScene();
     if (scene) {
         scene->HandleMouseClick(button, action, mods);

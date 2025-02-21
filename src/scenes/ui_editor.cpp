@@ -15,18 +15,16 @@ void EditorUI::Init() {
 float val = 100;
 vec2 mouse_pos;
 void EditorUI::InitializeUI() {
-    auto player_box = std::make_shared<bnuui::Box>(vec2(96,96), vec2(96,96), 0.0f);
+    auto player_box = std::make_shared<bnuui::Box>(vec2(96, 96), vec2(96, 96), 0.0f);
     auto player_status = std::make_shared<bnuui::PlayerStatus>(vec2(96, 96), vec2(60, 60), 0.0f, val, 100);
-    auto slider_bg = std::make_shared<bnuui::LongBox>(vec2(256, 96), vec2(240, 72),0.0f);
+    auto slider_bg = std::make_shared<bnuui::LongBox>(vec2(256, 96), vec2(240, 72), 0.0f);
 
     scene_ui.insert(slider_bg);
     scene_ui.insert(player_box);
     scene_ui.insert(player_status);
 
     for (auto elem : scene_ui.getElems()) {
-        elem->setOnActive([](bnuui::Element& e) {
-            e.position = mouse_pos;
-        });
+        elem->setOnActive([](bnuui::Element& e) { e.position = mouse_pos; });
 
         elem->setOnClick([](bnuui::Element& e) {
             std::cout << "POSITION" << std::endl;
@@ -41,10 +39,8 @@ void EditorUI::Exit() {
 
 void EditorUI::HandleInput(int key, int action, int mod) {
     if (action == GLFW_RELEASE && key == GLFW_KEY_1) {
-        auto player_box = std::make_shared<bnuui::Box>(mouse_pos, vec2(96,96), 0.0f);
-        player_box->setOnActive([](bnuui::Element& e) {
-            e.position = mouse_pos;
-        });
+        auto player_box = std::make_shared<bnuui::Box>(mouse_pos, vec2(96, 96), 0.0f);
+        player_box->setOnActive([](bnuui::Element& e) { e.position = mouse_pos; });
 
         player_box->setOnClick([](bnuui::Element& e) {
             std::cout << "POSITION" << std::endl;

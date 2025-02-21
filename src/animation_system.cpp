@@ -175,7 +175,7 @@ void HandleBunnyAnimation(float elapsed_ms) {
         Motion& bunny_motion = registry.motions.get(entity);
         if (!bunny.is_jailed && !bunny.on_ship) {
             vec2& bunny_position = bunny_motion.position;
-            vec2 empty_ship_location = {364, 252};      // hard coded to one specific tile
+            vec2 empty_ship_location = {364, 252};  // hard coded to one specific tile
 
             if (round(bunny_position) != empty_ship_location) {
                 vec2 direction = empty_ship_location - bunny_position;
@@ -191,7 +191,7 @@ void HandleBunnyAnimation(float elapsed_ms) {
                 bunny.on_ship = true;
                 bunny_motion.velocity = {0, 0};
             }
-        } 
+        }
     }
 }
 

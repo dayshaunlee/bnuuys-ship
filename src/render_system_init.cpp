@@ -222,10 +222,10 @@ void RenderSystem::initializeGlGeometryBuffers() {
 
     // Define the four corners of the square (centered at origin)
     square_vertices = {
-        {{-0.5f, -0.5f, square_depth}, {0.6f, 0.3f, 0.1f}}, // Bottom-left (brown color)
-        {{0.5f, -0.5f,  square_depth}, {0.6f, 0.3f, 0.1f}}, // Bottom-right
-        {{0.5f, 0.5f,   square_depth}, {0.6f, 0.3f, 0.1f}}, // Top-right
-        {{-0.5f, 0.5f,  square_depth}, {0.6f, 0.3f, 0.1f}}, // Top-left
+        {{-0.5f, -0.5f, square_depth}, {0.6f, 0.3f, 0.1f}},  // Bottom-left (brown color)
+        {{0.5f, -0.5f, square_depth}, {0.6f, 0.3f, 0.1f}},   // Bottom-right
+        {{0.5f, 0.5f, square_depth}, {0.6f, 0.3f, 0.1f}},    // Top-right
+        {{-0.5f, 0.5f, square_depth}, {0.6f, 0.3f, 0.1f}},   // Top-left
     };
 
     // Define two triangles forming the square
@@ -246,10 +246,10 @@ void RenderSystem::initializeGlGeometryBuffers() {
 
     // Define the four corners of the square (centered at origin)
     UISquare_vertices = {
-        {{-0.5f, -0.5f,  UISquare_depth}, {1.0f, 1.0f, 1.0f}},
-        {{ 0.5f, -0.5f,  UISquare_depth}, {1.0f, 1.0f, 1.0f}},
-        {{ 0.5f,  0.5f,  UISquare_depth}, {1.0f, 1.0f, 1.0f}},
-        {{-0.5f,  0.5f,  UISquare_depth}, {1.0f, 1.0f, 1.0f}},
+        {{-0.5f, -0.5f, UISquare_depth}, {1.0f, 1.0f, 1.0f}},
+        {{0.5f, -0.5f, UISquare_depth}, {1.0f, 1.0f, 1.0f}},
+        {{0.5f, 0.5f, UISquare_depth}, {1.0f, 1.0f, 1.0f}},
+        {{-0.5f, 0.5f, UISquare_depth}, {1.0f, 1.0f, 1.0f}},
     };
 
     // Define two triangles forming the square

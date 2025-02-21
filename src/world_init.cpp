@@ -74,18 +74,12 @@ Entity createEnemy(vec2 position) {
 
     Motion& motion = registry.motions.emplace(entity);
     motion.angle = 0.f;
-	motion.velocity = { 0.f, 0.f };
-	motion.position = position;
-    motion.scale = {40 ,40};
+    motion.velocity = {0.f, 0.f};
+    motion.position = position;
+    motion.scale = {40, 40};
 
-    registry.renderRequests.insert(
-		entity,
-		{
-			TEXTURE_ASSET_ID::ENEMY0,
-			EFFECT_ASSET_ID::TEXTURED,
-			GEOMETRY_BUFFER_ID::SPRITE
-		}
-	);
+    registry.renderRequests.insert(entity,
+                                   {TEXTURE_ASSET_ID::ENEMY0, EFFECT_ASSET_ID::TEXTURED, GEOMETRY_BUFFER_ID::SPRITE});
 
     return entity;
 }
@@ -100,18 +94,12 @@ Entity createBunny(vec2 position) {
 
     Motion& motion = registry.motions.emplace(entity);
     motion.angle = 0.f;
-	motion.velocity = { 0.f, 0.f };
-	motion.position = position;
-    motion.scale = {40 ,40};
+    motion.velocity = {0.f, 0.f};
+    motion.position = position;
+    motion.scale = {40, 40};
 
     registry.renderRequests.insert(
-		entity,
-		{
-			TEXTURE_ASSET_ID::BUNNY_JAILED,
-			EFFECT_ASSET_ID::TEXTURED,
-			GEOMETRY_BUFFER_ID::SPRITE
-		}
-	);
+        entity, {TEXTURE_ASSET_ID::BUNNY_JAILED, EFFECT_ASSET_ID::TEXTURED, GEOMETRY_BUFFER_ID::SPRITE});
 
     return entity;
 }
@@ -126,18 +114,12 @@ Entity createEnemy(RenderSystem* renderer, vec2 position) {
 
     Motion& motion = registry.motions.emplace(entity);
     motion.angle = 0.f;
-	motion.velocity = { 0.f, 0.f };
-	motion.position = position;
-    motion.scale = {40 ,40};
+    motion.velocity = {0.f, 0.f};
+    motion.position = position;
+    motion.scale = {40, 40};
 
-    registry.renderRequests.insert(
-		entity,
-		{
-			TEXTURE_ASSET_ID::ENEMY0,
-			EFFECT_ASSET_ID::TEXTURED,
-			GEOMETRY_BUFFER_ID::SPRITE
-		}
-	);
+    registry.renderRequests.insert(entity,
+                                   {TEXTURE_ASSET_ID::ENEMY0, EFFECT_ASSET_ID::TEXTURED, GEOMETRY_BUFFER_ID::SPRITE});
 
     return entity;
 }
@@ -156,18 +138,12 @@ Entity createBunny(RenderSystem* renderer, vec2 position) {
 
     Motion& motion = registry.motions.emplace(entity);
     motion.angle = 0.f;
-	motion.velocity = { 0.f, 0.f };
-	motion.position = position;
-    motion.scale = {40 ,40};
+    motion.velocity = {0.f, 0.f};
+    motion.position = position;
+    motion.scale = {40, 40};
 
     registry.renderRequests.insert(
-		entity,
-		{
-			TEXTURE_ASSET_ID::BUNNY_JAILED,
-			EFFECT_ASSET_ID::TEXTURED,
-			GEOMETRY_BUFFER_ID::SPRITE
-		}
-	);
+        entity, {TEXTURE_ASSET_ID::BUNNY_JAILED, EFFECT_ASSET_ID::TEXTURED, GEOMETRY_BUFFER_ID::SPRITE});
 
     return entity;
 }
@@ -179,41 +155,12 @@ Entity createObstacle(RenderSystem* renderer, vec2 position) {
 
     Motion& motion = registry.motions.emplace(entity);
     motion.angle = 0.f;
-	motion.velocity = { 0.f, 0.f };
-	motion.position = position;
-    motion.scale = {GRID_CELL_WIDTH_PX ,GRID_CELL_HEIGHT_PX};
+    motion.velocity = {0.f, 0.f};
+    motion.position = position;
+    motion.scale = {GRID_CELL_WIDTH_PX, GRID_CELL_HEIGHT_PX};
 
-    registry.renderRequests.insert(
-		entity,
-		{
-			TEXTURE_ASSET_ID::OBSTACLE,
-			EFFECT_ASSET_ID::TEXTURED,
-			GEOMETRY_BUFFER_ID::SPRITE
-		}
-	);
-
-    return entity;
-}
-
-Entity createObstacle(RenderSystem* renderer, vec2 position) {
-    auto entity = Entity();
-    registry.backgroundObjects.emplace(entity);
-    registry.obstacles.emplace(entity);
-
-    Motion& motion = registry.motions.emplace(entity);
-    motion.angle = 0.f;
-	motion.velocity = { 0.f, 0.f };
-	motion.position = position;
-    motion.scale = {GRID_CELL_WIDTH_PX ,GRID_CELL_HEIGHT_PX};
-
-    registry.renderRequests.insert(
-		entity,
-		{
-			TEXTURE_ASSET_ID::OBSTACLE,
-			EFFECT_ASSET_ID::TEXTURED,
-			GEOMETRY_BUFFER_ID::SPRITE
-		}
-	);
+    registry.renderRequests.insert(entity,
+                                   {TEXTURE_ASSET_ID::OBSTACLE, EFFECT_ASSET_ID::TEXTURED, GEOMETRY_BUFFER_ID::SPRITE});
 
     return entity;
 }
@@ -238,7 +185,7 @@ Entity createCannonProjectile(vec2 orig, vec2 dest) {
     Entity e;
     Motion& m = registry.motions.emplace(e);
     m.position = orig;
-    m.scale = {GRID_CELL_WIDTH_PX/2, GRID_CELL_HEIGHT_PX/2};
+    m.scale = {GRID_CELL_WIDTH_PX / 2, GRID_CELL_HEIGHT_PX / 2};
     m.angle = degrees(atan2(dest.y - dest.x, dest.x - orig.x));
     vec2 velVec = dest - orig;
     m.velocity = normalize(velVec) * 150.0f;
@@ -291,15 +238,15 @@ Entity createCannon(vec2 tile_pos) {
     return cannon;
 }
 
-void initializeShipModules(Ship& ship) { 
+void initializeShipModules(Ship& ship) {
     auto tmp_modules = std::vector<std::vector<MODULE_TYPES>>(ROW_COUNT, std::vector<MODULE_TYPES>(COL_COUNT, EMPTY));
 
     // This will make a ROW_COUNT * COL_COUNT new entities, which is fine i guess as they are just numbers.
     auto tmp_entities = std::vector<std::vector<Entity>>(ROW_COUNT, std::vector<Entity>(COL_COUNT));
-    
-    // Make a 3x3 platform from the middle. 
-    for (int i = MIDDLE_GRID_Y-1; i <= MIDDLE_GRID_Y+1; i++) {
-        for (int j = MIDDLE_GRID_X-1; j <= MIDDLE_GRID_X+1; j++) {
+
+    // Make a 3x3 platform from the middle.
+    for (int i = MIDDLE_GRID_Y - 1; i <= MIDDLE_GRID_Y + 1; i++) {
+        for (int j = MIDDLE_GRID_X - 1; j <= MIDDLE_GRID_X + 1; j++) {
             tmp_modules[i][j] = PLATFORM;
         }
     }
@@ -310,7 +257,7 @@ void initializeShipModules(Ship& ship) {
     Entity wheel_entity = createSteeringWheel(SteeringWheelGridPos);
     tmp_entities[SteeringWheelGridPos.y][SteeringWheelGridPos.x] = wheel_entity;
 
-    vec2 SimpleCannonGridPos = {MIDDLE_GRID_X, MIDDLE_GRID_Y-1};
+    vec2 SimpleCannonGridPos = {MIDDLE_GRID_X, MIDDLE_GRID_Y - 1};
     tmp_modules[SimpleCannonGridPos.y][SimpleCannonGridPos.x] = SIMPLE_CANNON;
 
     Entity cannon_entity = createCannon(SimpleCannonGridPos);
@@ -337,7 +284,6 @@ Entity createIslandBackground(int width, int height) {
     return islandbg;
 }
 
-
 Entity createShip() {
     Entity entity = Entity();
 
@@ -351,7 +297,7 @@ Entity createShip() {
     shipMotion.scale.y = GRID_CELL_HEIGHT_PX * 3;
 
     registry.renderRequests.insert(
-       entity, {TEXTURE_ASSET_ID::TEXTURE_COUNT, EFFECT_ASSET_ID::EGG, GEOMETRY_BUFFER_ID::SHIP_SQUARE});
+        entity, {TEXTURE_ASSET_ID::TEXTURE_COUNT, EFFECT_ASSET_ID::EGG, GEOMETRY_BUFFER_ID::SHIP_SQUARE});
 
     Ship& ship = registry.ships.emplace(entity);
     ship.health = 1;
@@ -362,7 +308,7 @@ Entity createShip() {
     return entity;
 }
 
-Entity createCamera(){
+Entity createCamera() {
     Entity entity = Entity();
 
     registry.cameras.emplace(entity);
