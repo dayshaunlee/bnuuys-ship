@@ -215,31 +215,40 @@ void HandlePlayerMovement(int key, int action, int mod) {
 }
 
 void HandleCameraMovement(int key, int action, int mod) {
+    CameraSystem* camera = CameraSystem::GetInstance();
+
     if (action == GLFW_PRESS) {
         if (!activeShipKeys.count(key)) {
             keyShipOrder.push_back(key);
         }
         activeShipKeys.insert(key);
+        Camera& c  = registry.cameras.components[0];
+        if (activeShipKeys.count(MOVE_UP_BUTTON) || activeShipKeys.count(MOVE_DOWN_BUTTON)) c.applyFrictionY = false;
+        if (activeShipKeys.count(MOVE_LEFT_BUTTON) || activeShipKeys.count(MOVE_RIGHT_BUTTON)) c.applyFrictionX = false;
     } else if (action == GLFW_RELEASE) {
         activeShipKeys.erase(key);
         keyShipOrder.erase(std::remove(keyShipOrder.begin(), keyShipOrder.end(), key), keyShipOrder.end());
     }
 
-    float velX = 0.0f;
-    float velY = 0.0f;
-    if (activeShipKeys.count(MOVE_UP_BUTTON)) velY += SHIP_CAMERA_SPEED;
-    if (activeShipKeys.count(MOVE_DOWN_BUTTON)) velY -= SHIP_CAMERA_SPEED;
-    if (activeShipKeys.count(MOVE_LEFT_BUTTON)) velX += SHIP_CAMERA_SPEED;
-    if (activeShipKeys.count(MOVE_RIGHT_BUTTON)) velX -= SHIP_CAMERA_SPEED;
+    // If no keys are pressed, don't reset velocity
+    if (activeShipKeys.empty() || (activeShipKeys.size() == 1 && activeShipKeys.count(GLFW_KEY_SPACE))) return;
+    vec2 inputVel = {0.0f, 0.0f};
 
-    velX = std::clamp(velX, -WALK_SPEED, WALK_SPEED);
-    velY = std::clamp(velY, -WALK_SPEED, WALK_SPEED);
+    if (activeShipKeys.count(MOVE_UP_BUTTON)) inputVel.y += SHIP_CAMERA_SPEED;
+    if (activeShipKeys.count(MOVE_DOWN_BUTTON)) inputVel.y -= SHIP_CAMERA_SPEED;
+    if (activeShipKeys.count(MOVE_LEFT_BUTTON)) inputVel.x += SHIP_CAMERA_SPEED;
+    if (activeShipKeys.count(MOVE_RIGHT_BUTTON)) inputVel.x -= SHIP_CAMERA_SPEED;
 
-    CameraSystem::GetInstance()->vel = vec2(velX, velY);
+    inputVel.x = std::clamp(inputVel.x, -WALK_SPEED, WALK_SPEED);
+    inputVel.y = std::clamp(inputVel.y, -WALK_SPEED, WALK_SPEED);
+
+    // Apply input to velocity directly instead of setting it
+    camera->vel = inputVel;
 }
 
 // tile_pos is the player's tile position when pressing SPACE.
 void HandlePlayerStationing(vec2 tile_pos) {
+    activeShipKeys.clear();
     if (tile_pos.x < 0 || tile_pos.x >= COL_COUNT || tile_pos.y < 0 || tile_pos.y >= ROW_COUNT) return;
 
     Player& player_comp = registry.players.components[0];
