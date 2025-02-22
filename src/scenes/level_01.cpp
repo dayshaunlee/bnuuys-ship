@@ -464,9 +464,6 @@ void Level01::HandleMouseClick(int button, int action, int mods) {
 }
 
 void Level01::Update(float dt) {
-    Camera& c  = registry.cameras.components[0];
-    if (activeShipKeys.count(MOVE_UP_BUTTON) || activeShipKeys.count(MOVE_DOWN_BUTTON)) c.applyFrictionY = false;
-    if (activeShipKeys.count(MOVE_LEFT_BUTTON) || activeShipKeys.count(MOVE_RIGHT_BUTTON)) c.applyFrictionX = false;
     CameraSystem::GetInstance()->update(dt);
     ai_system.step(dt);
     physics_system.step(dt);
