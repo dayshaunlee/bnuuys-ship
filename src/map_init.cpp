@@ -80,7 +80,7 @@ void debugMap(std::unique_ptr<tson::Map>& map) {
  *			- if it is of class 'player' -> update Player position (if exists)
  *	X return map size as tson::Vector2<int>
  */
-tson::Vector2<int> loadMap(const std::string& name) {
+std::pair<tson::Vector2i, tson::Vector2i> loadMap(const std::string& name) {
     // delete stuff from previous maps
     registry.enemies.clear();
     registry.islands.clear();
@@ -96,35 +96,24 @@ tson::Vector2<int> loadMap(const std::string& name) {
 
     if (map->getStatus() == tson::ParseStatus::OK) {
         // debugMap(map);
-        tson::Layer* islands_layer = map->getLayer("islands");
-        assert(islands_layer != nullptr);                                  // ensure layer exists
-        assert(islands_layer->getType() == tson::LayerType::ObjectGroup);  // ensure it is object layer
-        for (auto& obj : islands_layer->getObjects()) {
-            if (obj.getClassType() == "island") {
-                Entity e = Entity();
-                Motion& mot = registry.motions.emplace(e);
-                mot.position = {obj.getPosition().x, obj.getPosition().y};
-                mot.scale = {obj.getSize().x, obj.getSize().y};
-                Island& isl = registry.islands.emplace(e);
-                isl.polygon = obj.getPolygons();  // first point is always (0, 0)
-                registry.backgroundObjects.emplace(e);
-            } else if (obj.getClassType() == "base") {
-                Entity e = Entity();
-                Base& bas = registry.base.emplace(e);
-                bas.polygon = obj.getPolygons();
-                Motion& mot = registry.motions.emplace(e);
-                mot.position = {obj.getPosition().x, obj.getPosition().y};
-                mot.scale = {obj.getSize().x, obj.getSize().y};
-                registry.backgroundObjects.emplace(e);
-            }
-        }
+        float scaling_factor_x = GRID_CELL_WIDTH_PX / (float) map->getTileSize().x;
+        float scaling_factor_y = GRID_CELL_HEIGHT_PX / (float) map->getTileSize().y;
+        tson::Vector2i offset(0, 0);
 
         tson::Layer* spawns_layer = map->getLayer("spawnpoints");
         assert(spawns_layer != nullptr);                                  // ensure layer exists
         assert(spawns_layer->getType() == tson::LayerType::ObjectGroup);  // ensure it is object layer
 
         for (auto& obj : spawns_layer->getObjects()) {
-            if (obj.getClassType() == "enemy") {
+            if (obj.getClassType() == "player") {
+                if (registry.players.size() == 1) {
+                    Entity e = registry.players.entities[0];
+                    Motion& mot = registry.motions.get(e);
+                    offset.x = (WINDOW_WIDTH_PX / 2) - (obj.getPosition().x * scaling_factor_x);
+                    offset.y = (WINDOW_HEIGHT_PX / 2) - (obj.getPosition().y * scaling_factor_y);
+                    mot.position = {WINDOW_WIDTH_PX / 2, WINDOW_HEIGHT_PX / 2};
+                }
+            } else if (obj.getClassType() == "enemy") {
                 Entity e = Entity();
                 Enemy& ene = registry.enemies.emplace(e);
                 tson::EnumValue ene_type = obj.get<tson::EnumValue>("enemy_type_enum");
@@ -132,21 +121,51 @@ tson::Vector2<int> loadMap(const std::string& name) {
                 tson::Object eneh_type = obj.get<tson::Object>("home_island");
                 ene.home_island = obj.get<uint32_t>("home_island");
                 Motion& mot = registry.motions.emplace(e);
-                mot.position = {obj.getPosition().x, obj.getPosition().y};
-                mot.scale = {obj.getSize().x, obj.getSize().y};
+                mot.position = {obj.getPosition().x * scaling_factor_x + offset.x,
+                                obj.getPosition().y * scaling_factor_y + offset.y};
+                mot.scale = {obj.getSize().x * scaling_factor_x, obj.getSize().y * scaling_factor_y};
                 registry.backgroundObjects.emplace(e);
-            } else if (obj.getClassType() == "player") {
-                if (registry.players.size() == 1) {
-                    Entity e = registry.players.entities[0];
-                    Motion& mot = registry.motions.get(e);
-                    // mot.position = {obj.getPosition().x, obj.getPosition().y};
-                }
             }
         }
-        return {map->getSize().x * map->getTileSize().x, map->getSize().y * map->getTileSize().y};
+
+        tson::Layer* islands_layer = map->getLayer("islands");
+        assert(islands_layer != nullptr);                                  // ensure layer exists
+        assert(islands_layer->getType() == tson::LayerType::ObjectGroup);  // ensure it is object layer
+        for (auto& obj : islands_layer->getObjects()) {
+            if (obj.getClassType() == "island") {
+                Entity e = Entity();
+                Motion& mot = registry.motions.emplace(e);
+                mot.position = {obj.getPosition().x * scaling_factor_x + offset.x,
+                                obj.getPosition().y * scaling_factor_y + offset.y};
+                mot.scale = {obj.getSize().x * scaling_factor_x, obj.getSize().y * scaling_factor_y};
+                Island& isl = registry.islands.emplace(e);
+                isl.polygon = obj.getPolygons();  // first point is always (0, 0)
+                for (auto& p : isl.polygon) {     // scale up polygons too
+                    p.x *= scaling_factor_x;
+                    p.y *= scaling_factor_x;
+                }
+                registry.backgroundObjects.emplace(e);
+            } else if (obj.getClassType() == "base") {
+                Entity e = Entity();
+                Base& bas = registry.base.emplace(e);
+                bas.polygon = obj.getPolygons();
+                for (auto& p : bas.polygon) {  // scale up polygons too
+                    p.x *= scaling_factor_x;
+                    p.y *= scaling_factor_x;
+                }
+                Motion& mot = registry.motions.emplace(e);
+                mot.position = {obj.getPosition().x * scaling_factor_x + offset.x,
+                                obj.getPosition().y * scaling_factor_y + offset.y};
+                mot.scale = {obj.getSize().x * scaling_factor_x, obj.getSize().y * scaling_factor_y};
+                registry.backgroundObjects.emplace(e);
+            }
+        }
+        tson::Vector2i map_size(int(map->getSize().x * map->getTileSize().x * scaling_factor_x),
+                                int(map->getSize().y * map->getTileSize().y * scaling_factor_y));
+        return std::make_pair(map_size, offset);
     } else  // Error occured
     {
         std::cout << map->getStatusMessage();
-        return tson::Vector2<int>(0, 0);
+        return std::make_pair(tson::Vector2i(0, 0), tson::Vector2i(0, 0));
     }
 }
