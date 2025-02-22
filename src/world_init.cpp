@@ -88,6 +88,7 @@ Entity createEnemy(vec2 position) {
 
 Entity createBunny(vec2 position) {
     auto entity = Entity();
+    registry.backgroundObjects.emplace(entity);
 
     Bunny& bunny = registry.bunnies.emplace(entity);
     bunny.on_island = true;
