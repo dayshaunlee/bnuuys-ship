@@ -110,8 +110,9 @@ std::vector<tson::Vector2i> get_poly_from_motion(const Motion& motion) {
 // This is a SUPER APPROXIMATE check that puts a circle around the bounding
 // boxes and sees if the center point of either object is inside the other's
 // bounding-box-circle. You can surely implement a more accurate detection
+// Clare's note: add camera offset in calculation
 bool collidesSpherical(const Motion& motion1, const Motion& motion2) {
-    vec2 dp = motion1.position - motion2.position;
+    vec2 dp = motion1.position - motion2.position + CameraSystem::GetInstance()->position;;
     float dist_squared = dot(dp, dp);
     const vec2 other_bonding_box = get_bounding_box(motion1) / 2.f;
     const float other_r_squared = dot(other_bonding_box, other_bonding_box);
