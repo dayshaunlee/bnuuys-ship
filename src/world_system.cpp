@@ -215,8 +215,6 @@ void WorldSystem::handle_collisions() {
             if (bunny.jail_health <= 0) {
                 registry.renderRequests.get(e2).used_texture = TEXTURE_ASSET_ID::BUNNY_NOT_JAILED;
                 bunny.is_jailed = false;
-                
-                registry.backgroundObjects.remove(e2);
             }
             registry.remove_all_components_of(e1);
 
@@ -229,8 +227,6 @@ void WorldSystem::handle_collisions() {
             if (bunny.jail_health <= 0) {
                 registry.renderRequests.get(e1).used_texture = TEXTURE_ASSET_ID::BUNNY_NOT_JAILED;
                 bunny.is_jailed = false;
-                
-                registry.backgroundObjects.remove(e1);
             }
             registry.remove_all_components_of(e2);
         }
@@ -242,15 +238,6 @@ void WorldSystem::handle_collisions() {
             continue;
         } else if (registry.enemies.has(e2) && registry.ships.has(e1)) {
             registry.ships.get(e1).health -= 10.0f;
-            registry.remove_all_components_of(e2);
-            continue;
-        }
-
-        // Enemy - Island collision
-        if (registry.enemies.has(e1) && registry.islands.has(e2)) {
-            registry.remove_all_components_of(e1);
-            continue;
-        } else if (registry.enemies.has(e2) && registry.islands.has(e1)) {
             registry.remove_all_components_of(e2);
             continue;
         }

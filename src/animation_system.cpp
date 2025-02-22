@@ -5,6 +5,7 @@
 #include "tinyECS/components.hpp"
 #include "tinyECS/registry.hpp"
 #include "iostream"
+#include "camera_system.hpp"
 
 bool isIdleAnim(TEXTURE_ASSET_ID currAnim) {
     return (currAnim == TEXTURE_ASSET_ID::BUNNY_IDLE_UP0) || (currAnim == TEXTURE_ASSET_ID::BUNNY_IDLE_UP1) ||
@@ -174,8 +175,8 @@ void HandleBunnyAnimation(float elapsed_ms) {
         // Bunny saving animation.
         Motion& bunny_motion = registry.motions.get(entity);
         if (!bunny.is_jailed && !bunny.on_ship) {
-            vec2& bunny_position = bunny_motion.position;
-            vec2 empty_ship_location = {364, 252};  // hard coded to one specific tile
+            vec2 bunny_position = bunny_motion.position + CameraSystem::GetInstance()->position;
+            vec2 empty_ship_location = {364, 252};  // save bunny to top right ship tile
 
             if (round(bunny_position) != empty_ship_location) {
                 vec2 direction = empty_ship_location - bunny_position;
@@ -189,6 +190,7 @@ void HandleBunnyAnimation(float elapsed_ms) {
             } else {
                 bunny.on_island = false;
                 bunny.on_ship = true;
+                bunny_motion.position += CameraSystem::GetInstance()->position;
                 bunny_motion.velocity = {0, 0};
                 registry.backgroundObjects.remove(entity);
             }
