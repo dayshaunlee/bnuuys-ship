@@ -6,6 +6,7 @@
 // internal
 #include "render_system.hpp"
 #include "bnuui/bnuui.hpp"
+#include "camera_system.hpp"
 #include "common.hpp"
 #include "sceneManager/scene_manager.hpp"
 #include "tinyECS/components.hpp"
@@ -96,8 +97,14 @@ void RenderSystem::drawTexturedMesh(Entity entity, const mat3& projection) {
     // Transformation code, see Rendering and Transformation in the template
     // specification for more info Incrementally updates transformation matrix,
     // thus ORDER IS IMPORTANT
+
+    // BRIAN TODO:
     Transform transform;
-    transform.translate(motion.position);
+    if (registry.backgroundObjects.has(entity)) {
+        transform.translate(motion.position + CameraSystem::GetInstance()->position);
+    } else {
+        transform.translate(motion.position);
+    }
     transform.scale(motion.scale);
     transform.rotate(radians(motion.angle));
 

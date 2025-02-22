@@ -3,6 +3,7 @@
 
 #include <iostream>
 
+#include "camera_system.hpp"
 #include "world_init.hpp"
 
 // #include "camera_system.hpp"
@@ -121,6 +122,7 @@ bool collidesSpherical(const Motion& motion1, const Motion& motion2) {
     return false;
 }
 
+// Brian's Additional Feedback: I added the Camera Offset, but it might not be the EXACT outputs.
 // Polygon - Polygon collision
 bool collidesPoly(const Entity e1, const Entity e2) {
     if ((registry.islands.has(e1) && registry.ships.has(e2)) || (registry.islands.has(e2) && registry.ships.has(e1))) {
@@ -132,15 +134,15 @@ bool collidesPoly(const Entity e1, const Entity e2) {
             islandPolygon = registry.islands.get(e1).polygon;
             shipPolygon = get_poly_from_motion(e2_mot);
             for (auto& p : islandPolygon) {  // account for camera affecting position
-                p.x += e1_mot.position.x;
-                p.y += e1_mot.position.y;
+                p.x += e1_mot.position.x + CameraSystem::GetInstance()->position.x;
+                p.y += e1_mot.position.y + CameraSystem::GetInstance()->position.y;
             }
         } else {  // e2 is the Island, e1 is the Ship
             islandPolygon = registry.islands.get(e2).polygon;
             shipPolygon = get_poly_from_motion(e1_mot);
             for (auto& p : islandPolygon) {  // account for camera affecting position
-                p.x += e2_mot.position.x;
-                p.y += e2_mot.position.y;
+                p.x += e2_mot.position.x + CameraSystem::GetInstance()->position.x;
+                p.y += e2_mot.position.y + CameraSystem::GetInstance()->position.y;
             }
         }
         return polyPoly(islandPolygon, shipPolygon);
