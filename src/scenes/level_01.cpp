@@ -33,7 +33,8 @@ std::deque<int> keyOrder;
 std::set<int> activeShipKeys;
 std::deque<int> keyShipOrder;
 
-Level01::Level01() {
+Level01::Level01(WorldSystem* worldsystem) {
+    this->world_system = worldsystem;
     this->name = "Level 1";
 }
 
@@ -476,7 +477,7 @@ void Level01::Update(float dt) {
     physics_system.step(dt);
     animation_system.step(dt);
 
-    world_system.handle_collisions();
+    world_system->handle_collisions();
 
     // Simple cannon system. make this its own system later.
     for (SimpleCannon& sc : registry.simpleCannons.components) {
