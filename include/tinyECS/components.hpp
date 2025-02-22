@@ -294,10 +294,6 @@ struct Enemy {
     int home_island;
 };
 
-// temperary component for land for enemy path finding testing
-struct Obstacle {
-};
-
 // ========== BUNNY DETAILS ==========
 struct Bunny {
     bool on_island;
