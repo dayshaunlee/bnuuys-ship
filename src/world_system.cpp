@@ -141,7 +141,7 @@ void WorldSystem::init(RenderSystem* renderer_arg) {
     // start playing background music indefinitely
     std::cout << "Starting music..." << std::endl;
     // TODO Brian: uncomment later
-    Mix_PlayMusic(background_music, -1);
+    // Mix_PlayMusic(background_music, -1);
 
     // Set all states to default
     restart_game();
