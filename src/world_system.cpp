@@ -273,14 +273,6 @@ void WorldSystem::on_key(int key, int, int action, int mod) {
         close_window();
     }
 
-    // Resetting game
-    if (action == GLFW_RELEASE && key == GLFW_KEY_R) {
-        int w, h;
-        glfwGetWindowSize(window, &w, &h);
-
-        restart_game();
-    }
-
     Scene* scene = SceneManager::getInstance().getCurrentScene();
     if (scene) {
         scene->HandleInput(key, action, mod);
