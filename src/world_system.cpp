@@ -178,47 +178,6 @@ void WorldSystem::handle_collisions() {
     std::vector<Entity> collisions_to_remove;
 
     for (uint i = 0; i < collision_container.components.size(); i++) {
-        // Handle collision here.
-        Entity entity_i = collision_container.entities[i];
-        Entity entity_j = collision_container.components[i].other;
-
-        Entity bunny_entity;
-
-        if (registry.bunnies.has(entity_i)) {
-            bunny_entity = entity_i;
-        } else if (registry.bunnies.has(entity_j)) {
-            bunny_entity = entity_j;
-        } else {
-            continue;
-        }
-
-        Entity other_entity = (bunny_entity == entity_i) ? entity_j : entity_i;
-
-        Bunny& bunny = registry.bunnies.get(bunny_entity);
-
-        if (registry.projectiles.has(other_entity)) {
-            Projectile& projectile = registry.projectiles.get(other_entity);
-            float bunny_hit = bunny.jail_health - projectile.damage;
-
-            if (bunny.is_jailed) {
-                if (bunny_hit <= 0) {
-                    TEXTURE_ASSET_ID& texture = registry.renderRequests.get(bunny_entity).used_texture;
-                    texture = TEXTURE_ASSET_ID::BUNNY_NOT_JAILED;
-                    bunny.is_jailed = false;
-
-                    registry.remove_all_components_of(other_entity);
-                    registry.backgroundObjects.remove(bunny_entity);
-                } else {
-                    registry.remove_all_components_of(other_entity);
-                    bunny.jail_health = bunny_hit;
-                    std::cout << "projectile hit" << std::endl;
-                    std::cout << "bunny jail health is now " << bunny_hit << std::endl;
-                }
-            }
-        }
-    }
-
-    for (uint i = 0; i < collision_container.components.size(); i++) {
         Entity e1 = collision_container.entities[i];
         Entity e2 = collision_container.components[i].other;
         if (!registry.motions.has(e1) || !registry.motions.has(e2)) {
@@ -226,14 +185,56 @@ void WorldSystem::handle_collisions() {
             collisions_to_remove.push_back(e2);
             continue;
         }
-        /* TODO: implement projectiles from weapons
-        if ((registry.projectiles.has(e1) && registry.enemies.has(e2)) ||
-            (registry.projectiles.has(e2) && registry.enemies.has(e1))) {
-            // do damage to enemies
+
+        // Projectile - Enemy collision
+        if (registry.projectiles.has(e1) && registry.enemies.has(e2)) {
+            Projectile& projectile = registry.projectiles.get(e1);
+            Enemy& enemy = registry.enemies.get(e2);
+
+            enemy.health -= projectile.damage;
+
+            if (enemy.health <= 0) registry.remove_all_components_of(e2);
             registry.remove_all_components_of(e1);
+
+        } else if (registry.projectiles.has(e2) && registry.enemies.has(e1)) {
+            Projectile& projectile = registry.projectiles.get(e2);
+            Enemy& enemy = registry.enemies.get(e1);
+
+            enemy.health -= projectile.damage;
+            if (enemy.health <= 0) registry.remove_all_components_of(e1);
+
             registry.remove_all_components_of(e2);
         }
-        */
+
+        // Projectile - Bunny collision
+        if (registry.projectiles.has(e1) && registry.bunnies.has(e2) && registry.bunnies.get(e2).is_jailed) {
+            Projectile& projectile = registry.projectiles.get(e1);
+            Bunny& bunny = registry.bunnies.get(e2);
+
+            bunny.jail_health -= projectile.damage;
+
+            if (bunny.jail_health <= 0) {
+                registry.renderRequests.get(e2).used_texture = TEXTURE_ASSET_ID::BUNNY_NOT_JAILED;
+                bunny.is_jailed = false;
+                
+                registry.backgroundObjects.remove(e2);
+            }
+            registry.remove_all_components_of(e1);
+
+        } else if (registry.projectiles.has(e2) && registry.bunnies.has(e1) && registry.bunnies.get(e1).is_jailed) {
+            Projectile& projectile = registry.projectiles.get(e2);
+            Bunny& bunny = registry.bunnies.get(e1);
+
+            bunny.jail_health -= projectile.damage;
+
+            if (bunny.jail_health <= 0) {
+                registry.renderRequests.get(e1).used_texture = TEXTURE_ASSET_ID::BUNNY_NOT_JAILED;
+                bunny.is_jailed = false;
+                
+                registry.backgroundObjects.remove(e1);
+            }
+            registry.remove_all_components_of(e2);
+        }
 
         // Enemy - Ship collision
         if (registry.enemies.has(e1) && registry.ships.has(e2)) {
@@ -242,6 +243,15 @@ void WorldSystem::handle_collisions() {
             continue;
         } else if (registry.enemies.has(e2) && registry.ships.has(e1)) {
             registry.ships.get(e1).health -= 10.0f;
+            registry.remove_all_components_of(e2);
+            continue;
+        }
+
+        // Enemy - Island collision
+        if (registry.enemies.has(e1) && registry.islands.has(e2)) {
+            registry.remove_all_components_of(e1);
+            continue;
+        } else if (registry.enemies.has(e2) && registry.islands.has(e1)) {
             registry.remove_all_components_of(e2);
             continue;
         }
