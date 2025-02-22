@@ -141,7 +141,7 @@ void WorldSystem::init(RenderSystem* renderer_arg) {
     // start playing background music indefinitely
     std::cout << "Starting music..." << std::endl;
     // TODO Brian: uncomment later
-    Mix_PlayMusic(background_music, -1);
+    // Mix_PlayMusic(background_music, -1);
 
     // Set all states to default
     restart_game();
@@ -271,14 +271,6 @@ void WorldSystem::on_key(int key, int, int action, int mod) {
     // exit game w/ ESC
     if (action == GLFW_RELEASE && key == GLFW_KEY_ESCAPE) {
         close_window();
-    }
-
-    // Resetting game
-    if (action == GLFW_RELEASE && key == GLFW_KEY_R) {
-        int w, h;
-        glfwGetWindowSize(window, &w, &h);
-
-        restart_game();
     }
 
     Scene* scene = SceneManager::getInstance().getCurrentScene();
