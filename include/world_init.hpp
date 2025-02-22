@@ -23,9 +23,6 @@ Entity createGridLine(vec2 start_pos, vec2 end_pos);
 Entity createEnemy(RenderSystem* renderer, vec2 position);
 Entity createEnemy(Entity entity);
 
-// Obstacle for enemy path finding testing
-Entity createObstacle(RenderSystem* renderer, vec2 position);
-
 //Bunny
 Entity createBunny(RenderSystem* renderer, vec2 position);
 Entity createBunny(vec2 position);
