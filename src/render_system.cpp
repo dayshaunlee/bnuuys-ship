@@ -385,6 +385,9 @@ void RenderSystem::draw() {
     for (Entity entity : registry.renderRequests.entities) {
         // filter to entities that have a motion component
         if (registry.motions.has(entity)) {
+            // SKIP PLAYER TO RENDER THEM LAST.
+            if (registry.players.has(entity)) continue;
+
             // Note, its not very efficient to access elements indirectly via the entity
             // albeit iterating through all Sprites in sequence. A good point to optimize
             drawTexturedMesh(entity, projection_2D);
@@ -404,6 +407,11 @@ void RenderSystem::draw() {
         for (std::shared_ptr<bnuui::Element> elem : elems) {
             drawUIElement(*elem, projection_2D);
         }
+    }
+    // Render Player.
+    for (Entity entity : registry.players.entities) {
+        if (registry.motions.has(entity) && registry.renderRequests.has(entity))
+            drawTexturedMesh(entity, projection_2D);
     }
 
     // draw framebuffer to screen

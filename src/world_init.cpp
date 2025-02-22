@@ -2,6 +2,7 @@
 #include <cmath>
 #include <glm/geometric.hpp>
 #include <glm/trigonometric.hpp>
+#include <ostream>
 #include <vector>
 #include "common.hpp"
 #include "tinyECS/components.hpp"
@@ -81,6 +82,7 @@ Entity createEnemy(vec2 position) {
     registry.renderRequests.insert(entity,
                                    {TEXTURE_ASSET_ID::ENEMY0, EFFECT_ASSET_ID::TEXTURED, GEOMETRY_BUFFER_ID::SPRITE});
 
+    std::cout << "Enemy id: " << entity.id() << std::endl;
     return entity;
 }
 
@@ -121,6 +123,7 @@ Entity createEnemy(RenderSystem* renderer, vec2 position) {
     registry.renderRequests.insert(entity,
                                    {TEXTURE_ASSET_ID::ENEMY0, EFFECT_ASSET_ID::TEXTURED, GEOMETRY_BUFFER_ID::SPRITE});
 
+    std::cout << "Enemy id: " << entity.id() << std::endl;
     return entity;
 }
 
@@ -300,11 +303,11 @@ Entity createShip() {
         entity, {TEXTURE_ASSET_ID::TEXTURE_COUNT, EFFECT_ASSET_ID::EGG, GEOMETRY_BUFFER_ID::SHIP_SQUARE});
 
     Ship& ship = registry.ships.emplace(entity);
-    ship.health = 1;
-    ship.num_weapon = 0;
+    ship.health = 100.0f;
 
     initializeShipModules(ship);
-
+    std::cout << "Ship ID: " << entity.id() << std::endl;
+    ;
     return entity;
 }
 

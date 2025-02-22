@@ -1,4 +1,5 @@
 #pragma once
+#include <map>
 #include <unordered_map>
 #include <vector>
 
@@ -273,10 +274,12 @@ struct SimpleCannon {
 
 struct Ship {
     float health;
-    int num_weapon;
     // This defines what the module is AND the corresponding entity.
     std::vector<std::vector<MODULE_TYPES>> ship_modules;
     std::vector<std::vector<Entity>> ship_modules_entity;
+
+    // This defines how many of each modules is in our inventory. 
+    std::unordered_map<MODULE_TYPES, uint> available_modules;
 };
 
 // ========== ENEMY DETAILS ==========

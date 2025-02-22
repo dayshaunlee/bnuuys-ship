@@ -1,7 +1,9 @@
 #include "scenes/level_01.hpp"
 #include <cmath>
 #include <deque>
+#include <glm/common.hpp>
 #include <glm/ext/vector_float2.hpp>
+#include <glm/ext/vector_float3.hpp>
 #include <glm/trigonometric.hpp>
 #include <iostream>
 #include <memory>
@@ -23,6 +25,7 @@
 // Just to make my life easier. (TODO: REFACTOR LATER)
 std::shared_ptr<bnuui::Cursor> tile_cursor;
 vec2 l1_mouse_pos;
+MODULE_TYPES curr_selected = EMPTY;
 
 std::set<int> activeKeys;
 std::deque<int> keyOrder;
@@ -32,6 +35,17 @@ std::deque<int> keyShipOrder;
 
 Level01::Level01() {
     this->name = "Level 1";
+}
+
+MODULE_TYPES getModuleType(vec2 tile_pos) {
+    Ship& ship = registry.ships.components[0];
+    return ship.ship_modules[tile_pos.y][tile_pos.x];
+}
+
+vec2 getMouseTilePosition() {
+    int tile_x = (int) (l1_mouse_pos.x / GRID_CELL_WIDTH_PX);
+    int tile_y = (int) (l1_mouse_pos.y / GRID_CELL_HEIGHT_PX);
+    return vec2(tile_x, tile_y);
 }
 
 void Level01::Init() {
@@ -63,21 +77,82 @@ void Level01::Init() {
 
 void Level01::InitializeUI() {
     // Create Healthbar.
-
     auto player_box = std::make_shared<bnuui::Box>(vec2(96, 96), vec2(96, 96), 0.0f);
     auto player_status = std::make_shared<bnuui::PlayerStatus>(
-        vec2(96, 96), vec2(60, 60), 0.0f, registry.players.components[0].health, 100);
+        vec2(96, 96), vec2(60, 60), 0.0f, registry.ships.components[0].health, 100);
     auto slider_bg = std::make_shared<bnuui::LongBox>(vec2(256, 96), vec2(240, 72), 0.0f);
     auto progress_bar = std::make_shared<bnuui::ProgressBar>(
-        vec2(256, 93), vec2(180, 24), 0.0f, registry.players.components[0].health, 100);
+        vec2(256, 93), vec2(180, 24), 0.0f, registry.ships.components[0].health, 100);
     player_box->children.push_back(slider_bg);
 
+    // Create the tile cursor effect.
     tile_cursor = std::make_shared<bnuui::Cursor>(vec2(0, 0), vec2(GRID_CELL_WIDTH_PX, GRID_CELL_HEIGHT_PX), 0.0f);
     tile_cursor->visible = false;
+
+    // Create the inventory bar.
+    auto inventory_slots = std::make_shared<bnuui::LongBox>(vec2(420, 550), vec2(240, 72), 0.0f);
+
+    auto steering_wheels = std::make_shared<bnuui::Box>(vec2(340, 547.5f), vec2(40, 40), 0.0f);
+    auto steering_wheel_selected = std::make_shared<bnuui::Cursor>(vec2(340, 547.5f), vec2(40, 40), 0.0f);
+    steering_wheel_selected->visible = false;
+    steering_wheels->children.push_back(steering_wheel_selected);
+    steering_wheels->texture = TEXTURE_ASSET_ID::SQUARE_3_CLICKED;
+    steering_wheels->setOnClick([](bnuui::Element& e) {
+        if (curr_selected == STEERING_WHEEL) {
+            curr_selected = EMPTY;
+        } else {
+            curr_selected = STEERING_WHEEL;
+        }
+    });
+    steering_wheels->setOnUpdate([](bnuui::Element& e, float dt) {
+        Ship& ship = registry.ships.components[0];
+        if (ship.available_modules[STEERING_WHEEL] == 0) {
+            e.color = vec3(0.5f, 0, 0);
+        } else {
+            e.color = vec3(1, 1, 1);
+        }
+
+        if (curr_selected == STEERING_WHEEL)
+            e.children[0]->visible = true;
+        else
+            e.children[0]->visible = false;
+    });
+
+    auto cannons = std::make_shared<bnuui::Box>(vec2(380, 547.5f), vec2(40, 40), 0.0f);
+    auto cannons_selected = std::make_shared<bnuui::Cursor>(vec2(380, 547.5f), vec2(40, 40), 0.0f);
+    cannons_selected->visible = false;
+    cannons->children.push_back(cannons_selected);
+    cannons->texture = TEXTURE_ASSET_ID::SIMPLE_CANNON01;
+    cannons->setOnClick([](bnuui::Element& e) {
+        if (curr_selected == SIMPLE_CANNON) {
+            curr_selected = EMPTY;
+        } else {
+            curr_selected = SIMPLE_CANNON;
+        }
+    });
+    cannons->setOnUpdate([](bnuui::Element& e, float dt) {
+        Ship& ship = registry.ships.components[0];
+        if (ship.available_modules[SIMPLE_CANNON] == 0) {
+            e.color = vec3(0.5f, 0, 0);
+        } else {
+            e.color = vec3(1, 1, 1);
+        }
+
+        if (curr_selected == SIMPLE_CANNON)
+            e.children[0]->visible = true;
+        else
+            e.children[0]->visible = false;
+    });
+
+    // Insert all the stuff.
     scene_ui.insert(player_box);
     scene_ui.insert(player_status);
     scene_ui.insert(progress_bar);
     scene_ui.insert(tile_cursor);
+
+    scene_ui.insert(inventory_slots);
+    scene_ui.insert(steering_wheels);
+    scene_ui.insert(cannons);
 }
 
 void Level01::Exit() {
@@ -171,8 +246,7 @@ void HandlePlayerStationing(vec2 tile_pos) {
         return;
     }
 
-    Ship& ship = registry.ships.components[0];
-    MODULE_TYPES types = ship.ship_modules[tile_pos.y][tile_pos.x];
+    MODULE_TYPES types = getModuleType(tile_pos);
     switch (types) {
         case EMPTY:
         case PLATFORM:
@@ -200,8 +274,7 @@ void Level01::HandleInput(int key, int action, int mod) {
 
     if (player_comp.player_state == STATIONING) {
         // Check what module the player is on.
-        Ship& ship = registry.ships.components[0];
-        MODULE_TYPES module = ship.ship_modules[player_tile_y][player_tile_x];
+        MODULE_TYPES module = getModuleType(vec2(player_tile_x, player_tile_y));
         switch (module) {
             case EMPTY:
             case PLATFORM: {
@@ -213,13 +286,8 @@ void Level01::HandleInput(int key, int action, int mod) {
                 HandleCameraMovement(key, action, mod);
                 return;
             }
-            case SIMPLE_CANNON: {
+            default:
                 return;
-            }
-            case FAST_CANNON: {
-                player_comp.player_state = IDLE;
-                return;
-            } break;
         }
     } else {
         HandlePlayerMovement(key, action, mod);
@@ -244,8 +312,7 @@ void Level01::HandleMouseMove(vec2 pos) {
 
     // Check if in the grid
     if (mouse_tile_x > 0 && mouse_tile_x < COL_COUNT && mouse_tile_y > 0 && mouse_tile_y < ROW_COUNT) {
-        Ship& ship = registry.ships.components[0];
-        MODULE_TYPES module = ship.ship_modules[mouse_tile_y][mouse_tile_x];
+        MODULE_TYPES module = getModuleType(vec2(mouse_tile_x, mouse_tile_y));
         if (module != EMPTY) {
             tile_cursor->visible = true;
             tile_cursor->position = TileToVector2(mouse_tile_x, mouse_tile_y);
@@ -264,7 +331,7 @@ void Level01::HandleMouseMove(vec2 pos) {
     if (player_comp.player_state == STATIONING) {
         // Check what module the player is on.
         Ship& ship = registry.ships.components[0];
-        MODULE_TYPES module = ship.ship_modules[player_tile_y][player_tile_x];
+        MODULE_TYPES module = getModuleType(vec2(player_tile_x, player_tile_y));
         switch (module) {
             case SIMPLE_CANNON: {
                 // Rotate the simple cannon.
@@ -303,35 +370,83 @@ void Level01::HandleMouseClick(int button, int action, int mods) {
         }
     }
 
-    Entity player_entity = registry.players.entities[0];
-    glm::vec2 playerPos = registry.motions.get(player_entity).position;
-    int player_tile_x = (int) (playerPos.x / GRID_CELL_WIDTH_PX);
-    int player_tile_y = (int) (playerPos.y / GRID_CELL_HEIGHT_PX);
+    if (action == GLFW_PRESS && button == GLFW_MOUSE_BUTTON_1) {
+        // Handles mouse clicks for different stationings.
+        Entity player_entity = registry.players.entities[0];
+        glm::vec2 playerPos = registry.motions.get(player_entity).position;
+        int player_tile_x = (int) (playerPos.x / GRID_CELL_WIDTH_PX);
+        int player_tile_y = (int) (playerPos.y / GRID_CELL_HEIGHT_PX);
 
-    Player& player_comp = registry.players.get(player_entity);
+        Player& player_comp = registry.players.get(player_entity);
 
-    if (player_comp.player_state == STATIONING) {
-        // Check what module the player is on.
-        Ship& ship = registry.ships.components[0];
-        MODULE_TYPES module = ship.ship_modules[player_tile_y][player_tile_x];
-        switch (module) {
-            case SIMPLE_CANNON: {
-                // Rotate the simple cannon.
-                Entity cannon_entity = ship.ship_modules_entity[player_tile_y][player_tile_x];
-                SimpleCannon& sc = registry.simpleCannons.get(cannon_entity);
-                if (sc.timer_ms <= 0) {
-                    vec2 cannon_pos = registry.motions.get(cannon_entity).position;
-                    createCannonProjectile(cannon_pos, l1_mouse_pos);
-                    sc.timer_ms = SIMPLE_CANNON_COOLDOWN;
+        if (player_comp.player_state == STATIONING) {
+            // Check what module the player is on.
+            Ship& ship = registry.ships.components[0];
+            MODULE_TYPES module = ship.ship_modules[player_tile_y][player_tile_x];
+            switch (module) {
+                case SIMPLE_CANNON: {
+                    // Rotate the simple cannon.
+                    Entity cannon_entity = ship.ship_modules_entity[player_tile_y][player_tile_x];
+                    SimpleCannon& sc = registry.simpleCannons.get(cannon_entity);
+                    if (sc.timer_ms <= 0) {
+                        vec2 cannon_pos = registry.motions.get(cannon_entity).position;
+                        createCannonProjectile(cannon_pos, l1_mouse_pos);
+                        sc.timer_ms = SIMPLE_CANNON_COOLDOWN;
+                    }
+                    return;
                 }
-                return;
+                case FAST_CANNON: {
+                    player_comp.player_state = IDLE;
+                    return;
+                }
+                default:
+                    return;
             }
-            case FAST_CANNON: {
-                player_comp.player_state = IDLE;
-                return;
+        }
+    }
+    // Place selected items.
+    if (action == GLFW_PRESS && button == GLFW_MOUSE_BUTTON_1 && curr_selected != EMPTY) {
+        vec2 tile_pos = getMouseTilePosition();
+        MODULE_TYPES module = getModuleType(tile_pos);
+        Ship& ship = registry.ships.components[0];
+        if (ship.available_modules[curr_selected] == 0) {
+            return;
+        }
+
+        if (module == PLATFORM) {
+            ship.ship_modules[tile_pos.y][tile_pos.x] = curr_selected;
+            Entity e;
+            switch (curr_selected) {
+                case STEERING_WHEEL: {
+                    e = createSteeringWheel(tile_pos);
+                    break;
+                }
+                case SIMPLE_CANNON: {
+                    e = createCannon(tile_pos);
+                    break;
+                }
+                default:
+                    break;
             }
-            default:
+            ship.ship_modules_entity[tile_pos.y][tile_pos.x] = e;
+            ship.available_modules[curr_selected]--;
+        }
+    }
+
+    // Remove on right click.
+    if (action == GLFW_PRESS && button == GLFW_MOUSE_BUTTON_2) {
+        vec2 tile_pos = getMouseTilePosition();
+        MODULE_TYPES module = getModuleType(tile_pos);
+        switch (module) {
+            case EMPTY:
+            case PLATFORM:
                 return;
+            default: {
+                Ship& ship = registry.ships.components[0];
+                ship.ship_modules[tile_pos.y][tile_pos.x] = PLATFORM;
+                registry.remove_all_components_of(ship.ship_modules_entity[tile_pos.y][tile_pos.x]);
+                ship.available_modules[module]++;
+            }
         }
     }
 }
@@ -341,9 +456,10 @@ void Level01::Update(float dt) {
     ai_system.step(dt);
     physics_system.step(dt);
     animation_system.step(dt);
-    
+
     world_system.handle_collisions();
-    /*std::cout << CameraSystem::GetInstance()->velocity.x << " " << CameraSystem::GetInstance()->velocity.y << std::endl;*/
+    /*std::cout << CameraSystem::GetInstance()->velocity.x << " " << CameraSystem::GetInstance()->velocity.y <<
+     * std::endl;*/
 
     // Simple cannon system. make this its own system later.
     for (SimpleCannon& sc : registry.simpleCannons.components) {
@@ -364,9 +480,6 @@ void Level01::Update(float dt) {
             p.alive_time_ms -= dt;
         }
     }
-
-    if (registry.players.components[0].health <= 0.0f) registry.players.components[0].health = 100;
-    registry.players.components[0].health -= 0.1f;
 
     scene_ui.update(dt);
 }
