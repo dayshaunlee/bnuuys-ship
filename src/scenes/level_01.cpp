@@ -66,7 +66,9 @@ void Level01::Init() {
     createCamera();
 
     // enemy creation
-    createEnemy({150, 150});
+    for (Entity entity: registry.enemies.entities) {
+        createEnemy(entity);
+    };
 
     // bunny creation
     createBunny({200, 200});
