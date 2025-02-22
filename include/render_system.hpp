@@ -114,7 +114,10 @@ class RenderSystem {
 
         // Bunny (not jailed/jailed)
         textures_path("bunny/invert_idle_down1.png"),
-        textures_path("bunny/invert_idle_down0.png")
+        textures_path("bunny/invert_idle_down0.png"),
+
+        // Main Menu bg
+        textures_path("background/main_menu_bg.png"),
     };
 
     std::array<GLuint, effect_count> effects;

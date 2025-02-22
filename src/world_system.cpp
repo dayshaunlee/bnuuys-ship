@@ -78,7 +78,7 @@ GLFWwindow* WorldSystem::create_window() {
     glfwWindowHint(GLFW_SCALE_TO_MONITOR, GL_FALSE);  // GLFW 3.3+
 
     // Create the main window (for rendering, keyboard, and mouse input)
-    window = glfwCreateWindow(WINDOW_WIDTH_PX, WINDOW_HEIGHT_PX, "Towers vs Invaders Assignment", nullptr, nullptr);
+    window = glfwCreateWindow(WINDOW_WIDTH_PX, WINDOW_HEIGHT_PX, "Bnuuy's Ship", nullptr, nullptr);
     if (window == nullptr) {
         std::cerr << "ERROR: Failed to glfwCreateWindow in world_system.cpp" << std::endl;
         return nullptr;
