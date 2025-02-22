@@ -171,7 +171,6 @@ void WorldSystem::restart_game() {
     while (registry.motions.entities.size() > 0) registry.remove_all_components_of(registry.motions.entities.back());
 }
 
-int tmp = 0;
 // Compute collisions between entities
 void WorldSystem::handle_collisions() {
     ComponentContainer<Collision>& collision_container = registry.collisions;
@@ -259,30 +258,8 @@ void WorldSystem::handle_collisions() {
         // Ship - Island collision
         if ((registry.ships.has(e1) && registry.islands.has(e2)) ||
             (registry.ships.has(e2) && registry.islands.has(e1))) {
-            // debugging only right now
-            int ship_x;
-            int ship_y;
-            int island_x;
-            int island_y;
-
             collisions_to_remove.push_back(e1);
             collisions_to_remove.push_back(e2);
-            if (registry.ships.has(e1)) {  // e1 is the ship
-                ship_x = registry.motions.get(e1).position.x;
-                ship_y = registry.motions.get(e1).position.y;
-                island_x = registry.motions.get(e2).position.x;
-                island_y = registry.motions.get(e2).position.y;
-                std::cout << "SHIP ISLAND COLLISION WITH SHIP AT " << ship_x << ", " << ship_y << " AND ISLAND AT "
-                          << island_x << ", " << island_y << std::endl;
-            } else {  // e2 is the ship
-                ship_x = registry.motions.get(e2).position.x;
-                ship_y = registry.motions.get(e2).position.y;
-                island_x = registry.motions.get(e1).position.x;
-                island_y = registry.motions.get(e1).position.y;
-                std::cout << "SHIP ISLAND COLLISION WITH SHIP AT " << ship_x << ", " << ship_y << " AND ISLAND AT "
-                          << island_x << ", " << island_y << std::endl;
-            }
-            std::cout << tmp++ << std::endl;
             CameraSystem::GetInstance()->setToPreviousPosition();
         }
     }

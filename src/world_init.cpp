@@ -288,8 +288,6 @@ Entity createShip() {
     ship.health = 100.0f;
 
     initializeShipModules(ship);
-    std::cout << "Ship ID: " << entity.id() << std::endl;
-    ;
     return entity;
 }
 

@@ -463,8 +463,6 @@ void Level01::Update(float dt) {
     animation_system.step(dt);
 
     world_system.handle_collisions();
-    /*std::cout << CameraSystem::GetInstance()->velocity.x << " " << CameraSystem::GetInstance()->velocity.y <<
-     * std::endl;*/
 
     // Simple cannon system. make this its own system later.
     for (SimpleCannon& sc : registry.simpleCannons.components) {

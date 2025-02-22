@@ -13,8 +13,6 @@ void AISystem::step(float elapsed_ms) {
         for (const Entity& enemy : registry.enemies.entities) {
             Motion& enemy_motion = registry.motions.get(enemy);
             vec2 enemy_position = enemy_motion.position + CameraSystem::GetInstance()->position;   // Clare's note: camera offset calculation
-            std::cout << enemy_position.x << ", " << enemy_position.y << std::endl;
-
             if (enemy_position != ship_position) {
                 vec2 direction = ship_position - enemy_position;
 

@@ -4,6 +4,7 @@
 #include <iostream>
 
 #include "camera_system.hpp"
+#include "tinyECS/registry.hpp"
 #include "world_init.hpp"
 
 // #include "camera_system.hpp"
@@ -112,11 +113,36 @@ std::vector<tson::Vector2i> get_poly_from_motion(const Motion& motion) {
 // bounding-box-circle. You can surely implement a more accurate detection
 // Clare's note: add camera offset in calculation
 bool collidesSpherical(const Motion& motion1, const Motion& motion2) {
-    vec2 dp = motion1.position - motion2.position + CameraSystem::GetInstance()->position;;
+    vec2 dp = motion1.position - motion2.position + CameraSystem::GetInstance()->position;
     float dist_squared = dot(dp, dp);
     const vec2 other_bonding_box = get_bounding_box(motion1) / 2.f;
     const float other_r_squared = dot(other_bonding_box, other_bonding_box);
     const vec2 my_bonding_box = get_bounding_box(motion2) / 2.f;
+    const float my_r_squared = dot(my_bonding_box, my_bonding_box);
+    const float r_squared = max(other_r_squared, my_r_squared);
+    if (dist_squared < r_squared) return true;
+    return false;
+}
+
+bool collidesSphericalShip(const Entity e1, const Entity e2) {
+    Motion shipMotion;
+    Motion otherMotion;
+    if (registry.ships.has(e1)) {
+        otherMotion = registry.motions.get(e2);
+        shipMotion = registry.motions.get(e1);
+    } else {
+        otherMotion= registry.motions.get(e1);
+        shipMotion= registry.motions.get(e2);
+    }
+
+    otherMotion.position += CameraSystem::GetInstance()->position;
+
+
+    vec2 dp = otherMotion.position - shipMotion.position;
+    float dist_squared = dot(dp, dp);
+    const vec2 other_bonding_box = get_bounding_box(otherMotion) / 2.f;
+    const float other_r_squared = dot(other_bonding_box, other_bonding_box);
+    const vec2 my_bonding_box = get_bounding_box(shipMotion) / 2.f;
     const float my_r_squared = dot(my_bonding_box, my_bonding_box);
     const float r_squared = max(other_r_squared, my_r_squared);
     if (dist_squared < r_squared) return true;
@@ -185,7 +211,17 @@ void PhysicsSystem::step(float elapsed_ms) {
         for (uint j = i + 1; j < motion_container.components.size(); j++) {
             Entity entity_j = motion_container.entities[j];
             Motion& motion_j = motion_container.components[j];
-            if (collidesPoly(entity_i, entity_j) || collidesSpherical(motion_i, motion_j)) {
+            if (registry.islands.has(entity_i) || registry.islands.has(entity_j)) {
+                // Poly collision only for islands.
+                if (collidesPoly(entity_i, entity_j)) {
+                    registry.collisions.emplace_with_duplicates(entity_i, entity_j);
+                }
+            } else if (registry.ships.has(entity_i) || registry.ships.has(entity_j)){
+                // Handle SHIP collision.
+                if (collidesSphericalShip(entity_i, entity_j))
+                    registry.collisions.emplace_with_duplicates(entity_i, entity_j); 
+            } else if (collidesSpherical(motion_i, motion_j)){
+                // Every other collision.
                 registry.collisions.emplace_with_duplicates(entity_i, entity_j);
             }
         }
