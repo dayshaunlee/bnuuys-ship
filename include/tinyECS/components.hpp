@@ -245,6 +245,8 @@ struct PlayerAnimation {
 struct BackgroundObject {};
 struct Camera{
     vec2 acceleration = {0,0};
+    bool applyFrictionX = true;
+    bool applyFrictionY = true;
 };
 
 
