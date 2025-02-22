@@ -24,15 +24,6 @@ Entity createPlayer(vec2 position) {
     comp_motion.position = position;
     registry.motions.emplace(player, comp_motion);
 
-    RenderRequest comp_render_request = {
-        TEXTURE_ASSET_ID::BUNNY_IDLE_DOWN0, EFFECT_ASSET_ID::TEXTURED, GEOMETRY_BUFFER_ID::SPRITE};
-    registry.renderRequests.emplace(player, comp_render_request);
-
-    PlayerAnimation comp_anim;
-    comp_anim.timer_ms = 250;
-    comp_anim.curr_anim = TEXTURE_ASSET_ID::BUNNY_IDLE_DOWN0;
-    registry.playerAnimations.emplace(player, comp_anim);
-
     return player;
 }
 
@@ -53,6 +44,10 @@ Entity createPlayer(RenderSystem* renderer, vec2 position) {
     comp_motion.position = position;
     registry.motions.emplace(player, comp_motion);
 
+    return player;
+}
+
+Entity renderPlayer(Entity player) {
     RenderRequest comp_render_request = {
         TEXTURE_ASSET_ID::BUNNY_IDLE_DOWN0, EFFECT_ASSET_ID::TEXTURED, GEOMETRY_BUFFER_ID::SPRITE};
     registry.renderRequests.emplace(player, comp_render_request);
@@ -252,15 +247,16 @@ void initializeShipModules(Ship& ship) {
     ship.ship_modules_entity = tmp_entities;
 }
 
-// also create the camera component
-Entity createIslandBackground(int width, int height) {
+Entity createIslandBackground(int width, int height, int offset_x, int offset_y) {
     // create the island background entity
     Entity islandbg = Entity();
     registry.backgroundObjects.emplace(islandbg);
     Motion& islMotion = registry.motions.emplace(islandbg);
-
-    islMotion.position.x = width / 2;
-    islMotion.position.y = height / 2;
+    offset_x -= WINDOW_WIDTH_PX / 2 - width / 2;
+    offset_y -= WINDOW_HEIGHT_PX / 2 - height / 2;
+    islMotion.position.x = WINDOW_WIDTH_PX / 2 + offset_x;
+    islMotion.position.y = WINDOW_HEIGHT_PX / 2 + offset_y;
+    std::cout << "offset: " << offset_x << ", " << offset_y << std::endl;
     islMotion.scale.x = width;
     islMotion.scale.y = height;
 

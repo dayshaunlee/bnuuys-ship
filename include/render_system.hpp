@@ -67,7 +67,7 @@ class RenderSystem {
         textures_path("background/water_background.png"),
         
         // island background
-        map_path("m1.png"),
+        map_path("m1_debug.png"),
       
         // enemy (stationary)
         textures_path("enemies/chicken0.png"),

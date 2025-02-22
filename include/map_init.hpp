@@ -14,7 +14,7 @@
 *			- if it is of class 'player' -> update Player position (if exists)
 *	X return map size as tson::Vector2<int>
 */
-tson::Vector2<int> loadMap(const std::string& filename);
+std::pair<tson::Vector2i, tson::Vector2i> loadMap(const std::string& filename);
 
 std::string objectTypeStr(tson::ObjectType objType);
 

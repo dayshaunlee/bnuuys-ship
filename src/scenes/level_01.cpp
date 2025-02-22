@@ -49,19 +49,24 @@ vec2 getMouseTilePosition() {
 }
 
 void Level01::Init() {
+    // create player
+    Entity player = createPlayer({WINDOW_WIDTH_PX / 2, WINDOW_HEIGHT_PX / 2});
     // load map
     registry.list_all_components();
     std::cout << "loading map..." << std::endl;
-    tson::Vector2i mapSize = loadMap("m1.json");
+    std::pair<tson::Vector2i, tson::Vector2i> map = loadMap("m1.json");
+    tson::Vector2i mapSize = map.first;
+    tson::Vector2i map_offset = map.second;
     registry.list_all_components();
     std::cout << mapSize.x << ", " << mapSize.y << std::endl;
 
     // create the ocean background and then ship
-    createIslandBackground(mapSize.x, mapSize.y);
+    createIslandBackground(mapSize.x, mapSize.y, map_offset.x, map_offset.y);
     createShip();
 
-    // Now let's create our player.
-    createPlayer({WINDOW_WIDTH_PX / 2, WINDOW_HEIGHT_PX / 2});
+    // render player
+    renderPlayer(player);
+
 
     createCamera();
 
