@@ -27,7 +27,6 @@ class ECSRegistry {
     ComponentContainer<BackgroundObject> backgroundObjects;
     ComponentContainer<Camera> cameras;
     ComponentContainer<Enemy> enemies;
-    ComponentContainer<Obstacle> obstacles;
 
     ComponentContainer<Island> islands;
     ComponentContainer<Base> base;
@@ -57,14 +56,12 @@ class ECSRegistry {
         registry_list.push_back(&cameras);
 
         registry_list.push_back(&enemies);
-        registry_list.push_back(&obstacles);
         registry_list.push_back(&islands);
         registry_list.push_back(&base);
 
         registry_list.push_back(&steeringWheels);
         registry_list.push_back(&simpleCannons);
         registry_list.push_back(&enemies);
-        registry_list.push_back(&obstacles);
 
         registry_list.push_back(&bunnies);
     }

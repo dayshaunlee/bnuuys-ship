@@ -66,10 +66,12 @@ void Level01::Init() {
     createCamera();
 
     // enemy creation
-    createEnemy({150, 150});
+    for (Entity entity: registry.enemies.entities) {
+        createEnemy(entity);
+    };
 
     // bunny creation
-    createBunny({200, 200});
+    createBunny({150, 150});
 
     registry.players.components[0].health = 100.0f;
     InitializeUI();
@@ -470,8 +472,6 @@ void Level01::Update(float dt) {
     animation_system.step(dt);
 
     world_system.handle_collisions();
-    /*std::cout << CameraSystem::GetInstance()->velocity.x << " " << CameraSystem::GetInstance()->velocity.y <<
-     * std::endl;*/
 
     // Simple cannon system. make this its own system later.
     for (SimpleCannon& sc : registry.simpleCannons.components) {

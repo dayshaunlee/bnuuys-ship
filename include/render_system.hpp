@@ -71,9 +71,6 @@ class RenderSystem {
       
         // enemy (stationary)
         textures_path("enemies/chicken0.png"),
-
-        // obstacle
-        textures_path("path-testing/obstacle.png"),
         
         // UI Assets.
         textures_path("ui/buttons/square3Normal.png"),

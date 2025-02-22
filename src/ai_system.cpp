@@ -1,5 +1,5 @@
 #include "ai_system.hpp"
-
+#include "camera_system.hpp"
 #include <iostream>
 
 #include "world_init.hpp"
@@ -12,15 +12,16 @@ void AISystem::step(float elapsed_ms) {
 
         for (const Entity& enemy : registry.enemies.entities) {
             Motion& enemy_motion = registry.motions.get(enemy);
-            vec2& enemy_position = enemy_motion.position;
-
+            vec2 enemy_position = enemy_motion.position + CameraSystem::GetInstance()->position;   // Clare's note: camera offset calculation
             if (enemy_position != ship_position) {
                 vec2 direction = ship_position - enemy_position;
 
                 // unit vector for direction
                 float length = sqrt(direction.x * direction.x + direction.y * direction.y);
-                direction.x /= length;
-                direction.y /= length;
+                if (length > 0) {
+                    direction.x /= length;
+                    direction.y /= length;
+                }
 
                 enemy_motion.velocity = direction * ENEMY_BASE_SPEED;
 

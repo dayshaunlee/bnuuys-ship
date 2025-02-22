@@ -132,10 +132,8 @@ enum class TEXTURE_ASSET_ID {
 
     ENEMY0 = ISLAND_BACKGROUND + 1,
 
-    OBSTACLE = ENEMY0 + 1,
-
     // UI assets.
-    SQUARE_3_NORMAL = OBSTACLE + 1,
+    SQUARE_3_NORMAL = ENEMY0 + 1,
     SQUARE_3_HOVER = SQUARE_3_NORMAL + 1,
     SQUARE_3_CLICKED = SQUARE_3_HOVER + 1,
 
@@ -294,10 +292,6 @@ struct Enemy {
     int health;
 	int timer_ms;
     int home_island;
-};
-
-// temperary component for land for enemy path finding testing
-struct Obstacle {
 };
 
 // ========== BUNNY DETAILS ==========

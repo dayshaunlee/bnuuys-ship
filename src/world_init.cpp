@@ -65,18 +65,16 @@ Entity createPlayer(RenderSystem* renderer, vec2 position) {
     return player;
 }
 
-Entity createEnemy(vec2 position) {
-    auto entity = Entity();
-
-    Enemy& enemy = registry.enemies.emplace(entity);
+Entity createEnemy(Entity entity) {
+    Enemy& enemy = registry.enemies.get(entity);
     enemy.health = ENEMY_BASE_HEALTH;
     enemy.type = BASIC_GUNNER;
     enemy.timer_ms = 0;
 
-    Motion& motion = registry.motions.emplace(entity);
+    Motion& motion = registry.motions.get(entity);
     motion.angle = 0.f;
     motion.velocity = {0.f, 0.f};
-    motion.position = position;
+    // motion.position = position;
     motion.scale = {40, 40};
 
     registry.renderRequests.insert(entity,
@@ -148,23 +146,6 @@ Entity createBunny(RenderSystem* renderer, vec2 position) {
 
     registry.renderRequests.insert(
         entity, {TEXTURE_ASSET_ID::BUNNY_JAILED, EFFECT_ASSET_ID::TEXTURED, GEOMETRY_BUFFER_ID::SPRITE});
-
-    return entity;
-}
-
-Entity createObstacle(RenderSystem* renderer, vec2 position) {
-    auto entity = Entity();
-    registry.backgroundObjects.emplace(entity);
-    registry.obstacles.emplace(entity);
-
-    Motion& motion = registry.motions.emplace(entity);
-    motion.angle = 0.f;
-    motion.velocity = {0.f, 0.f};
-    motion.position = position;
-    motion.scale = {GRID_CELL_WIDTH_PX, GRID_CELL_HEIGHT_PX};
-
-    registry.renderRequests.insert(entity,
-                                   {TEXTURE_ASSET_ID::OBSTACLE, EFFECT_ASSET_ID::TEXTURED, GEOMETRY_BUFFER_ID::SPRITE});
 
     return entity;
 }
@@ -307,8 +288,6 @@ Entity createShip() {
     ship.health = 100.0f;
 
     initializeShipModules(ship);
-    std::cout << "Ship ID: " << entity.id() << std::endl;
-    ;
     return entity;
 }
 
