@@ -5,7 +5,9 @@
 #include "GLFW/glfw3.h"
 #include "bnuui/bnuui.hpp"
 #include "bnuui/buttons.hpp"
+#include "common.hpp"
 #include "sceneManager/scene_manager.hpp"
+#include "tinyECS/components.hpp"
 
 MainMenuScene::MainMenuScene() {
     this->name = "Main Menu";
@@ -13,15 +15,15 @@ MainMenuScene::MainMenuScene() {
 
 void MainMenuScene::Init() {
     // Create the UI Title Screen.
-    auto play_btn = std::make_shared<bnuui::PlayButton>(vec2(200, 250), vec2(350, 100), 0.0f);
-    auto reg_bnt = std::make_shared<bnuui::SquareButton>(vec2(200, 400), vec2(50, 50), 0.0f);
+    auto play_btn = std::make_shared<bnuui::PlayButton>(vec2(WINDOW_WIDTH_PX/2, 0.8*WINDOW_HEIGHT_PX), vec2(350, 100), 0.0f);
+    auto bg = std::make_shared<bnuui::Box>(vec2(WINDOW_WIDTH_PX/2, WINDOW_HEIGHT_PX/2), vec2(WINDOW_WIDTH_PX*1.25f, WINDOW_HEIGHT_PX), 0.0f);
+    bg->texture = TEXTURE_ASSET_ID::MAIN_MENU_BG;
     play_btn->setOnClick([](bnuui::Element& e) {
-        std::cout << "clicked\n";
         SceneManager::getInstance().switchScene("Level 1");
     });
 
+    scene_ui.insert(bg);
     scene_ui.insert(play_btn);
-    scene_ui.insert(reg_bnt);
 }
 
 void MainMenuScene::Exit() {
