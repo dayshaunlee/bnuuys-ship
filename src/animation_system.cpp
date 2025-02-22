@@ -187,9 +187,11 @@ void HandleBunnyAnimation(float elapsed_ms) {
 
                 bunny_motion.velocity = direction * 100.f;
             } else {
+                std::cout << "ppp" << std::endl;
                 bunny.on_island = false;
                 bunny.on_ship = true;
                 bunny_motion.velocity = {0, 0};
+                registry.backgroundObjects.remove(entity);
             }
         }
     }
