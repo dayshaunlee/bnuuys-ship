@@ -225,14 +225,17 @@ void HandleCameraMovement(int key, int action, int mod) {
         keyShipOrder.erase(std::remove(keyShipOrder.begin(), keyShipOrder.end(), key), keyShipOrder.end());
     }
 
-    float accelerationX = 0.0f;
-    float accelerationY = 0.0f;
-    if (activeShipKeys.count(MOVE_UP_BUTTON)) accelerationY += SHIP_CAMERA_SPEED;
-    if (activeShipKeys.count(MOVE_DOWN_BUTTON)) accelerationY -= SHIP_CAMERA_SPEED;
-    if (activeShipKeys.count(MOVE_LEFT_BUTTON)) accelerationX += SHIP_CAMERA_SPEED;
-    if (activeShipKeys.count(MOVE_RIGHT_BUTTON)) accelerationX -= SHIP_CAMERA_SPEED;
+    float velX = 0.0f;
+    float velY = 0.0f;
+    if (activeShipKeys.count(MOVE_UP_BUTTON)) velY += SHIP_CAMERA_SPEED;
+    if (activeShipKeys.count(MOVE_DOWN_BUTTON)) velY -= SHIP_CAMERA_SPEED;
+    if (activeShipKeys.count(MOVE_LEFT_BUTTON)) velX += SHIP_CAMERA_SPEED;
+    if (activeShipKeys.count(MOVE_RIGHT_BUTTON)) velX -= SHIP_CAMERA_SPEED;
 
-    CameraSystem::GetInstance()->setCameraScreen(accelerationX, accelerationY);
+    velX = std::clamp(velX, -WALK_SPEED, WALK_SPEED);
+    velY = std::clamp(velY, -WALK_SPEED, WALK_SPEED);
+
+    CameraSystem::GetInstance()->vel = vec2(velX, velY);
 }
 
 // tile_pos is the player's tile position when pressing SPACE.

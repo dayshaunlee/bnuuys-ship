@@ -171,6 +171,7 @@ void WorldSystem::restart_game() {
     while (registry.motions.entities.size() > 0) registry.remove_all_components_of(registry.motions.entities.back());
 }
 
+int tmp = 0;
 // Compute collisions between entities
 void WorldSystem::handle_collisions() {
     ComponentContainer<Collision>& collision_container = registry.collisions;
@@ -261,18 +262,18 @@ void WorldSystem::handle_collisions() {
                 ship_y = registry.motions.get(e1).position.y;
                 island_x = registry.motions.get(e2).position.x;
                 island_y = registry.motions.get(e2).position.y;
-                /*std::cout << "SHIP ISLAND COLLISION WITH SHIP AT " << ship_x << ", " << ship_y << " AND ISLAND AT "*/
-                /*<< island_x << ", " << island_x << std::endl;*/
+                std::cout << "SHIP ISLAND COLLISION WITH SHIP AT " << ship_x << ", " << ship_y << " AND ISLAND AT "
+                          << island_x << ", " << island_y << std::endl;
             } else {  // e2 is the ship
                 ship_x = registry.motions.get(e2).position.x;
                 ship_y = registry.motions.get(e2).position.y;
                 island_x = registry.motions.get(e1).position.x;
                 island_y = registry.motions.get(e1).position.y;
-                /*std::cout << "SHIP ISLAND COLLISION WITH SHIP AT " << ship_x << ", " << ship_y << " AND ISLAND AT "*/
-                /*<< island_x << ", " << island_x << std::endl;*/
+                std::cout << "SHIP ISLAND COLLISION WITH SHIP AT " << ship_x << ", " << ship_y << " AND ISLAND AT "
+                          << island_x << ", " << island_y << std::endl;
             }
-            // CameraSystem::GetInstance()->inverse_velocity(ship_x, ship_y, island_x, island_y);
-            CameraSystem::GetInstance()->inverse_velocity();
+            std::cout << tmp++ << std::endl;
+            CameraSystem::GetInstance()->setToPreviousPosition();
         }
     }
 
