@@ -12,12 +12,12 @@ private:
     AISystem ai_system;
     PhysicsSystem physics_system;
     AnimationSystem animation_system;
-    WorldSystem world_system;
+    WorldSystem* world_system;
 
     void InitializeUI();
 
 public:
-    Level01();
+    Level01(WorldSystem* worldsystem);
     void Init() override;
     void Exit() override;
     void HandleInput(int key, int action, int mod) override;

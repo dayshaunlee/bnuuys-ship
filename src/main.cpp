@@ -53,7 +53,7 @@ int main() {
     SceneManager& scene_manager = SceneManager::getInstance();
 
     Scene* mm = new MainMenuScene();
-    Scene* l1 = new Level01();
+    Scene* l1 = new Level01(&world_system);
     Scene* ui_editor = new EditorUI();
 
     scene_manager.registerScene(mm);
@@ -77,6 +77,8 @@ int main() {
     }
 
     delete (l1);
+    delete (mm);
+    delete (ui_editor);
 
     return EXIT_SUCCESS;
 }
