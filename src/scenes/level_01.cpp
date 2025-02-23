@@ -77,7 +77,7 @@ void Level01::Init() {
     };
 
     // bunny creation
-    createBunny({150, 150});
+    createBunny({40, 60});
 
     registry.players.components[0].health = 100.0f;
     InitializeUI();

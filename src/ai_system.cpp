@@ -10,6 +10,7 @@ void AISystem::step(float elapsed_ms) {
         Motion& ship_motion = registry.motions.get(ship);
         vec2& ship_position = ship_motion.position;
 
+        // Simple enemy path finding (no algorithm implemented yet)
         for (const Entity& enemy : registry.enemies.entities) {
             Motion& enemy_motion = registry.motions.get(enemy);
             vec2 enemy_position = enemy_motion.position + CameraSystem::GetInstance()->position;   // Clare's note: camera offset calculation
