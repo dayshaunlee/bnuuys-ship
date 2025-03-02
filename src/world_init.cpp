@@ -102,6 +102,7 @@ Entity createBunny(vec2 position) {
 
 Entity createEnemy(RenderSystem* renderer, vec2 position) {
     auto entity = Entity();
+    registry.backgroundObjects.emplace(entity);
 
     Enemy& enemy = registry.enemies.emplace(entity);
     enemy.health = ENEMY_BASE_HEALTH;
