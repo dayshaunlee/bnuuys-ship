@@ -295,6 +295,7 @@ struct Enemy {
     int health;
 	int timer_ms;
     int home_island;
+    int range = 10;
 };
 
 // ========== BUNNY DETAILS ==========

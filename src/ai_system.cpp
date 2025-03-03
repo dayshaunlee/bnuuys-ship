@@ -11,14 +11,19 @@ void AISystem::step(float elapsed_ms) {
         vec2& ship_position = ship_motion.position;
 
         // Simple enemy path finding (no algorithm implemented yet)
-        for (const Entity& enemy : registry.enemies.entities) {
-            Motion& enemy_motion = registry.motions.get(enemy);
+        for (const Entity& entity : registry.enemies.entities) {
+            Enemy& enemy = registry.enemies.get(entity);
+            Motion& enemy_motion = registry.motions.get(entity);
             vec2 enemy_position = enemy_motion.position + CameraSystem::GetInstance()->position;   // Clare's note: camera offset calculation
+
             if (enemy_position != ship_position) {
                 vec2 direction = ship_position - enemy_position;
 
                 // unit vector for direction
                 float length = sqrt(direction.x * direction.x + direction.y * direction.y);
+
+                if (enemy.range * GRID_CELL_WIDTH_PX < length) continue;     // ship not detected
+
                 if (length > 0) {
                     direction.x /= length;
                     direction.y /= length;
