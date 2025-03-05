@@ -170,6 +170,7 @@ void HandlePlayerAnimation(float elapsed_ms) {
 }
 
 void HandleBunnyAnimation(float elapsed_ms) {
+    Base& base = registry.base.components[0];
     for (Entity entity : registry.bunnies.entities) {
         Bunny& bunny = registry.bunnies.get(entity);
         // Bunny saving animation.
@@ -177,7 +178,6 @@ void HandleBunnyAnimation(float elapsed_ms) {
         if (!bunny.is_jailed && !bunny.on_ship) {
             vec2 bunny_position = bunny_motion.position + CameraSystem::GetInstance()->position;
             vec2 empty_ship_location = {364, 252};  // save bunny to top right ship tile
-
             if (round(bunny_position) != empty_ship_location) {
                 vec2 direction = empty_ship_location - bunny_position;
 
@@ -190,6 +190,31 @@ void HandleBunnyAnimation(float elapsed_ms) {
             } else {
                 bunny.on_island = false;
                 bunny.on_ship = true;
+                bunny_motion.position += CameraSystem::GetInstance()->position;
+                bunny_motion.velocity = {0, 0};
+                registry.backgroundObjects.remove(entity);
+            }
+        }
+        /*std::cout << base.drop_off_timer << std::endl;*/
+        else if (!bunny.is_jailed && bunny.on_ship && !bunny.on_base && base.drop_off_timer >= BUNNY_BASE_DROPOFF_TIME) {
+            vec2 bunny_position = bunny_motion.position;
+            Entity& base = registry.base.entities[0];
+            vec2 empty_base_location = registry.motions.get(base).position + CameraSystem::GetInstance()->position;
+            empty_base_location += vec2(GRID_CELL_WIDTH_PX, GRID_CELL_HEIGHT_PX);
+            std::cout << "bunny: " << bunny_position.x << ", " << bunny_position.y << std::endl;
+            std::cout << "base: " << empty_base_location.x << ", " << empty_base_location.y << std::endl;
+            if (round(bunny_position) != empty_base_location) {
+                vec2 direction = empty_base_location - bunny_position;
+
+                // unit vector for direction
+                float length = sqrt(direction.x * direction.x + direction.y * direction.y);
+                direction.x /= length;
+                direction.y /= length;
+
+                bunny_motion.velocity = direction * 100.f;
+            } else {
+                bunny.on_ship = false;
+                bunny.on_base = true;
                 bunny_motion.position += CameraSystem::GetInstance()->position;
                 bunny_motion.velocity = {0, 0};
                 registry.backgroundObjects.remove(entity);

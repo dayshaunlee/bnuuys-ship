@@ -249,6 +249,15 @@ void WorldSystem::handle_collisions() {
             collisions_to_remove.push_back(e2);
             CameraSystem::GetInstance()->setToPreviousPosition();
         }
+
+        // Ship - Base collision
+        if ((registry.ships.has(e1) && registry.base.has(e2)) ||
+            (registry.ships.has(e2) && registry.base.has(e1))) {
+            collisions_to_remove.push_back(e1);
+            collisions_to_remove.push_back(e2);
+            // just print debug stuff rn, behaviour is handled in different system
+            //std::cout << "island over base" << std::endl;            
+        }
     }
 
     for (Entity entity : collisions_to_remove) {

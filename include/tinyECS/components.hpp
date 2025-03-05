@@ -35,6 +35,8 @@ struct Island {
 // Player base, in the future may add more attributes for upgrades functionality
 struct Base {
     std::vector<tson::Vector2i> polygon;
+    float drop_off_timer = 0.0; // keep track of how long the ship is inside the base
+    bool ship_in_base = false;
 };
 
 // Data structure for toggling debug mode
@@ -302,6 +304,7 @@ struct Bunny {
     bool on_island;
     bool is_jailed;
     bool on_ship;
+    bool on_base;
 
     float jail_health;  // 0 if is_jailed is false
     int timer_ms;   // field reserved for animation 

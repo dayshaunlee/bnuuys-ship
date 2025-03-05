@@ -87,6 +87,7 @@ Entity createBunny(vec2 position) {
     bunny.on_island = true;
     bunny.is_jailed = true;
     bunny.on_ship = false;
+    bunny.on_base = false;
 
     Motion& motion = registry.motions.emplace(entity);
     motion.angle = 0.f;
