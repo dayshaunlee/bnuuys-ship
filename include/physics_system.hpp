@@ -9,6 +9,7 @@
 class PhysicsSystem {
    public:
     void step(float elapsed_ms);
+    static bool collidesPolyVec(Entity island_entity, vec2 node_pos);
 
     PhysicsSystem() {}
 };

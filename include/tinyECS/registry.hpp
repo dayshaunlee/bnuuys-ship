@@ -37,6 +37,8 @@ class ECSRegistry {
     ComponentContainer<Projectile> projectiles;
     ComponentContainer<Bunny> bunnies;
 
+    ComponentContainer<WalkingPath> walkingPaths;
+
     // constructor that adds all containers for looping over them
     ECSRegistry() {
         registry_list.push_back(&renderRequests);
@@ -64,6 +66,7 @@ class ECSRegistry {
         registry_list.push_back(&enemies);
 
         registry_list.push_back(&bunnies);
+        registry_list.push_back(&walkingPaths);
     }
 
     void clear_all_components() {

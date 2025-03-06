@@ -298,6 +298,12 @@ struct Enemy {
     int range = 10;
 };
 
+// walking path for enemy
+struct WalkingPath {
+	std::vector<ivec2> path;
+};
+
+
 // ========== BUNNY DETAILS ==========
 struct Bunny {
     bool on_island;
