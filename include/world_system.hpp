@@ -66,8 +66,13 @@ class WorldSystem {
 
     // music references
     Mix_Music* background_music;
-    Mix_Chunk* chicken_dead_sound;
-    Mix_Chunk* chicken_eat_sound;
+    /*Mix_Chunk* chicken_dead_sound;
+    Mix_Chunk* chicken_eat_sound;*/
+    Mix_Music* enemy_incoming;
+    Mix_Chunk* island_ship_collision;
+    Mix_Chunk* enemy_ship_collision;
+    Mix_Chunk* projectile_enemy_collision;
+    Mix_Chunk* projectile_shoot;
 
     // C++ random number generator
     std::default_random_engine rng;
