@@ -55,7 +55,6 @@ class ECSRegistry {
         registry_list.push_back(&backgroundObjects);
         registry_list.push_back(&cameras);
 
-        registry_list.push_back(&enemies);
         registry_list.push_back(&islands);
         registry_list.push_back(&base);
 

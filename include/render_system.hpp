@@ -118,6 +118,13 @@ class RenderSystem {
 
         // Main Menu bg
         textures_path("background/main_menu_bg.png"),
+
+        // Restart button
+        textures_path("ui/buttons/restartbtn_neutral.png"),
+        textures_path("ui/buttons/restartbtn_clicked.png"),
+
+        // Game over background
+        textures_path("background/game_over_bg.png"),
     };
 
     std::array<GLuint, effect_count> effects;
