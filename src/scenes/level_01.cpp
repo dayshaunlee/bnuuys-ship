@@ -293,10 +293,25 @@ void HandleCameraMovement(int key, int action, int mod) {
     if (activeShipKeys.empty() || (activeShipKeys.size() == 1 && activeShipKeys.count(GLFW_KEY_SPACE))) return;
     vec2 inputVel = {0.0f, 0.0f};
 
-    if (activeShipKeys.count(MOVE_UP_BUTTON)) inputVel.y += SHIP_CAMERA_SPEED;
-    if (activeShipKeys.count(MOVE_DOWN_BUTTON)) inputVel.y -= SHIP_CAMERA_SPEED;
-    if (activeShipKeys.count(MOVE_LEFT_BUTTON)) inputVel.x += SHIP_CAMERA_SPEED;
-    if (activeShipKeys.count(MOVE_RIGHT_BUTTON)) inputVel.x -= SHIP_CAMERA_SPEED;
+    // if (activeShipKeys.count(MOVE_UP_BUTTON)) inputVel.y += SHIP_CAMERA_SPEED;
+    // if (activeShipKeys.count(MOVE_DOWN_BUTTON)) inputVel.y -= SHIP_CAMERA_SPEED;
+    // if (activeShipKeys.count(MOVE_LEFT_BUTTON)) inputVel.x += SHIP_CAMERA_SPEED;
+    // if (activeShipKeys.count(MOVE_RIGHT_BUTTON)) inputVel.x -= SHIP_CAMERA_SPEED;
+    if (activeShipKeys.count(MOVE_UP_BUTTON)) inputVel.y += 1;
+    if (activeShipKeys.count(MOVE_DOWN_BUTTON)) inputVel.y -= 1;
+    if (activeShipKeys.count(MOVE_LEFT_BUTTON)) inputVel.x += 1;
+    if (activeShipKeys.count(MOVE_RIGHT_BUTTON)) inputVel.x -= 1;
+
+    if(inputVel.x != 0 || inputVel.y != 0){
+        float length = std::sqrt(inputVel.x* inputVel.x + inputVel.y * inputVel.y);
+        if (length > 0){
+            inputVel.x /= length;
+            inputVel.y /= length;
+        }
+    }
+
+    inputVel.x *= SHIP_CAMERA_SPEED;
+    inputVel *= SHIP_CAMERA_SPEED;
 
     inputVel.x = std::clamp(inputVel.x, -WALK_SPEED, WALK_SPEED);
     inputVel.y = std::clamp(inputVel.y, -WALK_SPEED, WALK_SPEED);
