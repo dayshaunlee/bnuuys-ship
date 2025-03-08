@@ -49,7 +49,7 @@ int main() {
     SceneManager& scene_manager = SceneManager::getInstance();
 
     Scene* mm = new MainMenuScene();
-    Scene* l1 = new Level01(&world_system);
+    Scene* l1 = new Level01(&world_system, "m1.json");
     Scene* ui_editor = new EditorUI();
     Scene* death = new DeathScene();
 
