@@ -150,8 +150,8 @@ void WorldSystem::init(RenderSystem* renderer_arg) {
 // Update our game world
 bool WorldSystem::step(float elapsed_ms_since_last_update) {
     // Updating window title with points
-    std::stringstream title_ss;
-    glfwSetWindowTitle(window, title_ss.str().c_str());
+    //std::stringstream title_ss;
+    //glfwSetWindowTitle(window, title_ss.str().c_str());
 
     assert(registry.screenStates.components.size() <= 1);
     ScreenState& screen = registry.screenStates.components[0];
@@ -273,6 +273,10 @@ void WorldSystem::handle_collisions() {
 // Should the game be over ?
 bool WorldSystem::is_over() const {
     return bool(glfwWindowShouldClose(window));
+}
+
+void WorldSystem::change_title(std::string title) {
+    glfwSetWindowTitle(window, title.c_str());
 }
 
 // on key callback

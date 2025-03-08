@@ -16,7 +16,10 @@ private:
 
     void InitializeUI();
 
-public:
+    // amount of bunnies player has to save to win
+    int bunnies_to_win;
+
+   public:
     Level01(WorldSystem* worldsystem);
     void Init() override;
     void Exit() override;

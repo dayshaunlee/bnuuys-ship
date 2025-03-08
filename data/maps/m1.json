@@ -1186,8 +1186,8 @@
                  "type":"player",
                  "visible":true,
                  "width":0,
-                 "x":902.510333333333,
-                 "y":479.524333333333
+                 "x":902.51,
+                 "y":479.524
                 }, 
                 {
                  "height":0,
@@ -1259,7 +1259,7 @@
                  "visible":true,
                  "width":0,
                  "x":868.996,
-                 "y":110.312766666667
+                 "y":110.313
                 }, 
                 {
                  "height":0,
@@ -1380,6 +1380,54 @@
                  "width":0,
                  "x":361.616,
                  "y":828.166
+                }, 
+                {
+                 "height":0,
+                 "id":83,
+                 "name":"",
+                 "point":true,
+                 "rotation":0,
+                 "type":"bunny",
+                 "visible":true,
+                 "width":0,
+                 "x":788,
+                 "y":401.333333333333
+                }, 
+                {
+                 "height":0,
+                 "id":84,
+                 "name":"",
+                 "point":true,
+                 "rotation":0,
+                 "type":"bunny",
+                 "visible":true,
+                 "width":0,
+                 "x":1304,
+                 "y":463.333333333333
+                }, 
+                {
+                 "height":0,
+                 "id":85,
+                 "name":"",
+                 "point":true,
+                 "rotation":0,
+                 "type":"bunny",
+                 "visible":true,
+                 "width":0,
+                 "x":816.666666666667,
+                 "y":735.333333333333
+                }, 
+                {
+                 "height":0,
+                 "id":86,
+                 "name":"",
+                 "point":true,
+                 "rotation":0,
+                 "type":"bunny",
+                 "visible":true,
+                 "width":0,
+                 "x":341.333333333333,
+                 "y":458
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -1388,7 +1436,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":83,
+ "nextobjectid":88,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.2",

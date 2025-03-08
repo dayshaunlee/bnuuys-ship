@@ -52,6 +52,8 @@ vec2 getMouseTilePosition() {
 void Level01::Init() {
     // create player
     Entity player = createPlayer({WINDOW_WIDTH_PX / 2, WINDOW_HEIGHT_PX / 2});
+    // reset points
+    bunnies_to_win = 0;
     // load map
     registry.list_all_components();
     std::cout << "loading map..." << std::endl;
@@ -77,7 +79,10 @@ void Level01::Init() {
     };
 
     // bunny creation
-    createBunny({40, 60});
+    for (Entity entity : registry.bunnies.entities) {
+        createBunny(entity);
+        bunnies_to_win += 1;
+    };
 
     registry.players.components[0].health = 100.0f;
     InitializeUI();
@@ -479,6 +484,11 @@ void Level01::Update(float dt) {
 
     world_system->handle_collisions();
 
+    // update window title with points
+    int points = registry.base.components[0].bunny_count;
+    std::string title = "Bnuuy's Ship - Bunny's Saved: " + std::to_string(points);
+    world_system->change_title(title);
+
     // Simple cannon system. make this its own system later.
     for (SimpleCannon& sc : registry.simpleCannons.components) {
         if (sc.timer_ms > 0)
@@ -497,6 +507,10 @@ void Level01::Update(float dt) {
             }
             p.alive_time_ms -= dt;
         }
+    }
+
+    if (registry.base.components[0].bunny_count == bunnies_to_win) {
+        std::cout << "BEAT LEVEL -- SAVED ALL [" << bunnies_to_win << "] BUNNIES"; 
     }
 
     scene_ui.update(dt);

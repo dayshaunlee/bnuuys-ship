@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.11" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="104" height="70" tilewidth="16" tileheight="16" infinite="0" nextlayerid="9" nextobjectid="83">
+<map version="1.11" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="104" height="70" tilewidth="16" tileheight="16" infinite="0" nextlayerid="9" nextobjectid="88">
  <editorsettings>
   <export target="m1.json" format="json"/>
  </editorsettings>
@@ -330,6 +330,18 @@
     <property name="enemy_type_enum" propertytype="enemy_type" value="flyer"/>
     <property name="home_island" type="object" value="9"/>
    </properties>
+   <point/>
+  </object>
+  <object id="83" type="bunny" x="788" y="401.333">
+   <point/>
+  </object>
+  <object id="84" type="bunny" x="1304" y="463.333">
+   <point/>
+  </object>
+  <object id="85" type="bunny" x="816.667" y="735.333">
+   <point/>
+  </object>
+  <object id="86" type="bunny" x="341.333" y="458">
    <point/>
   </object>
  </objectgroup>

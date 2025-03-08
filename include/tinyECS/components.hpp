@@ -37,6 +37,7 @@ struct Base {
     std::vector<tson::Vector2i> polygon;
     float drop_off_timer = 0.0; // keep track of how long the ship is inside the base
     bool ship_in_base = false;
+    int bunny_count = 0;
 };
 
 // Data structure for toggling debug mode

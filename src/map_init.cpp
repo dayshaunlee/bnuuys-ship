@@ -125,6 +125,13 @@ std::pair<tson::Vector2i, tson::Vector2i> loadMap(const std::string& name) {
                                 obj.getPosition().y * scaling_factor_y + offset.y};
                 mot.scale = {obj.getSize().x * scaling_factor_x, obj.getSize().y * scaling_factor_y};
                 registry.backgroundObjects.emplace(e);
+            } else if (obj.getClassType() == "bunny") {
+                Entity e = Entity();
+                Bunny& bun = registry.bunnies.emplace(e);
+                Motion& mot = registry.motions.emplace(e);
+                mot.position = {obj.getPosition().x * scaling_factor_x + offset.x,
+                                obj.getPosition().y * scaling_factor_y + offset.y};
+                mot.scale = {obj.getSize().x * scaling_factor_x, obj.getSize().y * scaling_factor_y};
             }
         }
 
