@@ -11,7 +11,6 @@ void AISystem::step(float elapsed_ms) {
     for (const Entity& ship_entity : registry.ships.entities) {
         Motion& ship_motion = registry.motions.get(ship_entity);
         vec2& ship_position = ship_motion.position;
-        // std::cout << CameraSystem::GetInstance()->position.x << ", " << CameraSystem::GetInstance()->position.y << std::endl;
 
         // A* enemy path finding
         for (const Entity& enemy_entity : registry.enemies.entities) {
@@ -27,34 +26,6 @@ void AISystem::step(float elapsed_ms) {
                     }
                 } 
             }
-            // Enemy& enemy = registry.enemies.get(entity);
-            // Motion& enemy_motion = registry.motions.get(entity);
-            // vec2 enemy_position = enemy_motion.position + CameraSystem::GetInstance()->position;   // Clare's note: camera offset calculation
-
-            // // vec2 enemy_node_position = {(enemy_position.x - GRID_CELL_WIDTH_PX / 2) / GRID_CELL_WIDTH_PX, (enemy_position.y - GRID_CELL_HEIGHT_PX / 2) / GRID_CELL_HEIGHT_PX};
-            // // vec2 start_fill = {enemy_node_position.x * GRID_CELL_WIDTH_PX + GRID_CELL_WIDTH_PX / 2, enemy_node_position.y * GRID_CELL_HEIGHT_PX + GRID_CELL_HEIGHT_PX / 2};
-            // // createFilledTile(start_fill, {GRID_CELL_WIDTH_PX, GRID_CELL_HEIGHT_PX}, {1, 0, 1});
-
-            // if (enemy_position != ship_position) {
-            //     vec2 direction = ship_position - enemy_position;
-
-            //     // unit vector for direction
-            //     float length = sqrt(direction.x * direction.x + direction.y * direction.y);
-
-            //     if (enemy.range * GRID_CELL_WIDTH_PX < length) continue;     // ship not detected
-
-            //     if (length > 0) {
-            //         direction.x /= length;
-            //         direction.y /= length;
-            //     }
-
-            //     enemy_motion.velocity = direction * ENEMY_BASE_SPEED;
-
-            //     if (enemy_motion.velocity.x < 0) {
-            //         vec2 flip = {-1, 1};
-            //         enemy_motion.scale *= flip;
-            //     }
-            // }
         };
     }
 }
@@ -66,8 +37,8 @@ bool AISystem::find_path(std::vector<ivec2> & path, Entity enemy_entity, Entity 
 {
     Motion& ship_motion = registry.motions.get(ship_entity);
     vec2 ship_position_with_camera = ship_motion.position - CameraSystem::GetInstance()->position;
-    vec2 ship_node_position = {(ship_position_with_camera.x - GRID_CELL_WIDTH_PX / 2) / GRID_CELL_WIDTH_PX, (ship_position_with_camera.y - GRID_CELL_HEIGHT_PX / 2) / GRID_CELL_HEIGHT_PX};
-
+    ivec2 ship_node_position = {(ship_position_with_camera.x - GRID_CELL_WIDTH_PX / 2) / GRID_CELL_WIDTH_PX, (ship_position_with_camera.y - GRID_CELL_HEIGHT_PX / 2) / GRID_CELL_HEIGHT_PX};
+    
     Enemy& enemy = registry.enemies.get(enemy_entity);
     Motion& enemy_motion = registry.motions.get(enemy_entity);
     vec2 enemy_position = enemy_motion.position;
@@ -101,14 +72,15 @@ bool AISystem::find_path(std::vector<ivec2> & path, Entity enemy_entity, Entity 
         closed_nodes.push_back(current_node);
     
         if (current_node == ship_node) {
+            std::cout << "path found" << std::endl;
             path.clear();
             path = retrace_path(closed_nodes, enemy_node, ship_node);
             for (ivec2 p : path) {
+                vec2 fill_pos = {p.x * GRID_CELL_WIDTH_PX + GRID_CELL_WIDTH_PX / 2, p.y * GRID_CELL_HEIGHT_PX + GRID_CELL_HEIGHT_PX / 2};
+                createFilledTile(fill_pos, {56, 56});
                 std::cout << p.x << ", " << p.y << std::endl;
             }
             return true;
-        } else {
-            std::cout << "path not found" << std::endl;
         }
     
         for (ivec2 neighbour : get_walkable_neighbours(current_node)) {
@@ -145,6 +117,7 @@ bool AISystem::find_path(std::vector<ivec2> & path, Entity enemy_entity, Entity 
     }
 
 	// we did not find a valid path...
+    // std::cout << "path not found" << std::endl;
 	return false;
 }
 

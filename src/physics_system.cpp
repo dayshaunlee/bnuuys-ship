@@ -174,15 +174,15 @@ bool collidesPoly(const Entity e1, const Entity e2) {
                 p.y += e2_mot.position.y + CameraSystem::GetInstance()->position.y;
             }
         }
-        return polyPoly(islandPolygon, shipPolygon);
+        return pol yPoly(islandPolygon, shipPolygon);
     }
     return false;
 }
 
 std::vector<tson::Vector2i> get_poly_from_node_pos(vec2 node_pos) {
     std::vector<tson::Vector2i> polygon;
-    int posX = node_pos.x * GRID_CELL_WIDTH_PX + GRID_CELL_WIDTH_PX / 2 + CameraSystem::GetInstance()->position.x;
-    int posY = node_pos.y * GRID_CELL_HEIGHT_PX + GRID_CELL_HEIGHT_PX / 2 + CameraSystem::GetInstance()->position.y;
+    int posX = node_pos.x * GRID_CELL_WIDTH_PX + GRID_CELL_WIDTH_PX / 2;
+    int posY = node_pos.y * GRID_CELL_HEIGHT_PX + GRID_CELL_HEIGHT_PX / 2;
     int halfWidth = GRID_CELL_WIDTH_PX / 2;
     int halfHeight = GRID_CELL_HEIGHT_PX / 2;
 

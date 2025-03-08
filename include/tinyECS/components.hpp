@@ -177,7 +177,9 @@ enum class TEXTURE_ASSET_ID {
     
     MAIN_MENU_BG = BUNNY_NOT_JAILED + 1,
 
-    TEXTURE_COUNT = MAIN_MENU_BG + 1
+    FILLED_TILE = MAIN_MENU_BG + 1,
+
+    TEXTURE_COUNT = FILLED_TILE + 1
 };
 
 const int texture_count = (int) TEXTURE_ASSET_ID::TEXTURE_COUNT;
@@ -301,6 +303,12 @@ struct Enemy {
 // walking path for enemy
 struct WalkingPath {
 	std::vector<ivec2> path;
+};
+
+// filled tile for enemy path
+struct FilledTile {
+	vec2 pos;
+	vec2 size;
 };
 
 

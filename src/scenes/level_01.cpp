@@ -72,12 +72,19 @@ void Level01::Init() {
 
     createCamera();
 
-    // enemy creation
-    for (Entity entity: registry.enemies.entities) {
+    for (int i = registry.enemies.entities.size() - 1; i >= 1; i--) {
+        Entity entity = registry.enemies.entities[i];
         registry.remove_all_components_of(entity);
+    }
+
+
+    for (Entity entity: registry.enemies.entities) {
+        createEnemy(entity);
     };
 
-    createEnemy({252, 196});
+    std::cout << registry.enemies.entities.size() << std::endl;
+
+    // createEnemy({140, 140});
 
     // createEnemy({1036, 1036});
 

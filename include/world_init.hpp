@@ -30,4 +30,4 @@ Entity createBunny(RenderSystem* renderer, vec2 position);
 Entity createBunny(vec2 position);
 
 // filled tile for enemy path 
-Entity createFilledTile(vec2 position, vec2 size, vec3 color);
+Entity createFilledTile(vec2 position, vec2 size);
