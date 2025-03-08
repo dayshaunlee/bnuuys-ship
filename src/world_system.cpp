@@ -30,7 +30,8 @@ WorldSystem::~WorldSystem() {
     if (enemy_incoming != nullptr) Mix_FreeMusic(enemy_incoming);
     if (island_ship_collision != nullptr) Mix_FreeChunk(island_ship_collision);
     if (enemy_ship_collision != nullptr) Mix_FreeChunk(enemy_ship_collision);
-    //if (projectile_enemy_collision != nullptr) Mix_FreeChunk(projectile_enemy_collision);
+    if (projectile_jail_collision != nullptr) Mix_FreeChunk(projectile_jail_collision);
+    if (projectile_enemy_collision != nullptr) Mix_FreeChunk(projectile_enemy_collision);
     if (projectile_shoot != nullptr) Mix_FreeChunk(projectile_shoot);
     Mix_CloseAudio();
 
@@ -129,8 +130,8 @@ bool WorldSystem::start_and_load_sounds() {
     enemy_incoming = Mix_LoadMUS(audio_path("enemy_incoming.wav").c_str());
     island_ship_collision = Mix_LoadWAV(audio_path("island-ship_collision.wav").c_str());
     enemy_ship_collision = Mix_LoadWAV(audio_path("ship-enemy_collision.wav").c_str());
-    // projectile_enemy_collision = Mix_LoadWAV(audio_path("projectile-enemy_collision.wav").c_str()); //Somehow just
-    // this one doesn't work
+    projectile_jail_collision = Mix_LoadWAV(audio_path("projectile-jail_collision.wav").c_str());
+    //projectile_enemy_collision = Mix_LoadWAV(audio_path("projectile-enemy_collision.wav").c_str()); //Somehow just this one doesn't work
     projectile_shoot = Mix_LoadWAV(audio_path("projectile_shoot.wav").c_str());
 
     if (background_music == nullptr ||
@@ -174,6 +175,15 @@ bool WorldSystem::step(float elapsed_ms_since_last_update) {
 
     assert(registry.screenStates.components.size() <= 1);
     ScreenState& screen = registry.screenStates.components[0];
+
+    // TODO: Change the music
+    /*if (!CameraSystem::GetInstance()->IsEnemyOnScreen()) {
+        Mix_ResumeMusic();
+    } else {
+        Mix_PauseMusic();
+        Mix_PlayMusic(enemy_incoming, -1);
+    }*/
+
     return true;
 }
 
@@ -237,6 +247,8 @@ void WorldSystem::handle_collisions() {
 
             if (bunny.jail_health <= 0) {
                 registry.renderRequests.get(e2).used_texture = TEXTURE_ASSET_ID::BUNNY_NOT_JAILED;
+                // Play sound
+                Mix_PlayChannel(-1, projectile_jail_collision, 0);
                 bunny.is_jailed = false;
             }
             registry.remove_all_components_of(e1);

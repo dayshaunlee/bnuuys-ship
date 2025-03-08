@@ -43,3 +43,18 @@ void CameraSystem::update(float deltaTime) {
 void CameraSystem::setToPreviousPosition() {
     position = prev_pos;
 }
+
+bool IsEnemyOnScreen() {
+    CameraSystem* camera = CameraSystem::GetInstance();
+    Camera& c = registry.cameras.components[0];
+    for (Entity entity : registry.enemies.entities) {
+        Motion& motion = registry.motions.get(entity);
+        if (motion.position.x > camera->position.x - WINDOW_WIDTH_PX / 2 &&
+            motion.position.x < camera->position.x + WINDOW_WIDTH_PX / 2 &&
+            motion.position.y > camera->position.y - WINDOW_HEIGHT_PX / 2 &&
+            motion.position.y < camera->position.y + WINDOW_HEIGHT_PX / 2) {
+            return true;
+        }
+    }
+    return false;
+}

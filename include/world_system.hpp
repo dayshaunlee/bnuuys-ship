@@ -71,6 +71,7 @@ class WorldSystem {
     Mix_Music* enemy_incoming;
     Mix_Chunk* island_ship_collision;
     Mix_Chunk* enemy_ship_collision;
+    Mix_Chunk* projectile_jail_collision;
     Mix_Chunk* projectile_enemy_collision;
     Mix_Chunk* projectile_shoot;
 
