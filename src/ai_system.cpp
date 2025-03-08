@@ -17,14 +17,9 @@ void AISystem::step(float elapsed_ms) {
             if (!registry.walkingPaths.has(enemy_entity)) {
                 std::vector<ivec2> path;
                 if (find_path(path, enemy_entity, ship_entity)) {
-                    if (!registry.walkingPaths.has(enemy_entity)) {
-                        WalkingPath& walkingPath = registry.walkingPaths.emplace(enemy_entity);
-                        walkingPath.path = path;
-                    } else {
-                        WalkingPath& walkingPath = registry.walkingPaths.get(enemy_entity);
-                        walkingPath.path = path;
-                    }
-                } 
+                    WalkingPath& walkingPath = registry.walkingPaths.emplace(enemy_entity);
+                    walkingPath.path = path;
+                }
             }
         };
     }
@@ -146,10 +141,13 @@ std::vector<ivec2> AISystem::get_walkable_neighbours(Node node) {
 
     for (Entity entity : registry.islands.entities) {
         for (ivec2 neighbour : possible_neighbours) {      
-            if (!PhysicsSystem::collidesPolyVec(entity, neighbour)) neighbours.push_back(neighbour);
+            if (!PhysicsSystem::collidesPolyVec(entity, neighbour)) {
+                neighbours.push_back(neighbour);
+            };
         }
     }
-
+    std::cout << "islands size: " << registry.islands.entities.size() << std::endl;
+    std::cout << "neighbour size: " << neighbours.size() << std::endl;
     return neighbours;
 }
 

@@ -174,12 +174,12 @@ bool collidesPoly(const Entity e1, const Entity e2) {
                 p.y += e2_mot.position.y + CameraSystem::GetInstance()->position.y;
             }
         }
-        return pol yPoly(islandPolygon, shipPolygon);
+        return polyPoly(islandPolygon, shipPolygon);
     }
     return false;
 }
 
-std::vector<tson::Vector2i> get_poly_from_node_pos(vec2 node_pos) {
+std::vector<tson::Vector2i> get_poly_from_node_pos(ivec2 node_pos) {
     std::vector<tson::Vector2i> polygon;
     int posX = node_pos.x * GRID_CELL_WIDTH_PX + GRID_CELL_WIDTH_PX / 2;
     int posY = node_pos.y * GRID_CELL_HEIGHT_PX + GRID_CELL_HEIGHT_PX / 2;
@@ -198,15 +198,15 @@ std::vector<tson::Vector2i> get_poly_from_node_pos(vec2 node_pos) {
     return polygon;
 }
 
-bool PhysicsSystem::collidesPolyVec(Entity island_entity, vec2 node_pos) {
+bool PhysicsSystem::collidesPolyVec(Entity island_entity, ivec2 node_pos) {
     Motion& island_motion = registry.motions.get(island_entity);
     std::vector<tson::Vector2i> islandPolygon;
     std::vector<tson::Vector2i> nodePolygon;
     islandPolygon = registry.islands.get(island_entity).polygon;
     nodePolygon = get_poly_from_node_pos(node_pos);
     for (auto& p : islandPolygon) {
-        p.x += island_motion.position.x + CameraSystem::GetInstance()->position.x;
-        p.y += island_motion.position.y + CameraSystem::GetInstance()->position.y;
+        p.x += island_motion.position.x;
+        p.y += island_motion.position.y;
     }
 
     return polyPoly(islandPolygon, nodePolygon);
