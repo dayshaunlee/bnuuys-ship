@@ -177,7 +177,9 @@ enum class TEXTURE_ASSET_ID {
     
     MAIN_MENU_BG = BUNNY_NOT_JAILED + 1,
 
-    RESTART_BUTTON_NORMAL = MAIN_MENU_BG + 1,
+    FILLED_TILE = MAIN_MENU_BG + 1,
+
+    RESTART_BUTTON_NORMAL = FILLED_TILE + 1,
     RESTART_BUTTON_CLICKED = RESTART_BUTTON_NORMAL + 1,
 
     GAME_OVER_BG = RESTART_BUTTON_CLICKED + 1,
@@ -299,7 +301,20 @@ struct Enemy {
     int health;
 	int timer_ms;
     int home_island;
+    int range = 10;
 };
+
+// walking path for enemy
+struct WalkingPath {
+	std::vector<ivec2> path;
+};
+
+// filled tile for enemy path
+struct FilledTile {
+	vec2 pos;
+	vec2 size;
+};
+
 
 // ========== BUNNY DETAILS ==========
 struct Bunny {

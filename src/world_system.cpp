@@ -237,7 +237,7 @@ void WorldSystem::handle_collisions() {
 
         // Enemy - Ship collision
         if (registry.enemies.has(e1) && registry.ships.has(e2)) {
-            registry.ships.get(e2).health -= 100.0f;
+            registry.ships.get(e2).health -= 50.0f;
             registry.remove_all_components_of(e1);
 
             // When Player dies (ship health is <= 0)
@@ -247,7 +247,7 @@ void WorldSystem::handle_collisions() {
             }
             continue;
         } else if (registry.enemies.has(e2) && registry.ships.has(e1)) {
-            registry.ships.get(e1).health -= 100.0f;
+            registry.ships.get(e1).health -= 50.0f;
             registry.remove_all_components_of(e2);
 
             // When Player dies (ship health is <= 0)

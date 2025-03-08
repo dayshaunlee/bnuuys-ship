@@ -70,7 +70,7 @@ Entity createEnemy(Entity entity) {
     motion.angle = 0.f;
     motion.velocity = {0.f, 0.f};
     // motion.position = position;
-    motion.scale = {40, 40};
+    motion.scale = {56, 56};
 
     registry.renderRequests.insert(entity,
                                    {TEXTURE_ASSET_ID::ENEMY0, EFFECT_ASSET_ID::TEXTURED, GEOMETRY_BUFFER_ID::SPRITE});
@@ -100,8 +100,9 @@ Entity createBunny(vec2 position) {
     return entity;
 }
 
-Entity createEnemy(RenderSystem* renderer, vec2 position) {
+Entity createEnemy(vec2 position) {
     auto entity = Entity();
+    registry.backgroundObjects.emplace(entity);
 
     Enemy& enemy = registry.enemies.emplace(entity);
     enemy.health = ENEMY_BASE_HEALTH;
@@ -112,7 +113,7 @@ Entity createEnemy(RenderSystem* renderer, vec2 position) {
     motion.angle = 0.f;
     motion.velocity = {0.f, 0.f};
     motion.position = position;
-    motion.scale = {40, 40};
+    motion.scale = {56, 56};
 
     registry.renderRequests.insert(entity,
                                    {TEXTURE_ASSET_ID::ENEMY0, EFFECT_ASSET_ID::TEXTURED, GEOMETRY_BUFFER_ID::SPRITE});
@@ -304,4 +305,34 @@ Entity createGridLine(vec2 start_pos, vec2 end_pos) {
         entity, {TEXTURE_ASSET_ID::TEXTURE_COUNT, EFFECT_ASSET_ID::EGG, GEOMETRY_BUFFER_ID::DEBUG_LINE});
     registry.colors.insert(entity, vec3(0.8f, 0.8f, 0.8f));
     return entity;
+}
+
+Entity createFilledTile(vec2 position, vec2 size)
+{
+	// reserve an entity
+	auto entity = Entity();
+    registry.backgroundObjects.emplace(entity);
+
+	// add a FilledTile component
+	FilledTile& filledTile = registry.filledTiles.emplace(entity);
+	filledTile.pos = position;
+	filledTile.size = size;
+
+    Motion& motion = registry.motions.emplace(entity);
+    motion.angle = 0.f;
+    motion.velocity = {0.f, 0.f};
+    motion.position = position;
+    motion.scale = size;
+
+	// re-use the "DEBUG_LINE"
+	registry.renderRequests.insert(
+		entity,
+		{
+			TEXTURE_ASSET_ID::FILLED_TILE,
+			EFFECT_ASSET_ID::TEXTURED,
+			GEOMETRY_BUFFER_ID::SPRITE
+		}
+	);
+
+	return entity;
 }
