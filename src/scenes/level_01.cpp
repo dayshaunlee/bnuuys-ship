@@ -50,6 +50,7 @@ vec2 getMouseTilePosition() {
 }
 
 void Level01::Init() {
+    scene_ui.clear();
     // create player
     Entity player = createPlayer({WINDOW_WIDTH_PX / 2, WINDOW_HEIGHT_PX / 2});
     // load map
@@ -164,7 +165,57 @@ void Level01::InitializeUI() {
 }
 
 void Level01::Exit() {
+    scene_ui.clear();
+    CameraSystem* cs = CameraSystem::GetInstance();
+    cs->position = {0.0f, 0.0f};
+    cs->prev_pos = {0.0f, 0.0f};
+    cs->vel = {0.0f, 0.0f};
     // Delete all components and stuff from this scene.
+    // registry.clear_all_components();
+    // registry.renderRequests.clear();
+    while (registry.cameras.entities.size() > 0){
+	    registry.remove_all_components_of(registry.cameras.entities.back());
+	}
+    while (registry.renderRequests.entities.size() > 0){
+	    registry.remove_all_components_of(registry.renderRequests.entities.back());
+	}
+
+    while (registry.colors.entities.size() > 0){
+	    registry.remove_all_components_of(registry.colors.entities.back());
+	}
+    while (registry.players.entities.size() > 0){
+	    registry.remove_all_components_of(registry.players.entities.back());
+	}
+    while (registry.motions.entities.size() > 0){
+	    registry.remove_all_components_of(registry.motions.entities.back());
+	}
+    while (registry.playerAnimations.entities.size() > 0){
+	    registry.remove_all_components_of(registry.playerAnimations.entities.back());
+	}
+
+    while (registry.ships.entities.size() > 0){
+	    registry.remove_all_components_of(registry.ships.entities.back());
+	}
+    while (registry.backgroundObjects.entities.size() > 0){
+	    registry.remove_all_components_of(registry.backgroundObjects.entities.back());
+	}
+    
+
+    while (registry.enemies.entities.size() > 0){
+	    registry.remove_all_components_of(registry.enemies.entities.back());
+	}
+
+    while (registry.islands.entities.size() > 0){
+	    registry.remove_all_components_of(registry.islands.entities.back());
+	}
+
+    while (registry.base.entities.size() > 0){
+	    registry.remove_all_components_of(registry.base.entities.back());
+	}
+
+    while (registry.bunnies.entities.size() > 0){
+	    registry.remove_all_components_of(registry.bunnies.entities.back());
+	}
 }
 
 void HandlePlayerMovement(int key, int action, int mod) {

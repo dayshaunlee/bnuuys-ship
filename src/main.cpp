@@ -1,5 +1,6 @@
 #include "sceneManager/scene.hpp"
 #include "sceneManager/scene_manager.hpp"
+#include "scenes/death_scene.hpp"
 #include "scenes/level_01.hpp"
 #include "scenes/main_menu.hpp"
 #include "scenes/ui_editor.hpp"
@@ -23,6 +24,8 @@ int main() {
     WorldSystem world_system;
     RenderSystem renderer_system;
     AnimationSystem animation_system;
+    int frameCounter = 0;
+    float msCounter = 0;
 
     // initialize window
     GLFWwindow* window = world_system.create_window();
@@ -48,10 +51,12 @@ int main() {
     Scene* mm = new MainMenuScene();
     Scene* l1 = new Level01(&world_system);
     Scene* ui_editor = new EditorUI();
+    Scene* death = new DeathScene();
 
     scene_manager.registerScene(mm);
     scene_manager.registerScene(l1);
     scene_manager.registerScene(ui_editor);
+    scene_manager.registerScene(death);
 
     scene_manager.switchScene("Main Menu");
 
@@ -61,10 +66,27 @@ int main() {
         auto now = Clock::now();
         float elapsed_ms = (float) (std::chrono::duration_cast<std::chrono::microseconds>(now - t)).count() / 1000;
         t = now;
+        
+        msCounter += elapsed_ms;
+        // std::cout << "msCounter: " << msCounter << std::endl;
+        frameCounter++;
+        // std::cout << frameCounter << std::endl;
+        if(msCounter >= 1000){
+            world_system.fpsCounter = frameCounter* (msCounter/1000.f);
+            
+            msCounter = 0;
+            frameCounter = 0;
+        }
+
+
+
+        // std::cout << "FPS: " << world_system.fpsCounter << std::endl;
+
         scene_manager.checkSceneSwitch();
 
         Scene* s = scene_manager.getCurrentScene();
         if (s != nullptr) s->Update(elapsed_ms);
+        world_system.step(elapsed_ms);
 
         renderer_system.draw();
     }
