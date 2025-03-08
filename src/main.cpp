@@ -1,4 +1,3 @@
-#include "bnuui/bnuui.hpp"
 #include "sceneManager/scene.hpp"
 #include "sceneManager/scene_manager.hpp"
 #include "scenes/level_01.hpp"
@@ -12,23 +11,17 @@
 #include <iostream>
 
 // internal
-#include "ai_system.hpp"
-#include "physics_system.hpp"
 #include "render_system.hpp"
 #include "world_system.hpp"
 #include "animation_system.hpp"
-#include "bnuui/bnuui.hpp"
-#include "camera_system.hpp"
 
 using Clock = std::chrono::high_resolution_clock;
 
 // Entry point
 int main() {
     // global systems
-    AISystem ai_system;
     WorldSystem world_system;
     RenderSystem renderer_system;
-    PhysicsSystem physics_system;
     AnimationSystem animation_system;
 
     // initialize window
