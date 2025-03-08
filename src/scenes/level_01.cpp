@@ -273,9 +273,8 @@ void HandlePlayerMovement(int key, int action, int mod) {
     }
 }
 
-void HandleCameraMovement(int key, int action, int mod) {
-    CameraSystem* camera = CameraSystem::GetInstance();
-
+// this allows the camera movement to update even if not actively pressing movement keys
+void UpdateCameraMoveDirection(int key, int action, int mod){
     if (action == GLFW_PRESS) {
         if (!activeShipKeys.count(key)) {
             keyShipOrder.push_back(key);
@@ -290,13 +289,15 @@ void HandleCameraMovement(int key, int action, int mod) {
     }
 
     // If no keys are pressed, don't reset velocity
+    if (activeShipKeys.empty() || (activeShipKeys.size() == 1 && activeShipKeys.count(GLFW_KEY_SPACE))) return;   
+}
+
+void HandleCameraMovement() {
     if (activeShipKeys.empty() || (activeShipKeys.size() == 1 && activeShipKeys.count(GLFW_KEY_SPACE))) return;
+    CameraSystem* camera = CameraSystem::GetInstance();
+
     vec2 inputVel = {0.0f, 0.0f};
 
-    // if (activeShipKeys.count(MOVE_UP_BUTTON)) inputVel.y += SHIP_CAMERA_SPEED;
-    // if (activeShipKeys.count(MOVE_DOWN_BUTTON)) inputVel.y -= SHIP_CAMERA_SPEED;
-    // if (activeShipKeys.count(MOVE_LEFT_BUTTON)) inputVel.x += SHIP_CAMERA_SPEED;
-    // if (activeShipKeys.count(MOVE_RIGHT_BUTTON)) inputVel.x -= SHIP_CAMERA_SPEED;
     if (activeShipKeys.count(MOVE_UP_BUTTON)) inputVel.y += 1;
     if (activeShipKeys.count(MOVE_DOWN_BUTTON)) inputVel.y -= 1;
     if (activeShipKeys.count(MOVE_LEFT_BUTTON)) inputVel.x += 1;
@@ -311,7 +312,7 @@ void HandleCameraMovement(int key, int action, int mod) {
     }
 
     inputVel.x *= SHIP_CAMERA_SPEED;
-    inputVel *= SHIP_CAMERA_SPEED;
+    inputVel.y *= SHIP_CAMERA_SPEED;
 
     inputVel.x = std::clamp(inputVel.x, -WALK_SPEED, WALK_SPEED);
     inputVel.y = std::clamp(inputVel.y, -WALK_SPEED, WALK_SPEED);
@@ -319,6 +320,49 @@ void HandleCameraMovement(int key, int action, int mod) {
     // Apply input to velocity directly instead of setting it
     camera->vel = inputVel;
 }
+
+// void HandleCameraMovement(int key, int action, int mod) {
+//     CameraSystem* camera = CameraSystem::GetInstance();
+
+//     if (action == GLFW_PRESS) {
+//         if (!activeShipKeys.count(key)) {
+//             keyShipOrder.push_back(key);
+//         }
+//         activeShipKeys.insert(key);
+//         Camera& c  = registry.cameras.components[0];
+//         if (activeShipKeys.count(MOVE_UP_BUTTON) || activeShipKeys.count(MOVE_DOWN_BUTTON)) c.applyFrictionY = false;
+//         if (activeShipKeys.count(MOVE_LEFT_BUTTON) || activeShipKeys.count(MOVE_RIGHT_BUTTON)) c.applyFrictionX = false;
+//     } else if (action == GLFW_RELEASE) {
+//         activeShipKeys.erase(key);
+//         keyShipOrder.erase(std::remove(keyShipOrder.begin(), keyShipOrder.end(), key), keyShipOrder.end());
+//     }
+
+//     // If no keys are pressed, don't reset velocity
+//     if (activeShipKeys.empty() || (activeShipKeys.size() == 1 && activeShipKeys.count(GLFW_KEY_SPACE))) return;
+//     vec2 inputVel = {0.0f, 0.0f};
+
+//     if (activeShipKeys.count(MOVE_UP_BUTTON)) inputVel.y += 1;
+//     if (activeShipKeys.count(MOVE_DOWN_BUTTON)) inputVel.y -= 1;
+//     if (activeShipKeys.count(MOVE_LEFT_BUTTON)) inputVel.x += 1;
+//     if (activeShipKeys.count(MOVE_RIGHT_BUTTON)) inputVel.x -= 1;
+
+//     if(inputVel.x != 0 || inputVel.y != 0){
+//         float length = std::sqrt(inputVel.x* inputVel.x + inputVel.y * inputVel.y);
+//         if (length > 0){
+//             inputVel.x /= length;
+//             inputVel.y /= length;
+//         }
+//     }
+
+//     inputVel.x *= SHIP_CAMERA_SPEED;
+//     inputVel.y *= SHIP_CAMERA_SPEED;
+
+//     inputVel.x = std::clamp(inputVel.x, -WALK_SPEED, WALK_SPEED);
+//     inputVel.y = std::clamp(inputVel.y, -WALK_SPEED, WALK_SPEED);
+
+//     // Apply input to velocity directly instead of setting it
+//     camera->vel = inputVel;
+// }
 
 // tile_pos is the player's tile position when pressing SPACE.
 void HandlePlayerStationing(vec2 tile_pos) {
@@ -369,7 +413,8 @@ void Level01::HandleInput(int key, int action, int mod) {
                 return;
             }
             case STEERING_WHEEL: {
-                HandleCameraMovement(key, action, mod);
+                // HandleCameraMovement(key, action, mod);
+                UpdateCameraMoveDirection(key, action, mod);
                 return;
             }
             default:
@@ -542,6 +587,7 @@ void Level01::Update(float dt) {
     ai_system.step(dt);
     physics_system.step(dt);
     animation_system.step(dt);
+    HandleCameraMovement();
 
     world_system->handle_collisions();
 
