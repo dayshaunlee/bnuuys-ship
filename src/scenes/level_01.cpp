@@ -72,10 +72,10 @@ void Level01::Init() {
 
     createCamera();
 
-    for (int i = registry.enemies.entities.size() - 1; i >= 1; i--) {
+    /*for (int i = registry.enemies.entities.size() - 1; i >= 1; i--) {
         Entity entity = registry.enemies.entities[i];
         registry.remove_all_components_of(entity);
-    }
+    }*/
 
 
     for (Entity entity: registry.enemies.entities) {

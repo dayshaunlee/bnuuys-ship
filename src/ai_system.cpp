@@ -6,6 +6,8 @@
 #include "pathing.hpp"
 #include "physics_system.hpp"
 
+#include <queue>
+
 void AISystem::step(float elapsed_ms) {
     (void) elapsed_ms;
     for (const Entity& ship_entity : registry.ships.entities) {
@@ -19,6 +21,9 @@ void AISystem::step(float elapsed_ms) {
                 if (find_path(path, enemy_entity, ship_entity)) {
                     WalkingPath& walkingPath = registry.walkingPaths.emplace(enemy_entity);
                     walkingPath.path = path;
+                } else {
+                    // just remove the enemy if path is not found, otherwise it gets really laggy
+                    registry.remove_all_components_of(enemy_entity);
                 }
             }
         };
@@ -139,13 +144,19 @@ std::vector<ivec2> AISystem::get_walkable_neighbours(Node node) {
         {node.position.x + 1, node.position.y + 1}     // bottom right
     };
 
-    for (Entity entity : registry.islands.entities) {
-        for (ivec2 neighbour : possible_neighbours) {      
-            if (!PhysicsSystem::collidesPolyVec(entity, neighbour)) {
-                neighbours.push_back(neighbour);
-            };
+
+    for (ivec2 neighbour : possible_neighbours) {
+        bool should_add = true;
+        for (Entity entity : registry.islands.entities) {
+            if (PhysicsSystem::collidesPolyVec(entity, neighbour)) {
+                should_add = false;
+                break;
+            }
         }
+        if (!should_add) continue;
+        neighbours.push_back(neighbour);
     }
+    
     std::cout << "islands size: " << registry.islands.entities.size() << std::endl;
     std::cout << "neighbour size: " << neighbours.size() << std::endl;
     return neighbours;
