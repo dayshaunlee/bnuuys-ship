@@ -50,6 +50,7 @@ vec2 getMouseTilePosition() {
 }
 
 void Level01::Init() {
+    scene_ui.clear();
     // create player
     Entity player = createPlayer({WINDOW_WIDTH_PX / 2, WINDOW_HEIGHT_PX / 2});
     // load map
@@ -92,6 +93,7 @@ void Level01::Init() {
     createBunny({40, 60});
 
     registry.players.components[0].health = 100.0f;
+    activeShipKeys.clear();
     InitializeUI();
 }
 
@@ -176,7 +178,57 @@ void Level01::InitializeUI() {
 }
 
 void Level01::Exit() {
+    scene_ui.clear();
+    CameraSystem* cs = CameraSystem::GetInstance();
+    cs->position = {0.0f, 0.0f};
+    cs->prev_pos = {0.0f, 0.0f};
+    cs->vel = {0.0f, 0.0f};
     // Delete all components and stuff from this scene.
+    // registry.clear_all_components();
+    // registry.renderRequests.clear();
+    while (registry.cameras.entities.size() > 0){
+	    registry.remove_all_components_of(registry.cameras.entities.back());
+	}
+    while (registry.renderRequests.entities.size() > 0){
+	    registry.remove_all_components_of(registry.renderRequests.entities.back());
+	}
+
+    while (registry.colors.entities.size() > 0){
+	    registry.remove_all_components_of(registry.colors.entities.back());
+	}
+    while (registry.players.entities.size() > 0){
+	    registry.remove_all_components_of(registry.players.entities.back());
+	}
+    while (registry.motions.entities.size() > 0){
+	    registry.remove_all_components_of(registry.motions.entities.back());
+	}
+    while (registry.playerAnimations.entities.size() > 0){
+	    registry.remove_all_components_of(registry.playerAnimations.entities.back());
+	}
+
+    while (registry.ships.entities.size() > 0){
+	    registry.remove_all_components_of(registry.ships.entities.back());
+	}
+    while (registry.backgroundObjects.entities.size() > 0){
+	    registry.remove_all_components_of(registry.backgroundObjects.entities.back());
+	}
+    
+
+    while (registry.enemies.entities.size() > 0){
+	    registry.remove_all_components_of(registry.enemies.entities.back());
+	}
+
+    while (registry.islands.entities.size() > 0){
+	    registry.remove_all_components_of(registry.islands.entities.back());
+	}
+
+    while (registry.base.entities.size() > 0){
+	    registry.remove_all_components_of(registry.base.entities.back());
+	}
+
+    while (registry.bunnies.entities.size() > 0){
+	    registry.remove_all_components_of(registry.bunnies.entities.back());
+	}
 }
 
 void HandlePlayerMovement(int key, int action, int mod) {
@@ -234,9 +286,8 @@ void HandlePlayerMovement(int key, int action, int mod) {
     }
 }
 
-void HandleCameraMovement(int key, int action, int mod) {
-    CameraSystem* camera = CameraSystem::GetInstance();
-
+// this allows the camera movement to update even if not actively pressing movement keys
+void UpdateCameraMoveDirection(int key, int action, int mod){
     if (action == GLFW_PRESS) {
         if (!activeShipKeys.count(key)) {
             keyShipOrder.push_back(key);
@@ -251,13 +302,30 @@ void HandleCameraMovement(int key, int action, int mod) {
     }
 
     // If no keys are pressed, don't reset velocity
+    if (activeShipKeys.empty() || (activeShipKeys.size() == 1 && activeShipKeys.count(GLFW_KEY_SPACE))) return;   
+}
+
+void HandleCameraMovement() {
     if (activeShipKeys.empty() || (activeShipKeys.size() == 1 && activeShipKeys.count(GLFW_KEY_SPACE))) return;
+    CameraSystem* camera = CameraSystem::GetInstance();
+
     vec2 inputVel = {0.0f, 0.0f};
 
-    if (activeShipKeys.count(MOVE_UP_BUTTON)) inputVel.y += SHIP_CAMERA_SPEED;
-    if (activeShipKeys.count(MOVE_DOWN_BUTTON)) inputVel.y -= SHIP_CAMERA_SPEED;
-    if (activeShipKeys.count(MOVE_LEFT_BUTTON)) inputVel.x += SHIP_CAMERA_SPEED;
-    if (activeShipKeys.count(MOVE_RIGHT_BUTTON)) inputVel.x -= SHIP_CAMERA_SPEED;
+    if (activeShipKeys.count(MOVE_UP_BUTTON)) inputVel.y += 1;
+    if (activeShipKeys.count(MOVE_DOWN_BUTTON)) inputVel.y -= 1;
+    if (activeShipKeys.count(MOVE_LEFT_BUTTON)) inputVel.x += 1;
+    if (activeShipKeys.count(MOVE_RIGHT_BUTTON)) inputVel.x -= 1;
+
+    if(inputVel.x != 0 || inputVel.y != 0){
+        float length = std::sqrt(inputVel.x* inputVel.x + inputVel.y * inputVel.y);
+        if (length > 0){
+            inputVel.x /= length;
+            inputVel.y /= length;
+        }
+    }
+
+    inputVel.x *= SHIP_CAMERA_SPEED;
+    inputVel.y *= SHIP_CAMERA_SPEED;
 
     inputVel.x = std::clamp(inputVel.x, -WALK_SPEED, WALK_SPEED);
     inputVel.y = std::clamp(inputVel.y, -WALK_SPEED, WALK_SPEED);
@@ -315,7 +383,8 @@ void Level01::HandleInput(int key, int action, int mod) {
                 return;
             }
             case STEERING_WHEEL: {
-                HandleCameraMovement(key, action, mod);
+                // HandleCameraMovement(key, action, mod);
+                UpdateCameraMoveDirection(key, action, mod);
                 return;
             }
             default:
@@ -488,6 +557,7 @@ void Level01::Update(float dt) {
     ai_system.step(dt);
     physics_system.step(dt);
     animation_system.step(dt);
+    HandleCameraMovement();
 
     world_system->handle_collisions();
 
