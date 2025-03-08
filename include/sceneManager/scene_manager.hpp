@@ -16,6 +16,8 @@ private:
     std::unordered_map<std::string, Scene*> scenes;
     Scene* currScene = nullptr;
     Scene* nextScene = nullptr;
+    // For restarting back at level scene after death
+    std::string prevSceneName;
 
     SceneManager() = default;
     ~SceneManager() = default;
@@ -36,4 +38,8 @@ public:
     void switchScene(const std::string& name);
 
     Scene* getCurrentScene();    
+
+    void setRestartScence(const std::string& restartName);
+
+    void restartScene();
 };
