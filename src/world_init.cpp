@@ -168,7 +168,7 @@ Entity createCannonProjectile(vec2 orig, vec2 dest) {
     m.scale = {GRID_CELL_WIDTH_PX / 2, GRID_CELL_HEIGHT_PX / 2};
     m.angle = degrees(atan2(dest.y - dest.x, dest.x - orig.x));
     vec2 velVec = dest - orig;
-    m.velocity = normalize(velVec) * 150.0f;
+    m.velocity = normalize(velVec) * 350.0f;
 
     registry.renderRequests.insert(
         e, {TEXTURE_ASSET_ID::BUNNY_FACE_ANGRY05, EFFECT_ASSET_ID::TEXTURED, GEOMETRY_BUFFER_ID::SPRITE});

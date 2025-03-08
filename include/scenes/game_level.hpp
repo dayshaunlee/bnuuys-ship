@@ -4,6 +4,7 @@
 #include <string>
 #include "ai_system.hpp"
 #include "animation_system.hpp"
+#include "modules_system.hpp"
 #include "physics_system.hpp"
 #include "sceneManager/scene.hpp"
 #include "world_system.hpp"
@@ -14,6 +15,7 @@ protected:
     AISystem ai_system;
     PhysicsSystem physics_system;
     AnimationSystem animation_system;
+    ModulesSystem module_system;
     WorldSystem* world_system;
 
     void InitializeUI();

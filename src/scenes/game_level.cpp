@@ -364,6 +364,10 @@ void GameLevel::HandleInput(int key, int action, int mod) {
         HandlePlayerMovement(key, action, mod);
     }
 
+    if (action == GLFW_RELEASE && key == GLFW_KEY_K) {
+        registry.simpleCannons.components[0].is_automated = !registry.simpleCannons.components[0].is_automated;
+    }
+
     LevelHandleInput(key, action, mod);
 }
 
@@ -533,16 +537,9 @@ void GameLevel::Update(float dt) {
     ai_system.step(dt);
     physics_system.step(dt);
     animation_system.step(dt);
+    module_system.step(dt);
 
     world_system->handle_collisions();
-
-    // Simple cannon system. make this its own system later.
-    for (SimpleCannon& sc : registry.simpleCannons.components) {
-        if (sc.timer_ms > 0)
-            sc.timer_ms -= dt;
-        else
-            sc.timer_ms = 0;
-    }
 
     // Remove projectiles.
     for (Entity e : registry.projectiles.entities) {
