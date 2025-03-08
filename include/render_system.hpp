@@ -120,7 +120,7 @@ class RenderSystem {
         textures_path("background/main_menu_bg.png"),
 
         // filled tile for enemy pathing debug
-        textures_path("enemies/filledTile.png")
+        textures_path("enemies/filledTile.png"),
         // Restart button
         textures_path("ui/buttons/restartbtn_neutral.png"),
         textures_path("ui/buttons/restartbtn_clicked.png"),
