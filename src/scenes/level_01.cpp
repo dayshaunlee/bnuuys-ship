@@ -64,6 +64,7 @@ void Level01::Init() {
 
     // create the ocean background and then ship
     createIslandBackground(mapSize.x, mapSize.y, map_offset.x, map_offset.y);
+    std::cout << mapSize.x << ", " << mapSize.y << std::endl;
     createShip();
 
     // render player
@@ -72,10 +73,21 @@ void Level01::Init() {
 
     createCamera();
 
-    // enemy creation
+    /*for (int i = registry.enemies.entities.size() - 1; i >= 1; i--) {
+        Entity entity = registry.enemies.entities[i];
+        registry.remove_all_components_of(entity);
+    }*/
+
+
     for (Entity entity: registry.enemies.entities) {
         createEnemy(entity);
     };
+
+    std::cout << registry.enemies.entities.size() << std::endl;
+
+    // createEnemy({140, 140});
+
+    // createEnemy({1036, 1036});
 
     // bunny creation
     createBunny({40, 60});

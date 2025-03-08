@@ -179,6 +179,39 @@ bool collidesPoly(const Entity e1, const Entity e2) {
     return false;
 }
 
+std::vector<tson::Vector2i> get_poly_from_node_pos(ivec2 node_pos) {
+    std::vector<tson::Vector2i> polygon;
+    int posX = node_pos.x * GRID_CELL_WIDTH_PX + GRID_CELL_WIDTH_PX / 2;
+    int posY = node_pos.y * GRID_CELL_HEIGHT_PX + GRID_CELL_HEIGHT_PX / 2;
+    int halfWidth = GRID_CELL_WIDTH_PX / 2;
+    int halfHeight = GRID_CELL_HEIGHT_PX / 2;
+
+    // top left
+    polygon.push_back(tson::Vector2i(posX - halfWidth, posY - halfHeight));
+    // top right
+    polygon.push_back(tson::Vector2i(posX + halfWidth, posY - halfHeight));
+    // bottom right
+    polygon.push_back(tson::Vector2i(posX + halfWidth, posY + halfHeight));
+    // bottom left
+    polygon.push_back(tson::Vector2i(posX - halfWidth, posY + halfHeight));
+
+    return polygon;
+}
+
+bool PhysicsSystem::collidesPolyVec(Entity island_entity, ivec2 node_pos) {
+    Motion& island_motion = registry.motions.get(island_entity);
+    std::vector<tson::Vector2i> islandPolygon;
+    std::vector<tson::Vector2i> nodePolygon;
+    islandPolygon = registry.islands.get(island_entity).polygon;
+    nodePolygon = get_poly_from_node_pos(node_pos);
+    for (auto& p : islandPolygon) {
+        p.x += island_motion.position.x;
+        p.y += island_motion.position.y;
+    }
+
+    return polyPoly(islandPolygon, nodePolygon);
+}
+
 void PhysicsSystem::step(float elapsed_ms) {
     // TODO: Updates camera and move all the background objects
 
@@ -199,6 +232,34 @@ void PhysicsSystem::step(float elapsed_ms) {
             motion.position.y = std::clamp(motion.position.y,
                                            ship_mot.position.y - (ship_mot.scale.y / 2) + 16,
                                            ship_mot.position.y + (ship_mot.scale.y / 2) - 16);
+        } else if (registry.walkingPaths.has(entity)) {
+            // walk the path, tile by tile until it reach the end
+			WalkingPath& walkingPath = registry.walkingPaths.get(entity);
+            if (walkingPath.path.size() > 0) {
+                ivec2 next_pos = walkingPath.path[0];
+                // std::cout << next_pos.x << ", " << next_pos.y << std::endl;
+
+                // transform path position
+                int transformed_path_x = next_pos.x * GRID_CELL_WIDTH_PX + GRID_CELL_WIDTH_PX / 2;
+                int transformed_path_y = next_pos.y * GRID_CELL_HEIGHT_PX + GRID_CELL_HEIGHT_PX / 2;
+
+                if (abs(motion.position.x - transformed_path_x) < 0.3f && abs(motion.position.y - transformed_path_y) < 0.3f) {
+                    // remove the arrived path
+                    walkingPath.path.erase(walkingPath.path.begin());
+
+                } else {
+                    vec2 direction = vec2(transformed_path_x, transformed_path_y) - motion.position;
+                    float length = sqrt(direction.x * direction.x + direction.y * direction.y);
+                    if (length > 0) {
+                        direction.x /= length;
+                        direction.y /= length;
+                    }
+                    motion.velocity = direction * (float) ENEMY_BASE_SPEED;
+                }
+            } else {
+                // if no more walking path, remove entity from walkingPaths
+                registry.walkingPaths.remove(entity);
+            }
         }
     }
 

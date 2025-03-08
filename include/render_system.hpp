@@ -70,7 +70,7 @@ class RenderSystem {
         map_path("m1_debug.png"),
       
         // enemy (stationary)
-        textures_path("enemies/chicken0.png"),
+        textures_path("enemies/chicken0-debug.png"),
         
         // UI Assets.
         textures_path("ui/buttons/square3Normal.png"),
@@ -119,6 +119,8 @@ class RenderSystem {
         // Main Menu bg
         textures_path("background/main_menu_bg.png"),
 
+        // filled tile for enemy pathing debug
+        textures_path("enemies/filledTile.png")
         // Restart button
         textures_path("ui/buttons/restartbtn_neutral.png"),
         textures_path("ui/buttons/restartbtn_clicked.png"),
