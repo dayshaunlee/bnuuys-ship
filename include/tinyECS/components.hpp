@@ -288,13 +288,12 @@ struct Ship {
 // ========== ENEMY DETAILS ==========
 // the enemy type stores information about enemy HP, damage, speed, etc..
 // TODO: ADD ENEMY TYPE INFORMATION IN COMMON
-enum ENEMY_TYPE { BASIC_GUNNER = 0, FLYER };
-
 struct Enemy {
     ENEMY_TYPE type;
     int health;
 	int timer_ms;
     int home_island;
+    int speed;
 };
 
 // ========== BUNNY DETAILS ==========

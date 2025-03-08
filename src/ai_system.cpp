@@ -24,7 +24,7 @@ void AISystem::step(float elapsed_ms) {
                     direction.y /= length;
                 }
 
-                enemy_motion.velocity = direction * ENEMY_BASE_SPEED;
+                enemy_motion.velocity = direction * (float) registry.enemies.get(enemy).speed;
 
                 if (enemy_motion.velocity.x < 0) {
                     vec2 flip = {-1, 1};

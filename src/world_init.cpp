@@ -8,6 +8,38 @@
 #include "tinyECS/components.hpp"
 #include "tinyECS/entity.hpp"
 #include "tinyECS/registry.hpp"
+#include <random>
+
+ENEMY_TYPE getRandEnemyType() {
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<> distrib(0, 2);
+    return static_cast<ENEMY_TYPE>(distrib(gen));
+}
+
+int getEnemyHealth(ENEMY_TYPE type) {
+    switch (type) {
+        case BASIC_GUNNER:
+            return ENEMY_BASE_HEALTH;
+        case FLYER:
+            return ENEMY_FLYER_HEALTH;
+        case TANK:
+            return ENEMY_TANK_HEALTH;
+    }
+    return 0;
+}
+
+float getEnemySpeed(ENEMY_TYPE type) {
+    switch (type) {
+        case BASIC_GUNNER:
+            return ENEMY_BASE_SPEED;
+        case FLYER:
+            return ENEMY_FLYER_SPEED;
+        case TANK:
+            return ENEMY_TANK_SPEED;
+    }
+    return 0;
+}
 
 Entity createPlayer(vec2 position) {
     Entity player;
@@ -104,8 +136,9 @@ Entity createEnemy(RenderSystem* renderer, vec2 position) {
     auto entity = Entity();
 
     Enemy& enemy = registry.enemies.emplace(entity);
-    enemy.health = ENEMY_BASE_HEALTH;
-    enemy.type = BASIC_GUNNER;
+    enemy.type = getRandEnemyType();
+    enemy.health = getEnemyHealth(enemy.type);
+    enemy.speed = getEnemySpeed(enemy.type);
     enemy.timer_ms = 0;
 
     Motion& motion = registry.motions.emplace(entity);
