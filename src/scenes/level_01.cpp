@@ -510,7 +510,7 @@ void Level01::Update(float dt) {
     }
 
     if (registry.base.components[0].bunny_count == bunnies_to_win) {
-        std::cout << "BEAT LEVEL -- SAVED ALL [" << bunnies_to_win << "] BUNNIES"; 
+        std::cout << "BEAT LEVEL -- SAVED ALL [" << bunnies_to_win << "] BUNNIES" << std::endl; 
     }
 
     scene_ui.update(dt);

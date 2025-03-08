@@ -102,6 +102,9 @@ void RenderSystem::drawTexturedMesh(Entity entity, const mat3& projection) {
     Transform transform;
     if (registry.backgroundObjects.has(entity)) {
         transform.translate(motion.position + CameraSystem::GetInstance()->position);
+        if (registry.bunnies.has(entity)) {
+            std::cout << entity.id() << std::endl;
+        }
     } else {
         transform.translate(motion.position);
     }

@@ -207,8 +207,8 @@ void HandleBunnyAnimation(float elapsed_ms) {
             if (!bunny.on_base) {
                 bunny.on_base = true;
                 registry.base.get(base).bunny_count += 1;
-                registry.backgroundObjects.emplace(entity);
                 bunny_motion.position = bunny_position -= CameraSystem::GetInstance()->position;
+                registry.backgroundObjects.emplace(entity);
             }
 
             if (round(bunny_position) != round(empty_base_location)) {
