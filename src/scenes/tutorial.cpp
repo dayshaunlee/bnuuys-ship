@@ -5,15 +5,17 @@
 #include "GLFW/glfw3.h"
 #include "bnuui/buttons.hpp"
 #include "common.hpp"
+#include "sceneManager/scene_manager.hpp"
 #include "scenes/game_level.hpp"
 #include "tinyECS/components.hpp"
 #include "tinyECS/registry.hpp"
 #include "world_init.hpp"
 #include "world_system.hpp"
 
-TutorialLevel::TutorialLevel(WorldSystem* world_system, std::string map_filename) : GameLevel(world_system) {
+TutorialLevel::TutorialLevel(WorldSystem* world_system, std::string map_filename, TEXTURE_ASSET_ID texture) : GameLevel(world_system) {
     this->name = "Tutorial Level";
     this->level_path = map_filename;
+    this->texture = texture;
 }
 
 TutorialLevel::~TutorialLevel() {}
@@ -24,6 +26,7 @@ enum TUTORIAL_PHASE {
     WASD_KEYS,
     SPACEBAR_KEY,
     SAVE_BUNNIES,
+    GOTO_BASE,
 };
 
 vec2 tutorial_mouse_pos;
@@ -36,7 +39,7 @@ void TutorialLevel::LevelInit() {
     auto player_box = std::make_shared<bnuui::Box>(vec2(765, 540), vec2(96, 96), 0.0f);
     // Create the press tutorial dialog.
     auto tutorial_dialog = std::make_shared<bnuui::Box>(
-        vec2(650, 425), vec2(150, 150), 0.0f
+        vec2(650, 425), vec2(200, 200), 0.0f
     );
     tutorial_dialog->texture = TEXTURE_ASSET_ID::TUTORIAL_WASD_UI;
 
@@ -44,9 +47,11 @@ void TutorialLevel::LevelInit() {
         if (curr_tutorial_phase == WASD_KEYS) {
             e.texture = TEXTURE_ASSET_ID::TUTORIAL_WASD_UI;
         } else if (curr_tutorial_phase == SPACEBAR_KEY) {
-            e.texture = TEXTURE_ASSET_ID::COW0;
+            e.texture = TEXTURE_ASSET_ID::TUTORIAL_SPACE_UI;
         } else if (curr_tutorial_phase == SAVE_BUNNIES) {
-            e.texture = TEXTURE_ASSET_ID::BUNNY_NPC_IDLE_UP0;
+            e.texture = TEXTURE_ASSET_ID::TUTORIAL_MOUSE_UI;
+        } else if (curr_tutorial_phase == GOTO_BASE) {
+            e.texture = TEXTURE_ASSET_ID::TUTORIAL_HOME_UI;
         }
     });
     // Create a press spacebar
@@ -78,5 +83,16 @@ void TutorialLevel::LevelUpdate(float dt) {
         if (registry.players.components[0].player_state == PLAYERSTATE::STATIONING) {
             curr_tutorial_phase = SAVE_BUNNIES;
         }
+    }
+
+    if (curr_tutorial_phase == SAVE_BUNNIES) {
+        if (registry.bunnies.components[0].on_ship) {
+            curr_tutorial_phase = GOTO_BASE;
+        }
+    }
+
+    if (registry.bunnies.components[0].on_base) {
+        // Skip tutorial.
+        SceneManager::getInstance().switchScene("Level 1");
     }
 }

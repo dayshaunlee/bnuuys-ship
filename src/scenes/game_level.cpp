@@ -64,7 +64,7 @@ void GameLevel::Init() {
     std::cout << mapSize.x << ", " << mapSize.y << std::endl;
 
     // create the ocean background and then ship
-    createIslandBackground(mapSize.x, mapSize.y, map_offset.x, map_offset.y);
+    createIslandBackground(mapSize.x, mapSize.y, map_offset.x, map_offset.y, texture);
     createShip();
 
     // render player
@@ -163,7 +163,7 @@ void GameLevel::InitializeUI() {
     auto helper_bunnies_selected = std::make_shared<bnuui::Cursor>(vec2(420, 547.5f), vec2(40, 40), 0.0f);
     helper_bunnies_selected->visible = false;
     helper_bunnies->children.push_back(helper_bunnies_selected);
-    helper_bunnies->texture = TEXTURE_ASSET_ID::BUNNY_NPC_JAILED0;
+    helper_bunnies->texture = TEXTURE_ASSET_ID::BUNNY_NPC_IDLE_UP0;
     helper_bunnies->setOnClick([](bnuui::Element& e) {
         if (curr_selected == HELPER_BUNNY) {
             curr_selected = EMPTY;
@@ -598,8 +598,8 @@ void GameLevel::HandleMouseClick(int button, int action, int mods) {
                 if (sc.is_automated) {
                     ship.available_modules[HELPER_BUNNY]++;
                     sc.is_automated = false;
+                    break;
                 }
-                break;
             }
             default: {
                 Ship& ship = registry.ships.components[0];

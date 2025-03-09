@@ -1,6 +1,7 @@
 #pragma once
 
 #include "common.hpp"
+#include "tinyECS/components.hpp"
 #include "tinyECS/tiny_ecs.hpp"
 #include "render_system.hpp"
 
@@ -15,7 +16,7 @@ Entity createCannon(vec2 tile_pos);
 
 Entity createWaterBackground();
 
-Entity createIslandBackground(int width, int height, int offset_x, int offset_y);
+Entity createIslandBackground(int width, int height, int offset_x, int offset_y, TEXTURE_ASSET_ID texture);
 
 
 Entity createShip();

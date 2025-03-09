@@ -68,6 +68,7 @@ class RenderSystem {
         
         // island background
         map_path("m1_debug.png"),
+        map_path("m2_tutorial.png"),
       
         // Enemy (balloon/flyer)
         textures_path("enemies/balloon0.png"),
@@ -152,8 +153,11 @@ class RenderSystem {
         // Game over background
         textures_path("background/game_over_bg.png"),
         
-        // Tutorial Dialog Part 1.
-        textures_path("ui/tutorial_ui/MoveKey.jpg"),
+        // Tutorial Dialog.
+        textures_path("ui/tutorial_ui/movementKeyTutorial.png"),
+        textures_path("ui/tutorial_ui/spaceKeyTutorial.png"),
+        textures_path("ui/tutorial_ui/mouseTutorial.png"),
+        textures_path("ui/tutorial_ui/homeTutorial.png"),
     };
 
     std::array<GLuint, effect_count> effects;

@@ -102,18 +102,6 @@
          "objects":[
                 {
                  "height":0,
-                 "id":90,
-                 "name":"",
-                 "point":true,
-                 "rotation":0,
-                 "type":"player",
-                 "visible":true,
-                 "width":0,
-                 "x":80,
-                 "y":224
-                }, 
-                {
-                 "height":0,
                  "id":95,
                  "name":"",
                  "polygon":[
@@ -358,6 +346,18 @@
                  "width":0,
                  "x":280,
                  "y":216
+                }, 
+                {
+                 "height":0,
+                 "id":104,
+                 "name":"",
+                 "point":true,
+                 "rotation":0,
+                 "type":"player",
+                 "visible":true,
+                 "width":0,
+                 "x":80,
+                 "y":224
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -366,7 +366,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":104,
+ "nextobjectid":105,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.2",
