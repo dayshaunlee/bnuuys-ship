@@ -76,31 +76,9 @@ struct Mesh {
     std::vector<uint16_t> vertex_indices;
 };
 
-/**
- * The following enumerators represent global identifiers refering to graphic
- * assets. For example TEXTURE_ASSET_ID are the identifiers of each texture
- * currently supported by the system.
- *
- * So, instead of referring to a game asset directly, the game logic just
- * uses these enumerators and the RenderRequest struct to inform the renderer
- * how to structure the next draw command.
- *
- * There are 2 reasons for this:
- *
- * First, game assets such as textures and meshes are large and should not be
- * copied around as this wastes memory and runtime. Thus separating the data
- * from its representation makes the system faster.
- *
- * Second, it is good practice to decouple the game logic from the render logic.
- * Imagine, for example, changing from OpenGL to Vulkan, if the game logic
- * depends on OpenGL semantics it will be much harder to do the switch than if
- * the renderer encapsulates all asset data and the game logic is agnostic to it.
- *
- * The final value in each enumeration is both a way to keep track of how many
- * enums there are, and as a default value to represent uninitialized fields.
- */
 
 enum class TEXTURE_ASSET_ID {
+    // Bunny player
     BUNNY_IDLE_UP0 = 0,
     BUNNY_IDLE_UP1 = BUNNY_IDLE_UP0 + 1,
 
@@ -130,10 +108,20 @@ enum class TEXTURE_ASSET_ID {
     // TODO: figure out which background to use
     ISLAND_BACKGROUND = WATER_BACKGROUND + 1,
 
-    ENEMY0 = ISLAND_BACKGROUND + 1,
+    // Enemies
+    BALLOON0 = ISLAND_BACKGROUND + 1,
+    BALLOON1 = BALLOON0 + 1,
+    BALLOON2 = BALLOON1 + 1,
+
+    CHICKEN_BOAT0 = BALLOON2 + 1,
+    CHICKEN_BOAT1 = CHICKEN_BOAT0 + 1,
+
+    COW0 = CHICKEN_BOAT1 + 1,
+    COW1 = COW0 + 1,
+    COW2 = COW1 + 1,
 
     // UI assets.
-    SQUARE_3_NORMAL = ENEMY0 + 1,
+    SQUARE_3_NORMAL = COW2 + 1,
     SQUARE_3_HOVER = SQUARE_3_NORMAL + 1,
     SQUARE_3_CLICKED = SQUARE_3_HOVER + 1,
 
@@ -172,10 +160,14 @@ enum class TEXTURE_ASSET_ID {
     SIMPLE_CANNON05 = SIMPLE_CANNON04 + 1,
     SIMPLE_CANNON06 = SIMPLE_CANNON05 + 1,
 
-    BUNNY_JAILED = SIMPLE_CANNON06 + 1,
-    BUNNY_NOT_JAILED = BUNNY_JAILED + 1,
+    // Bunny npc
+    BUNNY_NPC_JAILED0 = SIMPLE_CANNON06 + 1,
+    BUNNY_NPC_JAILED1 = BUNNY_NPC_JAILED0 + 1,
+
+    BUNNY_NPC_IDLE_UP0 = BUNNY_NPC_JAILED1 + 1,
+    BUNNY_NPC_IDLE_UP1 = BUNNY_NPC_IDLE_UP0 + 1,
     
-    MAIN_MENU_BG = BUNNY_NOT_JAILED + 1,
+    MAIN_MENU_BG = BUNNY_NPC_IDLE_UP1 + 1,
 
     FILLED_TILE = MAIN_MENU_BG + 1,
 

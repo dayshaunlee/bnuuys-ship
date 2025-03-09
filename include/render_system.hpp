@@ -69,8 +69,19 @@ class RenderSystem {
         // island background
         map_path("m1_debug.png"),
       
-        // enemy (stationary)
-        textures_path("enemies/chicken0-debug.png"),
+        // Enemy (balloon/flyer)
+        textures_path("enemies/balloon0.png"),
+        textures_path("enemies/balloon1.png"),
+        textures_path("enemies/balloon2.png"),
+
+        // Enemy (chicken-boat)
+        textures_path("enemies/chicken-boat0.png"),
+        textures_path("enemies/chicken-boat1.png"),
+
+        // Enemy (cow)
+        textures_path("enemies/cow0.png"),
+        textures_path("enemies/cow1.png"),
+        textures_path("enemies/cow2.png"),
         
         // UI Assets.
         textures_path("ui/buttons/square3Normal.png"),
@@ -112,15 +123,20 @@ class RenderSystem {
         textures_path("cannons/simple_cannon004.png"),
         textures_path("cannons/simple_cannon005.png"),
 
-        // Bunny (not jailed/jailed)
-        textures_path("bunny/invert_idle_down1.png"),
-        textures_path("bunny/invert_idle_down0.png"),
+        // NPC bunny (jailed)
+        textures_path("bunny/jailed-bunny0.png"),
+        textures_path("bunny/jailed-bunny1.png"),
+
+        // NPC bunny - idle up
+        textures_path("bunny/npc_idle_down0.png"),
+        textures_path("bunny/npc_idle_down1.png"),
 
         // Main Menu bg
         textures_path("background/main_menu_bg.png"),
 
-        // filled tile for enemy pathing debug
+        // Filled tile for enemy pathing debug
         textures_path("enemies/filledTile.png"),
+
         // Restart button
         textures_path("ui/buttons/restartbtn_neutral.png"),
         textures_path("ui/buttons/restartbtn_clicked.png"),

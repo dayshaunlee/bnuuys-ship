@@ -70,10 +70,10 @@ Entity createEnemy(Entity entity) {
     motion.angle = 0.f;
     motion.velocity = {0.f, 0.f};
     // motion.position = position;
-    motion.scale = {56, 56};
+    motion.scale = {112, 56};
 
     registry.renderRequests.insert(entity,
-                                   {TEXTURE_ASSET_ID::ENEMY0, EFFECT_ASSET_ID::TEXTURED, GEOMETRY_BUFFER_ID::SPRITE});
+                                   {TEXTURE_ASSET_ID::CHICKEN_BOAT0, EFFECT_ASSET_ID::TEXTURED, GEOMETRY_BUFFER_ID::SPRITE});
 
     std::cout << "Enemy id: " << entity.id() << std::endl;
     return entity;
@@ -92,10 +92,10 @@ Entity createBunny(vec2 position) {
     motion.angle = 0.f;
     motion.velocity = {0.f, 0.f};
     motion.position = position;
-    motion.scale = {40, 40};
+    motion.scale = {56, 56};
 
     registry.renderRequests.insert(
-        entity, {TEXTURE_ASSET_ID::BUNNY_JAILED, EFFECT_ASSET_ID::TEXTURED, GEOMETRY_BUFFER_ID::SPRITE});
+        entity, {TEXTURE_ASSET_ID::BUNNY_NPC_JAILED0, EFFECT_ASSET_ID::TEXTURED, GEOMETRY_BUFFER_ID::SPRITE});
 
     return entity;
 }
@@ -113,10 +113,10 @@ Entity createEnemy(vec2 position) {
     motion.angle = 0.f;
     motion.velocity = {0.f, 0.f};
     motion.position = position;
-    motion.scale = {56, 56};
+    motion.scale = {112, 56};
 
     registry.renderRequests.insert(entity,
-                                   {TEXTURE_ASSET_ID::ENEMY0, EFFECT_ASSET_ID::TEXTURED, GEOMETRY_BUFFER_ID::SPRITE});
+                                   {TEXTURE_ASSET_ID::CHICKEN_BOAT0, EFFECT_ASSET_ID::TEXTURED, GEOMETRY_BUFFER_ID::SPRITE});
 
     std::cout << "Enemy id: " << entity.id() << std::endl;
     return entity;
@@ -138,10 +138,10 @@ Entity createBunny(RenderSystem* renderer, vec2 position) {
     motion.angle = 0.f;
     motion.velocity = {0.f, 0.f};
     motion.position = position;
-    motion.scale = {40, 40};
+    motion.scale = {56, 56};
 
     registry.renderRequests.insert(
-        entity, {TEXTURE_ASSET_ID::BUNNY_JAILED, EFFECT_ASSET_ID::TEXTURED, GEOMETRY_BUFFER_ID::SPRITE});
+        entity, {TEXTURE_ASSET_ID::BUNNY_NPC_JAILED0, EFFECT_ASSET_ID::TEXTURED, GEOMETRY_BUFFER_ID::SPRITE});
 
     return entity;
 }
