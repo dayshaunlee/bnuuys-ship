@@ -598,8 +598,8 @@ void GameLevel::HandleMouseClick(int button, int action, int mods) {
                 if (sc.is_automated) {
                     ship.available_modules[HELPER_BUNNY]++;
                     sc.is_automated = false;
+                    break;
                 }
-                break;
             }
             default: {
                 Ship& ship = registry.ships.components[0];
