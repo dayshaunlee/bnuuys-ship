@@ -26,6 +26,10 @@ Scene* SceneManager::getCurrentScene() {
     return currScene;
 }
 
+std::string SceneManager::getNewLevelSceneName(){
+    return nextLevelName;
+}
+
 // This function will be called every time in main.
 // Essentially this checks if we have a switch Scene Request.
 // If we do, then we will switch the scene, otherwise do nothing.
@@ -45,6 +49,12 @@ void SceneManager::setRestartScence(const std::string& restartName){
     if(scenes.find(restartName) != scenes.end()){
         prevSceneName = restartName;
     }
+}
+
+void SceneManager::setNextLevelScence(const std::string& nextLevName){
+    if(scenes.find(nextLevName) != scenes.end()){
+        nextLevelName = nextLevName;
+    } 
 }
 
 

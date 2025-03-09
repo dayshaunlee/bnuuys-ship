@@ -18,6 +18,7 @@ private:
     Scene* nextScene = nullptr;
     // For restarting back at level scene after death
     std::string prevSceneName;
+    std::string nextLevelName;
 
     SceneManager() = default;
     ~SceneManager() = default;
@@ -37,9 +38,11 @@ public:
 
     void switchScene(const std::string& name);
 
-    Scene* getCurrentScene();    
+    Scene* getCurrentScene();  
+    std::string getNewLevelSceneName();
 
     void setRestartScence(const std::string& restartName);
+    void setNextLevelScence(const std::string& nextLevelName);
 
     void restartScene();
 };

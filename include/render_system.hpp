@@ -158,6 +158,9 @@ class RenderSystem {
         textures_path("ui/tutorial_ui/spaceKeyTutorial.png"),
         textures_path("ui/tutorial_ui/mouseTutorial.png"),
         textures_path("ui/tutorial_ui/homeTutorial.png"),
+
+        // Next level scene background
+        textures_path("background/next_level_bg.png"),
     };
 
     std::array<GLuint, effect_count> effects;
