@@ -77,6 +77,11 @@ void GameLevel::Init() {
         createEnemy(entity);
     };
 
+    // bunny creation
+    for (Entity entity : registry.bunnies.entities) {
+        createBunny(entity);
+    };
+
     registry.players.components[0].health = 100.0f;
     InitializeUI();
 
@@ -555,5 +560,5 @@ void GameLevel::Update(float dt) {
 
     scene_ui.update(dt);
 
-    LevelUpdate();
+    LevelUpdate(dt);
 }

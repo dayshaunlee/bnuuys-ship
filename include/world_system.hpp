@@ -52,6 +52,8 @@ class WorldSystem {
     // change title
     void change_title(std::string title);
 
+    int getFPScounter();
+
    private:
     float mouse_pos_x = 0.0f;
     float mouse_pos_y = 0.0f;
