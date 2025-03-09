@@ -199,7 +199,7 @@ void HandleBunnyAnimation(float elapsed_ms) {
         Motion& bunny_motion = registry.motions.get(entity);
         
         // bunny -> ship
-        if (!bunny.is_jailed && !bunny.on_ship && !bunny.on_base) {
+        if (!bunny.is_jailed && !bunny.on_ship && !bunny.on_base && !bunny.moving_to_base) {
             vec2 bunny_position = bunny_motion.position + CameraSystem::GetInstance()->position;
             vec2 empty_ship_location = {364, 252};  // save bunny to top right ship tile
             if (round(bunny_position) != empty_ship_location) {
