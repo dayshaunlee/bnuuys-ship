@@ -313,31 +313,43 @@
          "objects":[
                 {
                  "height":0,
-                 "id":91,
+                 "id":105,
+                 "name":"",
+                 "point":true,
+                 "rotation":0,
+                 "type":"player",
+                 "visible":true,
+                 "width":0,
+                 "x":80,
+                 "y":208
+                }, 
+                {
+                 "height":0,
+                 "id":106,
                  "name":"",
                  "point":true,
                  "rotation":0,
                  "type":"enemy",
                  "visible":true,
                  "width":0,
-                 "x":64,
+                 "x":80,
                  "y":96
                 }, 
                 {
                  "height":0,
-                 "id":92,
+                 "id":107,
                  "name":"",
                  "point":true,
                  "rotation":0,
                  "type":"enemy",
                  "visible":true,
                  "width":0,
-                 "x":144,
+                 "x":160,
                  "y":96
                 }, 
                 {
                  "height":0,
-                 "id":93,
+                 "id":108,
                  "name":"",
                  "point":true,
                  "rotation":0,
@@ -346,18 +358,6 @@
                  "width":0,
                  "x":280,
                  "y":216
-                }, 
-                {
-                 "height":0,
-                 "id":104,
-                 "name":"",
-                 "point":true,
-                 "rotation":0,
-                 "type":"player",
-                 "visible":true,
-                 "width":0,
-                 "x":80,
-                 "y":224
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -366,7 +366,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":105,
+ "nextobjectid":109,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.2",
