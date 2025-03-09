@@ -152,11 +152,6 @@ void WorldSystem::init(RenderSystem* renderer_arg) {
 
 // Update our game world
 bool WorldSystem::step(float elapsed_ms_since_last_update) {
-    // Updating window title with points
-    std::stringstream title_ss;
-    std::string fullTitle = "Bnuuy's Ship      FPS: " + std::to_string(fpsCounter);    
-    glfwSetWindowTitle(window, fullTitle.c_str());
-
     assert(registry.screenStates.components.size() <= 1);
     ScreenState& screen = registry.screenStates.components[0];
     return true;
@@ -295,6 +290,10 @@ bool WorldSystem::is_over() const {
 
 void WorldSystem::change_title(std::string title) {
     glfwSetWindowTitle(window, title.c_str());
+}
+
+int WorldSystem::getFPScounter() {
+    return fpsCounter;
 }
 
 void WorldSystem::handle_player_death(){
