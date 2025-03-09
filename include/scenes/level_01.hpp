@@ -1,27 +1,24 @@
 #pragma once
 
 #include <glm/ext/vector_float2.hpp>
-#include "ai_system.hpp"
-#include "animation_system.hpp"
-#include "physics_system.hpp"
-#include "sceneManager/scene.hpp"
+#include <string>
+#include "scenes/game_level.hpp"
 #include "world_system.hpp"
 
-class Level01 : public Scene {
+class Level01 : public GameLevel {
 private:
-    AISystem ai_system;
-    PhysicsSystem physics_system;
-    AnimationSystem animation_system;
-    WorldSystem* world_system;
+    // Runs after the GameLevel's init.
+    void LevelInit() override;
+    void LevelUpdate() override;
+    void LevelExit() override;
+    void LevelHandleInput(int key, int action, int mod) override;
+    void LevelHandleMouseMove(glm::vec2 mousePos) override;
+    void LevelHandleMouseClick(int button, int action, int mods) override;
+    void LevelUpdate(float dt) override;
 
-    void InitializeUI();
-
+    // amount of bunnies player has to save to win
+    int bunnies_to_win;
 public:
-    Level01(WorldSystem* worldsystem);
-    void Init() override;
-    void Exit() override;
-    void HandleInput(int key, int action, int mod) override;
-    void HandleMouseMove(glm::vec2 mousePos) override;
-    void HandleMouseClick(int button, int action, int mods) override;
-    void Update(float dt) override; 
+    Level01(WorldSystem* worldsystem, std::string map_path);
+    ~Level01() override;
 }; 

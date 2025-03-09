@@ -85,6 +85,9 @@ public:
     std::vector<std::shared_ptr<Element>> getElems();
 
     void update(float dt);
+    void clear(){
+        ui_elems.clear();
+    }
 private: 
     std::vector<std::shared_ptr<Element>> ui_elems;
 };

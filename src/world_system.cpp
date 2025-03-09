@@ -20,6 +20,7 @@
 WorldSystem::WorldSystem() {
     // seeding rng with random device
     rng = std::default_random_engine(std::random_device()());
+    fpsCounter = 0;
 }
 
 WorldSystem::~WorldSystem() {
@@ -83,7 +84,9 @@ GLFWwindow* WorldSystem::create_window() {
     glfwWindowHint(GLFW_SCALE_TO_MONITOR, GL_FALSE);  // GLFW 3.3+
 
     // Create the main window (for rendering, keyboard, and mouse input)
-    window = glfwCreateWindow(WINDOW_WIDTH_PX, WINDOW_HEIGHT_PX, "Bnuuy's Ship", nullptr, nullptr);
+    std::string fullTitle = "Bnuuy's Ship      FPS: " + std::to_string(fpsCounter);    
+
+    window = glfwCreateWindow(WINDOW_WIDTH_PX, WINDOW_HEIGHT_PX, fullTitle.c_str(), nullptr, nullptr);
     if (window == nullptr) {
         std::cerr << "ERROR: Failed to glfwCreateWindow in world_system.cpp" << std::endl;
         return nullptr;
@@ -164,7 +167,8 @@ void WorldSystem::init(RenderSystem* renderer_arg) {
 bool WorldSystem::step(float elapsed_ms_since_last_update) {
     // Updating window title with points
     std::stringstream title_ss;
-    glfwSetWindowTitle(window, title_ss.str().c_str());
+    std::string fullTitle = "Bnuuy's Ship      FPS: " + std::to_string(fpsCounter);    
+    glfwSetWindowTitle(window, fullTitle.c_str());
 
     assert(registry.screenStates.components.size() <= 1);
     ScreenState& screen = registry.screenStates.components[0];
@@ -263,18 +267,32 @@ void WorldSystem::handle_collisions() {
 
         // Enemy - Ship collision
         if (registry.enemies.has(e1) && registry.ships.has(e2)) {
-            registry.ships.get(e2).health -= 10.0f;
+            registry.ships.get(e2).health -= 50.0f;
             registry.remove_all_components_of(e1);
             // Play sound
             Mix_PlayChannel(-1, enemy_ship_collision, 0);
+
+            // When Player dies (ship health is <= 0)
+            if(registry.ships.get(e2).health <= 0.0f){
+                handle_player_death();
+                return;
+            }
             continue;
         } else if (registry.enemies.has(e2) && registry.ships.has(e1)) {
-            registry.ships.get(e1).health -= 10.0f;
+            registry.ships.get(e1).health -= 50.0f;
             registry.remove_all_components_of(e2);
             // Play sound
             Mix_PlayChannel(-1, enemy_ship_collision, 0);
+
+            // When Player dies (ship health is <= 0)
+            if(registry.ships.get(e1).health <= 0.0f){
+                handle_player_death();
+                return;
+            }
             continue;
         }
+
+
 
         // Ship - Island collision
         if ((registry.ships.has(e1) && registry.islands.has(e2)) ||
@@ -284,6 +302,15 @@ void WorldSystem::handle_collisions() {
             // Play sound
             Mix_PlayChannel(-1, island_ship_collision, 0);
             CameraSystem::GetInstance()->setToPreviousPosition();
+        }
+
+        // Ship - Base collision
+        if ((registry.ships.has(e1) && registry.base.has(e2)) ||
+            (registry.ships.has(e2) && registry.base.has(e1))) {
+            collisions_to_remove.push_back(e1);
+            collisions_to_remove.push_back(e2);
+            // just print debug stuff rn, behaviour is handled in different system
+            //std::cout << "island over base" << std::endl;            
         }
     }
 
@@ -300,6 +327,18 @@ void WorldSystem::handle_collisions() {
 // Should the game be over ?
 bool WorldSystem::is_over() const {
     return bool(glfwWindowShouldClose(window));
+}
+
+void WorldSystem::change_title(std::string title) {
+    glfwSetWindowTitle(window, title.c_str());
+}
+
+void WorldSystem::handle_player_death(){
+    SceneManager& sceneManager = SceneManager::getInstance();
+    std::cout << "Switching to player death scene..." << std::endl;
+    std::string currentSceneName = sceneManager.getCurrentScene()->getName();
+    sceneManager.setRestartScence(currentSceneName);
+    sceneManager.switchScene("Death Scene");
 }
 
 // on key callback
