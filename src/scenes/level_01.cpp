@@ -488,9 +488,20 @@ void Level01::Update(float dt) {
     }
 
     // Remove projectiles.
-    for (Entity e : registry.projectiles.entities) {
-        if (registry.projectiles.has(e)) {
-            Projectile& p = registry.projectiles.get(e);
+    for (Entity e : registry.playerProjectiles.entities) {
+        if (registry.playerProjectiles.has(e)) {
+            PlayerProjectile& p = registry.playerProjectiles.get(e);
+            if (p.alive_time_ms <= 0) {
+                registry.remove_all_components_of(e);
+                continue;
+            }
+            p.alive_time_ms -= dt;
+        }
+    }
+
+    for (Entity e : registry.enemyProjectiles.entities) {
+        if (registry.enemyProjectiles.has(e)) {
+            EnemyProjectile& p = registry.enemyProjectiles.get(e);
             if (p.alive_time_ms <= 0) {
                 registry.remove_all_components_of(e);
                 continue;
