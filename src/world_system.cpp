@@ -131,7 +131,7 @@ bool WorldSystem::start_and_load_sounds() {
     island_ship_collision = Mix_LoadWAV(audio_path("island-ship_collision.wav").c_str());
     enemy_ship_collision = Mix_LoadWAV(audio_path("ship-enemy_collision.wav").c_str());
     projectile_jail_collision = Mix_LoadWAV(audio_path("projectile-jail_collision.wav").c_str());
-    //projectile_enemy_collision = Mix_LoadWAV(audio_path("projectile-enemy_collision.wav").c_str()); //Somehow just this one doesn't work
+    projectile_enemy_collision = Mix_LoadWAV(audio_path("projectile-enemy_collision.wav").c_str()); //Somehow just this one doesn't work
     projectile_shoot = Mix_LoadWAV(audio_path("projectile_shoot.wav").c_str());
 
     if (background_music == nullptr ||
