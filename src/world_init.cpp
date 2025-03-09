@@ -45,6 +45,12 @@ float getEnemySpeed(ENEMY_TYPE type) {
     return 0;
 }
 
+#define SDL_MAIN_HANDLED
+#include <SDL.h>
+#include <SDL_mixer.h>
+
+Mix_Chunk* projectile_shoot;
+
 Entity createPlayer(vec2 position) {
     Entity player;
 
@@ -232,6 +238,12 @@ Entity createCannonProjectile(vec2 orig, vec2 dest) {
     PlayerProjectile& proj = registry.playerProjectiles.emplace(e);
     proj.damage = SIMPLE_CANNON_DAMAGE;
     proj.alive_time_ms = PROJECTILE_LIFETIME;
+
+    //Play sound
+    if (projectile_shoot == nullptr) {
+        projectile_shoot = Mix_LoadWAV(audio_path("projectile_shoot.wav").c_str());
+    }
+    Mix_PlayChannel(-1, projectile_shoot, 0);
 
     return e;
 }
