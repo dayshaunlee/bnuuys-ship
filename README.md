@@ -24,4 +24,4 @@ https://github.students.cs.ubc.ca/CPSC427-2024W-T2/team-05/blob/9ad7381f245cf55e
 ### Advanced Decision-making
 
 We implemented A* searching algorithm to the enemies for the creative component. The enemies will find the shorest path from their current location to the ship's location, while avoiding island collisions.
-https://github.students.cs.ubc.ca/CPSC427-2024W-T2/team-05/blob/main/src/ai_system.cpp#L33-L193
+[https://github.students.cs.ubc.ca/CPSC427-2024W-T2/team-05/blob/main/src/ai_system.cpp#L33-L193](https://github.students.cs.ubc.ca/CPSC427-2024W-T2/team-05/blob/77722e7b2ae66384a6abcae13dd449b4db39f287/src/ai_system.cpp)
