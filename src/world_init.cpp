@@ -87,6 +87,7 @@ Entity createBunny(Entity entity) {
     bunny.is_jailed = true;
     bunny.on_ship = false;
     bunny.on_base = false;
+    bunny.moving_to_base = false;
 
     Motion& motion = registry.motions.get(entity);
     motion.angle = 0.f;
