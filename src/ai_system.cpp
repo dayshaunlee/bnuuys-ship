@@ -16,7 +16,7 @@ void AISystem::step(float elapsed_ms) {
 
         // A* enemy path finding
         for (const Entity& enemy_entity : registry.enemies.entities) {
-            if (!registry.walkingPaths.has(enemy_entity)) {
+            if (registry.enemies.get(enemy_entity).type == ENEMY_TYPE::BASIC_GUNNER && !registry.walkingPaths.has(enemy_entity)) {
                 std::vector<ivec2> path;
                 if (find_path(path, enemy_entity, ship_entity)) {
                     WalkingPath& walkingPath = registry.walkingPaths.emplace(enemy_entity);
@@ -78,7 +78,6 @@ bool AISystem::find_path(std::vector<ivec2> & path, Entity enemy_entity, Entity 
             for (ivec2 p : path) {
                 vec2 fill_pos = {p.x * GRID_CELL_WIDTH_PX + GRID_CELL_WIDTH_PX / 2, p.y * GRID_CELL_HEIGHT_PX + GRID_CELL_HEIGHT_PX / 2};
                 //createFilledTile(fill_pos, {56, 56});
-                std::cout << p.x << ", " << p.y << std::endl;
             }
             return true;
         }
@@ -156,9 +155,7 @@ std::vector<ivec2> AISystem::get_walkable_neighbours(Node node) {
         if (!should_add) continue;
         neighbours.push_back(neighbour);
     }
-    
-    std::cout << "islands size: " << registry.islands.entities.size() << std::endl;
-    std::cout << "neighbour size: " << neighbours.size() << std::endl;
+
     return neighbours;
 }
 
