@@ -175,8 +175,8 @@ void HandleBunnyAnimation(float elapsed_ms) {
         Bunny& bunny = registry.bunnies.get(entity);
         // Bunny saving animation.
         Motion& bunny_motion = registry.motions.get(entity);
-        std::cout << "bunny: " << bunny_motion.position.x << ", "
-                  << bunny_motion.position.y << std::endl;
+        
+        // bunny -> ship
         if (!bunny.is_jailed && !bunny.on_ship && !bunny.on_base) {
             vec2 bunny_position = bunny_motion.position + CameraSystem::GetInstance()->position;
             vec2 empty_ship_location = {364, 252};  // save bunny to top right ship tile
@@ -197,34 +197,34 @@ void HandleBunnyAnimation(float elapsed_ms) {
                 registry.backgroundObjects.remove(entity);
             }
         }
-        /*std::cout << base.drop_off_timer << std::endl;*/
+        
+        // bunny -> ship
         else if (!bunny.is_jailed && bunny.on_ship && base.drop_off_timer >= BUNNY_BASE_DROPOFF_TIME) {
             vec2 bunny_position = bunny_motion.position;
             Entity& base = registry.base.entities[0];
-            vec2 empty_base_location = registry.motions.get(base).position;
+            vec2 empty_base_location = registry.motions.get(base).position + CameraSystem::GetInstance()->position;
             empty_base_location += vec2(GRID_CELL_WIDTH_PX, GRID_CELL_HEIGHT_PX);
-            
-            if (!bunny.on_base) {
-                bunny.on_base = true;
-                registry.base.get(base).bunny_count += 1;
-                bunny_motion.position = bunny_position -= CameraSystem::GetInstance()->position;
-                registry.backgroundObjects.emplace(entity);
-            }
 
             if (round(bunny_position) != round(empty_base_location)) {
                 vec2 direction = empty_base_location - bunny_position;
 
                 // unit vector for direction
                 float length = sqrt(direction.x * direction.x + direction.y * direction.y);
-                direction.x /= length;
-                direction.y /= length;
+                if (length > 0) {
+                    direction.x /= length;
+                    direction.y /= length;
+                }
 
                 bunny_motion.velocity = direction * 100.f;
             } else {
                 std::cout << "bunny docked on ship" << std::endl;
                 bunny.on_ship = false;
+                bunny.on_base = true;
+                registry.base.get(base).bunny_count += 1;
                 bunny_motion.position = empty_base_location;
                 bunny_motion.velocity = {0, 0};
+                registry.backgroundObjects.emplace(entity);
+                bunny_motion.position = empty_base_location - CameraSystem::GetInstance()->position;
                 std::cout << "bunny: " << bunny_position.x << ", " << bunny_position.y << std::endl;
 
             }
