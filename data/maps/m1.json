@@ -1197,9 +1197,9 @@
                  "properties":[
                         {
                          "name":"enemy_type_enum",
-                         "propertytype":"enemy_type",
-                         "type":"string",
-                         "value":"flyer"
+                         "propertytype":"enemy_type_enum",
+                         "type":"int",
+                         "value":1
                         }, 
                         {
                          "name":"home_island",
@@ -1221,9 +1221,9 @@
                  "properties":[
                         {
                          "name":"enemy_type_enum",
-                         "propertytype":"enemy_type",
-                         "type":"string",
-                         "value":"flyer"
+                         "propertytype":"enemy_type_enum",
+                         "type":"int",
+                         "value":1
                         }, 
                         {
                          "name":"home_island",
@@ -1245,9 +1245,9 @@
                  "properties":[
                         {
                          "name":"enemy_type_enum",
-                         "propertytype":"enemy_type",
-                         "type":"string",
-                         "value":"basic_gunner"
+                         "propertytype":"enemy_type_enum",
+                         "type":"int",
+                         "value":0
                         }, 
                         {
                          "name":"home_island",
@@ -1269,9 +1269,9 @@
                  "properties":[
                         {
                          "name":"enemy_type_enum",
-                         "propertytype":"enemy_type",
-                         "type":"string",
-                         "value":"basic_gunner"
+                         "propertytype":"enemy_type_enum",
+                         "type":"int",
+                         "value":0
                         }, 
                         {
                          "name":"home_island",
@@ -1293,9 +1293,9 @@
                  "properties":[
                         {
                          "name":"enemy_type_enum",
-                         "propertytype":"enemy_type",
-                         "type":"string",
-                         "value":"basic_gunner"
+                         "propertytype":"enemy_type_enum",
+                         "type":"int",
+                         "value":0
                         }, 
                         {
                          "name":"home_island",
@@ -1317,9 +1317,9 @@
                  "properties":[
                         {
                          "name":"enemy_type_enum",
-                         "propertytype":"enemy_type",
-                         "type":"string",
-                         "value":"flyer"
+                         "propertytype":"enemy_type_enum",
+                         "type":"int",
+                         "value":3
                         }, 
                         {
                          "name":"home_island",
@@ -1341,9 +1341,9 @@
                  "properties":[
                         {
                          "name":"enemy_type_enum",
-                         "propertytype":"enemy_type",
-                         "type":"string",
-                         "value":"flyer"
+                         "propertytype":"enemy_type_enum",
+                         "type":"int",
+                         "value":3
                         }, 
                         {
                          "name":"home_island",
@@ -1365,9 +1365,9 @@
                  "properties":[
                         {
                          "name":"enemy_type_enum",
-                         "propertytype":"enemy_type",
-                         "type":"string",
-                         "value":"flyer"
+                         "propertytype":"enemy_type_enum",
+                         "type":"int",
+                         "value":3
                         }, 
                         {
                          "name":"home_island",
@@ -1428,6 +1428,30 @@
                  "width":0,
                  "x":341.333,
                  "y":458
+                }, 
+                {
+                 "height":0,
+                 "id":89,
+                 "name":"",
+                 "point":true,
+                 "properties":[
+                        {
+                         "name":"enemy_type_enum",
+                         "propertytype":"enemy_type_enum",
+                         "type":"int",
+                         "value":2
+                        }, 
+                        {
+                         "name":"home_island",
+                         "type":"object",
+                         "value":6
+                        }],
+                 "rotation":0,
+                 "type":"enemy",
+                 "visible":true,
+                 "width":0,
+                 "x":736,
+                 "y":400
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -1436,7 +1460,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":89,
+ "nextobjectid":90,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.2",
