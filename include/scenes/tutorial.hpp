@@ -3,6 +3,7 @@
 #include <glm/ext/vector_float2.hpp>
 #include <string>
 #include "scenes/game_level.hpp"
+#include "tinyECS/components.hpp"
 #include "world_system.hpp"
 
 class TutorialLevel : public GameLevel {
@@ -17,6 +18,6 @@ private:
     void LevelUpdate(float dt) override;
 
 public:
-    TutorialLevel(WorldSystem* worldsystem, std::string map_path);
+    TutorialLevel(WorldSystem* worldsystem, std::string map_path, TEXTURE_ASSET_ID texture);
     ~TutorialLevel() override;
 }; 

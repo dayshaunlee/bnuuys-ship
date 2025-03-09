@@ -5,6 +5,7 @@
 #include "scenes/main_menu.hpp"
 #include "scenes/tutorial.hpp"
 #include "scenes/ui_editor.hpp"
+#include "tinyECS/components.hpp"
 #define GL3W_IMPLEMENTATION
 #include <gl3w.h>
 
@@ -50,8 +51,8 @@ int main() {
     SceneManager& scene_manager = SceneManager::getInstance();
 
     Scene* mm = new MainMenuScene();
-    Scene* l1 = new Level01(&world_system, "m1.json");
-    Scene* tutorial = new TutorialLevel(&world_system, "m1.json");
+    Scene* l1 = new Level01(&world_system, "m1.json", TEXTURE_ASSET_ID::ISLAND_BACKGROUND);
+    Scene* tutorial = new TutorialLevel(&world_system, "m1.json", TEXTURE_ASSET_ID::ISLAND_BACKGROUND);
     Scene* ui_editor = new EditorUI();
     Scene* death = new DeathScene();
 
@@ -80,9 +81,6 @@ int main() {
             msCounter = 0;
             frameCounter = 0;
         }
-
-
-
         // std::cout << "FPS: " << world_system.fpsCounter << std::endl;
 
         scene_manager.checkSceneSwitch();

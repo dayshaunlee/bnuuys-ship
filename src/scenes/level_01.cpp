@@ -2,13 +2,15 @@
 #include <glm/ext/vector_float2.hpp>
 #include <string>
 #include "scenes/game_level.hpp"
+#include "tinyECS/components.hpp"
 #include "world_init.hpp"
 #include "world_system.hpp"
 
-Level01::Level01(WorldSystem* world_system, std::string map_filename) : GameLevel(world_system) {
+Level01::Level01(WorldSystem* world_system, std::string map_filename, TEXTURE_ASSET_ID texture) : GameLevel(world_system) {
     this->name = "Level 1";
-    this->level_path = map_filename;
+    this->level_path = map_filename; 
     this->bunnies_to_win = 0;
+    this->texture = texture;
 }
 
 Level01::~Level01() {}

@@ -332,7 +332,7 @@ void initializeShipModules(Ship& ship) {
     ship.ship_modules_entity = tmp_entities;
 }
 
-Entity createIslandBackground(int width, int height, int offset_x, int offset_y) {
+Entity createIslandBackground(int width, int height, int offset_x, int offset_y, TEXTURE_ASSET_ID island_texture) {
     // create the island background entity
     Entity islandbg = Entity();
     registry.backgroundObjects.emplace(islandbg);
@@ -346,7 +346,7 @@ Entity createIslandBackground(int width, int height, int offset_x, int offset_y)
     islMotion.scale.y = height;
 
     registry.renderRequests.insert(
-        islandbg, {TEXTURE_ASSET_ID::ISLAND_BACKGROUND, EFFECT_ASSET_ID::TEXTURED, GEOMETRY_BUFFER_ID::SPRITE});
+        islandbg, {island_texture, EFFECT_ASSET_ID::TEXTURED, GEOMETRY_BUFFER_ID::SPRITE});
     return islandbg;
 }
 

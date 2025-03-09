@@ -7,6 +7,7 @@
 #include "modules_system.hpp"
 #include "physics_system.hpp"
 #include "sceneManager/scene.hpp"
+#include "tinyECS/components.hpp"
 #include "world_system.hpp"
 
 // This class describes a parent class for Gameplay Levels.
@@ -21,6 +22,7 @@ protected:
     void InitializeUI();
     std::string level_path; // TODO: Make a mapping for level_path and the background.
     // amount of bunnies player has to save to win
+    TEXTURE_ASSET_ID texture;
     int bunnies_to_win = 0;
     
     virtual void LevelInit() = 0;

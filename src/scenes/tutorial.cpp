@@ -11,9 +11,10 @@
 #include "world_init.hpp"
 #include "world_system.hpp"
 
-TutorialLevel::TutorialLevel(WorldSystem* world_system, std::string map_filename) : GameLevel(world_system) {
+TutorialLevel::TutorialLevel(WorldSystem* world_system, std::string map_filename, TEXTURE_ASSET_ID texture) : GameLevel(world_system) {
     this->name = "Tutorial Level";
     this->level_path = map_filename;
+    this->texture = texture;
 }
 
 TutorialLevel::~TutorialLevel() {}
