@@ -74,6 +74,7 @@ class WorldSystem {
     Mix_Chunk* projectile_jail_collision;
     Mix_Chunk* projectile_enemy_collision;
     Mix_Chunk* projectile_shoot;
+    Mix_Chunk* game_over;
 
     // C++ random number generator
     std::default_random_engine rng;

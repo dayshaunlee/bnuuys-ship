@@ -33,6 +33,7 @@ WorldSystem::~WorldSystem() {
     if (projectile_jail_collision != nullptr) Mix_FreeChunk(projectile_jail_collision);
     if (projectile_enemy_collision != nullptr) Mix_FreeChunk(projectile_enemy_collision);
     if (projectile_shoot != nullptr) Mix_FreeChunk(projectile_shoot);
+    if (game_over != nullptr) Mix_FreeChunk(game_over);
     Mix_CloseAudio();
 
     // Destroy all created components
@@ -133,6 +134,7 @@ bool WorldSystem::start_and_load_sounds() {
     projectile_jail_collision = Mix_LoadWAV(audio_path("projectile-jail_collision.wav").c_str());
     projectile_enemy_collision = Mix_LoadWAV(audio_path("projectile-enemy_collision.wav").c_str()); //Somehow just this one doesn't work
     projectile_shoot = Mix_LoadWAV(audio_path("projectile_shoot.wav").c_str());
+    game_over = Mix_LoadWAV(audio_path("game_over.wav").c_str());
 
     if (background_music == nullptr ||
         /*chicken_dead_sound == nullptr || chicken_eat_sound == nullptr || */ enemy_incoming == nullptr ||
@@ -149,6 +151,8 @@ bool WorldSystem::start_and_load_sounds() {
                 audio_path("ship-enemy_collision.wav").c_str(),
                 audio_path("projectile-enemy_collision.wav").c_str(),
                 audio_path("projectile_shoot.wav").c_str());
+                audio_path("projectile-jail_collision.wav").c_str();
+                audio_path("game_over.wav").c_str();
         return false;
     }
 
