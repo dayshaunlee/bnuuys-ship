@@ -44,15 +44,7 @@ inline std::string map_path(const std::string& name) {
 };
 
 // TODO: do this for all enemy stuff later
-//int enemyDamage(ENEMY_TYPE type) {
-//    switch (type) { 
-//    case ENEMY_TYPE::BASIC_GUNNER:
-//        return 10;
-//        break;
-//    default:
-//        return 10;
-//    }
-//}
+enum ENEMY_TYPE { BASIC_GUNNER = 0, FLYER = 1, TANK = 2, SHOOTER = 3 };
 
 //
 // game constants
@@ -75,8 +67,17 @@ const int MIDDLE_GRID_Y = 5;
 const int COL_COUNT = WINDOW_WIDTH_PX/GRID_CELL_WIDTH_PX;
 const int ROW_COUNT = WINDOW_HEIGHT_PX/GRID_CELL_HEIGHT_PX;
 
-const int ENEMY_BASE_HEALTH = 1;
+const int ENEMY_BASE_HEALTH = 10;
 const float ENEMY_BASE_SPEED = 50;
+
+const int ENEMY_FLYER_HEALTH = 15;
+const float ENEMY_FLYER_SPEED = 75;
+
+const int ENEMY_TANK_HEALTH = 30;
+const float ENEMY_TANK_SPEED = 25;
+
+const int ENEMY_SHOOTER_HEALTH = 5;
+const float ENEMY_SHOOTER_SPEED = 0;
 
 #ifndef M_PI
 #define M_PI 3.14159265358979323846f

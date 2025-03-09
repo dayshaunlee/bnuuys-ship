@@ -8,6 +8,42 @@
 #include "tinyECS/components.hpp"
 #include "tinyECS/entity.hpp"
 #include "tinyECS/registry.hpp"
+#include <random>
+
+ENEMY_TYPE getRandEnemyType() {
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<> distrib(0, 3);
+    return static_cast<ENEMY_TYPE>(distrib(gen));
+}
+
+int getEnemyHealth(ENEMY_TYPE type) {
+    switch (type) {
+        case BASIC_GUNNER:
+            return ENEMY_BASE_HEALTH;
+        case FLYER:
+            return ENEMY_FLYER_HEALTH;
+        case TANK:
+            return ENEMY_TANK_HEALTH;
+        case SHOOTER:
+            return ENEMY_SHOOTER_HEALTH;
+    }
+    return 0;
+}
+
+float getEnemySpeed(ENEMY_TYPE type) {
+    switch (type) {
+        case BASIC_GUNNER:
+            return ENEMY_BASE_SPEED;
+        case FLYER:
+            return ENEMY_FLYER_SPEED;
+        case TANK:
+            return ENEMY_TANK_SPEED;
+        case SHOOTER:
+            return ENEMY_SHOOTER_SPEED;
+    }
+    return 0;
+}
 
 Entity createPlayer(vec2 position) {
     Entity player;
@@ -105,8 +141,9 @@ Entity createEnemy(vec2 position) {
     registry.backgroundObjects.emplace(entity);
 
     Enemy& enemy = registry.enemies.emplace(entity);
-    enemy.health = ENEMY_BASE_HEALTH;
-    enemy.type = BASIC_GUNNER;
+    enemy.type = getRandEnemyType();
+    enemy.health = getEnemyHealth(enemy.type);
+    enemy.speed = getEnemySpeed(enemy.type);
     enemy.timer_ms = 0;
 
     Motion& motion = registry.motions.emplace(entity);
@@ -178,6 +215,23 @@ Entity createCannonProjectile(vec2 orig, vec2 dest) {
     proj.damage = SIMPLE_CANNON_DAMAGE;
     proj.alive_time_ms = PROJECTILE_LIFETIME;
 
+    return e;
+}
+
+// TODO: Change the stats and sprite
+Entity createEnemyProjectile(vec2 orig, vec2 dest) {
+    Entity e;
+    Motion& m = registry.motions.emplace(e);
+    m.position = orig;
+    m.scale = {GRID_CELL_WIDTH_PX / 2, GRID_CELL_HEIGHT_PX / 2};
+    m.angle = degrees(atan2(dest.y - dest.x, dest.x - orig.x));
+    vec2 velVec = dest - orig;
+    m.velocity = normalize(velVec) * 150.0f;
+    registry.renderRequests.insert(
+        e, {TEXTURE_ASSET_ID::BUNNY_FACE_ANGRY05, EFFECT_ASSET_ID::TEXTURED, GEOMETRY_BUFFER_ID::SPRITE});
+    Projectile& proj = registry.projectiles.emplace(e);
+    proj.damage = SIMPLE_CANNON_DAMAGE;
+    proj.alive_time_ms = PROJECTILE_LIFETIME;
     return e;
 }
 
