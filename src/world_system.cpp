@@ -217,6 +217,7 @@ void WorldSystem::handle_collisions() {
             bunny.jail_health -= projectile.damage;
 
             if (bunny.jail_health <= 0) {
+                registry.motions.get(e2).scale = {28, 28};
                 registry.renderRequests.get(e2).used_texture = TEXTURE_ASSET_ID::BUNNY_NPC_IDLE_UP0;
                 bunny.is_jailed = false;
             }
@@ -229,6 +230,7 @@ void WorldSystem::handle_collisions() {
             bunny.jail_health -= projectile.damage;
 
             if (bunny.jail_health <= 0) {
+                registry.motions.get(e1).scale = {28, 28};
                 registry.renderRequests.get(e1).used_texture = TEXTURE_ASSET_ID::BUNNY_NPC_IDLE_UP0;
                 bunny.is_jailed = false;
             }

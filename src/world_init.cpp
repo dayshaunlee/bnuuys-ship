@@ -99,17 +99,35 @@ Entity renderPlayer(Entity player) {
 Entity createEnemy(Entity entity) {
     Enemy& enemy = registry.enemies.get(entity);
     enemy.health = ENEMY_BASE_HEALTH;
-    enemy.type = BASIC_GUNNER;
     enemy.timer_ms = 0;
 
     Motion& motion = registry.motions.get(entity);
     motion.angle = 0.f;
     motion.velocity = {0.f, 0.f};
-    // motion.position = position;
-    motion.scale = {112, 56};
 
-    registry.renderRequests.insert(entity,
-                                   {TEXTURE_ASSET_ID::CHICKEN_BOAT0, EFFECT_ASSET_ID::TEXTURED, GEOMETRY_BUFFER_ID::SPRITE});
+    switch (enemy.type) {
+        case BASIC_GUNNER:
+            motion.scale = {112, 56};
+            registry.renderRequests.insert(entity,
+                {TEXTURE_ASSET_ID::CHICKEN_BOAT0, EFFECT_ASSET_ID::TEXTURED, GEOMETRY_BUFFER_ID::SPRITE});
+            break;
+        case FLYER:
+            motion.scale = {56, 112};
+            registry.renderRequests.insert(entity,
+                {TEXTURE_ASSET_ID::BALLOON0, EFFECT_ASSET_ID::TEXTURED, GEOMETRY_BUFFER_ID::SPRITE});
+            break;
+        case TANK:      // TODO!!
+            motion.scale = {56, 112};
+            registry.renderRequests.insert(entity,
+                {TEXTURE_ASSET_ID::BALLOON0, EFFECT_ASSET_ID::TEXTURED, GEOMETRY_BUFFER_ID::SPRITE});
+            break;
+        case SHOOTER:
+            motion.scale = {112, 56};
+            registry.renderRequests.insert(entity,
+                {TEXTURE_ASSET_ID::COW0, EFFECT_ASSET_ID::TEXTURED, GEOMETRY_BUFFER_ID::SPRITE});
+            break;
+    };
+
 
     std::cout << "Enemy id: " << entity.id() << std::endl;
     return entity;
