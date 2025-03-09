@@ -115,6 +115,9 @@ class RenderSystem {
         // Cursor UI
         textures_path("ui/cursor.png"),
 
+        // Raft
+        textures_path("raft.png"),
+
         // Simple Cannon
         textures_path("cannons/simple_cannon000.png"),
         textures_path("cannons/simple_cannon001.png"),
@@ -122,6 +125,11 @@ class RenderSystem {
         textures_path("cannons/simple_cannon003.png"),
         textures_path("cannons/simple_cannon004.png"),
         textures_path("cannons/simple_cannon005.png"),
+
+        // Projectiles
+        textures_path("effects/bullet0.png"),
+        textures_path("effects/bullet1.png"),
+        textures_path("effects/bullet2.png"),
 
         // NPC bunny (jailed)
         textures_path("bunny/jailed-bunny0.png"),
