@@ -8,6 +8,42 @@
 #include "tinyECS/components.hpp"
 #include "tinyECS/entity.hpp"
 #include "tinyECS/registry.hpp"
+#include <random>
+
+ENEMY_TYPE getRandEnemyType() {
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<> distrib(0, 3);
+    return static_cast<ENEMY_TYPE>(distrib(gen));
+}
+
+int getEnemyHealth(ENEMY_TYPE type) {
+    switch (type) {
+        case BASIC_GUNNER:
+            return ENEMY_BASE_HEALTH;
+        case FLYER:
+            return ENEMY_FLYER_HEALTH;
+        case TANK:
+            return ENEMY_TANK_HEALTH;
+        case SHOOTER:
+            return ENEMY_SHOOTER_HEALTH;
+    }
+    return 0;
+}
+
+float getEnemySpeed(ENEMY_TYPE type) {
+    switch (type) {
+        case BASIC_GUNNER:
+            return ENEMY_BASE_SPEED;
+        case FLYER:
+            return ENEMY_FLYER_SPEED;
+        case TANK:
+            return ENEMY_TANK_SPEED;
+        case SHOOTER:
+            return ENEMY_SHOOTER_SPEED;
+    }
+    return 0;
+}
 
 Entity createPlayer(vec2 position) {
     Entity player;
@@ -63,17 +99,35 @@ Entity renderPlayer(Entity player) {
 Entity createEnemy(Entity entity) {
     Enemy& enemy = registry.enemies.get(entity);
     enemy.health = ENEMY_BASE_HEALTH;
-    enemy.type = BASIC_GUNNER;
     enemy.timer_ms = 0;
 
     Motion& motion = registry.motions.get(entity);
     motion.angle = 0.f;
     motion.velocity = {0.f, 0.f};
-    // motion.position = position;
-    motion.scale = {56, 56};
 
-    registry.renderRequests.insert(entity,
-                                   {TEXTURE_ASSET_ID::ENEMY0, EFFECT_ASSET_ID::TEXTURED, GEOMETRY_BUFFER_ID::SPRITE});
+    switch (enemy.type) {
+        case BASIC_GUNNER:
+            motion.scale = {112, 56};
+            registry.renderRequests.insert(entity,
+                {TEXTURE_ASSET_ID::CHICKEN_BOAT0, EFFECT_ASSET_ID::TEXTURED, GEOMETRY_BUFFER_ID::SPRITE});
+            break;
+        case FLYER:
+            motion.scale = {56, 112};
+            registry.renderRequests.insert(entity,
+                {TEXTURE_ASSET_ID::BALLOON0, EFFECT_ASSET_ID::TEXTURED, GEOMETRY_BUFFER_ID::SPRITE});
+            break;
+        case TANK:      // TODO!!
+            motion.scale = {56, 112};
+            registry.renderRequests.insert(entity,
+                {TEXTURE_ASSET_ID::BALLOON0, EFFECT_ASSET_ID::TEXTURED, GEOMETRY_BUFFER_ID::SPRITE});
+            break;
+        case SHOOTER:
+            motion.scale = {112, 56};
+            registry.renderRequests.insert(entity,
+                {TEXTURE_ASSET_ID::COW0, EFFECT_ASSET_ID::TEXTURED, GEOMETRY_BUFFER_ID::SPRITE});
+            break;
+    };
+
 
     std::cout << "Enemy id: " << entity.id() << std::endl;
     return entity;
@@ -95,7 +149,7 @@ Entity createBunny(Entity entity) {
     motion.scale = {40, 40};
 
     registry.renderRequests.insert(
-        entity, {TEXTURE_ASSET_ID::BUNNY_JAILED, EFFECT_ASSET_ID::TEXTURED, GEOMETRY_BUFFER_ID::SPRITE});
+        entity, {TEXTURE_ASSET_ID::BUNNY_NPC_JAILED0, EFFECT_ASSET_ID::TEXTURED, GEOMETRY_BUFFER_ID::SPRITE});
 
     return entity;
 }
@@ -105,18 +159,19 @@ Entity createEnemy(vec2 position) {
     registry.backgroundObjects.emplace(entity);
 
     Enemy& enemy = registry.enemies.emplace(entity);
-    enemy.health = ENEMY_BASE_HEALTH;
-    enemy.type = BASIC_GUNNER;
+    enemy.type = getRandEnemyType();
+    enemy.health = getEnemyHealth(enemy.type);
+    enemy.speed = getEnemySpeed(enemy.type);
     enemy.timer_ms = 0;
 
     Motion& motion = registry.motions.emplace(entity);
     motion.angle = 0.f;
     motion.velocity = {0.f, 0.f};
     motion.position = position;
-    motion.scale = {56, 56};
+    motion.scale = {112, 56};
 
     registry.renderRequests.insert(entity,
-                                   {TEXTURE_ASSET_ID::ENEMY0, EFFECT_ASSET_ID::TEXTURED, GEOMETRY_BUFFER_ID::SPRITE});
+                                   {TEXTURE_ASSET_ID::CHICKEN_BOAT0, EFFECT_ASSET_ID::TEXTURED, GEOMETRY_BUFFER_ID::SPRITE});
 
     std::cout << "Enemy id: " << entity.id() << std::endl;
     return entity;
@@ -138,10 +193,10 @@ Entity createBunny(RenderSystem* renderer, vec2 position) {
     motion.angle = 0.f;
     motion.velocity = {0.f, 0.f};
     motion.position = position;
-    motion.scale = {40, 40};
+    motion.scale = {56, 56};
 
     registry.renderRequests.insert(
-        entity, {TEXTURE_ASSET_ID::BUNNY_JAILED, EFFECT_ASSET_ID::TEXTURED, GEOMETRY_BUFFER_ID::SPRITE});
+        entity, {TEXTURE_ASSET_ID::BUNNY_NPC_JAILED0, EFFECT_ASSET_ID::TEXTURED, GEOMETRY_BUFFER_ID::SPRITE});
 
     return entity;
 }
@@ -174,10 +229,27 @@ Entity createCannonProjectile(vec2 orig, vec2 dest) {
     registry.renderRequests.insert(
         e, {TEXTURE_ASSET_ID::BUNNY_FACE_ANGRY05, EFFECT_ASSET_ID::TEXTURED, GEOMETRY_BUFFER_ID::SPRITE});
 
-    Projectile& proj = registry.projectiles.emplace(e);
+    PlayerProjectile& proj = registry.playerProjectiles.emplace(e);
     proj.damage = SIMPLE_CANNON_DAMAGE;
     proj.alive_time_ms = PROJECTILE_LIFETIME;
 
+    return e;
+}
+
+// TODO: Change the stats and sprite
+Entity createEnemyProjectile(vec2 orig, vec2 dest) {
+    Entity e;
+    Motion& m = registry.motions.emplace(e);
+    m.position = orig;
+    m.scale = {GRID_CELL_WIDTH_PX / 2, GRID_CELL_HEIGHT_PX / 2};
+    m.angle = degrees(atan2(dest.y - dest.x, dest.x - orig.x));
+    vec2 velVec = dest - orig;
+    m.velocity = normalize(velVec) * 150.0f;
+    registry.renderRequests.insert(
+        e, {TEXTURE_ASSET_ID::BUNNY_FACE_ANGRY05, EFFECT_ASSET_ID::TEXTURED, GEOMETRY_BUFFER_ID::SPRITE});
+    EnemyProjectile& proj = registry.enemyProjectiles.emplace(e);
+    proj.damage = SIMPLE_CANNON_DAMAGE;
+    proj.alive_time_ms = PROJECTILE_LIFETIME;
     return e;
 }
 
@@ -278,8 +350,11 @@ Entity createShip() {
     shipMotion.scale.x = GRID_CELL_WIDTH_PX * 3;  // the temporary grid height and width is 56
     shipMotion.scale.y = GRID_CELL_HEIGHT_PX * 3;
 
+    // registry.renderRequests.insert(
+    //     entity, {TEXTURE_ASSET_ID::TEXTURE_COUNT, EFFECT_ASSET_ID::EGG, GEOMETRY_BUFFER_ID::SHIP_SQUARE});
+
     registry.renderRequests.insert(
-        entity, {TEXTURE_ASSET_ID::TEXTURE_COUNT, EFFECT_ASSET_ID::EGG, GEOMETRY_BUFFER_ID::SHIP_SQUARE});
+        entity, {TEXTURE_ASSET_ID::RAFT, EFFECT_ASSET_ID::TEXTURED, GEOMETRY_BUFFER_ID::SPRITE});
 
     Ship& ship = registry.ships.emplace(entity);
     ship.health = 100.0f;

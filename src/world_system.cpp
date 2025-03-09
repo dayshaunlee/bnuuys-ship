@@ -187,8 +187,8 @@ void WorldSystem::handle_collisions() {
         }
 
         // Projectile - Enemy collision
-        if (registry.projectiles.has(e1) && registry.enemies.has(e2)) {
-            Projectile& projectile = registry.projectiles.get(e1);
+        if (registry.playerProjectiles.has(e1) && registry.enemies.has(e2)) {
+            PlayerProjectile& projectile = registry.playerProjectiles.get(e1);
             Enemy& enemy = registry.enemies.get(e2);
 
             enemy.health -= projectile.damage;
@@ -196,8 +196,8 @@ void WorldSystem::handle_collisions() {
             if (enemy.health <= 0) registry.remove_all_components_of(e2);
             registry.remove_all_components_of(e1);
 
-        } else if (registry.projectiles.has(e2) && registry.enemies.has(e1)) {
-            Projectile& projectile = registry.projectiles.get(e2);
+        } else if (registry.playerProjectiles.has(e2) && registry.enemies.has(e1)) {
+            PlayerProjectile& projectile = registry.playerProjectiles.get(e2);
             Enemy& enemy = registry.enemies.get(e1);
 
             enemy.health -= projectile.damage;
@@ -207,34 +207,49 @@ void WorldSystem::handle_collisions() {
         }
 
         // Projectile - Bunny collision
-        if (registry.projectiles.has(e1) && registry.bunnies.has(e2) && registry.bunnies.get(e2).is_jailed) {
-            Projectile& projectile = registry.projectiles.get(e1);
+        if (registry.playerProjectiles.has(e1) && registry.bunnies.has(e2) && registry.bunnies.get(e2).is_jailed) {
+            PlayerProjectile& projectile = registry.playerProjectiles.get(e1);
             Bunny& bunny = registry.bunnies.get(e2);
 
             bunny.jail_health -= projectile.damage;
 
             if (bunny.jail_health <= 0) {
-                registry.renderRequests.get(e2).used_texture = TEXTURE_ASSET_ID::BUNNY_NOT_JAILED;
+                registry.motions.get(e2).scale = {28, 28};
+                registry.renderRequests.get(e2).used_texture = TEXTURE_ASSET_ID::BUNNY_NPC_IDLE_UP0;
                 bunny.is_jailed = false;
             }
             registry.remove_all_components_of(e1);
 
-        } else if (registry.projectiles.has(e2) && registry.bunnies.has(e1) && registry.bunnies.get(e1).is_jailed) {
-            Projectile& projectile = registry.projectiles.get(e2);
+        } else if (registry.playerProjectiles.has(e2) && registry.bunnies.has(e1) && registry.bunnies.get(e1).is_jailed) {
+            PlayerProjectile& projectile = registry.playerProjectiles.get(e2);
             Bunny& bunny = registry.bunnies.get(e1);
 
             bunny.jail_health -= projectile.damage;
 
             if (bunny.jail_health <= 0) {
-                registry.renderRequests.get(e1).used_texture = TEXTURE_ASSET_ID::BUNNY_NOT_JAILED;
+                registry.motions.get(e1).scale = {28, 28};
+                registry.renderRequests.get(e1).used_texture = TEXTURE_ASSET_ID::BUNNY_NPC_IDLE_UP0;
                 bunny.is_jailed = false;
             }
             registry.remove_all_components_of(e2);
         }
 
+        // Projectile - Ship collision
+        if (registry.enemyProjectiles.has(e1) && registry.ships.has(e2)) {
+            EnemyProjectile& projectile = registry.enemyProjectiles.get(e1);
+            Ship& ship = registry.ships.get(e2);
+            ship.health -= projectile.damage;
+            registry.remove_all_components_of(e1);
+        } else if (registry.enemyProjectiles.has(e2) && registry.ships.has(e1)) {
+            EnemyProjectile& projectile = registry.enemyProjectiles.get(e2);
+            Ship& ship = registry.ships.get(e1);
+            ship.health -= projectile.damage;
+            registry.remove_all_components_of(e2);
+        }
+
         // Enemy - Ship collision
         if (registry.enemies.has(e1) && registry.ships.has(e2)) {
-            registry.ships.get(e2).health -= 50.0f;
+            registry.ships.get(e2).health -= registry.enemies.get(e1).health;
             registry.remove_all_components_of(e1);
 
             // When Player dies (ship health is <= 0)
@@ -244,7 +259,7 @@ void WorldSystem::handle_collisions() {
             }
             continue;
         } else if (registry.enemies.has(e2) && registry.ships.has(e1)) {
-            registry.ships.get(e1).health -= 50.0f;
+            registry.ships.get(e1).health -= registry.enemies.get(e2).health;
             registry.remove_all_components_of(e2);
 
             // When Player dies (ship health is <= 0)
