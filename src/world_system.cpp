@@ -134,6 +134,8 @@ bool WorldSystem::start_and_load_sounds() {
     projectile_jail_collision = Mix_LoadWAV(audio_path("projectile-jail_collision.wav").c_str());
     game_over = Mix_LoadWAV(audio_path("game_over.wav").c_str());
 
+    Mix_Volume(-1, 10);
+
     if (background_music == nullptr || enemy_incoming == nullptr ||
         island_ship_collision == nullptr || enemy_ship_collision == nullptr || projectile_enemy_collision == nullptr) {
         fprintf(stderr,
@@ -158,6 +160,7 @@ void WorldSystem::init(RenderSystem* renderer_arg) {
     // start playing background music indefinitely
     std::cout << "Starting music..." << std::endl;
     Mix_PlayMusic(background_music, -1);
+    Mix_VolumeMusic(10);
 
     // Set all states to default
     restart_game();
