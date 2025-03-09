@@ -93,6 +93,9 @@ void TutorialLevel::LevelUpdate(float dt) {
 
     if (registry.bunnies.components[0].on_base) {
         // Skip tutorial.
-        SceneManager::getInstance().switchScene("Level 1");
+        SceneManager& sceneManager = SceneManager::getInstance();
+        sceneManager.setNextLevelScence("Level 1");
+        std::cout << "Switching to next level scene.." << std::endl;
+        sceneManager.switchScene("Next Level Scene");
     }
 }
