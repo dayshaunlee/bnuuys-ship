@@ -18,3 +18,10 @@ https://github.students.cs.ubc.ca/CPSC427-2024W-T2/team-05/blob/9ad7381f245cf55e
 
 We implemented precise collisions to allow for convex and non-convex shapes.
 https://github.students.cs.ubc.ca/CPSC427-2024W-T2/team-05/blob/9ad7381f245cf55efcf3ac0fa5efaa7e5fb74613/src/physics_system.cpp#L19-L92
+
+# M2
+
+### Advanced Decision-making
+
+We implemented A* searching algorithm to the enemies for the creative component. The enemies will find the shorest path from their current location to the ship's location, while avoiding island collisions.
+https://github.students.cs.ubc.ca/CPSC427-2024W-T2/team-05/blob/77722e7b2ae66384a6abcae13dd449b4db39f287/src/ai_system.cpp#L33-L193
