@@ -79,9 +79,9 @@ GLFWwindow* WorldSystem::create_window() {
     glfwWindowHint(GLFW_SCALE_TO_MONITOR, GL_FALSE);  // GLFW 3.3+
 
     // Create the main window (for rendering, keyboard, and mouse input)
-    std::string fullTitle = "Bnuuy's Ship      FPS: " + std::to_string(fpsCounter);    
+    std::string title = "Bnuuy's Ship      FPS: " + std::to_string(fpsCounter);
 
-    window = glfwCreateWindow(WINDOW_WIDTH_PX, WINDOW_HEIGHT_PX, fullTitle.c_str(), nullptr, nullptr);
+    window = glfwCreateWindow(WINDOW_WIDTH_PX, WINDOW_HEIGHT_PX, title.c_str(), nullptr, nullptr);
     if (window == nullptr) {
         std::cerr << "ERROR: Failed to glfwCreateWindow in world_system.cpp" << std::endl;
         return nullptr;
@@ -152,6 +152,8 @@ void WorldSystem::init(RenderSystem* renderer_arg) {
 
 // Update our game world
 bool WorldSystem::step(float elapsed_ms_since_last_update) {
+    std::string title = "Bnuuy's Ship      FPS: " + std::to_string(fpsCounter) + "        " + title_points;
+    glfwSetWindowTitle(window, title.c_str());
     assert(registry.screenStates.components.size() <= 1);
     ScreenState& screen = registry.screenStates.components[0];
     return true;
@@ -288,8 +290,8 @@ bool WorldSystem::is_over() const {
     return bool(glfwWindowShouldClose(window));
 }
 
-void WorldSystem::change_title(std::string title) {
-    glfwSetWindowTitle(window, title.c_str());
+void WorldSystem::add_to_title(std::string new_title_text) {
+    title_points = new_title_text;
 }
 
 int WorldSystem::getFPScounter() {
