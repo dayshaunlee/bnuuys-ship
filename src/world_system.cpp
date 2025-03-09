@@ -267,6 +267,15 @@ void WorldSystem::handle_collisions() {
             collisions_to_remove.push_back(e2);
             CameraSystem::GetInstance()->setToPreviousPosition();
         }
+
+        // Ship - Base collision
+        if ((registry.ships.has(e1) && registry.base.has(e2)) ||
+            (registry.ships.has(e2) && registry.base.has(e1))) {
+            collisions_to_remove.push_back(e1);
+            collisions_to_remove.push_back(e2);
+            // just print debug stuff rn, behaviour is handled in different system
+            //std::cout << "island over base" << std::endl;            
+        }
     }
 
     for (Entity entity : collisions_to_remove) {
@@ -284,8 +293,11 @@ bool WorldSystem::is_over() const {
     return bool(glfwWindowShouldClose(window));
 }
 
+void WorldSystem::change_title(std::string title) {
+    glfwSetWindowTitle(window, title.c_str());
+}
+
 void WorldSystem::handle_player_death(){
-    
     SceneManager& sceneManager = SceneManager::getInstance();
     std::cout << "Switching to player death scene..." << std::endl;
     std::string currentSceneName = sceneManager.getCurrentScene()->getName();

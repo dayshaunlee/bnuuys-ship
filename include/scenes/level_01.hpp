@@ -16,6 +16,8 @@ private:
     void LevelHandleMouseClick(int button, int action, int mods) override;
     void LevelUpdate(float dt) override;
 
+    // amount of bunnies player has to save to win
+    int bunnies_to_win;
 public:
     Level01(WorldSystem* worldsystem, std::string map_path);
     ~Level01() override;

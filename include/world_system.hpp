@@ -49,6 +49,9 @@ class WorldSystem {
     // should the game be over ?
     bool is_over() const;
 
+    // change title
+    void change_title(std::string title);
+
    private:
     float mouse_pos_x = 0.0f;
     float mouse_pos_y = 0.0f;

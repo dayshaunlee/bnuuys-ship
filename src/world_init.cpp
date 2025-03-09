@@ -79,19 +79,19 @@ Entity createEnemy(Entity entity) {
     return entity;
 }
 
-Entity createBunny(vec2 position) {
-    auto entity = Entity();
+Entity createBunny(Entity entity) {
     registry.backgroundObjects.emplace(entity);
 
-    Bunny& bunny = registry.bunnies.emplace(entity);
+    Bunny& bunny = registry.bunnies.get(entity);
     bunny.on_island = true;
     bunny.is_jailed = true;
     bunny.on_ship = false;
+    bunny.on_base = false;
+    bunny.moving_to_base = false;
 
-    Motion& motion = registry.motions.emplace(entity);
+    Motion& motion = registry.motions.get(entity);
     motion.angle = 0.f;
     motion.velocity = {0.f, 0.f};
-    motion.position = position;
     motion.scale = {40, 40};
 
     registry.renderRequests.insert(
