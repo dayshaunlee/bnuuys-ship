@@ -15,6 +15,13 @@ void SceneManager::switchScene(const std::string& name) {
     }
 }
 
+void SceneManager::restartScene(){
+    if(scenes.find(prevSceneName) != scenes.end()){
+        nextScene = scenes[prevSceneName];
+    }
+}
+
+
 Scene* SceneManager::getCurrentScene() {
     return currScene;
 }
@@ -32,3 +39,12 @@ void SceneManager::checkSceneSwitch() {
         nextScene = nullptr;
     }
 }
+
+
+void SceneManager::setRestartScence(const std::string& restartName){
+    if(scenes.find(restartName) != scenes.end()){
+        prevSceneName = restartName;
+    }
+}
+
+

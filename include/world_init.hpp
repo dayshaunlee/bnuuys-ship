@@ -22,12 +22,12 @@ Entity createCamera();
 Entity createGridLine(vec2 start_pos, vec2 end_pos);
 
 // Enemy
-Entity createEnemy(RenderSystem* renderer, vec2 position);
+Entity createEnemy(vec2 position);
 Entity createEnemy(Entity entity);
 
-//Bunny
+// Bunny
 Entity createBunny(RenderSystem* renderer, vec2 position);
 Entity createBunny(Entity bunny);
 
-// Obstacle for enemy path finding testing
-Entity createObstacle(RenderSystem* renderer, vec2 position);
+// filled tile for enemy path 
+Entity createFilledTile(vec2 position, vec2 size);

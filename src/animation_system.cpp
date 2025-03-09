@@ -137,6 +137,10 @@ TEXTURE_ASSET_ID GetNextPlayerAnimation(TEXTURE_ASSET_ID currAnim, Player player
     return TEXTURE_ASSET_ID::BUNNY_IDLE_DOWN0;
 }
 
+/*
+*   M1 interpolation implementation.
+*   Very basic linear interpolation to switch player keyframes/textures for animation.
+*/
 void HandlePlayerAnimation(float elapsed_ms) {
     for (Entity player : registry.playerAnimations.entities) {
         Player player_comp = registry.players.get(player);
