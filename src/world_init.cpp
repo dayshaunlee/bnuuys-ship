@@ -45,6 +45,20 @@ float getEnemySpeed(ENEMY_TYPE type) {
     return 0;
 }
 
+int getEnemyRange(ENEMY_TYPE type) {
+    switch (type) {
+        case BASIC_GUNNER:
+            return ENEMY_BASE_RANGE;
+        case FLYER:
+            return ENEMY_FLYER_RANGE;
+        case TANK:
+            return ENEMY_TANK_RANGE;
+        case SHOOTER:
+            return ENEMY_SHOOTER_RANGE;
+    }
+    return 0;
+}
+
 #define SDL_MAIN_HANDLED
 #include <SDL.h>
 #include <SDL_mixer.h>
@@ -104,7 +118,8 @@ Entity renderPlayer(Entity player) {
 
 Entity createEnemy(Entity entity) {
     Enemy& enemy = registry.enemies.get(entity);
-    enemy.health = ENEMY_BASE_HEALTH;
+    enemy.health = getEnemyHealth(enemy.type);
+    enemy.range = getEnemyRange(enemy.type);
     enemy.timer_ms = 0;
 
     Motion& motion = registry.motions.get(entity);
@@ -256,12 +271,15 @@ Entity createEnemyProjectile(vec2 orig, vec2 dest) {
     m.scale = {GRID_CELL_WIDTH_PX / 2, GRID_CELL_HEIGHT_PX / 2};
     m.angle = degrees(atan2(dest.y - dest.x, dest.x - orig.x));
     vec2 velVec = dest - orig;
-    m.velocity = normalize(velVec) * 150.0f;
+    m.velocity = normalize(velVec) * 50.0f;
+
     registry.renderRequests.insert(
         e, {TEXTURE_ASSET_ID::BUNNY_FACE_ANGRY05, EFFECT_ASSET_ID::TEXTURED, GEOMETRY_BUFFER_ID::SPRITE});
-    EnemyProjectile& proj = registry.enemyProjectiles.emplace(e);
+    
+        EnemyProjectile& proj = registry.enemyProjectiles.emplace(e);
     proj.damage = SIMPLE_CANNON_DAMAGE;
     proj.alive_time_ms = PROJECTILE_LIFETIME;
+
     return e;
 }
 
@@ -369,7 +387,7 @@ Entity createShip() {
         entity, {TEXTURE_ASSET_ID::RAFT, EFFECT_ASSET_ID::TEXTURED, GEOMETRY_BUFFER_ID::SPRITE});
 
     Ship& ship = registry.ships.emplace(entity);
-    ship.health = 100.0f;
+    ship.health = SHIP_BASE_HEALTH;
 
     initializeShipModules(ship);
     return entity;

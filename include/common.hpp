@@ -62,21 +62,26 @@ const int GRID_LINE_WIDTH_PX = 2;
 const int MIDDLE_GRID_X = 7;
 const int MIDDLE_GRID_Y = 5;
 
-
 const int COL_COUNT = WINDOW_WIDTH_PX/GRID_CELL_WIDTH_PX;
 const int ROW_COUNT = WINDOW_HEIGHT_PX/GRID_CELL_HEIGHT_PX;
 
-const int ENEMY_BASE_HEALTH = 10;
+const float SHIP_BASE_HEALTH = 100.f;
+
+const int ENEMY_BASE_HEALTH = 20;
 const float ENEMY_BASE_SPEED = 50;
+const float ENEMY_BASE_RANGE = 20;
 
 const int ENEMY_FLYER_HEALTH = 15;
 const float ENEMY_FLYER_SPEED = 75;
+const float ENEMY_FLYER_RANGE = 30;
 
 const int ENEMY_TANK_HEALTH = 30;
 const float ENEMY_TANK_SPEED = 25;
+const float ENEMY_TANK_RANGE = 10;
 
-const int ENEMY_SHOOTER_HEALTH = 5;
+const int ENEMY_SHOOTER_HEALTH = 25;
 const float ENEMY_SHOOTER_SPEED = 0;
+const float ENEMY_SHOOTER_RANGE = 5;
 
 #ifndef M_PI
 #define M_PI 3.14159265358979323846f

@@ -5,6 +5,11 @@
 #include "tinyECS/tiny_ecs.hpp"
 #include "render_system.hpp"
 
+// Enemy helpers
+int getEnemyHealth(ENEMY_TYPE type);
+float getEnemySpeed(ENEMY_TYPE type);
+int getEnemyRange(ENEMY_TYPE type);
+
 // Player
 Entity createPlayer(RenderSystem* renderer, vec2 position);
 Entity createPlayer(vec2 position);
@@ -15,9 +20,7 @@ Entity createSteeringWheel(vec2 tile_pos);
 Entity createCannon(vec2 tile_pos);
 
 Entity createWaterBackground();
-
 Entity createIslandBackground(int width, int height, int offset_x, int offset_y, TEXTURE_ASSET_ID texture);
-
 
 Entity createShip();
 Entity createCamera();

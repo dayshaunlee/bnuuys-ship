@@ -315,10 +315,47 @@ void PhysicsSystem::step(float elapsed_ms) {
                         direction.y /= length;
                     }
                     motion.velocity = direction * (float) ENEMY_BASE_SPEED;
+
+                    if (motion.velocity.x < 0) {
+                        vec2 flip = {-1, 1};
+                        motion.scale *= flip;
+                    }
                 }
             } else {
                 // if no more walking path, remove entity from walkingPaths
                 registry.walkingPaths.remove(entity);
+            }
+        } else if (registry.enemies.has(entity)) {
+            Enemy& enemy = registry.enemies.get(entity);
+            vec2 enemy_position = motion.position + CameraSystem::GetInstance()->position;
+
+            Motion& ship_motion = registry.motions.get(registry.ships.entities[0]);
+            vec2& ship_position = ship_motion.position;
+
+            // TODO
+            if (enemy.type == ENEMY_TYPE::SHOOTER && enemy.timer_ms <= 0) {
+                // createEnemyProjectile(enemy_position, ship_position);
+                continue;
+            }
+
+            if (enemy_position != ship_position) {
+                vec2 direction = ship_position - enemy_position;
+
+                // unit vector for direction
+                float length = sqrt(direction.x * direction.x + direction.y * direction.y);
+
+                if (enemy.range * GRID_CELL_WIDTH_PX < length) continue ; // ship not detected
+                if (length > 0) {
+                    direction.x /= length;
+                    direction.y /= length;
+                }
+
+                motion.velocity = direction * getEnemySpeed(enemy.type);
+
+                if (motion.velocity.x < 0) {
+                    vec2 flip = {-1, 1};
+                    motion.scale *= flip;
+                }
             }
         }
     }

@@ -177,11 +177,29 @@ void HandleBunnyAnimation(float elapsed_ms) {
     Base& base = registry.base.components[0];
     for (Entity entity : registry.bunnies.entities) {
         Bunny& bunny = registry.bunnies.get(entity);
+        TEXTURE_ASSET_ID& texture = registry.renderRequests.get(entity).used_texture;
+        if (bunny.is_jailed) {
+            if (bunny.timer_ms <= 0) {
+                bunny.timer_ms = 1 * ANIMATION_TIME;
+                texture = TEXTURE_ASSET_ID::BUNNY_NPC_JAILED0;
+            } else if (bunny.timer_ms <= 0.5 * ANIMATION_TIME) {
+                texture = TEXTURE_ASSET_ID::BUNNY_NPC_JAILED1;
+            }
+        } else {
+            if (bunny.timer_ms <= 0) {
+                bunny.timer_ms = 2 * ANIMATION_TIME;
+                texture = TEXTURE_ASSET_ID::BUNNY_NPC_IDLE_UP0;
+            } else if (bunny.timer_ms <= 1 * ANIMATION_TIME) {
+                texture = TEXTURE_ASSET_ID::BUNNY_NPC_IDLE_UP1;
+            }
+        }
+        bunny.timer_ms -= elapsed_ms;
+
         // Bunny saving animation.
         Motion& bunny_motion = registry.motions.get(entity);
         
         // bunny -> ship
-        if (!bunny.is_jailed && !bunny.on_ship && !bunny.on_base) {
+        if (!bunny.is_jailed && !bunny.on_ship && !bunny.on_base && !bunny.moving_to_base) {
             vec2 bunny_position = bunny_motion.position + CameraSystem::GetInstance()->position;
             vec2 empty_ship_location = {364, 252};  // save bunny to top right ship tile
             if (round(bunny_position) != empty_ship_location) {
@@ -243,8 +261,47 @@ void HandleBunnyAnimation(float elapsed_ms) {
     }
 }
 
+void HandleEnemyAnimation(float elapsed_ms) {
+    for (Entity entity : registry.enemies.entities) {
+        Enemy& enemy = registry.enemies.get(entity);
+        TEXTURE_ASSET_ID& texture = registry.renderRequests.get(entity).used_texture;
+        if (enemy.type == ENEMY_TYPE::BASIC_GUNNER) {
+            if (enemy.timer_ms <= 0) {
+                enemy.timer_ms = 1 * ANIMATION_TIME;
+                texture = TEXTURE_ASSET_ID::CHICKEN_BOAT0;
+            } else if (enemy.timer_ms <= 0.5 * ANIMATION_TIME) {
+                texture = TEXTURE_ASSET_ID::CHICKEN_BOAT1;
+            }
+        } else if (enemy.type == ENEMY_TYPE::FLYER) {
+            if (enemy.timer_ms <= 0) {
+                enemy.timer_ms = 1 * ANIMATION_TIME;
+                texture = TEXTURE_ASSET_ID::BALLOON0;
+            } else if (enemy.timer_ms <= 0.5 * ANIMATION_TIME) {
+                texture = TEXTURE_ASSET_ID::BALLOON1;
+            }
+        } else if (enemy.type == ENEMY_TYPE::TANK) {    // TODO: find new tank sprites
+            if (enemy.timer_ms <= 0) {
+                enemy.timer_ms = 1 * ANIMATION_TIME;
+                texture = TEXTURE_ASSET_ID::BALLOON0;
+            } else if (enemy.timer_ms <= 0.5 * ANIMATION_TIME) {
+                texture = TEXTURE_ASSET_ID::BALLOON1;
+            }
+        } else if (enemy.type == ENEMY_TYPE::SHOOTER) {
+            if (enemy.timer_ms <= 0) {
+                enemy.timer_ms = 1 * ANIMATION_TIME;
+                texture = TEXTURE_ASSET_ID::COW0;
+            } else if (enemy.timer_ms <= 0.5 * ANIMATION_TIME) {
+                texture = TEXTURE_ASSET_ID::COW1;
+            }
+        }
+
+        enemy.timer_ms -= elapsed_ms;
+    }
+}
+
 void AnimationSystem::step(float elapsed_ms) {
     // Move each entity that has motion.
     HandlePlayerAnimation(elapsed_ms);
     HandleBunnyAnimation(elapsed_ms);
+    HandleEnemyAnimation(elapsed_ms);
 }
