@@ -25,14 +25,12 @@ WorldSystem::WorldSystem() {
 WorldSystem::~WorldSystem() {
     // Destroy music components
     if (background_music != nullptr) Mix_FreeMusic(background_music);
-    /*if (chicken_dead_sound != nullptr) Mix_FreeChunk(chicken_dead_sound);
-    if (chicken_eat_sound != nullptr) Mix_FreeChunk(chicken_eat_sound);*/
     if (enemy_incoming != nullptr) Mix_FreeMusic(enemy_incoming);
     if (island_ship_collision != nullptr) Mix_FreeChunk(island_ship_collision);
     if (enemy_ship_collision != nullptr) Mix_FreeChunk(enemy_ship_collision);
+    //if (projectile_shoot != nullptr) Mix_FreeChunk(projectile_shoot);
     if (projectile_jail_collision != nullptr) Mix_FreeChunk(projectile_jail_collision);
     if (projectile_enemy_collision != nullptr) Mix_FreeChunk(projectile_enemy_collision);
-    if (projectile_shoot != nullptr) Mix_FreeChunk(projectile_shoot);
     if (game_over != nullptr) Mix_FreeChunk(game_over);
     Mix_CloseAudio();
 
@@ -115,6 +113,14 @@ GLFWwindow* WorldSystem::create_window() {
 bool WorldSystem::start_and_load_sounds() {
     //////////////////////////////////////
     // Loading music and sounds with SDL
+    background_music = Mix_LoadMUS(audio_path("music.wav").c_str());
+    enemy_incoming = Mix_LoadMUS(audio_path("enemy_incoming.wav").c_str());
+    island_ship_collision = Mix_LoadWAV(audio_path("island-ship_collision.wav").c_str());
+    enemy_ship_collision = Mix_LoadWAV(audio_path("ship-enemy_collision.wav").c_str());
+    projectile_enemy_collision = Mix_LoadWAV(audio_path("projectile-enemy_collision.wav").c_str());
+    projectile_jail_collision = Mix_LoadWAV(audio_path("projectile-jail_collision.wav").c_str());
+    game_over = Mix_LoadWAV(audio_path("game_over.wav").c_str());
+
     if (SDL_Init(SDL_INIT_AUDIO) < 0) {
         fprintf(stderr, "Failed to initialize SDL Audio");
         return false;
@@ -125,34 +131,18 @@ bool WorldSystem::start_and_load_sounds() {
         return false;
     }
 
-    background_music = Mix_LoadMUS(audio_path("music.wav").c_str());
-    /*chicken_dead_sound = Mix_LoadWAV(audio_path("chicken_dead.wav").c_str());
-    chicken_eat_sound = Mix_LoadWAV(audio_path("chicken_eat.wav").c_str());*/
-    enemy_incoming = Mix_LoadMUS(audio_path("enemy_incoming.wav").c_str());
-    island_ship_collision = Mix_LoadWAV(audio_path("island-ship_collision.wav").c_str());
-    enemy_ship_collision = Mix_LoadWAV(audio_path("ship-enemy_collision.wav").c_str());
-    projectile_jail_collision = Mix_LoadWAV(audio_path("projectile-jail_collision.wav").c_str());
-    projectile_enemy_collision = Mix_LoadWAV(audio_path("projectile-enemy_collision.wav").c_str()); //Somehow just this one doesn't work
-    projectile_shoot = Mix_LoadWAV(audio_path("projectile_shoot.wav").c_str());
-    game_over = Mix_LoadWAV(audio_path("game_over.wav").c_str());
-
-    if (background_music == nullptr ||
-        /*chicken_dead_sound == nullptr || chicken_eat_sound == nullptr || */ enemy_incoming == nullptr ||
-        island_ship_collision == nullptr || enemy_ship_collision == nullptr || projectile_enemy_collision == nullptr ||
-        projectile_shoot == nullptr) {
+    if (background_music == nullptr || enemy_incoming == nullptr ||
+        island_ship_collision == nullptr || enemy_ship_collision == nullptr || projectile_enemy_collision == nullptr) {
         fprintf(stderr,
                 "Failed to load sounds\n %s\n %s\n %s\n make sure the data "
                 "directory is present",
                 audio_path("music.wav").c_str(),
-                /*audio_path("chicken_dead.wav").c_str(),
-                audio_path("chicken_eat.wav").c_str(),*/
                 audio_path("enemy_incoming.wav").c_str(),
                 audio_path("island-ship_collision.wav").c_str(),
                 audio_path("ship-enemy_collision.wav").c_str(),
                 audio_path("projectile-enemy_collision.wav").c_str(),
-                audio_path("projectile_shoot.wav").c_str());
-                audio_path("projectile-jail_collision.wav").c_str();
-                audio_path("game_over.wav").c_str();
+                audio_path("projectile-jail_collision.wav").c_str(),
+                audio_path("game_over.wav").c_str());
         return false;
     }
 
@@ -164,7 +154,6 @@ void WorldSystem::init(RenderSystem* renderer_arg) {
 
     // start playing background music indefinitely
     std::cout << "Starting music..." << std::endl;
-    // TODO Brian: uncomment later
     Mix_PlayMusic(background_music, -1);
 
     // Set all states to default
@@ -265,6 +254,8 @@ void WorldSystem::handle_collisions() {
 
             if (bunny.jail_health <= 0) {
                 registry.renderRequests.get(e1).used_texture = TEXTURE_ASSET_ID::BUNNY_NOT_JAILED;
+                // Play sound
+                Mix_PlayChannel(-1, projectile_jail_collision, 0);
                 bunny.is_jailed = false;
             }
             registry.remove_all_components_of(e2);
@@ -339,7 +330,6 @@ void WorldSystem::on_mouse_button_pressed(int button, int action, int mods) {
     Scene* scene = SceneManager::getInstance().getCurrentScene();
     if (scene) {
         // Play sound
-        Mix_PlayChannel(-1, projectile_shoot, 0);
         scene->HandleMouseClick(button, action, mods);
     }
 }
