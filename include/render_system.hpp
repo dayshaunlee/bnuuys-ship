@@ -153,7 +153,7 @@ class RenderSystem {
         textures_path("background/game_over_bg.png"),
         
         // Tutorial Dialog Part 1.
-        textures_path("ui/tutorial_ui/MoveKey.jpg"),
+        textures_path("ui/tutorial_ui/movementKeyTutorial.png"),
     };
 
     std::array<GLuint, effect_count> effects;

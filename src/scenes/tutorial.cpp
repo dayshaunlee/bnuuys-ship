@@ -44,9 +44,9 @@ void TutorialLevel::LevelInit() {
         if (curr_tutorial_phase == WASD_KEYS) {
             e.texture = TEXTURE_ASSET_ID::TUTORIAL_WASD_UI;
         } else if (curr_tutorial_phase == SPACEBAR_KEY) {
-            e.texture = TEXTURE_ASSET_ID::ENEMY0;
+            e.texture = TEXTURE_ASSET_ID::COW0;
         } else if (curr_tutorial_phase == SAVE_BUNNIES) {
-            e.texture = TEXTURE_ASSET_ID::BUNNY_JAILED;
+            e.texture = TEXTURE_ASSET_ID::BUNNY_NPC_JAILED0;
         }
     });
     // Create a press spacebar
@@ -78,5 +78,9 @@ void TutorialLevel::LevelUpdate(float dt) {
         if (registry.players.components[0].player_state == PLAYERSTATE::STATIONING) {
             curr_tutorial_phase = SAVE_BUNNIES;
         }
+    }
+
+    if (curr_tutorial_phase == SAVE_BUNNIES) {
+        
     }
 }
