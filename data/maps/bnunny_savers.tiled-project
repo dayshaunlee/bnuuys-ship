@@ -56,9 +56,9 @@
             "members": [
                 {
                     "name": "enemy_type_enum",
-                    "propertyType": "enemy_type",
-                    "type": "string",
-                    "value": "basic_gunner"
+                    "propertyType": "enemy_type_enum",
+                    "type": "int",
+                    "value": 0
                 },
                 {
                     "name": "home_island",
@@ -82,12 +82,14 @@
         },
         {
             "id": 7,
-            "name": "enemy_type",
-            "storageType": "string",
+            "name": "enemy_type_enum",
+            "storageType": "int",
             "type": "enum",
             "values": [
                 "basic_gunner",
-                "flyer"
+                "flyer",
+                "tank",
+                "shooter"
             ],
             "valuesAsFlags": false
         },

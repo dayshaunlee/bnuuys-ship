@@ -159,7 +159,7 @@ Entity createEnemy(vec2 position) {
     registry.backgroundObjects.emplace(entity);
 
     Enemy& enemy = registry.enemies.emplace(entity);
-    enemy.type = getRandEnemyType();
+    //enemy.type = getRandEnemyType();
     enemy.health = getEnemyHealth(enemy.type);
     enemy.speed = getEnemySpeed(enemy.type);
     enemy.timer_ms = 0;

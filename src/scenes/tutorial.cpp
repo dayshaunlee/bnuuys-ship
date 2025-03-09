@@ -44,9 +44,9 @@ void TutorialLevel::LevelInit() {
         if (curr_tutorial_phase == WASD_KEYS) {
             e.texture = TEXTURE_ASSET_ID::TUTORIAL_WASD_UI;
         } else if (curr_tutorial_phase == SPACEBAR_KEY) {
-            e.texture = TEXTURE_ASSET_ID::ENEMY0;
+            e.texture = TEXTURE_ASSET_ID::COW0;
         } else if (curr_tutorial_phase == SAVE_BUNNIES) {
-            e.texture = TEXTURE_ASSET_ID::BUNNY_JAILED;
+            e.texture = TEXTURE_ASSET_ID::BUNNY_NPC_IDLE_UP0;
         }
     });
     // Create a press spacebar
