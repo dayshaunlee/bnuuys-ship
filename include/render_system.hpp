@@ -151,6 +151,9 @@ class RenderSystem {
 
         // Game over background
         textures_path("background/game_over_bg.png"),
+        
+        // Tutorial Dialog Part 1.
+        textures_path("ui/tutorial_ui/MoveKey.jpg"),
     };
 
     std::array<GLuint, effect_count> effects;

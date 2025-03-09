@@ -19,7 +19,7 @@ void MainMenuScene::Init() {
     auto bg = std::make_shared<bnuui::Box>(vec2(WINDOW_WIDTH_PX/2, WINDOW_HEIGHT_PX/2), vec2(WINDOW_WIDTH_PX*1.25f, WINDOW_HEIGHT_PX), 0.0f);
     bg->texture = TEXTURE_ASSET_ID::MAIN_MENU_BG;
     play_btn->setOnClick([](bnuui::Element& e) {
-        SceneManager::getInstance().switchScene("Level 1");
+        SceneManager::getInstance().switchScene("Tutorial Level");
     });
 
     scene_ui.insert(bg);

@@ -87,6 +87,7 @@ void GameLevel::Init() {
     InitializeUI();
 
     LevelInit();
+    registry.ships.components[0].available_modules[HELPER_BUNNY] = 1;
 }
 
 void GameLevel::InitializeUI() {
@@ -158,6 +159,34 @@ void GameLevel::InitializeUI() {
             e.children[0]->visible = false;
     });
 
+    auto helper_bunnies = std::make_shared<bnuui::Box>(vec2(420, 547.5f), vec2(40, 40), 0.0f);
+    auto helper_bunnies_selected = std::make_shared<bnuui::Cursor>(vec2(420, 547.5f), vec2(40, 40), 0.0f);
+    helper_bunnies_selected->visible = false;
+    helper_bunnies->children.push_back(helper_bunnies_selected);
+    helper_bunnies->texture = TEXTURE_ASSET_ID::BUNNY_JAILED;
+    helper_bunnies->setOnClick([](bnuui::Element& e) {
+        if (curr_selected == HELPER_BUNNY) {
+            curr_selected = EMPTY;
+        } else {
+            curr_selected = HELPER_BUNNY;
+        }
+    });
+    helper_bunnies->setOnUpdate([](bnuui::Element& e, float dt) {
+        Ship& ship = registry.ships.components[0];
+        if (ship.available_modules[HELPER_BUNNY] == 0) {
+            e.color = vec3(0.5f, 0, 0);
+        } else {
+            e.color = vec3(1, 1, 1);
+        }
+
+        if (curr_selected == HELPER_BUNNY)
+            e.children[0]->visible = true;
+        else
+            e.children[0]->visible = false;
+    });
+
+
+
     // Insert all the stuff.
     scene_ui.insert(player_box);
     scene_ui.insert(player_status);
@@ -167,6 +196,7 @@ void GameLevel::InitializeUI() {
     scene_ui.insert(inventory_slots);
     scene_ui.insert(steering_wheels);
     scene_ui.insert(cannons);
+    scene_ui.insert(helper_bunnies);
 }
 
 void GameLevel::Exit() {
@@ -521,7 +551,7 @@ void GameLevel::HandleMouseClick(int button, int action, int mods) {
             return;
         }
 
-        if (module == PLATFORM) {
+        if (module == PLATFORM && curr_selected != HELPER_BUNNY) {
             ship.ship_modules[tile_pos.y][tile_pos.x] = curr_selected;
             Entity e;
             switch (curr_selected) {
@@ -538,6 +568,19 @@ void GameLevel::HandleMouseClick(int button, int action, int mods) {
             }
             ship.ship_modules_entity[tile_pos.y][tile_pos.x] = e;
             ship.available_modules[curr_selected]--;
+        } else if (curr_selected == HELPER_BUNNY && module != EMPTY && module != PLATFORM) {
+            switch (module) {
+                case SIMPLE_CANNON: {
+                    SimpleCannon& sc = registry.simpleCannons.get(ship.ship_modules_entity[tile_pos.y][tile_pos.x]);
+                    if (!sc.is_automated) {
+                        sc.is_automated = true;
+                        ship.available_modules[curr_selected]--;
+                    }
+                }
+                default: {
+                    break;
+                }
+            }
         }
     }
 
@@ -545,10 +588,19 @@ void GameLevel::HandleMouseClick(int button, int action, int mods) {
     if (action == GLFW_PRESS && button == GLFW_MOUSE_BUTTON_2) {
         vec2 tile_pos = getMouseTilePosition();
         MODULE_TYPES module = getModuleType(tile_pos);
+        Ship& ship = registry.ships.components[0];
         switch (module) {
             case EMPTY:
             case PLATFORM:
                 return;
+            case SIMPLE_CANNON: {
+                SimpleCannon& sc = registry.simpleCannons.get(ship.ship_modules_entity[tile_pos.y][tile_pos.x]);
+                if (sc.is_automated) {
+                    ship.available_modules[HELPER_BUNNY]++;
+                    sc.is_automated = false;
+                }
+                break;
+            }
             default: {
                 Ship& ship = registry.ships.components[0];
                 ship.ship_modules[tile_pos.y][tile_pos.x] = PLATFORM;

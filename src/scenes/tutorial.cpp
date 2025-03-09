@@ -1,0 +1,82 @@
+#include "scenes/tutorial.hpp"
+#include <glm/ext/vector_float2.hpp>
+#include <memory>
+#include <string>
+#include "GLFW/glfw3.h"
+#include "bnuui/buttons.hpp"
+#include "common.hpp"
+#include "scenes/game_level.hpp"
+#include "tinyECS/components.hpp"
+#include "tinyECS/registry.hpp"
+#include "world_init.hpp"
+#include "world_system.hpp"
+
+TutorialLevel::TutorialLevel(WorldSystem* world_system, std::string map_filename) : GameLevel(world_system) {
+    this->name = "Tutorial Level";
+    this->level_path = map_filename;
+}
+
+TutorialLevel::~TutorialLevel() {}
+
+float x = 100.0f;
+
+enum TUTORIAL_PHASE {
+    WASD_KEYS,
+    SPACEBAR_KEY,
+    SAVE_BUNNIES,
+};
+
+vec2 tutorial_mouse_pos;
+TUTORIAL_PHASE curr_tutorial_phase = WASD_KEYS;
+
+void TutorialLevel::LevelInit() {
+    // Initialize Tutorial UI.
+    auto tutorial_talk = std::make_shared<bnuui::PlayerStatus>(
+        vec2(765, 540), vec2(-60, 60), 0.0f, x, 100);
+    auto player_box = std::make_shared<bnuui::Box>(vec2(765, 540), vec2(96, 96), 0.0f);
+    // Create the press tutorial dialog.
+    auto tutorial_dialog = std::make_shared<bnuui::Box>(
+        vec2(650, 425), vec2(150, 150), 0.0f
+    );
+    tutorial_dialog->texture = TEXTURE_ASSET_ID::TUTORIAL_WASD_UI;
+
+    tutorial_dialog->setOnUpdate([](bnuui::Element& e, float dt) {
+        if (curr_tutorial_phase == WASD_KEYS) {
+            e.texture = TEXTURE_ASSET_ID::TUTORIAL_WASD_UI;
+        } else if (curr_tutorial_phase == SPACEBAR_KEY) {
+            e.texture = TEXTURE_ASSET_ID::ENEMY0;
+        } else if (curr_tutorial_phase == SAVE_BUNNIES) {
+            e.texture = TEXTURE_ASSET_ID::BUNNY_JAILED;
+        }
+    });
+    // Create a press spacebar
+    scene_ui.insert(player_box);
+    scene_ui.insert(tutorial_talk);
+    scene_ui.insert(tutorial_dialog);
+}
+
+void TutorialLevel::LevelUpdate() {}
+
+// GameLevel should already handle clearing all components. So don't have to worry here.
+void TutorialLevel::LevelExit() {}
+
+void TutorialLevel::LevelHandleInput(int key, int action, int mod) {
+    if (curr_tutorial_phase == WASD_KEYS) {
+        if (action == GLFW_PRESS && 
+        (key == MOVE_UP_BUTTON || key == MOVE_DOWN_BUTTON || key == MOVE_LEFT_BUTTON || key == MOVE_RIGHT_BUTTON)) { 
+            curr_tutorial_phase = SPACEBAR_KEY;
+        }
+    }
+}
+
+void TutorialLevel::LevelHandleMouseMove(vec2 pos) {}
+
+void TutorialLevel::LevelHandleMouseClick(int button, int action, int mods) {}
+
+void TutorialLevel::LevelUpdate(float dt) {
+    if (curr_tutorial_phase == SPACEBAR_KEY) {
+        if (registry.players.components[0].player_state == PLAYERSTATE::STATIONING) {
+            curr_tutorial_phase = SAVE_BUNNIES;
+        }
+    }
+}
