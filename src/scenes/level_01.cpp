@@ -12,9 +12,7 @@ Level01::Level01(WorldSystem* world_system, std::string map_filename) : GameLeve
 
 Level01::~Level01() {}
 
-void Level01::LevelInit() {
-    createBunny(vec2(100, 200));
-}
+void Level01::LevelInit() {}
 
 void Level01::LevelUpdate() {}
 

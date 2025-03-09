@@ -1,0 +1,140 @@
+[
+{
+  "directory": "C:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/cmake-build-debug",
+  "command": "C:\\Users\\chinm\\AppData\\Local\\Programs\\CLion\\bin\\mingw\\bin\\g++.exe -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/include -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/src -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/ext/stb_image -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/ext/gl3w -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/ext/glfw/include -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/ext/sdl/include/SDL -isystem C:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/ext/glm -g -std=gnu++17 -fdiagnostics-color=always -o CMakeFiles\\bnuuy_ship.dir\\src\\ai_system.cpp.obj -c C:\\Users\\chinm\\source\\repos\\bnuuy_savers\\audio-feedback\\src\\ai_system.cpp",
+  "file": "C:\\Users\\chinm\\source\\repos\\bnuuy_savers\\audio-feedback\\src\\ai_system.cpp",
+  "output": "CMakeFiles\\bnuuy_ship.dir\\src\\ai_system.cpp.obj"
+},
+{
+  "directory": "C:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/cmake-build-debug",
+  "command": "C:\\Users\\chinm\\AppData\\Local\\Programs\\CLion\\bin\\mingw\\bin\\g++.exe -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/include -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/src -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/ext/stb_image -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/ext/gl3w -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/ext/glfw/include -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/ext/sdl/include/SDL -isystem C:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/ext/glm -g -std=gnu++17 -fdiagnostics-color=always -o CMakeFiles\\bnuuy_ship.dir\\src\\animation_system.cpp.obj -c C:\\Users\\chinm\\source\\repos\\bnuuy_savers\\audio-feedback\\src\\animation_system.cpp",
+  "file": "C:\\Users\\chinm\\source\\repos\\bnuuy_savers\\audio-feedback\\src\\animation_system.cpp",
+  "output": "CMakeFiles\\bnuuy_ship.dir\\src\\animation_system.cpp.obj"
+},
+{
+  "directory": "C:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/cmake-build-debug",
+  "command": "C:\\Users\\chinm\\AppData\\Local\\Programs\\CLion\\bin\\mingw\\bin\\g++.exe -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/include -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/src -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/ext/stb_image -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/ext/gl3w -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/ext/glfw/include -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/ext/sdl/include/SDL -isystem C:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/ext/glm -g -std=gnu++17 -fdiagnostics-color=always -o CMakeFiles\\bnuuy_ship.dir\\src\\bnuui\\bnuui.cpp.obj -c C:\\Users\\chinm\\source\\repos\\bnuuy_savers\\audio-feedback\\src\\bnuui\\bnuui.cpp",
+  "file": "C:\\Users\\chinm\\source\\repos\\bnuuy_savers\\audio-feedback\\src\\bnuui\\bnuui.cpp",
+  "output": "CMakeFiles\\bnuuy_ship.dir\\src\\bnuui\\bnuui.cpp.obj"
+},
+{
+  "directory": "C:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/cmake-build-debug",
+  "command": "C:\\Users\\chinm\\AppData\\Local\\Programs\\CLion\\bin\\mingw\\bin\\g++.exe -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/include -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/src -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/ext/stb_image -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/ext/gl3w -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/ext/glfw/include -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/ext/sdl/include/SDL -isystem C:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/ext/glm -g -std=gnu++17 -fdiagnostics-color=always -o CMakeFiles\\bnuuy_ship.dir\\src\\bnuui\\buttons.cpp.obj -c C:\\Users\\chinm\\source\\repos\\bnuuy_savers\\audio-feedback\\src\\bnuui\\buttons.cpp",
+  "file": "C:\\Users\\chinm\\source\\repos\\bnuuy_savers\\audio-feedback\\src\\bnuui\\buttons.cpp",
+  "output": "CMakeFiles\\bnuuy_ship.dir\\src\\bnuui\\buttons.cpp.obj"
+},
+{
+  "directory": "C:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/cmake-build-debug",
+  "command": "C:\\Users\\chinm\\AppData\\Local\\Programs\\CLion\\bin\\mingw\\bin\\g++.exe -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/include -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/src -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/ext/stb_image -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/ext/gl3w -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/ext/glfw/include -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/ext/sdl/include/SDL -isystem C:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/ext/glm -g -std=gnu++17 -fdiagnostics-color=always -o CMakeFiles\\bnuuy_ship.dir\\src\\camera_system.cpp.obj -c C:\\Users\\chinm\\source\\repos\\bnuuy_savers\\audio-feedback\\src\\camera_system.cpp",
+  "file": "C:\\Users\\chinm\\source\\repos\\bnuuy_savers\\audio-feedback\\src\\camera_system.cpp",
+  "output": "CMakeFiles\\bnuuy_ship.dir\\src\\camera_system.cpp.obj"
+},
+{
+  "directory": "C:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/cmake-build-debug",
+  "command": "C:\\Users\\chinm\\AppData\\Local\\Programs\\CLion\\bin\\mingw\\bin\\g++.exe -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/include -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/src -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/ext/stb_image -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/ext/gl3w -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/ext/glfw/include -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/ext/sdl/include/SDL -isystem C:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/ext/glm -g -std=gnu++17 -fdiagnostics-color=always -o CMakeFiles\\bnuuy_ship.dir\\src\\common.cpp.obj -c C:\\Users\\chinm\\source\\repos\\bnuuy_savers\\audio-feedback\\src\\common.cpp",
+  "file": "C:\\Users\\chinm\\source\\repos\\bnuuy_savers\\audio-feedback\\src\\common.cpp",
+  "output": "CMakeFiles\\bnuuy_ship.dir\\src\\common.cpp.obj"
+},
+{
+  "directory": "C:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/cmake-build-debug",
+  "command": "C:\\Users\\chinm\\AppData\\Local\\Programs\\CLion\\bin\\mingw\\bin\\g++.exe -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/include -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/src -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/ext/stb_image -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/ext/gl3w -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/ext/glfw/include -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/ext/sdl/include/SDL -isystem C:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/ext/glm -g -std=gnu++17 -fdiagnostics-color=always -o CMakeFiles\\bnuuy_ship.dir\\src\\main.cpp.obj -c C:\\Users\\chinm\\source\\repos\\bnuuy_savers\\audio-feedback\\src\\main.cpp",
+  "file": "C:\\Users\\chinm\\source\\repos\\bnuuy_savers\\audio-feedback\\src\\main.cpp",
+  "output": "CMakeFiles\\bnuuy_ship.dir\\src\\main.cpp.obj"
+},
+{
+  "directory": "C:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/cmake-build-debug",
+  "command": "C:\\Users\\chinm\\AppData\\Local\\Programs\\CLion\\bin\\mingw\\bin\\g++.exe -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/include -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/src -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/ext/stb_image -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/ext/gl3w -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/ext/glfw/include -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/ext/sdl/include/SDL -isystem C:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/ext/glm -g -std=gnu++17 -fdiagnostics-color=always -o CMakeFiles\\bnuuy_ship.dir\\src\\map_init.cpp.obj -c C:\\Users\\chinm\\source\\repos\\bnuuy_savers\\audio-feedback\\src\\map_init.cpp",
+  "file": "C:\\Users\\chinm\\source\\repos\\bnuuy_savers\\audio-feedback\\src\\map_init.cpp",
+  "output": "CMakeFiles\\bnuuy_ship.dir\\src\\map_init.cpp.obj"
+},
+{
+  "directory": "C:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/cmake-build-debug",
+  "command": "C:\\Users\\chinm\\AppData\\Local\\Programs\\CLion\\bin\\mingw\\bin\\g++.exe -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/include -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/src -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/ext/stb_image -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/ext/gl3w -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/ext/glfw/include -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/ext/sdl/include/SDL -isystem C:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/ext/glm -g -std=gnu++17 -fdiagnostics-color=always -o CMakeFiles\\bnuuy_ship.dir\\src\\modules_system.cpp.obj -c C:\\Users\\chinm\\source\\repos\\bnuuy_savers\\audio-feedback\\src\\modules_system.cpp",
+  "file": "C:\\Users\\chinm\\source\\repos\\bnuuy_savers\\audio-feedback\\src\\modules_system.cpp",
+  "output": "CMakeFiles\\bnuuy_ship.dir\\src\\modules_system.cpp.obj"
+},
+{
+  "directory": "C:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/cmake-build-debug",
+  "command": "C:\\Users\\chinm\\AppData\\Local\\Programs\\CLion\\bin\\mingw\\bin\\g++.exe -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/include -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/src -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/ext/stb_image -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/ext/gl3w -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/ext/glfw/include -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/ext/sdl/include/SDL -isystem C:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/ext/glm -g -std=gnu++17 -fdiagnostics-color=always -o CMakeFiles\\bnuuy_ship.dir\\src\\physics_system.cpp.obj -c C:\\Users\\chinm\\source\\repos\\bnuuy_savers\\audio-feedback\\src\\physics_system.cpp",
+  "file": "C:\\Users\\chinm\\source\\repos\\bnuuy_savers\\audio-feedback\\src\\physics_system.cpp",
+  "output": "CMakeFiles\\bnuuy_ship.dir\\src\\physics_system.cpp.obj"
+},
+{
+  "directory": "C:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/cmake-build-debug",
+  "command": "C:\\Users\\chinm\\AppData\\Local\\Programs\\CLion\\bin\\mingw\\bin\\g++.exe -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/include -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/src -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/ext/stb_image -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/ext/gl3w -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/ext/glfw/include -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/ext/sdl/include/SDL -isystem C:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/ext/glm -g -std=gnu++17 -fdiagnostics-color=always -o CMakeFiles\\bnuuy_ship.dir\\src\\render_system.cpp.obj -c C:\\Users\\chinm\\source\\repos\\bnuuy_savers\\audio-feedback\\src\\render_system.cpp",
+  "file": "C:\\Users\\chinm\\source\\repos\\bnuuy_savers\\audio-feedback\\src\\render_system.cpp",
+  "output": "CMakeFiles\\bnuuy_ship.dir\\src\\render_system.cpp.obj"
+},
+{
+  "directory": "C:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/cmake-build-debug",
+  "command": "C:\\Users\\chinm\\AppData\\Local\\Programs\\CLion\\bin\\mingw\\bin\\g++.exe -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/include -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/src -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/ext/stb_image -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/ext/gl3w -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/ext/glfw/include -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/ext/sdl/include/SDL -isystem C:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/ext/glm -g -std=gnu++17 -fdiagnostics-color=always -o CMakeFiles\\bnuuy_ship.dir\\src\\render_system_init.cpp.obj -c C:\\Users\\chinm\\source\\repos\\bnuuy_savers\\audio-feedback\\src\\render_system_init.cpp",
+  "file": "C:\\Users\\chinm\\source\\repos\\bnuuy_savers\\audio-feedback\\src\\render_system_init.cpp",
+  "output": "CMakeFiles\\bnuuy_ship.dir\\src\\render_system_init.cpp.obj"
+},
+{
+  "directory": "C:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/cmake-build-debug",
+  "command": "C:\\Users\\chinm\\AppData\\Local\\Programs\\CLion\\bin\\mingw\\bin\\g++.exe -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/include -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/src -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/ext/stb_image -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/ext/gl3w -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/ext/glfw/include -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/ext/sdl/include/SDL -isystem C:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/ext/glm -g -std=gnu++17 -fdiagnostics-color=always -o CMakeFiles\\bnuuy_ship.dir\\src\\sceneManager\\scene_manager.cpp.obj -c C:\\Users\\chinm\\source\\repos\\bnuuy_savers\\audio-feedback\\src\\sceneManager\\scene_manager.cpp",
+  "file": "C:\\Users\\chinm\\source\\repos\\bnuuy_savers\\audio-feedback\\src\\sceneManager\\scene_manager.cpp",
+  "output": "CMakeFiles\\bnuuy_ship.dir\\src\\sceneManager\\scene_manager.cpp.obj"
+},
+{
+  "directory": "C:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/cmake-build-debug",
+  "command": "C:\\Users\\chinm\\AppData\\Local\\Programs\\CLion\\bin\\mingw\\bin\\g++.exe -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/include -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/src -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/ext/stb_image -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/ext/gl3w -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/ext/glfw/include -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/ext/sdl/include/SDL -isystem C:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/ext/glm -g -std=gnu++17 -fdiagnostics-color=always -o CMakeFiles\\bnuuy_ship.dir\\src\\scenes\\death_scene.cpp.obj -c C:\\Users\\chinm\\source\\repos\\bnuuy_savers\\audio-feedback\\src\\scenes\\death_scene.cpp",
+  "file": "C:\\Users\\chinm\\source\\repos\\bnuuy_savers\\audio-feedback\\src\\scenes\\death_scene.cpp",
+  "output": "CMakeFiles\\bnuuy_ship.dir\\src\\scenes\\death_scene.cpp.obj"
+},
+{
+  "directory": "C:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/cmake-build-debug",
+  "command": "C:\\Users\\chinm\\AppData\\Local\\Programs\\CLion\\bin\\mingw\\bin\\g++.exe -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/include -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/src -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/ext/stb_image -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/ext/gl3w -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/ext/glfw/include -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/ext/sdl/include/SDL -isystem C:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/ext/glm -g -std=gnu++17 -fdiagnostics-color=always -o CMakeFiles\\bnuuy_ship.dir\\src\\scenes\\game_level.cpp.obj -c C:\\Users\\chinm\\source\\repos\\bnuuy_savers\\audio-feedback\\src\\scenes\\game_level.cpp",
+  "file": "C:\\Users\\chinm\\source\\repos\\bnuuy_savers\\audio-feedback\\src\\scenes\\game_level.cpp",
+  "output": "CMakeFiles\\bnuuy_ship.dir\\src\\scenes\\game_level.cpp.obj"
+},
+{
+  "directory": "C:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/cmake-build-debug",
+  "command": "C:\\Users\\chinm\\AppData\\Local\\Programs\\CLion\\bin\\mingw\\bin\\g++.exe -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/include -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/src -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/ext/stb_image -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/ext/gl3w -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/ext/glfw/include -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/ext/sdl/include/SDL -isystem C:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/ext/glm -g -std=gnu++17 -fdiagnostics-color=always -o CMakeFiles\\bnuuy_ship.dir\\src\\scenes\\level_01.cpp.obj -c C:\\Users\\chinm\\source\\repos\\bnuuy_savers\\audio-feedback\\src\\scenes\\level_01.cpp",
+  "file": "C:\\Users\\chinm\\source\\repos\\bnuuy_savers\\audio-feedback\\src\\scenes\\level_01.cpp",
+  "output": "CMakeFiles\\bnuuy_ship.dir\\src\\scenes\\level_01.cpp.obj"
+},
+{
+  "directory": "C:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/cmake-build-debug",
+  "command": "C:\\Users\\chinm\\AppData\\Local\\Programs\\CLion\\bin\\mingw\\bin\\g++.exe -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/include -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/src -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/ext/stb_image -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/ext/gl3w -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/ext/glfw/include -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/ext/sdl/include/SDL -isystem C:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/ext/glm -g -std=gnu++17 -fdiagnostics-color=always -o CMakeFiles\\bnuuy_ship.dir\\src\\scenes\\main_menu.cpp.obj -c C:\\Users\\chinm\\source\\repos\\bnuuy_savers\\audio-feedback\\src\\scenes\\main_menu.cpp",
+  "file": "C:\\Users\\chinm\\source\\repos\\bnuuy_savers\\audio-feedback\\src\\scenes\\main_menu.cpp",
+  "output": "CMakeFiles\\bnuuy_ship.dir\\src\\scenes\\main_menu.cpp.obj"
+},
+{
+  "directory": "C:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/cmake-build-debug",
+  "command": "C:\\Users\\chinm\\AppData\\Local\\Programs\\CLion\\bin\\mingw\\bin\\g++.exe -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/include -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/src -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/ext/stb_image -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/ext/gl3w -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/ext/glfw/include -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/ext/sdl/include/SDL -isystem C:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/ext/glm -g -std=gnu++17 -fdiagnostics-color=always -o CMakeFiles\\bnuuy_ship.dir\\src\\scenes\\ui_editor.cpp.obj -c C:\\Users\\chinm\\source\\repos\\bnuuy_savers\\audio-feedback\\src\\scenes\\ui_editor.cpp",
+  "file": "C:\\Users\\chinm\\source\\repos\\bnuuy_savers\\audio-feedback\\src\\scenes\\ui_editor.cpp",
+  "output": "CMakeFiles\\bnuuy_ship.dir\\src\\scenes\\ui_editor.cpp.obj"
+},
+{
+  "directory": "C:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/cmake-build-debug",
+  "command": "C:\\Users\\chinm\\AppData\\Local\\Programs\\CLion\\bin\\mingw\\bin\\g++.exe -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/include -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/src -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/ext/stb_image -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/ext/gl3w -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/ext/glfw/include -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/ext/sdl/include/SDL -isystem C:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/ext/glm -g -std=gnu++17 -fdiagnostics-color=always -o CMakeFiles\\bnuuy_ship.dir\\src\\tinyECS\\components.cpp.obj -c C:\\Users\\chinm\\source\\repos\\bnuuy_savers\\audio-feedback\\src\\tinyECS\\components.cpp",
+  "file": "C:\\Users\\chinm\\source\\repos\\bnuuy_savers\\audio-feedback\\src\\tinyECS\\components.cpp",
+  "output": "CMakeFiles\\bnuuy_ship.dir\\src\\tinyECS\\components.cpp.obj"
+},
+{
+  "directory": "C:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/cmake-build-debug",
+  "command": "C:\\Users\\chinm\\AppData\\Local\\Programs\\CLion\\bin\\mingw\\bin\\g++.exe -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/include -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/src -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/ext/stb_image -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/ext/gl3w -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/ext/glfw/include -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/ext/sdl/include/SDL -isystem C:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/ext/glm -g -std=gnu++17 -fdiagnostics-color=always -o CMakeFiles\\bnuuy_ship.dir\\src\\tinyECS\\registry.cpp.obj -c C:\\Users\\chinm\\source\\repos\\bnuuy_savers\\audio-feedback\\src\\tinyECS\\registry.cpp",
+  "file": "C:\\Users\\chinm\\source\\repos\\bnuuy_savers\\audio-feedback\\src\\tinyECS\\registry.cpp",
+  "output": "CMakeFiles\\bnuuy_ship.dir\\src\\tinyECS\\registry.cpp.obj"
+},
+{
+  "directory": "C:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/cmake-build-debug",
+  "command": "C:\\Users\\chinm\\AppData\\Local\\Programs\\CLion\\bin\\mingw\\bin\\g++.exe -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/include -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/src -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/ext/stb_image -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/ext/gl3w -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/ext/glfw/include -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/ext/sdl/include/SDL -isystem C:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/ext/glm -g -std=gnu++17 -fdiagnostics-color=always -o CMakeFiles\\bnuuy_ship.dir\\src\\tinyECS\\tiny_ecs.cpp.obj -c C:\\Users\\chinm\\source\\repos\\bnuuy_savers\\audio-feedback\\src\\tinyECS\\tiny_ecs.cpp",
+  "file": "C:\\Users\\chinm\\source\\repos\\bnuuy_savers\\audio-feedback\\src\\tinyECS\\tiny_ecs.cpp",
+  "output": "CMakeFiles\\bnuuy_ship.dir\\src\\tinyECS\\tiny_ecs.cpp.obj"
+},
+{
+  "directory": "C:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/cmake-build-debug",
+  "command": "C:\\Users\\chinm\\AppData\\Local\\Programs\\CLion\\bin\\mingw\\bin\\g++.exe -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/include -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/src -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/ext/stb_image -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/ext/gl3w -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/ext/glfw/include -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/ext/sdl/include/SDL -isystem C:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/ext/glm -g -std=gnu++17 -fdiagnostics-color=always -o CMakeFiles\\bnuuy_ship.dir\\src\\world_init.cpp.obj -c C:\\Users\\chinm\\source\\repos\\bnuuy_savers\\audio-feedback\\src\\world_init.cpp",
+  "file": "C:\\Users\\chinm\\source\\repos\\bnuuy_savers\\audio-feedback\\src\\world_init.cpp",
+  "output": "CMakeFiles\\bnuuy_ship.dir\\src\\world_init.cpp.obj"
+},
+{
+  "directory": "C:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/cmake-build-debug",
+  "command": "C:\\Users\\chinm\\AppData\\Local\\Programs\\CLion\\bin\\mingw\\bin\\g++.exe -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/include -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/src -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/ext/stb_image -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/ext/gl3w -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/ext/glfw/include -IC:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/ext/sdl/include/SDL -isystem C:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/ext/glm -g -std=gnu++17 -fdiagnostics-color=always -o CMakeFiles\\bnuuy_ship.dir\\src\\world_system.cpp.obj -c C:\\Users\\chinm\\source\\repos\\bnuuy_savers\\audio-feedback\\src\\world_system.cpp",
+  "file": "C:\\Users\\chinm\\source\\repos\\bnuuy_savers\\audio-feedback\\src\\world_system.cpp",
+  "output": "CMakeFiles\\bnuuy_ship.dir\\src\\world_system.cpp.obj"
+}
+]

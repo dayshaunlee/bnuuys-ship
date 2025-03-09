@@ -116,14 +116,6 @@ GLFWwindow* WorldSystem::create_window() {
 bool WorldSystem::start_and_load_sounds() {
     //////////////////////////////////////
     // Loading music and sounds with SDL
-    background_music = Mix_LoadMUS(audio_path("music.wav").c_str());
-    enemy_incoming = Mix_LoadMUS(audio_path("enemy_incoming.wav").c_str());
-    island_ship_collision = Mix_LoadWAV(audio_path("island-ship_collision.wav").c_str());
-    enemy_ship_collision = Mix_LoadWAV(audio_path("ship-enemy_collision.wav").c_str());
-    projectile_enemy_collision = Mix_LoadWAV(audio_path("projectile-enemy_collision.wav").c_str());
-    projectile_jail_collision = Mix_LoadWAV(audio_path("projectile-jail_collision.wav").c_str());
-    game_over = Mix_LoadWAV(audio_path("game_over.wav").c_str());
-
     if (SDL_Init(SDL_INIT_AUDIO) < 0) {
         fprintf(stderr, "Failed to initialize SDL Audio");
         return false;
@@ -133,6 +125,14 @@ bool WorldSystem::start_and_load_sounds() {
         fprintf(stderr, "Failed to open audio device");
         return false;
     }
+
+    background_music = Mix_LoadMUS(audio_path("music.wav").c_str());
+    enemy_incoming = Mix_LoadMUS(audio_path("enemy_incoming.wav").c_str());
+    island_ship_collision = Mix_LoadWAV(audio_path("island-ship_collision.wav").c_str());
+    enemy_ship_collision = Mix_LoadWAV(audio_path("ship-enemy_collision.wav").c_str());
+    projectile_enemy_collision = Mix_LoadWAV(audio_path("projectile-enemy_collision.wav").c_str());
+    projectile_jail_collision = Mix_LoadWAV(audio_path("projectile-jail_collision.wav").c_str());
+    game_over = Mix_LoadWAV(audio_path("game_over.wav").c_str());
 
     if (background_music == nullptr || enemy_incoming == nullptr ||
         island_ship_collision == nullptr || enemy_ship_collision == nullptr || projectile_enemy_collision == nullptr) {

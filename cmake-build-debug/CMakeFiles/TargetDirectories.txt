@@ -1,0 +1,3 @@
+C:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/cmake-build-debug/CMakeFiles/bnuuy_ship.dir
+C:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/chinm/source/repos/bnuuy_savers/audio-feedback/cmake-build-debug/CMakeFiles/rebuild_cache.dir
