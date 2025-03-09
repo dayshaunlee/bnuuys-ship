@@ -53,7 +53,6 @@ void GameLevel::Init() {
 
     // create player
     Entity player = createPlayer({WINDOW_WIDTH_PX / 2, WINDOW_HEIGHT_PX / 2});
-
     // load map
     registry.list_all_components();
     std::cout << "loading map..." << std::endl;
@@ -421,10 +420,6 @@ void GameLevel::HandleInput(int key, int action, int mod) {
         }
     } else {
         HandlePlayerMovement(key, action, mod);
-    }
-
-    if (action == GLFW_RELEASE && key == GLFW_KEY_K) {
-        registry.simpleCannons.components[0].is_automated = !registry.simpleCannons.components[0].is_automated;
     }
 
     LevelHandleInput(key, action, mod);
