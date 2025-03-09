@@ -124,23 +124,14 @@ bool polyPoly(std::vector<tson::Vector2i> p1, std::vector<tson::Vector2i> p2) {
 bool polyPolyInside(std::vector<tson::Vector2i> p1, std::vector<tson::Vector2i> p2) { // only true if one polygon is completely in the other
     // go through each of the vertices, plus the next
     // vertex in the list
-    int next = 0;
-    for (int current = 0; current < p1.size(); current++) {
-        // get next vertex in list
-        // if we've hit the end, wrap around to 0
-        next = current + 1;
-        if (next == p1.size()) next = 0;
+    // check if the 2nd polygon is INSIDE the first
+    bool collision = true;
 
-        // get the tson::Vector2i at our current position
-        // this makes our if statement a little cleaner
-        tson::Vector2i vc = p1[current];  // c for "current"
-        tson::Vector2i vn = p1[next];     // n for "next"
-
-        // check if the 2nd polygon is INSIDE the first
-        bool collision = polyPoint(p1, p2[0].x, p2[0].y);
-        if (collision) return true;
+    // works by checking if ALL the points of p2 are INSIDE p1
+    for (tson::Vector2i p : p2) {
+        if (!polyPoint(p1, p.x, p.y)) collision = false;
     }
-    return false;
+    return collision;
 }
 
 std::vector<tson::Vector2i> get_poly_from_motion(const Motion& motion) {
@@ -206,10 +197,6 @@ bool collidesSphericalShip(const Entity e1, const Entity e2) {
 // Brian's Additional Feedback: I added the Camera Offset, but it might not be the EXACT outputs.
 // Polygon - Polygon collision
 bool collidesPoly(const Entity e1, const Entity e2) {
-    /*if ((registry.islands.has(e1) && registry.ships.has(e2)) || (registry.islands.has(e2) && registry.ships.has(e1))) {
-        
-    }*/
-
     Motion& e1_mot = registry.motions.get(e1);
     Motion& e2_mot = registry.motions.get(e2);
     std::vector<tson::Vector2i> islandPolygon;
