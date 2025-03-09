@@ -34,7 +34,8 @@ class ECSRegistry {
     ComponentContainer<SteeringWheel> steeringWheels;
     ComponentContainer<SimpleCannon> simpleCannons;
 
-    ComponentContainer<Projectile> projectiles;
+    ComponentContainer<PlayerProjectile> playerProjectiles;
+    ComponentContainer<EnemyProjectile> enemyProjectiles;
     ComponentContainer<Bunny> bunnies;
 
     ComponentContainer<WalkingPath> walkingPaths;

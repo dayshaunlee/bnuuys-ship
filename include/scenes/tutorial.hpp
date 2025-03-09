@@ -5,7 +5,7 @@
 #include "scenes/game_level.hpp"
 #include "world_system.hpp"
 
-class Level01 : public GameLevel {
+class TutorialLevel : public GameLevel {
 private:
     // Runs after the GameLevel's init.
     void LevelInit() override;
@@ -17,6 +17,6 @@ private:
     void LevelUpdate(float dt) override;
 
 public:
-    Level01(WorldSystem* worldsystem, std::string map_path);
-    ~Level01() override;
+    TutorialLevel(WorldSystem* worldsystem, std::string map_path);
+    ~TutorialLevel() override;
 }; 

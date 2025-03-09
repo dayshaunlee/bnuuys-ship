@@ -8,6 +8,7 @@
 Level01::Level01(WorldSystem* world_system, std::string map_filename) : GameLevel(world_system) {
     this->name = "Level 1";
     this->level_path = map_filename;
+    this->bunnies_to_win = 0;
 }
 
 Level01::~Level01() {}
@@ -28,8 +29,8 @@ void Level01::LevelHandleMouseClick(int button, int action, int mods) {}
 void Level01::LevelUpdate(float dt) {
     // update window title with points
     int points = registry.base.components[0].bunny_count;
-    std::string title = "Bnuuy's Ship - Bunny's Saved: " + std::to_string(points);
-    world_system->change_title(title);
+    std::string title_points = std::to_string(points);
+    world_system->add_to_title("Bunny's saved/left: " + title_points + "/" + std::to_string(bunnies_to_win - points));
     if (registry.base.components[0].bunny_count == bunnies_to_win) {
         std::cout << "BEAT LEVEL -- SAVED ALL [" << bunnies_to_win << "] BUNNIES" << std::endl; 
     }

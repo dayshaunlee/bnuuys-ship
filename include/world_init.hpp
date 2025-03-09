@@ -9,6 +9,7 @@ Entity createPlayer(RenderSystem* renderer, vec2 position);
 Entity createPlayer(vec2 position);
 Entity renderPlayer(Entity player);
 Entity createCannonProjectile(vec2 orig, vec2 dest);
+Entity createEnemyProjectile(vec2 orig, vec2 dest);
 Entity createSteeringWheel(vec2 tile_pos);
 Entity createCannon(vec2 tile_pos);
 

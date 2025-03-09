@@ -77,10 +77,17 @@ void GameLevel::Init() {
         createEnemy(entity);
     };
 
+    // bunny creation
+    for (Entity entity : registry.bunnies.entities) {
+        createBunny(entity);
+        bunnies_to_win += 1;
+    };
+
     registry.players.components[0].health = 100.0f;
     InitializeUI();
 
     LevelInit();
+    registry.ships.components[0].available_modules[HELPER_BUNNY] = 1;
 }
 
 void GameLevel::InitializeUI() {
@@ -152,6 +159,34 @@ void GameLevel::InitializeUI() {
             e.children[0]->visible = false;
     });
 
+    auto helper_bunnies = std::make_shared<bnuui::Box>(vec2(420, 547.5f), vec2(40, 40), 0.0f);
+    auto helper_bunnies_selected = std::make_shared<bnuui::Cursor>(vec2(420, 547.5f), vec2(40, 40), 0.0f);
+    helper_bunnies_selected->visible = false;
+    helper_bunnies->children.push_back(helper_bunnies_selected);
+    helper_bunnies->texture = TEXTURE_ASSET_ID::BUNNY_JAILED;
+    helper_bunnies->setOnClick([](bnuui::Element& e) {
+        if (curr_selected == HELPER_BUNNY) {
+            curr_selected = EMPTY;
+        } else {
+            curr_selected = HELPER_BUNNY;
+        }
+    });
+    helper_bunnies->setOnUpdate([](bnuui::Element& e, float dt) {
+        Ship& ship = registry.ships.components[0];
+        if (ship.available_modules[HELPER_BUNNY] == 0) {
+            e.color = vec3(0.5f, 0, 0);
+        } else {
+            e.color = vec3(1, 1, 1);
+        }
+
+        if (curr_selected == HELPER_BUNNY)
+            e.children[0]->visible = true;
+        else
+            e.children[0]->visible = false;
+    });
+
+
+
     // Insert all the stuff.
     scene_ui.insert(player_box);
     scene_ui.insert(player_status);
@@ -161,6 +196,7 @@ void GameLevel::InitializeUI() {
     scene_ui.insert(inventory_slots);
     scene_ui.insert(steering_wheels);
     scene_ui.insert(cannons);
+    scene_ui.insert(helper_bunnies);
 }
 
 void GameLevel::Exit() {
@@ -177,7 +213,6 @@ void GameLevel::Exit() {
     while (registry.renderRequests.entities.size() > 0){
 	    registry.remove_all_components_of(registry.renderRequests.entities.back());
 	}
-
     while (registry.colors.entities.size() > 0){
 	    registry.remove_all_components_of(registry.colors.entities.back());
 	}
@@ -190,30 +225,39 @@ void GameLevel::Exit() {
     while (registry.playerAnimations.entities.size() > 0){
 	    registry.remove_all_components_of(registry.playerAnimations.entities.back());
 	}
-
     while (registry.ships.entities.size() > 0){
 	    registry.remove_all_components_of(registry.ships.entities.back());
 	}
     while (registry.backgroundObjects.entities.size() > 0){
 	    registry.remove_all_components_of(registry.backgroundObjects.entities.back());
 	}
-    
-
     while (registry.enemies.entities.size() > 0){
 	    registry.remove_all_components_of(registry.enemies.entities.back());
 	}
-
     while (registry.islands.entities.size() > 0){
 	    registry.remove_all_components_of(registry.islands.entities.back());
 	}
-
     while (registry.base.entities.size() > 0){
 	    registry.remove_all_components_of(registry.base.entities.back());
 	}
-
     while (registry.bunnies.entities.size() > 0){
 	    registry.remove_all_components_of(registry.bunnies.entities.back());
 	}
+    while (registry.walkingPaths.entities.size() > 0){
+        registry.remove_all_components_of(registry.walkingPaths.entities.back());
+    }
+    while (registry.filledTiles.entities.size() > 0){
+        registry.remove_all_components_of(registry.filledTiles.entities.back());
+    }
+    while (registry.steeringWheels.entities.size() > 0){
+        registry.remove_all_components_of(registry.steeringWheels.entities.back());
+    }
+    while (registry.simpleCannons.entities.size() > 0){
+        registry.remove_all_components_of(registry.simpleCannons.entities.back());
+    }
+    // while (registry.projectiles.entities.size() > 0){
+    //     registry.remove_all_components_of(registry.projectiles.entities.back());
+    // }
 
     LevelExit();
 }
@@ -273,9 +317,7 @@ void HandlePlayerMovement(int key, int action, int mod) {
     } 
 }
 
-void HandleCameraMovement(int key, int action, int mod) {
-    CameraSystem* camera = CameraSystem::GetInstance();
-
+void UpdateCameraMoveDirection(int key, int action, int mod){
     if (action == GLFW_PRESS) {
         if (!activeShipKeys.count(key)) {
             keyShipOrder.push_back(key);
@@ -290,13 +332,30 @@ void HandleCameraMovement(int key, int action, int mod) {
     }
 
     // If no keys are pressed, don't reset velocity
+    if (activeShipKeys.empty() || (activeShipKeys.size() == 1 && activeShipKeys.count(GLFW_KEY_SPACE))) return;   
+}
+
+void HandleCameraMovement() {
     if (activeShipKeys.empty() || (activeShipKeys.size() == 1 && activeShipKeys.count(GLFW_KEY_SPACE))) return;
+    CameraSystem* camera = CameraSystem::GetInstance();
+
     vec2 inputVel = {0.0f, 0.0f};
 
-    if (activeShipKeys.count(MOVE_UP_BUTTON)) inputVel.y += SHIP_CAMERA_SPEED;
-    if (activeShipKeys.count(MOVE_DOWN_BUTTON)) inputVel.y -= SHIP_CAMERA_SPEED;
-    if (activeShipKeys.count(MOVE_LEFT_BUTTON)) inputVel.x += SHIP_CAMERA_SPEED;
-    if (activeShipKeys.count(MOVE_RIGHT_BUTTON)) inputVel.x -= SHIP_CAMERA_SPEED;
+    if (activeShipKeys.count(MOVE_UP_BUTTON)) inputVel.y += 1;
+    if (activeShipKeys.count(MOVE_DOWN_BUTTON)) inputVel.y -= 1;
+    if (activeShipKeys.count(MOVE_LEFT_BUTTON)) inputVel.x += 1;
+    if (activeShipKeys.count(MOVE_RIGHT_BUTTON)) inputVel.x -= 1;
+
+    if(inputVel.x != 0 || inputVel.y != 0){
+        float length = std::sqrt(inputVel.x* inputVel.x + inputVel.y * inputVel.y);
+        if (length > 0){
+            inputVel.x /= length;
+            inputVel.y /= length;
+        }
+    }
+
+    inputVel.x *= SHIP_CAMERA_SPEED;
+    inputVel.y *= SHIP_CAMERA_SPEED;
 
     inputVel.x = std::clamp(inputVel.x, -WALK_SPEED, WALK_SPEED);
     inputVel.y = std::clamp(inputVel.y, -WALK_SPEED, WALK_SPEED);
@@ -354,7 +413,7 @@ void GameLevel::HandleInput(int key, int action, int mod) {
                 return;
             }
             case STEERING_WHEEL: {
-                HandleCameraMovement(key, action, mod);
+                UpdateCameraMoveDirection(key, action, mod);
                 return;
             }
             default:
@@ -492,7 +551,7 @@ void GameLevel::HandleMouseClick(int button, int action, int mods) {
             return;
         }
 
-        if (module == PLATFORM) {
+        if (module == PLATFORM && curr_selected != HELPER_BUNNY) {
             ship.ship_modules[tile_pos.y][tile_pos.x] = curr_selected;
             Entity e;
             switch (curr_selected) {
@@ -509,6 +568,19 @@ void GameLevel::HandleMouseClick(int button, int action, int mods) {
             }
             ship.ship_modules_entity[tile_pos.y][tile_pos.x] = e;
             ship.available_modules[curr_selected]--;
+        } else if (curr_selected == HELPER_BUNNY && module != EMPTY && module != PLATFORM) {
+            switch (module) {
+                case SIMPLE_CANNON: {
+                    SimpleCannon& sc = registry.simpleCannons.get(ship.ship_modules_entity[tile_pos.y][tile_pos.x]);
+                    if (!sc.is_automated) {
+                        sc.is_automated = true;
+                        ship.available_modules[curr_selected]--;
+                    }
+                }
+                default: {
+                    break;
+                }
+            }
         }
     }
 
@@ -516,10 +588,19 @@ void GameLevel::HandleMouseClick(int button, int action, int mods) {
     if (action == GLFW_PRESS && button == GLFW_MOUSE_BUTTON_2) {
         vec2 tile_pos = getMouseTilePosition();
         MODULE_TYPES module = getModuleType(tile_pos);
+        Ship& ship = registry.ships.components[0];
         switch (module) {
             case EMPTY:
             case PLATFORM:
                 return;
+            case SIMPLE_CANNON: {
+                SimpleCannon& sc = registry.simpleCannons.get(ship.ship_modules_entity[tile_pos.y][tile_pos.x]);
+                if (sc.is_automated) {
+                    ship.available_modules[HELPER_BUNNY]++;
+                    sc.is_automated = false;
+                }
+                break;
+            }
             default: {
                 Ship& ship = registry.ships.components[0];
                 ship.ship_modules[tile_pos.y][tile_pos.x] = PLATFORM;
@@ -538,13 +619,25 @@ void GameLevel::Update(float dt) {
     physics_system.step(dt);
     animation_system.step(dt);
     module_system.step(dt);
+    HandleCameraMovement();
 
     world_system->handle_collisions();
 
     // Remove projectiles.
-    for (Entity e : registry.projectiles.entities) {
-        if (registry.projectiles.has(e)) {
-            Projectile& p = registry.projectiles.get(e);
+    for (Entity e : registry.playerProjectiles.entities) {
+        if (registry.playerProjectiles.has(e)) {
+            PlayerProjectile& p = registry.playerProjectiles.get(e);
+            if (p.alive_time_ms <= 0) {
+                registry.remove_all_components_of(e);
+                continue;
+            }
+            p.alive_time_ms -= dt;
+        }
+    }
+
+    for (Entity e : registry.enemyProjectiles.entities) {
+        if (registry.enemyProjectiles.has(e)) {
+            EnemyProjectile& p = registry.enemyProjectiles.get(e);
             if (p.alive_time_ms <= 0) {
                 registry.remove_all_components_of(e);
                 continue;
@@ -555,5 +648,5 @@ void GameLevel::Update(float dt) {
 
     scene_ui.update(dt);
 
-    LevelUpdate();
+    LevelUpdate(dt);
 }

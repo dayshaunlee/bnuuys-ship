@@ -3,6 +3,7 @@
 #include "scenes/death_scene.hpp"
 #include "scenes/level_01.hpp"
 #include "scenes/main_menu.hpp"
+#include "scenes/tutorial.hpp"
 #include "scenes/ui_editor.hpp"
 #define GL3W_IMPLEMENTATION
 #include <gl3w.h>
@@ -50,6 +51,7 @@ int main() {
 
     Scene* mm = new MainMenuScene();
     Scene* l1 = new Level01(&world_system, "m1.json");
+    Scene* tutorial = new TutorialLevel(&world_system, "m1.json");
     Scene* ui_editor = new EditorUI();
     Scene* death = new DeathScene();
 
@@ -57,6 +59,7 @@ int main() {
     scene_manager.registerScene(l1);
     scene_manager.registerScene(ui_editor);
     scene_manager.registerScene(death);
+    scene_manager.registerScene(tutorial);
 
     scene_manager.switchScene("Main Menu");
 

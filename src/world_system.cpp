@@ -84,9 +84,9 @@ GLFWwindow* WorldSystem::create_window() {
     glfwWindowHint(GLFW_SCALE_TO_MONITOR, GL_FALSE);  // GLFW 3.3+
 
     // Create the main window (for rendering, keyboard, and mouse input)
-    std::string fullTitle = "Bnuuy's Ship      FPS: " + std::to_string(fpsCounter);    
+    std::string title = "Bnuuy's Ship      FPS: " + std::to_string(fpsCounter);
 
-    window = glfwCreateWindow(WINDOW_WIDTH_PX, WINDOW_HEIGHT_PX, fullTitle.c_str(), nullptr, nullptr);
+    window = glfwCreateWindow(WINDOW_WIDTH_PX, WINDOW_HEIGHT_PX, title.c_str(), nullptr, nullptr);
     if (window == nullptr) {
         std::cerr << "ERROR: Failed to glfwCreateWindow in world_system.cpp" << std::endl;
         return nullptr;
@@ -168,11 +168,8 @@ void WorldSystem::init(RenderSystem* renderer_arg) {
 
 // Update our game world
 bool WorldSystem::step(float elapsed_ms_since_last_update) {
-    // Updating window title with points
-    std::stringstream title_ss;
-    std::string fullTitle = "Bnuuy's Ship      FPS: " + std::to_string(fpsCounter);    
-    glfwSetWindowTitle(window, fullTitle.c_str());
-
+    std::string title = "Bnuuy's Ship      FPS: " + std::to_string(fpsCounter) + "        " + title_points;
+    glfwSetWindowTitle(window, title.c_str());
     assert(registry.screenStates.components.size() <= 1);
     ScreenState& screen = registry.screenStates.components[0];
 
@@ -215,8 +212,8 @@ void WorldSystem::handle_collisions() {
         }
 
         // Projectile - Enemy collision
-        if (registry.projectiles.has(e1) && registry.enemies.has(e2)) {
-            Projectile& projectile = registry.projectiles.get(e1);
+        if (registry.playerProjectiles.has(e1) && registry.enemies.has(e2)) {
+            PlayerProjectile& projectile = registry.playerProjectiles.get(e1);
             Enemy& enemy = registry.enemies.get(e2);
 
             enemy.health -= projectile.damage;
@@ -226,8 +223,8 @@ void WorldSystem::handle_collisions() {
             // Play sound
             Mix_PlayChannel(-1, projectile_enemy_collision, 0);
 
-        } else if (registry.projectiles.has(e2) && registry.enemies.has(e1)) {
-            Projectile& projectile = registry.projectiles.get(e2);
+        } else if (registry.playerProjectiles.has(e2) && registry.enemies.has(e1)) {
+            PlayerProjectile& projectile = registry.playerProjectiles.get(e2);
             Enemy& enemy = registry.enemies.get(e1);
 
             enemy.health -= projectile.damage;
@@ -239,38 +236,52 @@ void WorldSystem::handle_collisions() {
         }
 
         // Projectile - Bunny collision
-        if (registry.projectiles.has(e1) && registry.bunnies.has(e2) && registry.bunnies.get(e2).is_jailed) {
-            Projectile& projectile = registry.projectiles.get(e1);
+        if (registry.playerProjectiles.has(e1) && registry.bunnies.has(e2) && registry.bunnies.get(e2).is_jailed) {
+            PlayerProjectile& projectile = registry.playerProjectiles.get(e1);
             Bunny& bunny = registry.bunnies.get(e2);
 
             bunny.jail_health -= projectile.damage;
 
             if (bunny.jail_health <= 0) {
-                registry.renderRequests.get(e2).used_texture = TEXTURE_ASSET_ID::BUNNY_NOT_JAILED;
                 // Play sound
                 Mix_PlayChannel(-1, projectile_jail_collision, 0);
+                registry.motions.get(e2).scale = {28, 28};
+                registry.renderRequests.get(e2).used_texture = TEXTURE_ASSET_ID::BUNNY_NPC_IDLE_UP0;
                 bunny.is_jailed = false;
             }
             registry.remove_all_components_of(e1);
 
-        } else if (registry.projectiles.has(e2) && registry.bunnies.has(e1) && registry.bunnies.get(e1).is_jailed) {
-            Projectile& projectile = registry.projectiles.get(e2);
+        } else if (registry.playerProjectiles.has(e2) && registry.bunnies.has(e1) && registry.bunnies.get(e1).is_jailed) {
+            PlayerProjectile& projectile = registry.playerProjectiles.get(e2);
             Bunny& bunny = registry.bunnies.get(e1);
 
             bunny.jail_health -= projectile.damage;
 
             if (bunny.jail_health <= 0) {
-                registry.renderRequests.get(e1).used_texture = TEXTURE_ASSET_ID::BUNNY_NOT_JAILED;
-                // Play sound
                 Mix_PlayChannel(-1, projectile_jail_collision, 0);
+                registry.motions.get(e1).scale = {28, 28};
+                registry.renderRequests.get(e1).used_texture = TEXTURE_ASSET_ID::BUNNY_NPC_IDLE_UP0;
                 bunny.is_jailed = false;
             }
             registry.remove_all_components_of(e2);
         }
 
+        // Projectile - Ship collision
+        if (registry.enemyProjectiles.has(e1) && registry.ships.has(e2)) {
+            EnemyProjectile& projectile = registry.enemyProjectiles.get(e1);
+            Ship& ship = registry.ships.get(e2);
+            ship.health -= projectile.damage;
+            registry.remove_all_components_of(e1);
+        } else if (registry.enemyProjectiles.has(e2) && registry.ships.has(e1)) {
+            EnemyProjectile& projectile = registry.enemyProjectiles.get(e2);
+            Ship& ship = registry.ships.get(e1);
+            ship.health -= projectile.damage;
+            registry.remove_all_components_of(e2);
+        }
+
         // Enemy - Ship collision
         if (registry.enemies.has(e1) && registry.ships.has(e2)) {
-            registry.ships.get(e2).health -= 50.0f;
+            registry.ships.get(e2).health -= registry.enemies.get(e1).health;
             registry.remove_all_components_of(e1);
             // Play sound
             Mix_PlayChannel(-1, enemy_ship_collision, 0);
@@ -282,7 +293,7 @@ void WorldSystem::handle_collisions() {
             }
             continue;
         } else if (registry.enemies.has(e2) && registry.ships.has(e1)) {
-            registry.ships.get(e1).health -= 50.0f;
+            registry.ships.get(e1).health -= registry.enemies.get(e2).health;
             registry.remove_all_components_of(e2);
             // Play sound
             Mix_PlayChannel(-1, enemy_ship_collision, 0);
@@ -332,8 +343,12 @@ bool WorldSystem::is_over() const {
     return bool(glfwWindowShouldClose(window));
 }
 
-void WorldSystem::change_title(std::string title) {
-    glfwSetWindowTitle(window, title.c_str());
+void WorldSystem::add_to_title(std::string new_title_text) {
+    title_points = new_title_text;
+}
+
+int WorldSystem::getFPScounter() {
+    return fpsCounter;
 }
 
 void WorldSystem::handle_player_death(){
