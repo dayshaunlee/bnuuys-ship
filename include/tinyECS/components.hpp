@@ -270,9 +270,14 @@ struct SteeringWheel {
     bool is_automated;
 };
 
-struct Projectile {
+struct PlayerProjectile {
     float damage;
     float alive_time_ms; // How long before we remove this projectile.
+};
+
+struct EnemyProjectile {
+    float damage;
+    float alive_time_ms;  // How long before we remove this projectile.
 };
 
 struct SimpleCannon {

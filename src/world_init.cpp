@@ -211,7 +211,7 @@ Entity createCannonProjectile(vec2 orig, vec2 dest) {
     registry.renderRequests.insert(
         e, {TEXTURE_ASSET_ID::BUNNY_FACE_ANGRY05, EFFECT_ASSET_ID::TEXTURED, GEOMETRY_BUFFER_ID::SPRITE});
 
-    Projectile& proj = registry.projectiles.emplace(e);
+    PlayerProjectile& proj = registry.playerProjectiles.emplace(e);
     proj.damage = SIMPLE_CANNON_DAMAGE;
     proj.alive_time_ms = PROJECTILE_LIFETIME;
 
@@ -229,7 +229,7 @@ Entity createEnemyProjectile(vec2 orig, vec2 dest) {
     m.velocity = normalize(velVec) * 150.0f;
     registry.renderRequests.insert(
         e, {TEXTURE_ASSET_ID::BUNNY_FACE_ANGRY05, EFFECT_ASSET_ID::TEXTURED, GEOMETRY_BUFFER_ID::SPRITE});
-    Projectile& proj = registry.projectiles.emplace(e);
+    EnemyProjectile& proj = registry.enemyProjectiles.emplace(e);
     proj.damage = SIMPLE_CANNON_DAMAGE;
     proj.alive_time_ms = PROJECTILE_LIFETIME;
     return e;
