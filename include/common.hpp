@@ -43,7 +43,7 @@ inline std::string map_path(const std::string& name) {
 };
 
 // TODO: do this for all enemy stuff later
-enum ENEMY_TYPE { BASIC_GUNNER = 0, FLYER = 1, TANK = 2 };
+enum ENEMY_TYPE { BASIC_GUNNER = 0, FLYER = 1, TANK = 2, SHOOTER = 3 };
 
 //
 // game constants
@@ -74,6 +74,9 @@ const float ENEMY_FLYER_SPEED = 75;
 
 const int ENEMY_TANK_HEALTH = 30;
 const float ENEMY_TANK_SPEED = 25;
+
+const int ENEMY_SHOOTER_HEALTH = 5;
+const float ENEMY_SHOOTER_SPEED = 0;
 
 #ifndef M_PI
 #define M_PI 3.14159265358979323846f

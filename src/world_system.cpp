@@ -231,6 +231,19 @@ void WorldSystem::handle_collisions() {
             registry.remove_all_components_of(e2);
         }
 
+        // Projectile - Ship collision
+        if (registry.projectiles.has(e1) && registry.ships.has(e2)) {
+            Projectile& projectile = registry.projectiles.get(e1);
+            Ship& ship = registry.ships.get(e2);
+            ship.health -= projectile.damage;
+            registry.remove_all_components_of(e1);
+        } else if (registry.projectiles.has(e2) && registry.ships.has(e1)) {
+            Projectile& projectile = registry.projectiles.get(e2);
+            Ship& ship = registry.ships.get(e1);
+            ship.health -= projectile.damage;
+            registry.remove_all_components_of(e2);
+        }
+
         // Enemy - Ship collision
         if (registry.enemies.has(e1) && registry.ships.has(e2)) {
             registry.ships.get(e2).health -= registry.enemies.get(e1).health;
