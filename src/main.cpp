@@ -86,7 +86,7 @@ int main() {
 
         Scene* s = scene_manager.getCurrentScene();
         if (s != nullptr) s->Update(elapsed_ms);
-        //world_system.step(elapsed_ms);
+        world_system.step(elapsed_ms);
 
         renderer_system.draw();
     }

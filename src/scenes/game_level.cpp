@@ -80,6 +80,7 @@ void GameLevel::Init() {
     // bunny creation
     for (Entity entity : registry.bunnies.entities) {
         createBunny(entity);
+        bunnies_to_win += 1;
     };
 
     registry.players.components[0].health = 100.0f;
