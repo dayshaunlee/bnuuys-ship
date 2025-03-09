@@ -137,7 +137,7 @@ bool WorldSystem::start_and_load_sounds() {
     if (background_music == nullptr || enemy_incoming == nullptr ||
         island_ship_collision == nullptr || enemy_ship_collision == nullptr || projectile_enemy_collision == nullptr) {
         fprintf(stderr,
-                "Failed to load sounds\n %s\n %s\n %s\n make sure the data "
+                "Failed to load sounds\n %s\n %s\n %s\n %s\n %s\n %s\n %s\n make sure the data "
                 "directory is present",
                 audio_path("music.wav").c_str(),
                 audio_path("enemy_incoming.wav").c_str(),
