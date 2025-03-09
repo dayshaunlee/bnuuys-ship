@@ -20,6 +20,8 @@ protected:
 
     void InitializeUI();
     std::string level_path; // TODO: Make a mapping for level_path and the background.
+    // amount of bunnies player has to save to win
+    int bunnies_to_win = 0;
     
     virtual void LevelInit() = 0;
     virtual void LevelUpdate() = 0;

@@ -79,9 +79,9 @@ GLFWwindow* WorldSystem::create_window() {
     glfwWindowHint(GLFW_SCALE_TO_MONITOR, GL_FALSE);  // GLFW 3.3+
 
     // Create the main window (for rendering, keyboard, and mouse input)
-    std::string fullTitle = "Bnuuy's Ship      FPS: " + std::to_string(fpsCounter);    
+    std::string title = "Bnuuy's Ship      FPS: " + std::to_string(fpsCounter);
 
-    window = glfwCreateWindow(WINDOW_WIDTH_PX, WINDOW_HEIGHT_PX, fullTitle.c_str(), nullptr, nullptr);
+    window = glfwCreateWindow(WINDOW_WIDTH_PX, WINDOW_HEIGHT_PX, title.c_str(), nullptr, nullptr);
     if (window == nullptr) {
         std::cerr << "ERROR: Failed to glfwCreateWindow in world_system.cpp" << std::endl;
         return nullptr;
@@ -152,11 +152,8 @@ void WorldSystem::init(RenderSystem* renderer_arg) {
 
 // Update our game world
 bool WorldSystem::step(float elapsed_ms_since_last_update) {
-    // Updating window title with points
-    std::stringstream title_ss;
-    std::string fullTitle = "Bnuuy's Ship      FPS: " + std::to_string(fpsCounter);    
-    glfwSetWindowTitle(window, fullTitle.c_str());
-
+    std::string title = "Bnuuy's Ship      FPS: " + std::to_string(fpsCounter) + "        " + title_points;
+    glfwSetWindowTitle(window, title.c_str());
     assert(registry.screenStates.components.size() <= 1);
     ScreenState& screen = registry.screenStates.components[0];
     return true;
@@ -282,6 +279,15 @@ void WorldSystem::handle_collisions() {
             collisions_to_remove.push_back(e2);
             CameraSystem::GetInstance()->setToPreviousPosition();
         }
+
+        // Ship - Base collision
+        if ((registry.ships.has(e1) && registry.base.has(e2)) ||
+            (registry.ships.has(e2) && registry.base.has(e1))) {
+            collisions_to_remove.push_back(e1);
+            collisions_to_remove.push_back(e2);
+            // just print debug stuff rn, behaviour is handled in different system
+            //std::cout << "island over base" << std::endl;            
+        }
     }
 
     for (Entity entity : collisions_to_remove) {
@@ -299,8 +305,15 @@ bool WorldSystem::is_over() const {
     return bool(glfwWindowShouldClose(window));
 }
 
+void WorldSystem::add_to_title(std::string new_title_text) {
+    title_points = new_title_text;
+}
+
+int WorldSystem::getFPScounter() {
+    return fpsCounter;
+}
+
 void WorldSystem::handle_player_death(){
-    
     SceneManager& sceneManager = SceneManager::getInstance();
     std::cout << "Switching to player death scene..." << std::endl;
     std::string currentSceneName = sceneManager.getCurrentScene()->getName();

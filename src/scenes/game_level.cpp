@@ -77,6 +77,12 @@ void GameLevel::Init() {
         createEnemy(entity);
     };
 
+    // bunny creation
+    for (Entity entity : registry.bunnies.entities) {
+        createBunny(entity);
+        bunnies_to_win += 1;
+    };
+
     registry.players.components[0].health = 100.0f;
     InitializeUI();
 
@@ -177,7 +183,6 @@ void GameLevel::Exit() {
     while (registry.renderRequests.entities.size() > 0){
 	    registry.remove_all_components_of(registry.renderRequests.entities.back());
 	}
-
     while (registry.colors.entities.size() > 0){
 	    registry.remove_all_components_of(registry.colors.entities.back());
 	}
@@ -190,30 +195,39 @@ void GameLevel::Exit() {
     while (registry.playerAnimations.entities.size() > 0){
 	    registry.remove_all_components_of(registry.playerAnimations.entities.back());
 	}
-
     while (registry.ships.entities.size() > 0){
 	    registry.remove_all_components_of(registry.ships.entities.back());
 	}
     while (registry.backgroundObjects.entities.size() > 0){
 	    registry.remove_all_components_of(registry.backgroundObjects.entities.back());
 	}
-    
-
     while (registry.enemies.entities.size() > 0){
 	    registry.remove_all_components_of(registry.enemies.entities.back());
 	}
-
     while (registry.islands.entities.size() > 0){
 	    registry.remove_all_components_of(registry.islands.entities.back());
 	}
-
     while (registry.base.entities.size() > 0){
 	    registry.remove_all_components_of(registry.base.entities.back());
 	}
-
     while (registry.bunnies.entities.size() > 0){
 	    registry.remove_all_components_of(registry.bunnies.entities.back());
 	}
+    while (registry.walkingPaths.entities.size() > 0){
+        registry.remove_all_components_of(registry.walkingPaths.entities.back());
+    }
+    while (registry.filledTiles.entities.size() > 0){
+        registry.remove_all_components_of(registry.filledTiles.entities.back());
+    }
+    while (registry.steeringWheels.entities.size() > 0){
+        registry.remove_all_components_of(registry.steeringWheels.entities.back());
+    }
+    while (registry.simpleCannons.entities.size() > 0){
+        registry.remove_all_components_of(registry.simpleCannons.entities.back());
+    }
+    // while (registry.projectiles.entities.size() > 0){
+    //     registry.remove_all_components_of(registry.projectiles.entities.back());
+    // }
 
     LevelExit();
 }
@@ -273,9 +287,7 @@ void HandlePlayerMovement(int key, int action, int mod) {
     } 
 }
 
-void HandleCameraMovement(int key, int action, int mod) {
-    CameraSystem* camera = CameraSystem::GetInstance();
-
+void UpdateCameraMoveDirection(int key, int action, int mod){
     if (action == GLFW_PRESS) {
         if (!activeShipKeys.count(key)) {
             keyShipOrder.push_back(key);
@@ -290,13 +302,30 @@ void HandleCameraMovement(int key, int action, int mod) {
     }
 
     // If no keys are pressed, don't reset velocity
+    if (activeShipKeys.empty() || (activeShipKeys.size() == 1 && activeShipKeys.count(GLFW_KEY_SPACE))) return;   
+}
+
+void HandleCameraMovement() {
     if (activeShipKeys.empty() || (activeShipKeys.size() == 1 && activeShipKeys.count(GLFW_KEY_SPACE))) return;
+    CameraSystem* camera = CameraSystem::GetInstance();
+
     vec2 inputVel = {0.0f, 0.0f};
 
-    if (activeShipKeys.count(MOVE_UP_BUTTON)) inputVel.y += SHIP_CAMERA_SPEED;
-    if (activeShipKeys.count(MOVE_DOWN_BUTTON)) inputVel.y -= SHIP_CAMERA_SPEED;
-    if (activeShipKeys.count(MOVE_LEFT_BUTTON)) inputVel.x += SHIP_CAMERA_SPEED;
-    if (activeShipKeys.count(MOVE_RIGHT_BUTTON)) inputVel.x -= SHIP_CAMERA_SPEED;
+    if (activeShipKeys.count(MOVE_UP_BUTTON)) inputVel.y += 1;
+    if (activeShipKeys.count(MOVE_DOWN_BUTTON)) inputVel.y -= 1;
+    if (activeShipKeys.count(MOVE_LEFT_BUTTON)) inputVel.x += 1;
+    if (activeShipKeys.count(MOVE_RIGHT_BUTTON)) inputVel.x -= 1;
+
+    if(inputVel.x != 0 || inputVel.y != 0){
+        float length = std::sqrt(inputVel.x* inputVel.x + inputVel.y * inputVel.y);
+        if (length > 0){
+            inputVel.x /= length;
+            inputVel.y /= length;
+        }
+    }
+
+    inputVel.x *= SHIP_CAMERA_SPEED;
+    inputVel.y *= SHIP_CAMERA_SPEED;
 
     inputVel.x = std::clamp(inputVel.x, -WALK_SPEED, WALK_SPEED);
     inputVel.y = std::clamp(inputVel.y, -WALK_SPEED, WALK_SPEED);
@@ -354,7 +383,7 @@ void GameLevel::HandleInput(int key, int action, int mod) {
                 return;
             }
             case STEERING_WHEEL: {
-                HandleCameraMovement(key, action, mod);
+                UpdateCameraMoveDirection(key, action, mod);
                 return;
             }
             default:
@@ -538,6 +567,7 @@ void GameLevel::Update(float dt) {
     physics_system.step(dt);
     animation_system.step(dt);
     module_system.step(dt);
+    HandleCameraMovement();
 
     world_system->handle_collisions();
 
@@ -566,5 +596,5 @@ void GameLevel::Update(float dt) {
 
     scene_ui.update(dt);
 
-    LevelUpdate();
+    LevelUpdate(dt);
 }

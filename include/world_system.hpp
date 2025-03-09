@@ -49,9 +49,16 @@ class WorldSystem {
     // should the game be over ?
     bool is_over() const;
 
+    // change title
+    void add_to_title(std::string title);
+
+    int getFPScounter();
+
    private:
     float mouse_pos_x = 0.0f;
     float mouse_pos_y = 0.0f;
+
+    std::string title_points = "";
 
     // input callback functions
     void on_key(int key, int, int action, int mod);
