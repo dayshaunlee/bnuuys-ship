@@ -35,6 +35,9 @@ struct Island {
 // Player base, in the future may add more attributes for upgrades functionality
 struct Base {
     std::vector<tson::Vector2i> polygon;
+    float drop_off_timer = 0.0; // keep track of how long the ship is inside the base
+    bool ship_in_base = false;
+    int bunny_count = 0;
 };
 
 // Data structure for toggling debug mode
@@ -177,7 +180,13 @@ enum class TEXTURE_ASSET_ID {
     
     MAIN_MENU_BG = BUNNY_NOT_JAILED + 1,
 
-    TEXTURE_COUNT = MAIN_MENU_BG + 1
+    FILLED_TILE = MAIN_MENU_BG + 1,
+
+    RESTART_BUTTON_NORMAL = FILLED_TILE + 1,
+    RESTART_BUTTON_CLICKED = RESTART_BUTTON_NORMAL + 1,
+
+    GAME_OVER_BG = RESTART_BUTTON_CLICKED + 1,
+    TEXTURE_COUNT = GAME_OVER_BG + 1
 };
 
 const int texture_count = (int) TEXTURE_ASSET_ID::TEXTURE_COUNT;
@@ -295,13 +304,28 @@ struct Enemy {
     int health;
 	int timer_ms;
     int home_island;
+    int range = 10;
 };
+
+// walking path for enemy
+struct WalkingPath {
+	std::vector<ivec2> path;
+};
+
+// filled tile for enemy path
+struct FilledTile {
+	vec2 pos;
+	vec2 size;
+};
+
 
 // ========== BUNNY DETAILS ==========
 struct Bunny {
     bool on_island;
     bool is_jailed;
     bool on_ship;
+    bool on_base;
+    bool moving_to_base;
 
     float jail_health;  // 0 if is_jailed is false
     int timer_ms;   // field reserved for animation 

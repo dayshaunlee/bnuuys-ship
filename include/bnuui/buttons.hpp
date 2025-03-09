@@ -18,6 +18,13 @@ public:
     void doUpdate(float dt) override;
 };
 
+class RestartButton : public Element {
+    public:
+        RestartButton(vec2 pos, vec2 scale, float rot);
+        ~RestartButton() = default;
+        void doUpdate(float dt) override;
+    };
+
 class Box : public Element {
 public:
     Box(vec2 pos, vec2 scale, float rot);

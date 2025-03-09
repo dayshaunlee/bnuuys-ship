@@ -892,23 +892,23 @@
                          "y":0
                         }, 
                         {
-                         "x":156.5,
+                         "x":158.667,
                          "y":0
                         }, 
                         {
-                         "x":156.5,
-                         "y":92
+                         "x":158.667,
+                         "y":97.3333
                         }, 
                         {
                          "x":0,
-                         "y":92
+                         "y":97.3333
                         }],
                  "rotation":0,
                  "type":"base",
                  "visible":true,
                  "width":0,
-                 "x":953.825,
-                 "y":313.101
+                 "x":952.667,
+                 "y":311.333
                 }, 
                 {
                  "height":0,
@@ -1186,8 +1186,8 @@
                  "type":"player",
                  "visible":true,
                  "width":0,
-                 "x":902.510333333333,
-                 "y":479.524333333333
+                 "x":902.51,
+                 "y":479.524
                 }, 
                 {
                  "height":0,
@@ -1210,8 +1210,8 @@
                  "type":"enemy",
                  "visible":true,
                  "width":0,
-                 "x":208.252,
-                 "y":192.109
+                 "x":192,
+                 "y":288
                 }, 
                 {
                  "height":0,
@@ -1234,8 +1234,8 @@
                  "type":"enemy",
                  "visible":true,
                  "width":0,
-                 "x":356.773,
-                 "y":179.194
+                 "x":496,
+                 "y":192
                 }, 
                 {
                  "height":0,
@@ -1258,8 +1258,8 @@
                  "type":"enemy",
                  "visible":true,
                  "width":0,
-                 "x":868.996,
-                 "y":110.312766666667
+                 "x":784,
+                 "y":96
                 }, 
                 {
                  "height":0,
@@ -1282,8 +1282,8 @@
                  "type":"enemy",
                  "visible":true,
                  "width":0,
-                 "x":1386.73,
-                 "y":413.276
+                 "x":1312,
+                 "y":320
                 }, 
                 {
                  "height":0,
@@ -1306,8 +1306,8 @@
                  "type":"enemy",
                  "visible":true,
                  "width":0,
-                 "x":1323.77,
-                 "y":842.695
+                 "x":1328,
+                 "y":752
                 }, 
                 {
                  "height":0,
@@ -1330,8 +1330,8 @@
                  "type":"enemy",
                  "visible":true,
                  "width":0,
-                 "x":431.034,
-                 "y":860.453
+                 "x":528,
+                 "y":928
                 }, 
                 {
                  "height":0,
@@ -1354,8 +1354,8 @@
                  "type":"enemy",
                  "visible":true,
                  "width":0,
-                 "x":246.997,
-                 "y":874.982
+                 "x":144,
+                 "y":912
                 }, 
                 {
                  "height":0,
@@ -1378,8 +1378,56 @@
                  "type":"enemy",
                  "visible":true,
                  "width":0,
-                 "x":361.616,
-                 "y":828.166
+                 "x":368,
+                 "y":736
+                }, 
+                {
+                 "height":0,
+                 "id":83,
+                 "name":"",
+                 "point":true,
+                 "rotation":0,
+                 "type":"bunny",
+                 "visible":true,
+                 "width":0,
+                 "x":788,
+                 "y":401.333
+                }, 
+                {
+                 "height":0,
+                 "id":84,
+                 "name":"",
+                 "point":true,
+                 "rotation":0,
+                 "type":"bunny",
+                 "visible":true,
+                 "width":0,
+                 "x":1304,
+                 "y":463.333
+                }, 
+                {
+                 "height":0,
+                 "id":85,
+                 "name":"",
+                 "point":true,
+                 "rotation":0,
+                 "type":"bunny",
+                 "visible":true,
+                 "width":0,
+                 "x":816.667,
+                 "y":735.333
+                }, 
+                {
+                 "height":0,
+                 "id":86,
+                 "name":"",
+                 "point":true,
+                 "rotation":0,
+                 "type":"bunny",
+                 "visible":true,
+                 "width":0,
+                 "x":341.333,
+                 "y":458
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -1388,7 +1436,7 @@
          "y":0
         }],
  "nextlayerid":9,
- "nextobjectid":83,
+ "nextobjectid":89,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.11.2",

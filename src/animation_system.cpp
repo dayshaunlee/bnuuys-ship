@@ -137,6 +137,10 @@ TEXTURE_ASSET_ID GetNextPlayerAnimation(TEXTURE_ASSET_ID currAnim, Player player
     return TEXTURE_ASSET_ID::BUNNY_IDLE_DOWN0;
 }
 
+/*
+*   M1 interpolation implementation.
+*   Very basic linear interpolation to switch player keyframes/textures for animation.
+*/
 void HandlePlayerAnimation(float elapsed_ms) {
     for (Entity player : registry.playerAnimations.entities) {
         Player player_comp = registry.players.get(player);
@@ -170,14 +174,16 @@ void HandlePlayerAnimation(float elapsed_ms) {
 }
 
 void HandleBunnyAnimation(float elapsed_ms) {
+    Base& base = registry.base.components[0];
     for (Entity entity : registry.bunnies.entities) {
         Bunny& bunny = registry.bunnies.get(entity);
         // Bunny saving animation.
         Motion& bunny_motion = registry.motions.get(entity);
-        if (!bunny.is_jailed && !bunny.on_ship) {
+        
+        // bunny -> ship
+        if (!bunny.is_jailed && !bunny.on_ship && !bunny.on_base) {
             vec2 bunny_position = bunny_motion.position + CameraSystem::GetInstance()->position;
             vec2 empty_ship_location = {364, 252};  // save bunny to top right ship tile
-
             if (round(bunny_position) != empty_ship_location) {
                 vec2 direction = empty_ship_location - bunny_position;
 
@@ -193,6 +199,45 @@ void HandleBunnyAnimation(float elapsed_ms) {
                 bunny_motion.position += CameraSystem::GetInstance()->position;
                 bunny_motion.velocity = {0, 0};
                 registry.backgroundObjects.remove(entity);
+            }
+        }
+        
+        // bunny -> base
+        vec2& bunny_position = bunny_motion.position;
+        Entity& base_entity = registry.base.entities[0];
+        vec2 empty_base_location = registry.motions.get(base_entity).position;
+        empty_base_location += vec2(GRID_CELL_WIDTH_PX, GRID_CELL_HEIGHT_PX);
+
+        // set bunny flags if it should start moving to the base from the ship
+        if (!bunny.is_jailed && bunny.on_ship && !bunny.moving_to_base &&
+            base.drop_off_timer >= BUNNY_BASE_DROPOFF_TIME) {
+            // the bunny should not be a background object while its on the ship before it started moving
+            assert(!registry.backgroundObjects.has(entity));
+            registry.backgroundObjects.emplace(entity);
+            bunny.on_ship = false;
+            bunny.moving_to_base = true;
+            bunny_position -= CameraSystem::GetInstance()->position;
+        }
+
+        if (bunny.moving_to_base) {
+            if (round(bunny_position) != round(empty_base_location)) {
+                vec2 direction = empty_base_location - bunny_position;
+
+                // unit vector for direction
+                float length = sqrt(direction.x * direction.x + direction.y * direction.y);
+                if (length > 0) {
+                    direction.x /= length;
+                    direction.y /= length;
+                }
+
+                bunny_motion.velocity = direction * 100.f;
+            } else {
+                std::cout << "bunny docked on base" << std::endl;
+                bunny.moving_to_base = false;
+                bunny.on_base = true;
+                base.bunny_count += 1;
+                bunny_motion.velocity = {0, 0};
+                std::cout << "bunny: " << bunny_position.x << ", " << bunny_position.y << std::endl;
             }
         }
     }
