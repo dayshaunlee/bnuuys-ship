@@ -282,6 +282,7 @@ void WorldSystem::handle_collisions() {
         // Enemy - Ship collision
         if (registry.enemies.has(e1) && registry.ships.has(e2)) {
             registry.ships.get(e2).health -= registry.enemies.get(e1).health;
+            // registry.ships.get(e2).health -= 50;
             registry.remove_all_components_of(e1);
             // Play sound
             Mix_PlayChannel(-1, enemy_ship_collision, 0);
@@ -294,6 +295,7 @@ void WorldSystem::handle_collisions() {
             continue;
         } else if (registry.enemies.has(e2) && registry.ships.has(e1)) {
             registry.ships.get(e1).health -= registry.enemies.get(e2).health;
+            // registry.ships.get(e1).health -= 50;
             registry.remove_all_components_of(e2);
             // Play sound
             Mix_PlayChannel(-1, enemy_ship_collision, 0);
