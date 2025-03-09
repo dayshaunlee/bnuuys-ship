@@ -26,8 +26,13 @@ WorldSystem::WorldSystem() {
 WorldSystem::~WorldSystem() {
     // Destroy music components
     if (background_music != nullptr) Mix_FreeMusic(background_music);
-    if (chicken_dead_sound != nullptr) Mix_FreeChunk(chicken_dead_sound);
-    if (chicken_eat_sound != nullptr) Mix_FreeChunk(chicken_eat_sound);
+    if (enemy_incoming != nullptr) Mix_FreeMusic(enemy_incoming);
+    if (island_ship_collision != nullptr) Mix_FreeChunk(island_ship_collision);
+    if (enemy_ship_collision != nullptr) Mix_FreeChunk(enemy_ship_collision);
+    //if (projectile_shoot != nullptr) Mix_FreeChunk(projectile_shoot);
+    if (projectile_jail_collision != nullptr) Mix_FreeChunk(projectile_jail_collision);
+    if (projectile_enemy_collision != nullptr) Mix_FreeChunk(projectile_enemy_collision);
+    if (game_over != nullptr) Mix_FreeChunk(game_over);
     Mix_CloseAudio();
 
     // Destroy all created components
@@ -122,16 +127,27 @@ bool WorldSystem::start_and_load_sounds() {
     }
 
     background_music = Mix_LoadMUS(audio_path("music.wav").c_str());
-    chicken_dead_sound = Mix_LoadWAV(audio_path("chicken_dead.wav").c_str());
-    chicken_eat_sound = Mix_LoadWAV(audio_path("chicken_eat.wav").c_str());
+    enemy_incoming = Mix_LoadMUS(audio_path("enemy_incoming.wav").c_str());
+    island_ship_collision = Mix_LoadWAV(audio_path("island-ship_collision.wav").c_str());
+    enemy_ship_collision = Mix_LoadWAV(audio_path("ship-enemy_collision.wav").c_str());
+    projectile_enemy_collision = Mix_LoadWAV(audio_path("projectile-enemy_collision.wav").c_str());
+    projectile_jail_collision = Mix_LoadWAV(audio_path("projectile-jail_collision.wav").c_str());
+    game_over = Mix_LoadWAV(audio_path("game_over.wav").c_str());
 
-    if (background_music == nullptr || chicken_dead_sound == nullptr || chicken_eat_sound == nullptr) {
+    Mix_Volume(-1, 10);
+
+    if (background_music == nullptr || enemy_incoming == nullptr ||
+        island_ship_collision == nullptr || enemy_ship_collision == nullptr || projectile_enemy_collision == nullptr) {
         fprintf(stderr,
-                "Failed to load sounds\n %s\n %s\n %s\n make sure the data "
+                "Failed to load sounds\n %s\n %s\n %s\n %s\n %s\n %s\n %s\n make sure the data "
                 "directory is present",
                 audio_path("music.wav").c_str(),
-                audio_path("chicken_dead.wav").c_str(),
-                audio_path("chicken_eat.wav").c_str());
+                audio_path("enemy_incoming.wav").c_str(),
+                audio_path("island-ship_collision.wav").c_str(),
+                audio_path("ship-enemy_collision.wav").c_str(),
+                audio_path("projectile-enemy_collision.wav").c_str(),
+                audio_path("projectile-jail_collision.wav").c_str(),
+                audio_path("game_over.wav").c_str());
         return false;
     }
 
@@ -143,8 +159,8 @@ void WorldSystem::init(RenderSystem* renderer_arg) {
 
     // start playing background music indefinitely
     std::cout << "Starting music..." << std::endl;
-    // TODO Brian: uncomment later
-    // Mix_PlayMusic(background_music, -1);
+    Mix_PlayMusic(background_music, -1);
+    Mix_VolumeMusic(10);
 
     // Set all states to default
     restart_game();
@@ -156,6 +172,15 @@ bool WorldSystem::step(float elapsed_ms_since_last_update) {
     glfwSetWindowTitle(window, title.c_str());
     assert(registry.screenStates.components.size() <= 1);
     ScreenState& screen = registry.screenStates.components[0];
+
+    // TODO: Change the music
+    /*if (!CameraSystem::GetInstance()->IsEnemyOnScreen()) {
+        Mix_ResumeMusic();
+    } else {
+        Mix_PauseMusic();
+        Mix_PlayMusic(enemy_incoming, -1);
+    }*/
+
     return true;
 }
 
@@ -195,6 +220,8 @@ void WorldSystem::handle_collisions() {
 
             if (enemy.health <= 0) registry.remove_all_components_of(e2);
             registry.remove_all_components_of(e1);
+            // Play sound
+            Mix_PlayChannel(-1, projectile_enemy_collision, 0);
 
         } else if (registry.playerProjectiles.has(e2) && registry.enemies.has(e1)) {
             PlayerProjectile& projectile = registry.playerProjectiles.get(e2);
@@ -204,6 +231,8 @@ void WorldSystem::handle_collisions() {
             if (enemy.health <= 0) registry.remove_all_components_of(e1);
 
             registry.remove_all_components_of(e2);
+            // Play sound
+            Mix_PlayChannel(-1, projectile_enemy_collision, 0);
         }
 
         // Projectile - Bunny collision
@@ -214,6 +243,8 @@ void WorldSystem::handle_collisions() {
             bunny.jail_health -= projectile.damage;
 
             if (bunny.jail_health <= 0) {
+                // Play sound
+                Mix_PlayChannel(-1, projectile_jail_collision, 0);
                 registry.motions.get(e2).scale = {28, 28};
                 registry.renderRequests.get(e2).used_texture = TEXTURE_ASSET_ID::BUNNY_NPC_IDLE_UP0;
                 bunny.is_jailed = false;
@@ -227,6 +258,7 @@ void WorldSystem::handle_collisions() {
             bunny.jail_health -= projectile.damage;
 
             if (bunny.jail_health <= 0) {
+                Mix_PlayChannel(-1, projectile_jail_collision, 0);
                 registry.motions.get(e1).scale = {28, 28};
                 registry.renderRequests.get(e1).used_texture = TEXTURE_ASSET_ID::BUNNY_NPC_IDLE_UP0;
                 bunny.is_jailed = false;
@@ -251,6 +283,8 @@ void WorldSystem::handle_collisions() {
         if (registry.enemies.has(e1) && registry.ships.has(e2)) {
             registry.ships.get(e2).health -= registry.enemies.get(e1).health;
             registry.remove_all_components_of(e1);
+            // Play sound
+            Mix_PlayChannel(-1, enemy_ship_collision, 0);
 
             // When Player dies (ship health is <= 0)
             if(registry.ships.get(e2).health <= 0.0f){
@@ -261,6 +295,8 @@ void WorldSystem::handle_collisions() {
         } else if (registry.enemies.has(e2) && registry.ships.has(e1)) {
             registry.ships.get(e1).health -= registry.enemies.get(e2).health;
             registry.remove_all_components_of(e2);
+            // Play sound
+            Mix_PlayChannel(-1, enemy_ship_collision, 0);
 
             // When Player dies (ship health is <= 0)
             if(registry.ships.get(e1).health <= 0.0f){
@@ -277,6 +313,8 @@ void WorldSystem::handle_collisions() {
             (registry.ships.has(e2) && registry.islands.has(e1))) {
             collisions_to_remove.push_back(e1);
             collisions_to_remove.push_back(e2);
+            // Play sound
+            Mix_PlayChannel(-1, island_ship_collision, 0);
             CameraSystem::GetInstance()->setToPreviousPosition();
         }
 
@@ -348,6 +386,7 @@ void WorldSystem::on_mouse_button_pressed(int button, int action, int mods) {
     // on button press
     Scene* scene = SceneManager::getInstance().getCurrentScene();
     if (scene) {
+        // Play sound
         scene->HandleMouseClick(button, action, mods);
     }
 }
