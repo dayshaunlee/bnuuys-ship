@@ -609,35 +609,38 @@ void GameLevel::HandleMouseClick(int button, int action, int mods) {
 }
 
 void GameLevel::Update(float dt) {
-    CameraSystem::GetInstance()->update(dt);
-    ai_system.step(dt);
-    physics_system.step(dt);
-    animation_system.step(dt);
-    module_system.step(dt);
-    HandleCameraMovement();
 
-    world_system->handle_collisions();
+    if(!RenderSystem::isRenderingGacha){
+        CameraSystem::GetInstance()->update(dt);
+        ai_system.step(dt);
+        physics_system.step(dt);
+        animation_system.step(dt);
+        module_system.step(dt);
+        HandleCameraMovement();
 
-    // Remove projectiles.
-    for (Entity e : registry.playerProjectiles.entities) {
-        if (registry.playerProjectiles.has(e)) {
-            PlayerProjectile& p = registry.playerProjectiles.get(e);
-            if (p.alive_time_ms <= 0) {
-                registry.remove_all_components_of(e);
-                continue;
+        world_system->handle_collisions();
+
+        // Remove projectiles.
+        for (Entity e : registry.playerProjectiles.entities) {
+            if (registry.playerProjectiles.has(e)) {
+                PlayerProjectile& p = registry.playerProjectiles.get(e);
+                if (p.alive_time_ms <= 0) {
+                    registry.remove_all_components_of(e);
+                    continue;
+                }
+                p.alive_time_ms -= dt;
             }
-            p.alive_time_ms -= dt;
         }
-    }
 
-    for (Entity e : registry.enemyProjectiles.entities) {
-        if (registry.enemyProjectiles.has(e)) {
-            EnemyProjectile& p = registry.enemyProjectiles.get(e);
-            if (p.alive_time_ms <= 0) {
-                registry.remove_all_components_of(e);
-                continue;
+        for (Entity e : registry.enemyProjectiles.entities) {
+            if (registry.enemyProjectiles.has(e)) {
+                EnemyProjectile& p = registry.enemyProjectiles.get(e);
+                if (p.alive_time_ms <= 0) {
+                    registry.remove_all_components_of(e);
+                    continue;
+                }
+                p.alive_time_ms -= dt;
             }
-            p.alive_time_ms -= dt;
         }
     }
 

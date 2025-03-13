@@ -82,6 +82,7 @@ class SceneUI {
 public:
     bool insert(std::shared_ptr<Element> elem);
     bool remove(int idx);
+    int size();
     std::vector<std::shared_ptr<Element>> getElems();
 
     void update(float dt);

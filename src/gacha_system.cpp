@@ -7,22 +7,23 @@
 #include "world_init.hpp"
 #include "gacha_system.hpp"
 #include "sceneManager/scene_manager.hpp"
+#include "render_system.hpp"
 
 GachaSystem::GachaSystem(){
     rng.seed(static_cast<unsigned>(time(nullptr)));
     levelModulePools.resize(5); // temporarily set to 5 levels for now
 
     //TODO lily set level pool and set module drop rates
-    setLevelPool(0, {MODULE_TYPES::SIMPLE_CANNON, MODULE_TYPES::FAST_CANNON});
+    setLevelPool(0, {MODULE_TYPES::SIMPLE_CANNON, MODULE_TYPES::HELPER_BUNNY});
     setLevelPool(1, {MODULE_TYPES::SIMPLE_CANNON, MODULE_TYPES::FAST_CANNON, MODULE_TYPES::PLATFORM});
     
     // the rates will be normalized if not set the default is 1
     setDropRate(MODULE_TYPES::STEERING_WHEEL, 0);
-    setDropRate(MODULE_TYPES::HELPER_BUNNY, 0);
+    setDropRate(MODULE_TYPES::HELPER_BUNNY, 100);
     setDropRate(MODULE_TYPES::EMPTY, 0);
-    setDropRate(MODULE_TYPES::PLATFORM, 5);
+    setDropRate(MODULE_TYPES::PLATFORM, 0);
     setDropRate(MODULE_TYPES::SIMPLE_CANNON, 100);
-    setDropRate(MODULE_TYPES::FAST_CANNON, 50);
+    setDropRate(MODULE_TYPES::FAST_CANNON, 0);
 }
 
 
@@ -70,9 +71,94 @@ std::vector<MODULE_TYPES> GachaSystem::getModuleOptions(int level){
     return selectedModules;
 }
 
-void GachaSystem::displayGacha(int level){
+// bool GachaSystem::isOnDisplay(){
+//     return onDisplay;
+// }
+
+TEXTURE_ASSET_ID getTextureFromModuleType(MODULE_TYPES module){
+    switch (module)
+    {
+    case MODULE_TYPES::SIMPLE_CANNON :
+        /* code */
+        return TEXTURE_ASSET_ID::SIMPLE_CANNON01;
+        break;
+    case MODULE_TYPES::FAST_CANNON :
+        return TEXTURE_ASSET_ID::SIMPLE_CANNON02;
+        break;
+    case MODULE_TYPES::PLATFORM :
+        return TEXTURE_ASSET_ID::RAFT;
+        break;
+    case MODULE_TYPES::HELPER_BUNNY :
+        return TEXTURE_ASSET_ID::BUNNY_NPC_IDLE_UP0;
+        break;
+    default:
+        std::cout << "This is not a valid module" << std::endl;
+        return TEXTURE_ASSET_ID::WATER_BACKGROUND; 
+        break;
+    }
+}
+
+void GachaSystem::displayGacha(int level, bnuui::SceneUI& scene_ui){
+    std::cout << "gacha pop up..." << std::endl;
+    RenderSystem::isRenderingGacha = true;
     std::vector<MODULE_TYPES> threeOptions = getModuleOptions(level);
-    
+    std::cout << "options" << threeOptions[0] << " " << threeOptions[1] << " " << threeOptions[2] << '\n';
+
+    auto gacha_box = std::make_shared<bnuui::Box>(vec2(WINDOW_WIDTH_PX/2, WINDOW_HEIGHT_PX/2), vec2(600, 400), 0.0f);
+
+    auto moduleOption1 = std::make_shared<bnuui::Box>(vec2(((WINDOW_WIDTH_PX/2) - 120), WINDOW_HEIGHT_PX/2), vec2(70, 70), 0.0f);
+
+    moduleOption1->texture = getTextureFromModuleType(threeOptions[0]);
+    moduleOption1->setOnClick([&, threeOptions](bnuui::Element& e) {
+        std::cout << "HERE " << threeOptions[0] << " " << threeOptions[1] << " " << threeOptions[2] << '\n';
+        std::cout << threeOptions[0] << '\n';
+        registry.ships.components[0].available_modules[threeOptions[0]]++;
+        std::cout << "Picked option 1, count: " << registry.ships.components[0].available_modules[threeOptions[0]] << '\n';
+        RenderSystem::isRenderingGacha = false;
+        int uiSize = scene_ui.size();
+        scene_ui.remove(uiSize-1);
+        scene_ui.remove(uiSize-2);
+        scene_ui.remove(uiSize-3);
+        scene_ui.remove(uiSize-4); 
+    });
+    moduleOption1->setOnUpdate([](bnuui::Element& e, float dt) {
+    });
+
+
+    auto moduleOption2 = std::make_shared<bnuui::Box>(vec2(WINDOW_WIDTH_PX/2, WINDOW_HEIGHT_PX/2), vec2(70, 70), 0.0f);
+    moduleOption2->texture = getTextureFromModuleType(threeOptions[1]);
+    moduleOption2->setOnClick([&, threeOptions](bnuui::Element& e) {
+        registry.ships.components[0].available_modules[threeOptions[1]]++;
+        RenderSystem::isRenderingGacha = false;
+        int uiSize = scene_ui.size();
+        scene_ui.remove(uiSize-1);
+        scene_ui.remove(uiSize-2);
+        scene_ui.remove(uiSize-3);
+        scene_ui.remove(uiSize-4); 
+    });
+    moduleOption2->setOnUpdate([](bnuui::Element& e, float dt) { 
+    });
+
+    auto moduleOption3 = std::make_shared<bnuui::Box>(vec2(((WINDOW_WIDTH_PX/2) + 120), WINDOW_HEIGHT_PX/2), vec2(70, 70), 0.0f);
+    moduleOption3->texture = getTextureFromModuleType(threeOptions[2]);
+    moduleOption3->setOnClick([&, threeOptions](bnuui::Element& e) {
+        registry.ships.components[0].available_modules[threeOptions[2]]++;
+        RenderSystem::isRenderingGacha = false;
+        int uiSize = scene_ui.size();
+        scene_ui.remove(uiSize-1);
+        scene_ui.remove(uiSize-2);
+        scene_ui.remove(uiSize-3);
+        scene_ui.remove(uiSize-4); 
+    });
+    moduleOption3->setOnUpdate([](bnuui::Element& e, float dt) { 
+    });
+
+
+    scene_ui.insert(gacha_box);
+    scene_ui.insert(moduleOption1);
+    scene_ui.insert(moduleOption2);
+    scene_ui.insert(moduleOption3); 
+
 }
 
 

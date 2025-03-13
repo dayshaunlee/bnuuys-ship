@@ -16,6 +16,10 @@ bool SceneUI::remove(int idx) {
     return true;
 }
 
+int SceneUI::size(){
+    return ui_elems.size();
+}
+
 std::vector<std::shared_ptr<Element>> SceneUI::getElems() {
     return ui_elems;
 }
