@@ -67,7 +67,7 @@ class RenderSystem {
         textures_path("background/water_background.png"),
         
         // island background
-        map_path("m1_debug.png"),
+        map_path("m3_level1_debug.png"),
         map_path("m2_tutorial.png"),
       
         // Enemy (balloon/flyer)

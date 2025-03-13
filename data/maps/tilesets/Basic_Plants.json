@@ -1,0 +1,14 @@
+{ "columns":6,
+ "image":"Basic_Plants.png",
+ "imageheight":32,
+ "imagewidth":96,
+ "margin":0,
+ "name":"Basic_Plants",
+ "spacing":0,
+ "tilecount":12,
+ "tiledversion":"1.11.2",
+ "tileheight":16,
+ "tilewidth":16,
+ "type":"tileset",
+ "version":"1.11"
+}
