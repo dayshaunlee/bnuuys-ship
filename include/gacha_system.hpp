@@ -3,14 +3,23 @@
 #include "tinyECS/tiny_ecs.hpp"
 #include "tinyECS/components.hpp"
 #include "tinyECS/registry.hpp"
+#include <random>
+#include <unordered_set>
+#include <vector>
 
-class GachaSystem(){
+
+class GachaSystem{
     public:
-    
-    setLevelPool();
-    getModuleOptions();
-    displayGacha();
-    private:
-    std::vector<std::unordered_set> levelModulePool;
 
+    GachaSystem();
+    
+    void setLevelPool(int level, std::vector<MODULE_TYPES>& modulesPool);
+    std::vector<MODULE_TYPES> getModuleOptions(int level);
+    void displayGacha(int level);
+
+
+    private:
+    std::vector<std::unordered_set<MODULE_TYPES>> levelModulePools;
+    std::unordered_map<MODULE_TYPES, float> moduleDropRates;
+    std::default_random_engine rng;
 };
