@@ -62,6 +62,7 @@ int getEnemyRange(ENEMY_TYPE type) {
 #define SDL_MAIN_HANDLED
 #include <SDL.h>
 #include <SDL_mixer.h>
+#include <camera_system.hpp>
 
 Mix_Chunk* projectile_shoot;
 
@@ -241,12 +242,12 @@ Entity createWaterBackground() {
 Entity createCannonProjectile(vec2 orig, vec2 dest) {
     Entity e;
     Motion& m = registry.motions.emplace(e);
-    m.position = orig;
+    m.position = orig - CameraSystem::GetInstance()->position;
     m.scale = {GRID_CELL_WIDTH_PX / 2, GRID_CELL_HEIGHT_PX / 2};
     m.angle = degrees(atan2(dest.y - dest.x, dest.x - orig.x));
     vec2 velVec = dest - orig;
     m.velocity = normalize(velVec) * 350.0f;
-
+    registry.backgroundObjects.emplace(e);
     registry.renderRequests.insert(
         e, {TEXTURE_ASSET_ID::BUNNY_FACE_ANGRY05, EFFECT_ASSET_ID::TEXTURED, GEOMETRY_BUFFER_ID::SPRITE});
 

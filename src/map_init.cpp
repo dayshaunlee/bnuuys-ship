@@ -34,6 +34,30 @@ std::string objectTypeStr(tson::ObjectType objType) {
     }
 };
 
+Motion getPolygonMotion(const std::vector<tson::Vector2i>& polygon) {
+    if (polygon.empty()) {
+        return {{0, 0}, 0, {0, 0}, {10, 10}};
+    }
+
+    int minX = std::numeric_limits<int>::max();
+    int maxX = std::numeric_limits<int>::min();
+    int minY = std::numeric_limits<int>::max();
+    int maxY = std::numeric_limits<int>::min();
+
+    for (const auto& p : polygon) {
+        minX = std::min(minX, p.x);
+        maxX = std::max(maxX, p.x);
+        minY = std::min(minY, p.y);
+        maxY = std::max(maxY, p.y);
+    }
+
+    vec2 center((minX + maxX) / 2, (minY + maxY) / 2);
+    vec2 size(maxX - minX, maxY - minY);
+
+    // Motion: position, angle, velocity, scale
+    return {center, 0, {0, 0}, size};
+}
+
 void debugMap(std::unique_ptr<tson::Map>& map) {
     std::cout << "Map size: x=" << map->getSize().x << " y=" << map->getSize().y << std::endl;
     std::cout << "Render order: " << map->getRenderOrder() << std::endl;
@@ -70,7 +94,7 @@ void debugMap(std::unique_ptr<tson::Map>& map) {
     }
 };
 
-/* TODO (X=COMPLETE):
+/* LOAD MAP
  *	- loop through all layers. if it is of type 'objectgroup' then:
  *		- loop through "island" layer and:
  *			- if it is of class 'island' -> create Entities with Island and Motion
@@ -78,7 +102,7 @@ void debugMap(std::unique_ptr<tson::Map>& map) {
  *		- loop through "spawnpoints" layer and:
  *			- if it is of class 'enemy' -> create Entities with Enemy and Motion
  *			- if it is of class 'player' -> update Player position (if exists)
- *	X return map size as tson::Vector2<int>
+ *	- return map size as tson::Vector2<int>
  */
 std::pair<tson::Vector2i, tson::Vector2i> loadMap(const std::string& name) {
     // delete stuff from previous maps
@@ -147,9 +171,17 @@ std::pair<tson::Vector2i, tson::Vector2i> loadMap(const std::string& name) {
                 mot.scale = {obj.getSize().x * scaling_factor_x, obj.getSize().y * scaling_factor_y};
                 Island& isl = registry.islands.emplace(e);
                 isl.polygon = obj.getPolygons();  // first point is always (0, 0)
+                Motion centeredMot1 = getPolygonMotion(isl.polygon);
                 for (auto& p : isl.polygon) {     // scale up polygons too
                     p.x *= scaling_factor_x;
-                    p.y *= scaling_factor_x;
+                    p.y *= scaling_factor_y;
+                }
+                Motion centeredMot = getPolygonMotion(isl.polygon);
+                mot.position += centeredMot.position;
+                mot.scale = centeredMot.scale;
+                for (auto& p : isl.polygon) {  // recenter polygon
+                    p.x -= centeredMot.position.x;
+                    p.y -= centeredMot.position.y;
                 }
                 registry.backgroundObjects.emplace(e);
             } else if (obj.getClassType() == "base") {
@@ -158,12 +190,19 @@ std::pair<tson::Vector2i, tson::Vector2i> loadMap(const std::string& name) {
                 bas.polygon = obj.getPolygons();
                 for (auto& p : bas.polygon) {  // scale up polygons too
                     p.x *= scaling_factor_x;
-                    p.y *= scaling_factor_x;
+                    p.y *= scaling_factor_y;
                 }
                 Motion& mot = registry.motions.emplace(e);
                 mot.position = {obj.getPosition().x * scaling_factor_x + offset.x,
                                 obj.getPosition().y * scaling_factor_y + offset.y};
                 mot.scale = {obj.getSize().x * scaling_factor_x, obj.getSize().y * scaling_factor_y};
+                Motion centeredMot = getPolygonMotion(bas.polygon);
+                mot.position += centeredMot.position;
+                mot.scale = centeredMot.scale;
+                for (auto& p : bas.polygon) {  // recenter polygon
+                    p.x -= centeredMot.position.x;
+                    p.y -= centeredMot.position.y;
+                }
                 registry.backgroundObjects.emplace(e);
             }
         }

@@ -73,7 +73,6 @@ void GameLevel::Init() {
 
     // enemy creation
     for (Entity entity: registry.enemies.entities) {
-        //registry.remove_all_components_of(entity);
         createEnemy(entity);
     };
 

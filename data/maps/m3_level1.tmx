@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.11" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="50" height="30" tilewidth="16" tileheight="16" infinite="0" nextlayerid="10" nextobjectid="170">
- <editorsettings>
-  <export target="m3_level1.json" format="json"/>
- </editorsettings>
  <tileset firstgid="1" source="tilesets/Grass.json"/>
  <tileset firstgid="78" source="tilesets/Water.json"/>
  <tileset firstgid="79" source="tilesets/Tilled_Dirt_v2.json"/>
- <tileset firstgid="156" source="tilesets/Hills.tsx"/>
- <tileset firstgid="233" source="tilesets/Grass_Biome.tsx"/>
+ <tileset firstgid="156" source="tilesets/Hills.json"/>
+ <tileset firstgid="233" source="tilesets/Grass_Biome.json"/>
  <layer id="2" name="water_tiles" width="50" height="30">
   <data encoding="csv">
 78,0,0,0,78,0,0,0,78,0,0,0,78,0,0,0,78,0,0,0,78,0,0,0,78,0,0,0,78,0,0,0,78,0,0,0,78,0,0,0,78,0,0,0,78,0,0,0,78,0,

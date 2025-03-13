@@ -153,12 +153,33 @@ std::vector<tson::Vector2i> get_poly_from_motion(const Motion& motion) {
     return polygon;
 }
 
+// Collision using "axis-aligned" rectangular bounding boxes
+bool collidesAABB(const Motion& motion1, const Motion& motion2) {
+    vec2 half_size1 = get_bounding_box(motion1) / 2.f;
+    vec2 half_size2 = get_bounding_box(motion2) / 2.f;
+
+    vec2 pos1 = motion1.position;
+    vec2 pos2 = motion2.position - CameraSystem::GetInstance()->position;
+
+    if (pos1.x + half_size1.x < pos2.x - half_size2.x || pos2.x + half_size2.x < pos1.x - half_size1.x) {
+        return false;
+    }
+
+    if (pos1.y + half_size1.y < pos2.y - half_size2.y || pos2.y + half_size2.y < pos1.y - half_size1.y) {
+        return false;
+    }
+
+    return true;
+}
+
+
 // This is a SUPER APPROXIMATE check that puts a circle around the bounding
 // boxes and sees if the center point of either object is inside the other's
 // bounding-box-circle. You can surely implement a more accurate detection
 // Clare's note: add camera offset in calculation
+// Dayshaun's note: removed camera offset because made projectiles background offset
 bool collidesSpherical(const Motion& motion1, const Motion& motion2) {
-    vec2 dp = motion1.position - motion2.position + CameraSystem::GetInstance()->position;
+    vec2 dp = motion1.position - motion2.position;
     float dist_squared = dot(dp, dp);
     const vec2 other_bonding_box = get_bounding_box(motion1) / 2.f;
     const float other_r_squared = dot(other_bonding_box, other_bonding_box);
@@ -196,7 +217,10 @@ bool collidesSphericalShip(const Entity e1, const Entity e2) {
 
 // Brian's Additional Feedback: I added the Camera Offset, but it might not be the EXACT outputs.
 // Polygon - Polygon collision
+// TODO Dayshaun: this function is mega scuffed and has repeating code WILL FIX SOON TM
 bool collidesPoly(const Entity e1, const Entity e2) {
+    // discard if the bounding boxes do not collide
+    if (!collidesAABB(registry.motions.get(e1), registry.motions.get(e2))) return false;
     Motion& e1_mot = registry.motions.get(e1);
     Motion& e2_mot = registry.motions.get(e2);
     std::vector<tson::Vector2i> islandPolygon;
@@ -209,6 +233,7 @@ bool collidesPoly(const Entity e1, const Entity e2) {
             p.x += e1_mot.position.x + CameraSystem::GetInstance()->position.x;
             p.y += e1_mot.position.y + CameraSystem::GetInstance()->position.y;
         }
+        if (!collidesAABB(registry.motions.get(e1), registry.motions.get(e2))) return false;
         return polyPoly(islandPolygon, shipPolygon);
     } else if (registry.islands.has(e2)) {  // e2 is the Island, e1 is the Ship
         islandPolygon = registry.islands.get(e2).polygon;
@@ -217,6 +242,7 @@ bool collidesPoly(const Entity e1, const Entity e2) {
             p.x += e2_mot.position.x + CameraSystem::GetInstance()->position.x;
             p.y += e2_mot.position.y + CameraSystem::GetInstance()->position.y;
         }
+        if (!collidesAABB(registry.motions.get(e2), registry.motions.get(e1))) return false;
         return polyPoly(islandPolygon, shipPolygon);
     } else if (registry.base.has(e1)) {  // e1 is the Base, e2 is the Ship
         basePolygon = registry.base.get(e1).polygon;
@@ -225,6 +251,7 @@ bool collidesPoly(const Entity e1, const Entity e2) {
             p.x += e1_mot.position.x + CameraSystem::GetInstance()->position.x;
             p.y += e1_mot.position.y + CameraSystem::GetInstance()->position.y;
         }
+        if (!collidesAABB(registry.motions.get(e1), registry.motions.get(e2))) return false;
         return polyPolyInside(basePolygon, shipPolygon);
     } else {  // e2 is the Base, e1 is the Ship
         basePolygon = registry.base.get(e2).polygon;
@@ -233,6 +260,7 @@ bool collidesPoly(const Entity e1, const Entity e2) {
             p.x += e2_mot.position.x + CameraSystem::GetInstance()->position.x;
             p.y += e2_mot.position.y + CameraSystem::GetInstance()->position.y;
         }
+        if (!collidesAABB(registry.motions.get(e2), registry.motions.get(e1))) return false;
         return polyPolyInside(basePolygon, shipPolygon);
     }
     // should never reach
@@ -372,7 +400,8 @@ void PhysicsSystem::step(float elapsed_ms) {
         for (uint j = i + 1; j < motion_container.components.size(); j++) {
             Entity entity_j = motion_container.entities[j];
             Motion& motion_j = motion_container.components[j];
-            if (registry.islands.has(entity_i) || registry.islands.has(entity_j)) {
+            if ((registry.islands.has(entity_i) || registry.islands.has(entity_j)) &&
+                (registry.ships.has(entity_i) || registry.ships.has(entity_j))) {
                 // Poly collision only for islands.
                 if (collidesPoly(entity_i, entity_j)) {
                     registry.collisions.emplace_with_duplicates(entity_i, entity_j);
