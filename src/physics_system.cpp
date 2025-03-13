@@ -220,7 +220,6 @@ bool collidesSphericalShip(const Entity e1, const Entity e2) {
 // TODO Dayshaun: this function is mega scuffed and has repeating code WILL FIX SOON TM
 bool collidesPoly(const Entity e1, const Entity e2) {
     // discard if the bounding boxes do not collide
-    if (!collidesAABB(registry.motions.get(e1), registry.motions.get(e2))) return false;
     Motion& e1_mot = registry.motions.get(e1);
     Motion& e2_mot = registry.motions.get(e2);
     std::vector<tson::Vector2i> islandPolygon;
