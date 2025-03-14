@@ -79,7 +79,6 @@ void TutorialLevel::LevelHandleMouseMove(vec2 pos) {}
 
 void TutorialLevel::LevelHandleMouseClick(int button, int action, int mods) {}
 
-bool called = false;
 void TutorialLevel::LevelUpdate(float dt) {
     if (curr_tutorial_phase == SPACEBAR_KEY) {
         if (registry.players.components[0].player_state == PLAYERSTATE::STATIONING) {
@@ -95,17 +94,21 @@ void TutorialLevel::LevelUpdate(float dt) {
 
     if (registry.bunnies.components[0].on_base) {
         // Skip tutorial.
-        if(!called){
-            GachaSystem gs;
-            gs.displayGacha(0, scene_ui);
-            called = true;
-            std::cout << "Gacha popup.." << std::endl;
+
+        if(upgradesReceived == 1){
+            SceneManager& sceneManager = SceneManager::getInstance();
+            sceneManager.setNextLevelScence("Level 1");
+            std::cout << "Switching to next level scene.." << std::endl;
+            sceneManager.switchScene("Next Level Scene");
+            return;
         }
 
-        //TODO lily: uncomment
-        // SceneManager& sceneManager = SceneManager::getInstance();
-        // sceneManager.setNextLevelScence("Level 1");
-        // std::cout << "Switching to next level scene.." << std::endl;
-        // sceneManager.switchScene("Next Level Scene");
+        if(!(this->gacha_called)){
+            std::cout << "tutorial gacha pop" << std::endl;
+            // std::cout << this->gacha_called << std::endl;
+            GachaSystem gs;
+            gs.displayGacha(0, this->scene_ui, *this);
+            // std::cout << this->gacha_called << std::endl;
+        }
     }
 }

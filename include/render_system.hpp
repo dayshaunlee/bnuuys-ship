@@ -161,6 +161,9 @@ class RenderSystem {
 
         // Next level scene background
         textures_path("background/next_level_bg.png"),
+
+        // Choose upgrade title on gacha pop-up
+        textures_path("ui/upgrade_title.png"),
     };
 
     std::array<GLuint, effect_count> effects;

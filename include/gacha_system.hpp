@@ -5,6 +5,7 @@
 #include "tinyECS/registry.hpp"
 #include "sceneManager/scene.hpp"
 #include "bnuui/buttons.hpp"
+#include "scenes/game_level.hpp"
 #include <random>
 #include <unordered_set>
 #include <vector>
@@ -18,7 +19,7 @@ class GachaSystem{
     void setLevelPool(int level, const std::vector<MODULE_TYPES>& modulesPool);
     void setDropRate(MODULE_TYPES module, float dropRate);
     std::vector<MODULE_TYPES> getModuleOptions(int level);
-    void displayGacha(int level, bnuui::SceneUI& scene_ui);
+    void displayGacha(int level, bnuui::SceneUI& scene_ui, GameLevel& currentLevel);
     // bool isOnDisplay();
 
     private:

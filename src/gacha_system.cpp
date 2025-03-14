@@ -98,65 +98,86 @@ TEXTURE_ASSET_ID getTextureFromModuleType(MODULE_TYPES module){
     }
 }
 
-void GachaSystem::displayGacha(int level, bnuui::SceneUI& scene_ui){
-    std::cout << "gacha pop up..." << std::endl;
-    RenderSystem::isRenderingGacha = true;
-    std::vector<MODULE_TYPES> threeOptions = getModuleOptions(level);
-    std::cout << "options" << threeOptions[0] << " " << threeOptions[1] << " " << threeOptions[2] << '\n';
 
-    auto gacha_box = std::make_shared<bnuui::Box>(vec2(WINDOW_WIDTH_PX/2, WINDOW_HEIGHT_PX/2), vec2(600, 400), 0.0f);
-
-    auto moduleOption1 = std::make_shared<bnuui::Box>(vec2(((WINDOW_WIDTH_PX/2) - 120), WINDOW_HEIGHT_PX/2), vec2(70, 70), 0.0f);
-
-    moduleOption1->texture = getTextureFromModuleType(threeOptions[0]);
-    moduleOption1->setOnClick([&, threeOptions](bnuui::Element& e) {
-        std::cout << "HERE " << threeOptions[0] << " " << threeOptions[1] << " " << threeOptions[2] << '\n';
-        std::cout << threeOptions[0] << '\n';
-        registry.ships.components[0].available_modules[threeOptions[0]]++;
-        std::cout << "Picked option 1, count: " << registry.ships.components[0].available_modules[threeOptions[0]] << '\n';
-        RenderSystem::isRenderingGacha = false;
+void clearGatchaUI(bnuui::SceneUI& scene_ui){
         int uiSize = scene_ui.size();
         scene_ui.remove(uiSize-1);
         scene_ui.remove(uiSize-2);
         scene_ui.remove(uiSize-3);
-        scene_ui.remove(uiSize-4); 
-    });
-    moduleOption1->setOnUpdate([](bnuui::Element& e, float dt) {
-    });
+        scene_ui.remove(uiSize-4);
+        scene_ui.remove(uiSize-5);
+        scene_ui.remove(uiSize-6);
+        scene_ui.remove(uiSize-7);
+        scene_ui.remove(uiSize-8);
+}
 
 
-    auto moduleOption2 = std::make_shared<bnuui::Box>(vec2(WINDOW_WIDTH_PX/2, WINDOW_HEIGHT_PX/2), vec2(70, 70), 0.0f);
+
+void GachaSystem::displayGacha(int level, bnuui::SceneUI& scene_ui, GameLevel &currentLevel){
+    // std::cout << "gacha pop up..." << std::endl;
+    RenderSystem::isRenderingGacha = true;
+    currentLevel.gacha_called = true;
+    std::vector<MODULE_TYPES> threeOptions = getModuleOptions(level);
+    std::cout << "options" << threeOptions[0] << " " << threeOptions[1] << " " << threeOptions[2] << '\n';
+
+    auto gacha_box = std::make_shared<bnuui::Box>(vec2(WINDOW_WIDTH_PX/2, WINDOW_HEIGHT_PX/2 + 40), vec2(450, 250), 0.0f);
+    auto upgrade_title_box = std::make_shared<bnuui::Box>(vec2(WINDOW_WIDTH_PX/2, WINDOW_HEIGHT_PX/2 - 50), vec2(350, 115), 0.0f);
+    upgrade_title_box->texture = TEXTURE_ASSET_ID::UPGRADE_TITLE;
+
+    auto module1bg = std::make_shared<bnuui::Box>(vec2(((WINDOW_WIDTH_PX/2) - 100), (WINDOW_HEIGHT_PX/2 + 60)), vec2(90, 90), 0.0f);
+    auto moduleOption1 = std::make_shared<bnuui::Box>(vec2(((WINDOW_WIDTH_PX/2) - 100), (WINDOW_HEIGHT_PX/2 + 60)), vec2(70, 70), 0.0f);
+
+    moduleOption1->texture = getTextureFromModuleType(threeOptions[0]);
+    moduleOption1->setOnClick([&, threeOptions](bnuui::Element& e) {
+        // std::cout << "HERE " << threeOptions[0] << " " << threeOptions[1] << " " << threeOptions[2] << '\n';
+        // std::cout << threeOptions[0] << '\n';
+        registry.ships.components[0].available_modules[threeOptions[0]]++;
+        // std::cout << "Picked option 1, count: " << registry.ships.components[0].available_modules[threeOptions[0]] << '\n';
+        RenderSystem::isRenderingGacha = false;
+        // std::cout << "HERE for rendering" << RenderSystem::isRenderingGacha << '\n';  
+        currentLevel.upgradesReceived++;
+        currentLevel.gacha_called = false;
+        std::cout << currentLevel.upgradesReceived << '\n'; 
+        clearGatchaUI(scene_ui); 
+    });
+    moduleOption1->setOnHover([](bnuui::Element& e) {
+    });
+
+    auto module2bg = std::make_shared<bnuui::Box>(vec2(((WINDOW_WIDTH_PX/2)), (WINDOW_HEIGHT_PX/2 + 60)), vec2(90, 90), 0.0f);
+    auto moduleOption2 = std::make_shared<bnuui::Box>(vec2(WINDOW_WIDTH_PX/2, (WINDOW_HEIGHT_PX/2 + 60)), vec2(70, 70), 0.0f);
     moduleOption2->texture = getTextureFromModuleType(threeOptions[1]);
     moduleOption2->setOnClick([&, threeOptions](bnuui::Element& e) {
         registry.ships.components[0].available_modules[threeOptions[1]]++;
         RenderSystem::isRenderingGacha = false;
-        int uiSize = scene_ui.size();
-        scene_ui.remove(uiSize-1);
-        scene_ui.remove(uiSize-2);
-        scene_ui.remove(uiSize-3);
-        scene_ui.remove(uiSize-4); 
+        currentLevel.upgradesReceived++;
+        currentLevel.gacha_called = false;
+       std::cout << currentLevel.upgradesReceived << '\n'; 
+        clearGatchaUI(scene_ui);
     });
-    moduleOption2->setOnUpdate([](bnuui::Element& e, float dt) { 
+    moduleOption2->setOnHover([](bnuui::Element& e) { 
     });
 
-    auto moduleOption3 = std::make_shared<bnuui::Box>(vec2(((WINDOW_WIDTH_PX/2) + 120), WINDOW_HEIGHT_PX/2), vec2(70, 70), 0.0f);
+    auto module3bg = std::make_shared<bnuui::Box>(vec2(((WINDOW_WIDTH_PX/2) +100), ((WINDOW_HEIGHT_PX/2 + 60))), vec2(90, 90), 0.0f);
+    auto moduleOption3 = std::make_shared<bnuui::Box>(vec2(((WINDOW_WIDTH_PX/2) + 100), (WINDOW_HEIGHT_PX/2 + 60)), vec2(70, 70), 0.0f);
     moduleOption3->texture = getTextureFromModuleType(threeOptions[2]);
     moduleOption3->setOnClick([&, threeOptions](bnuui::Element& e) {
         registry.ships.components[0].available_modules[threeOptions[2]]++;
         RenderSystem::isRenderingGacha = false;
-        int uiSize = scene_ui.size();
-        scene_ui.remove(uiSize-1);
-        scene_ui.remove(uiSize-2);
-        scene_ui.remove(uiSize-3);
-        scene_ui.remove(uiSize-4); 
+        currentLevel.upgradesReceived++;
+        currentLevel.gacha_called = false;
+        std::cout << currentLevel.upgradesReceived << '\n'; 
+        clearGatchaUI(scene_ui);
     });
-    moduleOption3->setOnUpdate([](bnuui::Element& e, float dt) { 
+    moduleOption3->setOnHover([](bnuui::Element& e) { 
     });
-
 
     scene_ui.insert(gacha_box);
+    scene_ui.insert(upgrade_title_box);
+    scene_ui.insert(module1bg);
     scene_ui.insert(moduleOption1);
+    scene_ui.insert(module2bg);
     scene_ui.insert(moduleOption2);
+    scene_ui.insert(module3bg);
     scene_ui.insert(moduleOption3); 
 
 }
