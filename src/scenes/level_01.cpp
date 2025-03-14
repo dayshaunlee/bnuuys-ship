@@ -41,7 +41,7 @@ void Level01::LevelUpdate(float dt) {
     
     if(upgradesReceived == bunnies_to_win){
         SceneManager& sceneManager = SceneManager::getInstance();
-        //todo m3: change it to level 2
+        //todo m3: change it to proceed to level 2 when there's level 2
         sceneManager.setNextLevelScence("Level 1");
         std::cout << "Switching to next level scene.." << std::endl;
         sceneManager.switchScene("Next Level Scene");
@@ -54,7 +54,8 @@ void Level01::LevelUpdate(float dt) {
             std::cout << "Gacha popup in level 1.." << std::endl; 
             GachaSystem gs;
             this->gacha_called = true;
-            gs.displayGacha(0, this->scene_ui, *this);
+            // todo M3: update level 1 pool
+            gs.displayGacha(1, this->scene_ui, *this);
             // std::cout << "Gacha poped.." << std::endl;
         }
     }
