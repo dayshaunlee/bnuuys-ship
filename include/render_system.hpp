@@ -67,8 +67,11 @@ class RenderSystem {
         textures_path("background/water_background.png"),
         
         // island background
-        map_path("m3_level1.png"),
         map_path("m2_tutorial.png"),
+        map_path("m3_level1.png"),
+        map_path("m3_level2.png"),
+        map_path("m3_level3.png"),
+        
       
         // Enemy (balloon/flyer)
         textures_path("enemies/balloon0.png"),
