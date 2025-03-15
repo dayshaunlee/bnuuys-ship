@@ -41,6 +41,9 @@ inline std::string mesh_path(const std::string& name) {
 inline std::string map_path(const std::string& name) {
     return data_path() + "/maps/" + std::string(name);
 };
+inline std::string font_path(const std::string& name) {
+    return data_path() + "/fonts/" + std::string(name);
+};
 
 // TODO: do this for all enemy stuff later
 enum ENEMY_TYPE { BASIC_GUNNER = 0, FLYER = 1, TANK = 2, SHOOTER = 3 };

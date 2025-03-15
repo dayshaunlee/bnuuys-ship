@@ -1,3 +1,4 @@
+#include "common.hpp"
 #include "sceneManager/scene.hpp"
 #include "sceneManager/scene_manager.hpp"
 #include "scenes/death_scene.hpp"
@@ -44,6 +45,7 @@ int main() {
 
     // initialize the main systems
     renderer_system.init(window);
+    renderer_system.fontInit(font_path("sproutslandfont.ttf"), 16);
     world_system.init(&renderer_system);
 
     // variable timestep loop

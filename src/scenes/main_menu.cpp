@@ -17,13 +17,17 @@ void MainMenuScene::Init() {
     // Create the UI Title Screen.
     auto play_btn = std::make_shared<bnuui::PlayButton>(vec2(WINDOW_WIDTH_PX/2, 0.8*WINDOW_HEIGHT_PX), vec2(350, 100), 0.0f);
     auto bg = std::make_shared<bnuui::Box>(vec2(WINDOW_WIDTH_PX/2, WINDOW_HEIGHT_PX/2), vec2(WINDOW_WIDTH_PX*1.25f, WINDOW_HEIGHT_PX), 0.0f);
+
     bg->texture = TEXTURE_ASSET_ID::MAIN_MENU_BG;
     play_btn->setOnClick([](bnuui::Element& e) {
         SceneManager::getInstance().switchScene("Tutorial Level");
     });
 
+    auto txt = std::make_shared<bnuui::TextLabel>(vec2(0,50), 2.0f, "HEllo");
+
     scene_ui.insert(bg);
     scene_ui.insert(play_btn);
+    scene_ui.insert(txt);
 }
 
 void MainMenuScene::Exit() {

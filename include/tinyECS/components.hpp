@@ -1,5 +1,4 @@
 #pragma once
-#include <map>
 #include <unordered_map>
 #include <vector>
 
@@ -208,7 +207,8 @@ enum class EFFECT_ASSET_ID {
     CHICKEN = EGG + 1,
     TEXTURED = CHICKEN + 1,
     VIGNETTE = TEXTURED + 1,
-    EFFECT_COUNT = VIGNETTE + 1
+    FONT = VIGNETTE + 1,
+    EFFECT_COUNT = FONT + 1
 };
 const int effect_count = (int) EFFECT_ASSET_ID::EFFECT_COUNT;
 
