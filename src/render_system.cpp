@@ -388,12 +388,23 @@ void RenderSystem::draw() {
 
     mat3 projection_2D = createProjectionMatrix();
 
+    // Render Disaster whirlpool
+    for (Entity entity : registry.disasters.entities) {
+        if (registry.disasters.get(entity).type == DISASTER_TYPE::WHIRLPOOL)
+            drawTexturedMesh(entity, projection_2D);
+    }
+
     // draw all entities with a render request to the frame buffer
     for (Entity entity : registry.renderRequests.entities) {
         // filter to entities that have a motion component
         if (registry.motions.has(entity)) {
             // SKIP PLAYER TO RENDER THEM LAST.
             if (registry.players.has(entity)) continue;
+
+            if (registry.disasters.has(entity)) {
+                if (registry.disasters.get(entity).type == DISASTER_TYPE::TORNADO)
+                continue;
+            }
 
             // Note, its not very efficient to access elements indirectly via the entity
             // albeit iterating through all Sprites in sequence. A good point to optimize
@@ -420,6 +431,14 @@ void RenderSystem::draw() {
         if (registry.motions.has(entity) && registry.renderRequests.has(entity))
             drawTexturedMesh(entity, projection_2D);
     }
+
+    // Render Disaster tornado
+    for (Entity entity : registry.disasters.entities) {
+        if (registry.disasters.get(entity).type == DISASTER_TYPE::TORNADO)
+            drawTexturedMesh(entity, projection_2D);
+    }
+
+
 
     // draw framebuffer to screen
     // adding "vignette" effect when applied

@@ -357,6 +357,22 @@ void PhysicsSystem::step(float elapsed_ms) {
                     motion.scale *= flip;
                 }
             }
+        } else if (registry.disasters.has(entity)) {
+            Disaster& disaster = registry.disasters.get(entity);
+            if (disaster.type == DISASTER_TYPE::TORNADO) {
+                Motion& disaster_motion = registry.motions.get(entity);
+                vec2 position = disaster_motion.position;
+                // std::cout << position.x << ", " << position.y << std::endl;
+                if (disaster_motion.position.x <= 0 || disaster_motion.position.x >= 5824) {
+                    std::cout << "flip" << std::endl;
+                    disaster_motion.velocity *= vec2(-1, 1);
+                }
+
+                if (disaster_motion.position.y <= 0 || disaster_motion.position.y >= 3920) {
+                    std::cout << "flip" << std::endl;
+                    disaster_motion.velocity *= vec2(1, -1);
+                }
+            }
         }
     }
 

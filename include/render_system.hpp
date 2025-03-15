@@ -83,6 +83,16 @@ class RenderSystem {
         textures_path("enemies/cow0.png"),
         textures_path("enemies/cow1.png"),
         textures_path("enemies/cow2.png"),
+
+        // Tornado
+        textures_path("effects/tornado0.png"),
+        textures_path("effects/tornado1.png"),
+        textures_path("effects/tornado2.png"),
+
+        // Whirlpool
+        textures_path("effects/whirlpool0.png"),
+        textures_path("effects/whirlpool1.png"),
+        textures_path("effects/whirlpool2.png"),
         
         // UI Assets.
         textures_path("ui/buttons/square3Normal.png"),

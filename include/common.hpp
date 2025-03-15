@@ -42,8 +42,8 @@ inline std::string map_path(const std::string& name) {
     return data_path() + "/maps/" + std::string(name);
 };
 
-// TODO: do this for all enemy stuff later
 enum ENEMY_TYPE { BASIC_GUNNER = 0, FLYER = 1, TANK = 2, SHOOTER = 3 };
+enum DISASTER_TYPE { TORNADO = 0, WHIRLPOOL = 1};
 
 //
 // game constants
@@ -114,7 +114,7 @@ const int MOVE_LEFT_BUTTON = GLFW_KEY_A;
 
 const float WALK_SPEED = 150.0f;
 const float ANIMATION_TIME = 250.0f;
-const float SHIP_CAMERA_SPEED = 100.0f;
+const float SHIP_CAMERA_SPEED = 200.0f;
 
 const float SIMPLE_CANNON_COOLDOWN = 1000.0f;   // 1 second
 const float SIMPLE_CANNON_DAMAGE = 10.0f;

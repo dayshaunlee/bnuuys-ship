@@ -82,6 +82,9 @@ void GameLevel::Init() {
         bunnies_to_win += 1;
     };
 
+    createDisaster({300, 100}, DISASTER_TYPE::TORNADO);
+    createDisaster({300, 100}, DISASTER_TYPE::WHIRLPOOL);
+
     registry.players.components[0].health = 100.0f;
     InitializeUI();
 
