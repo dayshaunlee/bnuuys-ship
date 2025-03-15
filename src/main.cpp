@@ -85,13 +85,10 @@ int main() {
             frameCounter = 0;
         }
         // std::cout << "FPS: " << world_system.fpsCounter << std::endl;
-
         scene_manager.checkSceneSwitch();
-
         Scene* s = scene_manager.getCurrentScene();
         if (s != nullptr) s->Update(elapsed_ms);
         world_system.step(elapsed_ms);
-
         renderer_system.draw();
     }
 

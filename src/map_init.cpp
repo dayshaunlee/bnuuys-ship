@@ -139,10 +139,9 @@ std::pair<tson::Vector2i, tson::Vector2i> loadMap(const std::string& name) {
                 }
             } else if (obj.getClassType() == "enemy") {
                 Entity e = Entity();
-                Enemy& ene = registry.enemies.emplace(e);
+                EnemySpawner& ene = registry.enemySpawners.emplace(e);
                 tson::EnumValue ene_type = obj.get<tson::EnumValue>("enemy_type_enum");
                 ene.type = static_cast<ENEMY_TYPE>(ene_type.getValue());
-                tson::Object eneh_type = obj.get<tson::Object>("home_island");
                 ene.home_island = obj.get<uint32_t>("home_island");
                 Motion& mot = registry.motions.emplace(e);
                 mot.position = {obj.getPosition().x * scaling_factor_x + offset.x,

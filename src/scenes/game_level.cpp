@@ -71,11 +71,6 @@ void GameLevel::Init() {
 
     createCamera();
 
-    // enemy creation
-    for (Entity entity: registry.enemies.entities) {
-        createEnemy(entity);
-    };
-
     // bunny creation
     for (Entity entity : registry.bunnies.entities) {
         createBunny(entity);
@@ -233,6 +228,9 @@ void GameLevel::Exit() {
     while (registry.enemies.entities.size() > 0){
 	    registry.remove_all_components_of(registry.enemies.entities.back());
 	}
+    while (registry.enemySpawners.entities.size() > 0) {
+        registry.remove_all_components_of(registry.enemySpawners.entities.back());
+    }
     while (registry.islands.entities.size() > 0){
 	    registry.remove_all_components_of(registry.islands.entities.back());
 	}
@@ -257,7 +255,6 @@ void GameLevel::Exit() {
     // while (registry.projectiles.entities.size() > 0){
     //     registry.remove_all_components_of(registry.projectiles.entities.back());
     // }
-
     LevelExit();
 }
 

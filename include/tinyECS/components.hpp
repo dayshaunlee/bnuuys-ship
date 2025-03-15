@@ -310,14 +310,19 @@ struct Ship {
 
 // ========== ENEMY DETAILS ==========
 // the enemy type stores information about enemy HP, damage, speed, etc..
-// TODO: ADD ENEMY TYPE INFORMATION IN COMMON
 struct Enemy {
     ENEMY_TYPE type;
     int health;
-	int timer_ms;
-    int home_island;
+	int timer_ms; // for sprite animation
     int range = 10;
     int speed;
+};
+
+struct EnemySpawner {
+    ENEMY_TYPE type;
+    int range = 10;
+    int home_island;
+    int cooldown_ms; // cooldown for spawning enemies
 };
 
 // walking path for enemy
