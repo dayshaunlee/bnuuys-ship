@@ -109,11 +109,13 @@ enum class TEXTURE_ASSET_ID {
     WATER_BACKGROUND = BUNNY_LEFT_WALK1 + 1,
   
     // TODO: figure out which background to use
-    ISLAND_BACKGROUND = WATER_BACKGROUND + 1,
-    TUTORIAL_BACKGROUND = ISLAND_BACKGROUND + 1,
+    TUTORIAL_BACKGROUND = WATER_BACKGROUND + 1,
+    LEVEL01_BACKGROUND = TUTORIAL_BACKGROUND + 1,
+    LEVEL02_BACKGROUND = LEVEL01_BACKGROUND + 1,
+    LEVEL03_BACKGROUND = LEVEL02_BACKGROUND + 1,
 
     // Enemies
-    BALLOON0 = TUTORIAL_BACKGROUND + 1,
+    BALLOON0 = LEVEL03_BACKGROUND + 1,
     BALLOON1 = BALLOON0 + 1,
     BALLOON2 = BALLOON1 + 1,
 
@@ -312,14 +314,19 @@ struct Ship {
 
 // ========== ENEMY DETAILS ==========
 // the enemy type stores information about enemy HP, damage, speed, etc..
-// TODO: ADD ENEMY TYPE INFORMATION IN COMMON
 struct Enemy {
     ENEMY_TYPE type;
     int health;
-	int timer_ms;
-    int home_island;
+	int timer_ms; // for sprite animation
     int range = 10;
     int speed;
+};
+
+struct EnemySpawner {
+    ENEMY_TYPE type;
+    int range = 10;
+    int home_island;
+    int cooldown_ms; // cooldown for spawning enemies
 };
 
 // walking path for enemy

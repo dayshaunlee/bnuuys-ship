@@ -52,7 +52,7 @@ int main() {
     SceneManager& scene_manager = SceneManager::getInstance();
 
     Scene* mm = new MainMenuScene();
-    Scene* l1 = new Level01(&world_system, "m1.json", TEXTURE_ASSET_ID::ISLAND_BACKGROUND);
+    Scene* l1 = new Level01(&world_system, "m3_level1.json", TEXTURE_ASSET_ID::LEVEL01_BACKGROUND);
     Scene* tutorial = new TutorialLevel(&world_system, "m2_tutorial.json", TEXTURE_ASSET_ID::TUTORIAL_BACKGROUND);
     Scene* ui_editor = new EditorUI();
     Scene* death = new DeathScene();
@@ -85,13 +85,10 @@ int main() {
             frameCounter = 0;
         }
         // std::cout << "FPS: " << world_system.fpsCounter << std::endl;
-
         scene_manager.checkSceneSwitch();
-
         Scene* s = scene_manager.getCurrentScene();
         if (s != nullptr) s->Update(elapsed_ms);
         world_system.step(elapsed_ms);
-
         renderer_system.draw();
     }
 

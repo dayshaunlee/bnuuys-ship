@@ -11,7 +11,7 @@
     "propertyTypes": [
         {
             "color": "#ffff00ff",
-            "drawFill": true,
+            "drawFill": false,
             "id": 5,
             "members": [
             ],
@@ -95,7 +95,7 @@
         },
         {
             "color": "#ff00ff00",
-            "drawFill": true,
+            "drawFill": false,
             "id": 3,
             "members": [
             ],

@@ -70,6 +70,7 @@ const float SHIP_BASE_HEALTH = 100.f;
 const int ENEMY_BASE_HEALTH = 20;
 const float ENEMY_BASE_SPEED = 50;
 const float ENEMY_BASE_RANGE = 20;
+const float ENEMY_BASE_SPAWN_CD_MS = 35 * 1000; // 35 seconds
 
 const int ENEMY_FLYER_HEALTH = 15;
 const float ENEMY_FLYER_SPEED = 75;

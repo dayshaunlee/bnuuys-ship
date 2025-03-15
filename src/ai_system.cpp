@@ -28,6 +28,29 @@ void AISystem::step(float elapsed_ms) {
             }
         };
     }
+
+    // enemy spawning and creation
+    for (Entity entity : registry.enemySpawners.entities) {
+        EnemySpawner& spawner = registry.enemySpawners.get(entity);
+        if (spawner.cooldown_ms > 0) {
+            spawner.cooldown_ms = (int)max(spawner.cooldown_ms * 1.0 - elapsed_ms, 0.0); // ensure cooldown isn't negative
+        } else {
+            Motion& spawner_motion = registry.motions.get(entity);
+            vec2 spawner_position = spawner_motion.position + CameraSystem::GetInstance()->position; // add camera because spawner is background obj
+            Motion& ship_motion = registry.motions.get(registry.ships.entities[0]);
+            vec2& ship_position = ship_motion.position;
+            vec2 direction = ship_position - spawner_position;
+            float length = dot(direction, direction);
+            int r_squared = (spawner.range * GRID_CELL_WIDTH_PX) *
+                    (spawner.range * GRID_CELL_WIDTH_PX);
+            // check if ship is within the range AND spawner is off cooldown
+            // don't respawn shooters or else they could overlap
+            if (length <= r_squared && spawner.cooldown_ms <= 0 && spawner.type != ENEMY_TYPE::SHOOTER) {
+                createEnemy(entity);
+                spawner.cooldown_ms = ENEMY_BASE_SPAWN_CD_MS;  // reset spawn cooldown
+            }
+        }
+    };
 }
 
 // enemy search for a path from itself to the ship, avoiding islands

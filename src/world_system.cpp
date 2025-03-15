@@ -180,7 +180,6 @@ bool WorldSystem::step(float elapsed_ms_since_last_update) {
         Mix_PauseMusic();
         Mix_PlayMusic(enemy_incoming, -1);
     }*/
-
     return true;
 }
 
