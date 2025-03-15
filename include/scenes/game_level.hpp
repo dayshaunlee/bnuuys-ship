@@ -34,6 +34,8 @@ protected:
     virtual void LevelUpdate(float dt) = 0;
 
 public:
+    int upgradesReceived = 0;
+    bool gacha_called = false;
     GameLevel(WorldSystem* worldsystem);
     void Init() override;
     void Exit() override;

@@ -161,6 +161,9 @@ class RenderSystem {
 
         // Next level scene background
         textures_path("background/next_level_bg.png"),
+
+        // Choose upgrade title on gacha pop-up
+        textures_path("ui/upgrade_title.png"),
     };
 
     std::array<GLuint, effect_count> effects;
@@ -198,6 +201,9 @@ class RenderSystem {
     // The draw loop first renders to this texture, then it is used for the
     // vignette shader
     bool initScreenTexture();
+
+    // this is used to check that if redendering Gacha UI we don't render player on top
+    static bool isRenderingGacha;
 
     // Destroy resources associated to one or all entities created by the system
     ~RenderSystem();
