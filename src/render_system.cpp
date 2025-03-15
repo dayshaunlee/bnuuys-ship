@@ -1,4 +1,8 @@
 #include <SDL.h>
+#include <glm/ext/matrix_clip_space.hpp>
+#include <glm/ext/matrix_float4x4.hpp>
+#include <glm/ext/matrix_transform.hpp>
+#include <glm/ext/vector_float3.hpp>
 #include <glm/trigonometric.hpp>
 #include <iostream>
 #include <memory>
@@ -135,6 +139,7 @@ void RenderSystem::drawTexturedMesh(Entity entity, const mat3& projection) {
         gl_has_errors();
         assert(in_texcoord_loc >= 0);
 
+
         glEnableVertexAttribArray(in_position_loc);
         glVertexAttribPointer(in_position_loc, 3, GL_FLOAT, GL_FALSE, sizeof(TexturedVertex), (void*) 0);
         gl_has_errors();
@@ -212,6 +217,8 @@ void RenderSystem::drawTexturedMesh(Entity entity, const mat3& projection) {
 void RenderSystem::drawUIElement(bnuui::Element& element, const mat3& projection) {
     if (!element.visible) return;
 
+    glm::mat4 UI_Matrix = mat4(1.0f);
+
     Transform transform;
     transform.translate(element.position);
     transform.scale(element.scale);
@@ -231,20 +238,43 @@ void RenderSystem::drawUIElement(bnuui::Element& element, const mat3& projection
     if (element.effect == EFFECT_ASSET_ID::TEXTURED) {
         GLint in_position_loc = glGetAttribLocation(program, "in_position");
         GLint in_texcoord_loc = glGetAttribLocation(program, "in_texcoord");
+        
+        // Check if attribute locations are valid
+        if (in_position_loc < 0 || in_texcoord_loc < 0) {
+            std::cerr << "Error: Failed to get attribute locations in UI element shader" << std::endl;
+            return;
+        }
+        
         glEnableVertexAttribArray(in_position_loc);
         glVertexAttribPointer(in_position_loc, 3, GL_FLOAT, GL_FALSE, sizeof(TexturedVertex), (void*) 0);
+        gl_has_errors();
 
         glEnableVertexAttribArray(in_texcoord_loc);
         glVertexAttribPointer(in_texcoord_loc, 2, GL_FLOAT, GL_FALSE, sizeof(TexturedVertex), (void*) sizeof(vec3));
+        gl_has_errors();
 
         glActiveTexture(GL_TEXTURE0);
+        gl_has_errors();
+        
+        // Validate texture index
+        if ((GLuint)element.texture >= texture_gl_handles.size()) {
+            std::cerr << "Error: Invalid texture index: " << (GLuint)element.texture 
+                      << ", max is " << texture_gl_handles.size() - 1 << std::endl;
+            return;
+        }
+        
         GLuint texture_id = texture_gl_handles[(GLuint) element.texture];
+        
+        // Validate texture ID
+        if (texture_id == 0) {
+            std::cerr << "Error: Texture ID is 0 for texture index: " << (GLuint)element.texture << std::endl;
+            return;
+        }
+        
         glBindTexture(GL_TEXTURE_2D, texture_id);
         // Brian: Disable smoothing
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-
-        gl_has_errors();
     } else {
         GLint in_position_loc = glGetAttribLocation(program, "in_position");
         GLint in_color_loc = glGetAttribLocation(program, "in_color");
@@ -282,7 +312,10 @@ void RenderSystem::drawUIElement(bnuui::Element& element, const mat3& projection
 
     // Recursively draw children
     for (auto& child : element.children) {
-        drawUIElement(*child, projection);
+        if (child->getText() == "")
+            drawUIElement(*child, projection);
+        else
+            renderText(child->getText(), child->position.x, WINDOW_HEIGHT_PX - child->position.y, 2.0f, vec3(0,0,0), UI_Matrix);
     }
 }
 
@@ -309,7 +342,7 @@ void RenderSystem::drawToScreen() {
     gl_has_errors();
     // Enabling alpha channel for textures
     glDisable(GL_BLEND);
-    // glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glDisable(GL_DEPTH_TEST);
 
     // Draw the screen texture on the quad geometry
@@ -387,6 +420,7 @@ void RenderSystem::draw() {
     gl_has_errors();
 
     mat3 projection_2D = createProjectionMatrix();
+    glm::mat4 UI_Matrix = mat4(1.0f);
 
     // draw all entities with a render request to the frame buffer
     for (Entity entity : registry.renderRequests.entities) {
@@ -412,9 +446,14 @@ void RenderSystem::draw() {
         bnuui::SceneUI scene_ui = s->getUIElems();
         std::vector<std::shared_ptr<bnuui::Element>> elems = scene_ui.getElems();
         for (std::shared_ptr<bnuui::Element> elem : elems) {
-            drawUIElement(*elem, projection_2D);
+            if (elem->getText() != "") {
+                renderText(elem->getText(), elem->position.x, WINDOW_HEIGHT_PX - elem->position.y, 2.0f, vec3(0,0,0), UI_Matrix);
+            } else {
+                drawUIElement(*elem, projection_2D);
+            }
         }
     }
+    
     // Render Player.
     for (Entity entity : registry.players.entities) {
         if (registry.motions.has(entity) && registry.renderRequests.has(entity))
@@ -430,6 +469,10 @@ void RenderSystem::draw() {
     gl_has_errors();
 }
 
+mat4 RenderSystem::createUIMatrix() {
+    return glm::ortho(0.0f, static_cast<float>(WINDOW_WIDTH_PX), 0.0f, static_cast<float>(WINDOW_HEIGHT_PX));
+}
+
 mat3 RenderSystem::createProjectionMatrix() {
     // fake projection matrix, scaled to window coordinates
     float left = 0.f;
@@ -443,4 +486,68 @@ mat3 RenderSystem::createProjectionMatrix() {
     float ty = -(top + bottom) / (top - bottom);
 
     return {{sx, 0.f, 0.f}, {0.f, sy, 0.f}, {tx, ty, 1.f}};
+}
+
+void RenderSystem::renderText(std::string text, float x, float y, float scale, const glm::vec3& color, const glm::mat4& trans) {
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    // activate corresponding render state
+    glUseProgram(m_font_shaderProgram);
+
+    GLint textColor_location = glGetUniformLocation(m_font_shaderProgram, "textColor");
+    assert(textColor_location > -1);
+    // std::cout << "textColor_location: " << textColor_location << std::endl;
+    glUniform3f(textColor_location, color.x, color.y, color.z);
+
+    auto transformLoc = glGetUniformLocation(m_font_shaderProgram, "transform");
+    // std::cout << "transformLoc: " << transformLoc << std::endl;
+    assert(transformLoc > -1);
+    glUniformMatrix4fv(transformLoc, 1, GL_FALSE, glm::value_ptr(trans));
+
+    glBindVertexArray(m_font_VAO);
+
+    // iterate through each character
+    std::string::const_iterator c;
+    for (c = text.begin(); c != text.end(); c++)
+    {
+        Character ch = m_ftCharacters[*c];
+
+        float xpos = x + ch.Bearing.x * scale;
+        float ypos = y - (ch.Size.y - ch.Bearing.y) * scale;
+
+        float w = ch.Size.x * scale;
+        float h = ch.Size.y * scale;
+
+        float vertices[6][4] = {
+            { xpos,     ypos + h,   0.0f, 0.0f },
+            { xpos,     ypos,       0.0f, 1.0f },
+            { xpos + w, ypos,       1.0f, 1.0f },
+
+            { xpos,     ypos + h,   0.0f, 0.0f },
+            { xpos + w, ypos,       1.0f, 1.0f },
+            { xpos + w, ypos + h,   1.0f, 0.0f }
+        };
+
+        // render glyph texture over quad
+
+        glBindTexture(GL_TEXTURE_2D, ch.TextureID);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+        /*std::cout << "binding texture: " << ch.character << " = " << ch.TextureID << std::endl;*/
+
+        // update content of VBO memory
+        glBindBuffer(GL_ARRAY_BUFFER, m_font_VBO);
+        glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+        // render quad
+        glDrawArrays(GL_TRIANGLES, 0, 6);
+
+        // advance to next glyph (note that advance is number of 1/64 pixels)
+        x += (ch.Advance >> 6) * scale; // bitshift by 6 to get value in pixels (2^6 = 64)
+    }
+    glBindVertexArray(m_VAO);
+    glBindTexture(GL_TEXTURE_2D, 0);
 }

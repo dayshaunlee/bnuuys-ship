@@ -349,4 +349,33 @@ Cursor::Cursor(vec2 pos, vec2 scale, float rot) {
 void Cursor::doUpdate(float dt) {
 }
 
+TextLabel::TextLabel(vec2 pos, float font_size, const std::string& text) {
+    this->position = pos;
+    this->rotation = 0.0f;
+    this->text = text;
+    this->font_size = font_size;
+
+    this->scale = {0,0};    // When I have time to implement the Map
+    std::cout << this->scale.x << ' ' << this->scale.y << '\n';
+
+    this->offset = {0, 0};
+    this->color = {1, 1, 1};
+
+    this->visible = true;
+}
+
+void TextLabel::doUpdate(float dt) {
+    if (this->hovering && this->onHover) {
+        this->onHover(*this);
+    }
+
+    if (this->active && this->onActive) {
+        this->onActive(*this);
+    }
+
+    if (this->onUpdate) {
+        this->onUpdate(*this, dt);
+    }
+}
+
 }  // namespace bnuui

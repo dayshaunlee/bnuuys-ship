@@ -9,7 +9,6 @@
 #include "tinyECS/components.hpp"
 
 namespace bnuui {
-
 // Base class for different types of UI Elements.
 // All UI Elements will have a scale and position.
 class Element {
@@ -67,6 +66,14 @@ public:
         if (onClick) onClick(*this);
     }
 
+    const std::string& getText() {
+        return this->text;
+    }
+
+    const float getFontSize() {
+        return this->font_size;
+    }
+
     virtual ~Element() = default;
 
 protected:
@@ -74,6 +81,10 @@ protected:
     std::function<void(Element&)> onActive;
     std::function<void(Element&, float dt)> onUpdate;
     std::function<void(Element&)> onClick;
+
+    // Used for UI's that need text rendering.
+    float font_size;
+    std::string text;
 };
 
 // This is just a wrapper for a list of UI Elements.

@@ -1,5 +1,4 @@
 #pragma once
-
 #include <array>
 #include <utility>
 
@@ -7,6 +6,24 @@
 #include "common.hpp"
 #include "tinyECS/components.hpp"
 #include "tinyECS/tiny_ecs.hpp"
+
+#include <glm/gtc/type_ptr.hpp>
+#include <glm/ext/matrix_clip_space.hpp>
+
+
+// fonts
+#include <ft2build.h>
+#include FT_FREETYPE_H
+#include <map>
+
+// fonts
+struct Character {
+	unsigned int TextureID;  // ID handle of the glyph texture
+	glm::ivec2   Size;       // Size of glyph
+	glm::ivec2   Bearing;    // Offset from baseline to left/top of glyph
+	unsigned int Advance;    // Offset to advance to next glyph
+	char character;
+};
 
 // System responsible for setting up OpenGL and for rendering all the
 // visual entities in the game
@@ -20,6 +37,15 @@ class RenderSystem {
      */
     std::array<GLuint, texture_count> texture_gl_handles;
     std::array<ivec2, texture_count> texture_dimensions;
+
+	GLuint m_VAO;
+	GLuint m_VBO;
+
+	// fonts
+	std::map<char, Character> m_ftCharacters;
+	GLuint m_font_shaderProgram;
+	GLuint m_font_VAO;
+	GLuint m_font_VBO;
 
     // Make sure these paths remain in sync with the associated enumerators.
     // Associated id with .obj path
@@ -171,6 +197,7 @@ class RenderSystem {
         shader_path("chicken"), 
         shader_path("textured"), 
         shader_path("vignette"),
+        shader_path("font"),
     };
 
     std::array<GLuint, geometry_count> vertex_buffers;
@@ -180,6 +207,8 @@ class RenderSystem {
    public:
     // Initialize the window
     bool init(GLFWwindow* window);
+
+	bool fontInit(const std::string& font_filename, unsigned int font_default_size);
 
     template <class T>
     void bindVBOandIBO(GEOMETRY_BUFFER_ID gid, std::vector<T> vertices, std::vector<uint16_t> indices);
@@ -206,8 +235,11 @@ class RenderSystem {
     void draw();
 
     mat3 createProjectionMatrix();
+    mat4 createUIMatrix();
 
-    Entity get_screen_state_entity() { return screen_state_entity; }
+    void renderText(std::string text, float x, float y, float scale, const glm::vec3& color, const glm::mat4& trans);
+
+    Entity get_screen_state_entity() { return screen_state_entity; } 
 
    private:
     // Internal drawing functions for each entity type

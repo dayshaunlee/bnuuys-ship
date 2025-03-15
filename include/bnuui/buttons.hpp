@@ -74,4 +74,12 @@ public:
     void doUpdate(float dt) override;
 };
 
+class TextLabel : public Element {
+public:
+    TextLabel(vec2 pos, float font_size, const std::string& text);
+    ~TextLabel() = default;
+    void doUpdate(float dt) override;
+    void setText(const std::string& text);
+};
+
 }
