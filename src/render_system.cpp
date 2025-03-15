@@ -15,7 +15,9 @@
 #include "sceneManager/scene_manager.hpp"
 #include "tinyECS/components.hpp"
 #include "tinyECS/registry.hpp"
+#include "gacha_system.hpp"
 
+bool RenderSystem::isRenderingGacha = false;
 void RenderSystem::drawGridLine(Entity entity, const mat3& projection) {
     GridLine& gridLine = registry.gridLines.get(entity);
 
@@ -390,6 +392,7 @@ void RenderSystem::drawToScreen() {
     gl_has_errors();
 }
 
+
 // Render our game world
 // http://www.opengl-tutorial.org/intermediate-tutorials/tutorial-14-render-to-texture/
 void RenderSystem::draw() {
@@ -453,11 +456,15 @@ void RenderSystem::draw() {
             }
         }
     }
-    
-    // Render Player.
-    for (Entity entity : registry.players.entities) {
-        if (registry.motions.has(entity) && registry.renderRequests.has(entity))
-            drawTexturedMesh(entity, projection_2D);
+  
+    // if there is no gacha ui displayed
+    // std::cout << "Gacha rendering? " << isRenderingGacha<< std::endl; 
+    if(!isRenderingGacha){
+        // Render Player.
+        for (Entity entity : registry.players.entities) {
+            if (registry.motions.has(entity) && registry.renderRequests.has(entity))
+                drawTexturedMesh(entity, projection_2D);
+        }
     }
 
     // draw framebuffer to screen

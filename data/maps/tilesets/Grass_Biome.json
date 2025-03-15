@@ -1,0 +1,14 @@
+{ "columns":9,
+ "image":"Basic_Grass_Biom_things.png",
+ "imageheight":80,
+ "imagewidth":144,
+ "margin":0,
+ "name":"Grass_Biome",
+ "spacing":0,
+ "tilecount":45,
+ "tiledversion":"1.11.2",
+ "tileheight":16,
+ "tilewidth":16,
+ "type":"tileset",
+ "version":"1.11"
+}

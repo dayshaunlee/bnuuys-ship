@@ -33,6 +33,8 @@ std::deque<int> keyOrder;
 std::set<int> activeShipKeys;
 std::deque<int> keyShipOrder;
 
+
+
 GameLevel::GameLevel(WorldSystem* worldsystem) {
     this->world_system = worldsystem;
 }
@@ -70,11 +72,6 @@ void GameLevel::Init() {
     renderPlayer(player);
 
     createCamera();
-
-    // enemy creation
-    for (Entity entity: registry.enemies.entities) {
-        createEnemy(entity);
-    };
 
     // bunny creation
     for (Entity entity : registry.bunnies.entities) {
@@ -233,6 +230,9 @@ void GameLevel::Exit() {
     while (registry.enemies.entities.size() > 0){
 	    registry.remove_all_components_of(registry.enemies.entities.back());
 	}
+    while (registry.enemySpawners.entities.size() > 0) {
+        registry.remove_all_components_of(registry.enemySpawners.entities.back());
+    }
     while (registry.islands.entities.size() > 0){
 	    registry.remove_all_components_of(registry.islands.entities.back());
 	}
@@ -257,7 +257,6 @@ void GameLevel::Exit() {
     // while (registry.projectiles.entities.size() > 0){
     //     registry.remove_all_components_of(registry.projectiles.entities.back());
     // }
-
     LevelExit();
 }
 
@@ -609,35 +608,38 @@ void GameLevel::HandleMouseClick(int button, int action, int mods) {
 }
 
 void GameLevel::Update(float dt) {
-    CameraSystem::GetInstance()->update(dt);
-    ai_system.step(dt);
-    physics_system.step(dt);
-    animation_system.step(dt);
-    module_system.step(dt);
-    HandleCameraMovement();
 
-    world_system->handle_collisions();
+    if(!RenderSystem::isRenderingGacha){
+        CameraSystem::GetInstance()->update(dt);
+        ai_system.step(dt);
+        physics_system.step(dt);
+        animation_system.step(dt);
+        module_system.step(dt);
+        HandleCameraMovement();
 
-    // Remove projectiles.
-    for (Entity e : registry.playerProjectiles.entities) {
-        if (registry.playerProjectiles.has(e)) {
-            PlayerProjectile& p = registry.playerProjectiles.get(e);
-            if (p.alive_time_ms <= 0) {
-                registry.remove_all_components_of(e);
-                continue;
+        world_system->handle_collisions();
+
+        // Remove projectiles.
+        for (Entity e : registry.playerProjectiles.entities) {
+            if (registry.playerProjectiles.has(e)) {
+                PlayerProjectile& p = registry.playerProjectiles.get(e);
+                if (p.alive_time_ms <= 0) {
+                    registry.remove_all_components_of(e);
+                    continue;
+                }
+                p.alive_time_ms -= dt;
             }
-            p.alive_time_ms -= dt;
         }
-    }
 
-    for (Entity e : registry.enemyProjectiles.entities) {
-        if (registry.enemyProjectiles.has(e)) {
-            EnemyProjectile& p = registry.enemyProjectiles.get(e);
-            if (p.alive_time_ms <= 0) {
-                registry.remove_all_components_of(e);
-                continue;
+        for (Entity e : registry.enemyProjectiles.entities) {
+            if (registry.enemyProjectiles.has(e)) {
+                EnemyProjectile& p = registry.enemyProjectiles.get(e);
+                if (p.alive_time_ms <= 0) {
+                    registry.remove_all_components_of(e);
+                    continue;
+                }
+                p.alive_time_ms -= dt;
             }
-            p.alive_time_ms -= dt;
         }
     }
 

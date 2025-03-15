@@ -11,6 +11,7 @@
 #include "tinyECS/registry.hpp"
 #include "world_init.hpp"
 #include "world_system.hpp"
+#include "gacha_system.hpp"
 
 TutorialLevel::TutorialLevel(WorldSystem* world_system, std::string map_filename, TEXTURE_ASSET_ID texture) : GameLevel(world_system) {
     this->name = "Tutorial Level";
@@ -93,9 +94,21 @@ void TutorialLevel::LevelUpdate(float dt) {
 
     if (registry.bunnies.components[0].on_base) {
         // Skip tutorial.
-        SceneManager& sceneManager = SceneManager::getInstance();
-        sceneManager.setNextLevelScence("Level 1");
-        std::cout << "Switching to next level scene.." << std::endl;
-        sceneManager.switchScene("Next Level Scene");
+
+        if(upgradesReceived == 1){
+            SceneManager& sceneManager = SceneManager::getInstance();
+            sceneManager.setNextLevelScence("Level 1");
+            std::cout << "Switching to next level scene.." << std::endl;
+            sceneManager.switchScene("Next Level Scene");
+            return;
+        }
+
+        if(!(this->gacha_called)){
+            std::cout << "tutorial gacha pop" << std::endl;
+            // std::cout << this->gacha_called << std::endl;
+            GachaSystem gs;
+            gs.displayGacha(0, this->scene_ui, *this);
+            // std::cout << this->gacha_called << std::endl;
+        }
     }
 }
