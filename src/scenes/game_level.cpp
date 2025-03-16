@@ -52,7 +52,9 @@ vec2 getMouseTilePosition() {
 
 void GameLevel::Init() {
     scene_ui.clear();
-
+    RenderSystem::isRenderingGacha = false;
+    gacha_called = false;
+    upgradesReceived = 0;
     // create player
     Entity player = createPlayer({WINDOW_WIDTH_PX / 2, WINDOW_HEIGHT_PX / 2});
     // load map
