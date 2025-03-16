@@ -36,7 +36,7 @@ TUTORIAL_PHASE curr_tutorial_phase = WASD_KEYS;
 void TutorialLevel::LevelInit() {
     // Initialize Tutorial UI.
     auto tutorial_talk = std::make_shared<bnuui::PlayerStatus>(
-        vec2(765, 540), vec2(-60, 60), 0.0f, x, 100);
+        vec2(765, 540), vec2(-60, 60), 0.0f, x, x);
     auto player_box = std::make_shared<bnuui::Box>(vec2(765, 540), vec2(96, 96), 0.0f);
     // Create the press tutorial dialog.
     auto tutorial_dialog = std::make_shared<bnuui::Box>(
@@ -106,8 +106,8 @@ void TutorialLevel::LevelUpdate(float dt) {
         if(!(this->gacha_called)){
             std::cout << "tutorial gacha pop" << std::endl;
             // std::cout << this->gacha_called << std::endl;
-            GachaSystem gs;
-            gs.displayGacha(0, this->scene_ui, *this);
+            this->gacha_called = true;
+            GachaSystem::getInstance().displayGacha(0, this->scene_ui, *this);
             // std::cout << this->gacha_called << std::endl;
         }
     }

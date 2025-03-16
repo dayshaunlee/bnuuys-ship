@@ -183,8 +183,7 @@ void LongBox::doUpdate(float dt) {
     }
 }
 
-PlayerStatus::PlayerStatus(vec2 pos, vec2 scale, float rot, float& val, float max_val)
-    : max_health(max_val), curr_health(&val) {
+PlayerStatus::PlayerStatus(vec2 pos, vec2 scale, float rot, float& val, float& max_val): max_health(&max_val), curr_health(&val) {
     this->position = pos;
     this->scale = scale;
     this->rotation = rot;
@@ -223,7 +222,7 @@ TEXTURE_ASSET_ID GetNextFaceTexture(TEXTURE_ASSET_ID currAnim, float percentage)
 
 void PlayerStatus::doUpdate(float dt) {
     // Change to next animation.
-    float percentage = *curr_health / max_health;
+    float percentage = *curr_health / *max_health;
 
     if (time_ms <= 0) {
         this->texture = GetNextFaceTexture(this->texture, percentage);
@@ -273,8 +272,8 @@ void SimpleBox::doUpdate(float dt) {
     }
 }
 
-ProgressBar::ProgressBar(vec2 pos, vec2 scale, float rot, float& val, float max_val)
-    : max_val(max_val), curr_val(&val) {
+ProgressBar::ProgressBar(vec2 pos, vec2 scale, float rot, float& val, float& max_val)
+    : max_val(&max_val), curr_val(&val) {
     // Creating the background for progress bar.
     this->position = pos;
     this->scale = scale;
@@ -308,7 +307,7 @@ glm::vec3 interpolateColor(float t) {
 void ProgressBar::doUpdate(float dt) {
     auto progress_bar = this->children[0];
     // First calculate the actual progress.
-    float percentage = *curr_val / max_val;
+    float percentage = *curr_val / *max_val;
 
     // Rescale the progress_bar to percentage * background.
     float new_x = percentage * this->scale.x;

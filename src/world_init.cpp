@@ -382,6 +382,37 @@ Entity createIslandBackground(int width, int height, int offset_x, int offset_y,
     return islandbg;
 }
 
+Entity expandShip() {
+    Entity ship = registry.ships.entities[0];
+    
+    Motion& shipMotion = registry.motions.get(ship);
+    shipMotion.scale.x = GRID_CELL_WIDTH_PX * 5;
+    shipMotion.scale.y = GRID_CELL_HEIGHT_PX * 5;
+
+    Ship& shipStat = registry.ships.get(ship);
+    shipStat.health = EXPANDED_SHIP_HEALTH;
+    shipStat.maxHealth = EXPANDED_SHIP_HEALTH;
+
+    shipStat.ship_modules[MIDDLE_GRID_Y - 2][MIDDLE_GRID_X - 2] = PLATFORM;
+    shipStat.ship_modules[MIDDLE_GRID_Y - 1][MIDDLE_GRID_X - 2] = PLATFORM;
+    shipStat.ship_modules[MIDDLE_GRID_Y - 0][MIDDLE_GRID_X - 2] = PLATFORM;
+    shipStat.ship_modules[MIDDLE_GRID_Y + 1][MIDDLE_GRID_X - 2] = PLATFORM;
+    shipStat.ship_modules[MIDDLE_GRID_Y + 2][MIDDLE_GRID_X - 2] = PLATFORM;
+    shipStat.ship_modules[MIDDLE_GRID_Y + 2][MIDDLE_GRID_X - 1] = PLATFORM;
+    shipStat.ship_modules[MIDDLE_GRID_Y + 2][MIDDLE_GRID_X - 0] = PLATFORM;
+    shipStat.ship_modules[MIDDLE_GRID_Y + 2][MIDDLE_GRID_X + 1] = PLATFORM;
+    shipStat.ship_modules[MIDDLE_GRID_Y + 2][MIDDLE_GRID_X + 2] = PLATFORM;
+    shipStat.ship_modules[MIDDLE_GRID_Y + 1][MIDDLE_GRID_X + 2] = PLATFORM;
+    shipStat.ship_modules[MIDDLE_GRID_Y - 0][MIDDLE_GRID_X + 2] = PLATFORM;
+    shipStat.ship_modules[MIDDLE_GRID_Y - 1][MIDDLE_GRID_X + 2] = PLATFORM;
+    shipStat.ship_modules[MIDDLE_GRID_Y - 2][MIDDLE_GRID_X + 2] = PLATFORM;
+    shipStat.ship_modules[MIDDLE_GRID_Y - 2][MIDDLE_GRID_X + 1] = PLATFORM;
+    shipStat.ship_modules[MIDDLE_GRID_Y - 2][MIDDLE_GRID_X + 0] = PLATFORM;
+    shipStat.ship_modules[MIDDLE_GRID_Y - 2][MIDDLE_GRID_X - 1] = PLATFORM;
+
+    return ship;
+}
+
 Entity createShip() {
     Entity entity = Entity();
 
@@ -402,6 +433,7 @@ Entity createShip() {
 
     Ship& ship = registry.ships.emplace(entity);
     ship.health = SHIP_BASE_HEALTH;
+    ship.maxHealth = SHIP_BASE_HEALTH;
 
     initializeShipModules(ship);
     return entity;

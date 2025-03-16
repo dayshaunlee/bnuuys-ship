@@ -41,11 +41,11 @@ public:
 
 class PlayerStatus : public Element {
 private:
-    float max_health;
+    float* max_health;
     float* curr_health;
     float time_ms;
 public:
-    PlayerStatus(vec2 pos, vec2 scale, float rot, float& val, float max_val);
+    PlayerStatus(vec2 pos, vec2 scale, float rot, float& val, float& max_val);
     ~PlayerStatus() = default;
     void doUpdate(float dt) override;
 };
@@ -59,10 +59,10 @@ public:
 
 class ProgressBar : public Element {
 private:
-    float max_val;
+    float* max_val;
     float* curr_val;
 public:
-    ProgressBar(vec2 pos, vec2 scale, float rot, float& val, float max_val);
+    ProgressBar(vec2 pos, vec2 scale, float rot, float& val, float& max_val);
     ~ProgressBar() = default;
     void doUpdate(float dt) override;
 };

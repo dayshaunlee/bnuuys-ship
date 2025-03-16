@@ -89,11 +89,12 @@ void GameLevel::Init() {
 void GameLevel::InitializeUI() {
     // Create Healthbar.
     auto player_box = std::make_shared<bnuui::Box>(vec2(96, 96), vec2(96, 96), 0.0f);
+    // auto temp = new bnuui::PlayerStatus(vec2(96, 96), vec2(60, 60), 0.0f, registry.ships.components[0].health, registry.ships.components[0].maxHealth);
     auto player_status = std::make_shared<bnuui::PlayerStatus>(
-        vec2(96, 96), vec2(60, 60), 0.0f, registry.ships.components[0].health, 100);
+        vec2(96, 96), vec2(60, 60), 0.0f, registry.ships.components[0].health, registry.ships.components[0].maxHealth);
     auto slider_bg = std::make_shared<bnuui::LongBox>(vec2(256, 96), vec2(240, 72), 0.0f);
     auto progress_bar = std::make_shared<bnuui::ProgressBar>(
-        vec2(256, 93), vec2(180, 24), 0.0f, registry.ships.components[0].health, 100);
+        vec2(256, 93), vec2(180, 24), 0.0f, registry.ships.components[0].health, registry.ships.components[0].maxHealth);
     player_box->children.push_back(slider_bg);
 
     // Create the tile cursor effect.
