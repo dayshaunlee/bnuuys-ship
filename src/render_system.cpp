@@ -316,7 +316,7 @@ void RenderSystem::drawUIElement(bnuui::Element& element, const mat3& projection
     for (auto& child : element.children) {
         if (child->getText() == "")
             drawUIElement(*child, projection);
-        else
+        else 
             renderText(child->getText(), child->position.x, WINDOW_HEIGHT_PX - child->position.y, 2.0f, vec3(0,0,0), UI_Matrix);
     }
 }
