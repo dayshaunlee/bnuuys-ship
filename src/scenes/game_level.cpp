@@ -51,6 +51,7 @@ vec2 getMouseTilePosition() {
 }
 
 void GameLevel::Init() {
+    activeShipKeys.clear();
     scene_ui.clear();
     RenderSystem::isRenderingGacha = false;
     gacha_called = false;
@@ -612,6 +613,7 @@ void GameLevel::HandleMouseClick(int button, int action, int mods) {
 
 void GameLevel::Update(float dt) {
 
+    std::cout << "Camera x: " << CameraSystem::GetInstance()->position.x << "Camera y: " <<  CameraSystem::GetInstance()->position.y << std::endl;
     if(!RenderSystem::isRenderingGacha){
         CameraSystem::GetInstance()->update(dt);
         ai_system.step(dt);
