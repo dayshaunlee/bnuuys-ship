@@ -51,8 +51,11 @@ vec2 getMouseTilePosition() {
 }
 
 void GameLevel::Init() {
+    activeShipKeys.clear();
     scene_ui.clear();
-
+    RenderSystem::isRenderingGacha = false;
+    gacha_called = false;
+    upgradesReceived = 0;
     // create player
     Entity player = createPlayer({WINDOW_WIDTH_PX / 2, WINDOW_HEIGHT_PX / 2});
     // load map
@@ -73,6 +76,7 @@ void GameLevel::Init() {
 
     createCamera();
 
+    bunnies_to_win = 0;
     // bunny creation
     for (Entity entity : registry.bunnies.entities) {
         createBunny(entity);
@@ -610,6 +614,7 @@ void GameLevel::HandleMouseClick(int button, int action, int mods) {
 
 void GameLevel::Update(float dt) {
 
+    // std::cout << "Camera x: " << CameraSystem::GetInstance()->position.x << "Camera y: " <<  CameraSystem::GetInstance()->position.y << std::endl;
     if(!RenderSystem::isRenderingGacha){
         CameraSystem::GetInstance()->update(dt);
         ai_system.step(dt);
