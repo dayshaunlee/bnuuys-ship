@@ -487,3 +487,48 @@ Entity createFilledTile(vec2 position, vec2 size)
 
 	return entity;
 }
+
+// TODO: refactor this after map include disasters
+Entity createDisaster(vec2 position, DISASTER_TYPE type) {
+    auto entity = Entity();
+    registry.backgroundObjects.emplace(entity);
+
+    std::random_device dev;
+    std::mt19937 rng(dev());
+    std::uniform_int_distribution<std::mt19937::result_type> dist(0, 1); // int distribution in range [0, 1]
+
+    int random_signX = dist(rng) == 0 ? 1 : -1;
+    int random_signY = dist(rng) == 0 ? 1 : -1;
+
+    Motion& motion = registry.motions.emplace(entity);
+    Disaster& disaster = registry.disasters.emplace(entity);
+    disaster.type = type;
+    disaster.alive_time_ms = DISASTER_LIFETIME;
+
+    switch (disaster.type) {
+        case TORNADO:
+            disaster.speed = 100;
+            disaster.damage = 0.1;
+
+            motion.velocity = {disaster.speed * random_signX, disaster.speed * random_signY};
+            motion.scale = {168, 168};
+
+            registry.renderRequests.insert(entity,
+                {TEXTURE_ASSET_ID::TORNADO0, EFFECT_ASSET_ID::TEXTURED, GEOMETRY_BUFFER_ID::SPRITE});
+            break;
+        case WHIRLPOOL:
+            disaster.speed = 0;
+            disaster.damage = 0.1;
+
+            motion.scale = {168, 112};
+
+            registry.renderRequests.insert(entity,
+                {TEXTURE_ASSET_ID::WHIRLPOOL0, EFFECT_ASSET_ID::TEXTURED, GEOMETRY_BUFFER_ID::SPRITE});
+            break;
+    };
+
+    motion.angle = 0.f;
+    motion.position = position;
+
+    return entity;
+}

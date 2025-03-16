@@ -307,8 +307,6 @@ void WorldSystem::handle_collisions() {
             continue;
         }
 
-
-
         // Ship - Island collision
         if ((registry.ships.has(e1) && registry.islands.has(e2)) ||
             (registry.ships.has(e2) && registry.islands.has(e1))) {
@@ -326,6 +324,34 @@ void WorldSystem::handle_collisions() {
             collisions_to_remove.push_back(e2);
             // just print debug stuff rn, behaviour is handled in different system
             //std::cout << "island over base" << std::endl;            
+        }
+
+        // Disaster - Ship collision
+        if (registry.disasters.has(e1) && registry.ships.has(e2)) {
+            registry.ships.get(e2).health -= registry.disasters.get(e1).damage;
+            CameraSystem::GetInstance()->vel /= vec2(3, 3);
+            // Play sound
+            Mix_PlayChannel(-1, enemy_ship_collision, 0);
+
+            // When Player dies (ship health is <= 0)
+            if(registry.ships.get(e2).health <= 0.0f){
+                handle_player_death();
+                return;
+            }
+            continue;
+        } else if (registry.disasters.has(e2) && registry.ships.has(e1)) {
+            registry.ships.get(e1).health -= registry.disasters.get(e2).damage;
+            CameraSystem::GetInstance()->vel /= vec2(3, 3);
+            // Play sound
+            Mix_PlayChannel(-1, enemy_ship_collision, 0);
+
+            // When Player dies (ship health is <= 0)
+            if(registry.ships.get(e1).health <= 0.0f){
+                handle_player_death();
+                return;
+            }
+            
+            continue;
         }
     }
 

@@ -83,6 +83,9 @@ void GameLevel::Init() {
         bunnies_to_win += 1;
     };
 
+    createDisaster({300, 100}, DISASTER_TYPE::TORNADO);
+    createDisaster({300, 100}, DISASTER_TYPE::WHIRLPOOL);
+
     registry.players.components[0].health = 100.0f;
     InitializeUI();
 
@@ -646,6 +649,19 @@ void GameLevel::Update(float dt) {
                 }
                 p.alive_time_ms -= dt;
             }
+        }
+    }
+
+    // Remove disasters.
+    for (Entity e : registry.disasters.entities) {
+        Disaster& d = registry.disasters.get(e);
+        if (d.type == DISASTER_TYPE::TORNADO) {
+            if (d.alive_time_ms <= 0) {
+                std::cout << "remove tornado" << std::endl;
+                registry.remove_all_components_of(e);
+                continue;
+            }
+            d.alive_time_ms -= dt;
         }
     }
 

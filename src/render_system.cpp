@@ -425,12 +425,24 @@ void RenderSystem::draw() {
     mat3 projection_2D = createProjectionMatrix();
     glm::mat4 UI_Matrix = mat4(1.0f);
 
+    // Render Disaster whirlpool
+    for (Entity entity : registry.disasters.entities) {
+        if (registry.disasters.get(entity).type == DISASTER_TYPE::WHIRLPOOL)
+            drawTexturedMesh(entity, projection_2D);
+    }
+
     // draw all entities with a render request to the frame buffer
     for (Entity entity : registry.renderRequests.entities) {
         // filter to entities that have a motion component
         if (registry.motions.has(entity)) {
             // SKIP PLAYER TO RENDER THEM LAST.
             if (registry.players.has(entity)) continue;
+
+            if (registry.disasters.has(entity)) {
+                if (registry.disasters.get(entity).type == DISASTER_TYPE::TORNADO) {
+                    continue;
+                }
+            }
 
             // Note, its not very efficient to access elements indirectly via the entity
             // albeit iterating through all Sprites in sequence. A good point to optimize
@@ -442,6 +454,13 @@ void RenderSystem::draw() {
         }
     }
 
+    // Render Disaster tornado above bg/islands/enemies
+    for (Entity entity : registry.disasters.entities) {
+        if (registry.disasters.get(entity).type == DISASTER_TYPE::TORNADO) {
+            drawTexturedMesh(entity, projection_2D);
+        }
+    }
+    
     // Brian: Add draw UI components here.
     SceneManager& sm = SceneManager::getInstance();
     Scene* s = sm.getCurrentScene();
@@ -470,6 +489,7 @@ void RenderSystem::draw() {
     // draw framebuffer to screen
     // adding "vignette" effect when applied
     drawToScreen();
+
 
     // flicker-free display with a double buffer
     glfwSwapBuffers(window);
