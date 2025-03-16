@@ -401,7 +401,11 @@ void RenderSystem::draw() {
             // SKIP PLAYER TO RENDER THEM LAST.
             if (registry.players.has(entity)) continue;
 
-            if (registry.disasters.has(entity)) continue;
+            if (registry.disasters.has(entity)) {
+                if (registry.disasters.get(entity).type == DISASTER_TYPE::TORNADO) {
+                    continue;
+                }
+            }
 
             // Note, its not very efficient to access elements indirectly via the entity
             // albeit iterating through all Sprites in sequence. A good point to optimize
@@ -415,7 +419,9 @@ void RenderSystem::draw() {
 
     // Render Disaster tornado above bg/islands/enemies
     for (Entity entity : registry.disasters.entities) {
-        drawTexturedMesh(entity, projection_2D);
+        if (registry.disasters.get(entity).type == DISASTER_TYPE::TORNADO) {
+            drawTexturedMesh(entity, projection_2D);
+        }
     }
     
     // Brian: Add draw UI components here.
