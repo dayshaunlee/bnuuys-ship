@@ -25,6 +25,13 @@ class RestartButton : public Element {
         void doUpdate(float dt) override;
     };
 
+class TutorialButton : public Element {
+    public:
+        TutorialButton(vec2 pos, vec2 scale, float rot);
+        ~TutorialButton() = default;
+        void doUpdate(float dt) override;
+    };
+
 class Box : public Element {
 public:
     Box(vec2 pos, vec2 scale, float rot);

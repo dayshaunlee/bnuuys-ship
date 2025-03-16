@@ -193,6 +193,10 @@ class RenderSystem {
 
         // Choose upgrade title on gacha pop-up
         textures_path("ui/upgrade_title.png"),
+
+        // tutorial buttons
+        textures_path("ui/buttons/tutorial_neutral.png"),
+        textures_path("ui/buttons/tutorial_clicked.png")
     };
 
     std::array<GLuint, effect_count> effects;
