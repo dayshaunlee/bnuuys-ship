@@ -243,6 +243,7 @@ enum PLAYERSTATE {
     IDLE,
     WALKING,
     STATIONING,
+    BUILDING
 };
 
 // Player component
