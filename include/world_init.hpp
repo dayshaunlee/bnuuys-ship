@@ -23,6 +23,7 @@ Entity createWaterBackground();
 Entity createIslandBackground(int width, int height, int offset_x, int offset_y, TEXTURE_ASSET_ID texture);
 
 Entity createShip();
+Entity expandShip();
 Entity createCamera();
 Entity createGridLine(vec2 start_pos, vec2 end_pos);
 

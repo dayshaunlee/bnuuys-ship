@@ -16,7 +16,7 @@ float val = 100;
 vec2 mouse_pos;
 void EditorUI::InitializeUI() {
     auto player_box = std::make_shared<bnuui::Box>(vec2(96, 96), vec2(96, 96), 0.0f);
-    auto player_status = std::make_shared<bnuui::PlayerStatus>(vec2(96, 96), vec2(60, 60), 0.0f, val, 100);
+    auto player_status = std::make_shared<bnuui::PlayerStatus>(vec2(96, 96), vec2(60, 60), 0.0f, val, val);
     auto slider_bg = std::make_shared<bnuui::LongBox>(vec2(256, 96), vec2(240, 72), 0.0f);
 
     scene_ui.insert(slider_bg);

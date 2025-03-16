@@ -52,10 +52,9 @@ void Level01::LevelUpdate(float dt) {
     if(this->upgradesReceived < points){
         if(!this->gacha_called){
             std::cout << "Gacha popup in level 1.." << std::endl; 
-            GachaSystem gs;
             this->gacha_called = true;
             // todo M3: update level 1 pool
-            gs.displayGacha(1, this->scene_ui, *this);
+            GachaSystem::getInstance().displayGacha(1, this->scene_ui, *this);
             // std::cout << "Gacha poped.." << std::endl;
         }
     }
