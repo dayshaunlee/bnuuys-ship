@@ -401,10 +401,7 @@ void RenderSystem::draw() {
             // SKIP PLAYER TO RENDER THEM LAST.
             if (registry.players.has(entity)) continue;
 
-            if (registry.disasters.has(entity)) {
-                if (registry.disasters.get(entity).type == DISASTER_TYPE::TORNADO)
-                continue;
-            }
+            if (registry.disasters.has(entity)) continue;
 
             // Note, its not very efficient to access elements indirectly via the entity
             // albeit iterating through all Sprites in sequence. A good point to optimize
@@ -416,6 +413,11 @@ void RenderSystem::draw() {
         }
     }
 
+    // Render Disaster tornado above bg/islands/enemies
+    for (Entity entity : registry.disasters.entities) {
+        drawTexturedMesh(entity, projection_2D);
+    }
+    
     // Brian: Add draw UI components here.
     SceneManager& sm = SceneManager::getInstance();
     Scene* s = sm.getCurrentScene();
@@ -432,17 +434,10 @@ void RenderSystem::draw() {
             drawTexturedMesh(entity, projection_2D);
     }
 
-    // Render Disaster tornado
-    for (Entity entity : registry.disasters.entities) {
-        if (registry.disasters.get(entity).type == DISASTER_TYPE::TORNADO)
-            drawTexturedMesh(entity, projection_2D);
-    }
-
-
-
     // draw framebuffer to screen
     // adding "vignette" effect when applied
     drawToScreen();
+
 
     // flicker-free display with a double buffer
     glfwSwapBuffers(window);
