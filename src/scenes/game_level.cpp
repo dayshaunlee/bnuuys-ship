@@ -390,11 +390,24 @@ void HandlePlayerStationing(vec2 tile_pos) {
 
 void GameLevel::HandleInput(int key, int action, int mod) {
     Entity player = registry.players.entities[0];
+
     glm::vec2 playerPos = registry.motions.get(player).position;
     int player_tile_x = (int) (playerPos.x / GRID_CELL_WIDTH_PX);
     int player_tile_y = (int) (playerPos.y / GRID_CELL_HEIGHT_PX);
 
     Player& player_comp = registry.players.get(player);
+
+    // Build Mode.
+    if ((action == GLFW_RELEASE) && (key == GLFW_KEY_B) && (player_comp.player_state != STATIONING)) {
+        if (player_comp.player_state == BUILDING) {
+            player_comp.player_state = IDLE;
+            std::cout << "Returning back to idle\n";
+        } else {
+            player_comp.player_state = BUILDING;
+            std::cout << "Setting to build mode\n";
+        }
+        return;
+    }
 
     if ((action == GLFW_RELEASE) && (key == GLFW_KEY_SPACE) &&
         (player_comp.player_state == IDLE || player_comp.player_state == STATIONING)) {
@@ -418,7 +431,7 @@ void GameLevel::HandleInput(int key, int action, int mod) {
             default:
                 return;
         }
-    } else {
+    } else if (player_comp.player_state != BUILDING) {
         HandlePlayerMovement(key, action, mod);
     }
 
@@ -609,8 +622,7 @@ void GameLevel::HandleMouseClick(int button, int action, int mods) {
 }
 
 void GameLevel::Update(float dt) {
-
-    if(!RenderSystem::isRenderingGacha){
+    if(!RenderSystem::isRenderingGacha && registry.players.components[0].player_state != BUILDING){
         CameraSystem::GetInstance()->update(dt);
         ai_system.step(dt);
         physics_system.step(dt);
