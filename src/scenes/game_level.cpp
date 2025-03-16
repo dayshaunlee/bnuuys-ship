@@ -76,6 +76,7 @@ void GameLevel::Init() {
 
     createCamera();
 
+    bunnies_to_win = 0;
     // bunny creation
     for (Entity entity : registry.bunnies.entities) {
         createBunny(entity);
@@ -613,7 +614,7 @@ void GameLevel::HandleMouseClick(int button, int action, int mods) {
 
 void GameLevel::Update(float dt) {
 
-    std::cout << "Camera x: " << CameraSystem::GetInstance()->position.x << "Camera y: " <<  CameraSystem::GetInstance()->position.y << std::endl;
+    // std::cout << "Camera x: " << CameraSystem::GetInstance()->position.x << "Camera y: " <<  CameraSystem::GetInstance()->position.y << std::endl;
     if(!RenderSystem::isRenderingGacha){
         CameraSystem::GetInstance()->update(dt);
         ai_system.step(dt);

@@ -60,7 +60,11 @@ std::vector<MODULE_TYPES> GachaSystem::getModuleOptions(int level){
     }
 
     // Normalize weights to create a probability distribution
-    float sumWeights = std::accumulate(weights.begin(), weights.end(), 0.0f);
+    float sumWeights = 0.0f;
+    for (float weight : weights) {
+        sumWeights += weight;
+    }
+    
     for (float& weight : weights) {
         weight /= sumWeights;
     }
