@@ -644,6 +644,19 @@ void GameLevel::Update(float dt) {
         }
     }
 
+    // Remove disasters.
+    for (Entity e : registry.disasters.entities) {
+        Disaster& d = registry.disasters.get(e);
+        if (d.type == DISASTER_TYPE::TORNADO) {
+            if (d.alive_time_ms <= 0) {
+                std::cout << "remove tornado" << std::endl;
+                registry.remove_all_components_of(e);
+                continue;
+            }
+            d.alive_time_ms -= dt;
+        }
+    }
+
     scene_ui.update(dt);
 
     LevelUpdate(dt);

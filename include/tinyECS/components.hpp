@@ -360,4 +360,5 @@ struct Disaster {
 	float timer_ms;
     int speed;
     float damage;
+    float alive_time_ms;
 };

@@ -44,6 +44,7 @@ inline std::string map_path(const std::string& name) {
 
 enum ENEMY_TYPE { BASIC_GUNNER = 0, FLYER = 1, TANK = 2, SHOOTER = 3 };
 enum DISASTER_TYPE { TORNADO = 0, WHIRLPOOL = 1};
+const float DISASTER_LIFETIME = 30000.0f;   // 30 seconds life time 
 
 //
 // game constants
