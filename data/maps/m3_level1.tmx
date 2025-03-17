@@ -193,7 +193,7 @@
    <polygon points="-14,-26 -14,102 162,102 162,-26"/>
   </object>
  </objectgroup>
- <objectgroup id="7" name="spawnpoints" visible="0">
+ <objectgroup id="7" name="spawnpoints">
   <object id="201" type="player" x="152" y="376">
    <point/>
   </object>

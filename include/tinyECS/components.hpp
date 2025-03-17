@@ -106,15 +106,16 @@ enum class TEXTURE_ASSET_ID {
     BUNNY_LEFT_WALK1 = BUNNY_LEFT_WALK0 + 1,
 
     WATER_BACKGROUND = BUNNY_LEFT_WALK1 + 1,
-  
-    // TODO: figure out which background to use
+    
+    // Game Maps
     TUTORIAL_BACKGROUND = WATER_BACKGROUND + 1,
     LEVEL01_BACKGROUND = TUTORIAL_BACKGROUND + 1,
     LEVEL02_BACKGROUND = LEVEL01_BACKGROUND + 1,
     LEVEL03_BACKGROUND = LEVEL02_BACKGROUND + 1,
+    LEVEL04_BACKGROUND = LEVEL03_BACKGROUND + 1,
 
     // Enemies
-    BALLOON0 = LEVEL03_BACKGROUND + 1,
+    BALLOON0 = LEVEL04_BACKGROUND + 1,
     BALLOON1 = BALLOON0 + 1,
     BALLOON2 = BALLOON1 + 1,
 
@@ -244,6 +245,15 @@ struct RenderRequest {
     GEOMETRY_BUFFER_ID used_geometry = GEOMETRY_BUFFER_ID::GEOMETRY_COUNT;
 };
 
+/* for ordering of rendering. so far (add to comment to keep track):
+1 = whirlpool
+2 = ship
+3 = tornado
+*/
+struct RenderLayer {
+    int layer = 0;
+};
+
 enum DIRECTION { UP, RIGHT, DOWN, LEFT };
 
 // ========== PLAYER DETAILS ==========
@@ -273,9 +283,9 @@ struct PlayerAnimation {
     int timer_ms;  // How many ms before switching to the next frame.
 };
 
-// ========= Camera related componenet ======================
+// ========= Camera related components ======================
 // used for updating the objects in the background as camera moves with ship
-// bachgroundObject is anything that doesn't move with the ship
+// backgroundObject is anything that doesn't move with the ship
 
 struct BackgroundObject {};
 struct Camera{

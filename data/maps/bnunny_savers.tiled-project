@@ -50,6 +50,43 @@
             ]
         },
         {
+            "color": "#ffffaaff",
+            "drawFill": false,
+            "id": 9,
+            "members": [
+                {
+                    "name": "disaster_type",
+                    "propertyType": "disaster_type_enum",
+                    "type": "int",
+                    "value": 0
+                }
+            ],
+            "name": "disaster",
+            "type": "class",
+            "useAs": [
+                "property",
+                "map",
+                "layer",
+                "object",
+                "tile",
+                "tileset",
+                "wangcolor",
+                "wangset",
+                "project"
+            ]
+        },
+        {
+            "id": 10,
+            "name": "disaster_type_enum",
+            "storageType": "int",
+            "type": "enum",
+            "values": [
+                "tornado",
+                "whirlpool"
+            ],
+            "valuesAsFlags": false
+        },
+        {
             "color": "#ffff0000",
             "drawFill": false,
             "id": 1,
