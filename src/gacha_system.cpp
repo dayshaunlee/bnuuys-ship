@@ -64,7 +64,7 @@ std::vector<MODULE_TYPES> GachaSystem::getModuleOptions(int level){
     for (float weight : weights) {
         sumWeights += weight;
     }
-    
+
     for (float& weight : weights) {
         weight /= sumWeights;
     }
