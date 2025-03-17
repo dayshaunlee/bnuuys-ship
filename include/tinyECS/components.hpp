@@ -283,10 +283,28 @@ enum MODULE_TYPES {
     PLATFORM,
     STEERING_WHEEL,
     SIMPLE_CANNON,
-    FAST_CANNON,
 
     HELPER_BUNNY,
 };
+
+inline TEXTURE_ASSET_ID getTextureFromModuleType(MODULE_TYPES module){
+    switch (module)
+    {
+    case MODULE_TYPES::SIMPLE_CANNON :
+        return TEXTURE_ASSET_ID::SIMPLE_CANNON01;
+        break;
+    case MODULE_TYPES::PLATFORM :
+        return TEXTURE_ASSET_ID::RAFT;
+        break;
+    case MODULE_TYPES::HELPER_BUNNY :
+        return TEXTURE_ASSET_ID::BUNNY_NPC_IDLE_UP0;
+        break;
+    default:
+        std::cout << "This is not a valid module" << std::endl;
+        return TEXTURE_ASSET_ID::WATER_BACKGROUND; 
+        break;
+    }
+}
 
 struct SteeringWheel {
     bool is_automated;

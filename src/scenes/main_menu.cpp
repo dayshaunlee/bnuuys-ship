@@ -19,6 +19,8 @@ void MainMenuScene::Init() {
     auto tutorial_btn = std::make_shared<bnuui::TutorialButton>(vec2((WINDOW_WIDTH_PX/2) + 180, 0.8*WINDOW_HEIGHT_PX), vec2(300, 100), 0.0f);
     auto bg = std::make_shared<bnuui::Box>(vec2((WINDOW_WIDTH_PX/2), WINDOW_HEIGHT_PX/2), vec2(WINDOW_WIDTH_PX*1.25f, WINDOW_HEIGHT_PX), 0.0f);
 
+    auto txt = std::make_shared<bnuui::TextLabel>(vec2(100, 100), 1, "Hello");
+
     bg->texture = TEXTURE_ASSET_ID::MAIN_MENU_BG;
     tutorial_btn->setOnClick([](bnuui::Element& e) {
         SceneManager::getInstance().switchScene("Tutorial Level");
@@ -31,6 +33,7 @@ void MainMenuScene::Init() {
     scene_ui.insert(bg);
     scene_ui.insert(play_btn);
     scene_ui.insert(tutorial_btn);
+    scene_ui.insert(txt);
 }
 
 void MainMenuScene::Exit() {

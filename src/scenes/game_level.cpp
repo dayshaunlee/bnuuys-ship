@@ -12,6 +12,7 @@
 #include "bnuui/bnuui.hpp"
 #include "camera_system.hpp"
 #include "common.hpp"
+#include "inventory_system.hpp"
 #include "tinyECS/components.hpp"
 #include "tinyECS/registry.hpp"
 #include "world_init.hpp"
@@ -35,7 +36,7 @@ std::deque<int> keyShipOrder;
 
 
 
-GameLevel::GameLevel(WorldSystem* worldsystem) {
+GameLevel::GameLevel(WorldSystem* worldsystem) : inventory_system(scene_ui, curr_selected) {
     this->world_system = worldsystem;
 }
 
@@ -86,98 +87,9 @@ void GameLevel::Init() {
     registry.ships.components[0].available_modules[HELPER_BUNNY] = 1;
 }
 
-void GameLevel::CreateInventory() {
-    // Create the inventory bar.
-    auto inventory_slots = std::make_shared<bnuui::LongBox>(vec2(420, 550), vec2(240, 72), 0.0f);
-
-    auto steering_wheels = std::make_shared<bnuui::Box>(vec2(340, 547.5f), vec2(40, 40), 0.0f);
-    auto steering_wheel_selected = std::make_shared<bnuui::Cursor>(vec2(340, 547.5f), vec2(40, 40), 0.0f);
-    steering_wheel_selected->visible = false;
-    steering_wheels->children.push_back(steering_wheel_selected);
-    steering_wheels->texture = TEXTURE_ASSET_ID::SQUARE_3_CLICKED;
-    steering_wheels->setOnClick([](bnuui::Element& e) {
-        if (curr_selected == STEERING_WHEEL) {
-            curr_selected = EMPTY;
-        } else {
-            curr_selected = STEERING_WHEEL;
-        }
-    });
-    steering_wheels->setOnUpdate([](bnuui::Element& e, float dt) {
-        Ship& ship = registry.ships.components[0];
-        if (ship.available_modules[STEERING_WHEEL] == 0) {
-            e.color = vec3(0.5f, 0, 0);
-        } else {
-            e.color = vec3(1, 1, 1);
-        }
-
-        if (curr_selected == STEERING_WHEEL)
-            e.children[0]->visible = true;
-        else
-            e.children[0]->visible = false;
-    });
-
-    auto cannons = std::make_shared<bnuui::Box>(vec2(380, 547.5f), vec2(40, 40), 0.0f);
-    auto cannons_selected = std::make_shared<bnuui::Cursor>(vec2(380, 547.5f), vec2(40, 40), 0.0f);
-    cannons_selected->visible = false;
-    cannons->children.push_back(cannons_selected);
-    cannons->texture = TEXTURE_ASSET_ID::SIMPLE_CANNON01;
-    cannons->setOnClick([](bnuui::Element& e) {
-        if (curr_selected == SIMPLE_CANNON) {
-            curr_selected = EMPTY;
-        } else {
-            curr_selected = SIMPLE_CANNON;
-        }
-    });
-    cannons->setOnUpdate([](bnuui::Element& e, float dt) {
-        Ship& ship = registry.ships.components[0];
-        if (ship.available_modules[SIMPLE_CANNON] == 0) {
-            e.color = vec3(0.5f, 0, 0);
-        } else {
-            e.color = vec3(1, 1, 1);
-        }
-
-        if (curr_selected == SIMPLE_CANNON)
-            e.children[0]->visible = true;
-        else
-            e.children[0]->visible = false;
-    });
-
-    auto helper_bunnies = std::make_shared<bnuui::Box>(vec2(420, 547.5f), vec2(40, 40), 0.0f);
-    auto helper_bunnies_selected = std::make_shared<bnuui::Cursor>(vec2(420, 547.5f), vec2(40, 40), 0.0f);
-    helper_bunnies_selected->visible = false;
-    helper_bunnies->children.push_back(helper_bunnies_selected);
-    helper_bunnies->texture = TEXTURE_ASSET_ID::BUNNY_NPC_IDLE_UP0;
-    helper_bunnies->setOnClick([](bnuui::Element& e) {
-        if (curr_selected == HELPER_BUNNY) {
-            curr_selected = EMPTY;
-        } else {
-            curr_selected = HELPER_BUNNY;
-        }
-    });
-    helper_bunnies->setOnUpdate([](bnuui::Element& e, float dt) {
-        Ship& ship = registry.ships.components[0];
-        if (ship.available_modules[HELPER_BUNNY] == 0) {
-            e.color = vec3(0.5f, 0, 0);
-        } else {
-            e.color = vec3(1, 1, 1);
-        }
-
-        if (curr_selected == HELPER_BUNNY)
-            e.children[0]->visible = true;
-        else
-            e.children[0]->visible = false;
-    });
-
-    scene_ui.insert(inventory_slots);
-    scene_ui.insert(steering_wheels);
-    scene_ui.insert(cannons);
-    scene_ui.insert(helper_bunnies);
-}
-
 void GameLevel::InitializeUI() {
     // Create Healthbar.
     auto player_box = std::make_shared<bnuui::Box>(vec2(96, 96), vec2(96, 96), 0.0f);
-    // auto temp = new bnuui::PlayerStatus(vec2(96, 96), vec2(60, 60), 0.0f, registry.ships.components[0].health, registry.ships.components[0].maxHealth);
     auto player_status = std::make_shared<bnuui::PlayerStatus>(
         vec2(96, 96), vec2(60, 60), 0.0f, registry.ships.components[0].health, registry.ships.components[0].maxHealth);
     auto slider_bg = std::make_shared<bnuui::LongBox>(vec2(256, 96), vec2(240, 72), 0.0f);
@@ -383,7 +295,6 @@ void HandlePlayerStationing(vec2 tile_pos) {
             return;
         case STEERING_WHEEL:
         case SIMPLE_CANNON:
-        case FAST_CANNON:
             player_comp.player_state = STATIONING;
     }
     player_comp.player_state = STATIONING;
@@ -401,10 +312,12 @@ void GameLevel::HandleInput(int key, int action, int mod) {
     // Build Mode.
     if ((action == GLFW_RELEASE) && (key == GLFW_KEY_B) && (player_comp.player_state != STATIONING)) {
         if (player_comp.player_state == BUILDING) {
+            inventory_system.CloseInventory();
             player_comp.player_state = IDLE;
             std::cout << "Returning back to idle\n";
         } else {
             player_comp.player_state = BUILDING;
+            inventory_system.OpenInventory();
             std::cout << "Setting to build mode\n";
         }
         return;
@@ -485,10 +398,6 @@ void GameLevel::HandleMouseMove(vec2 pos) {
                 m.angle = degrees(atan2(pos.y - m.position.y, pos.x - m.position.x)) + 90.0f;
                 return;
             }
-            case FAST_CANNON: {
-                player_comp.player_state = IDLE;
-                return;
-            }
             default:
                 return;
         }
@@ -540,10 +449,6 @@ void GameLevel::HandleMouseClick(int button, int action, int mods) {
                         createCannonProjectile(cannon_pos, l1_mouse_pos);
                         sc.timer_ms = SIMPLE_CANNON_COOLDOWN;
                     }
-                    return;
-                }
-                case FAST_CANNON: {
-                    player_comp.player_state = IDLE;
                     return;
                 }
                 default:

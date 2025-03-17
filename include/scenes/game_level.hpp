@@ -4,6 +4,7 @@
 #include <string>
 #include "ai_system.hpp"
 #include "animation_system.hpp"
+#include "inventory_system.hpp"
 #include "modules_system.hpp"
 #include "physics_system.hpp"
 #include "sceneManager/scene.hpp"
@@ -12,14 +13,12 @@
 
 // This class describes a parent class for Gameplay Levels.
 class GameLevel : public Scene {
-private:
-    void CreateInventory();
-
 protected:
     AISystem ai_system;
     PhysicsSystem physics_system;
     AnimationSystem animation_system;
     ModulesSystem module_system;
+    InventorySystem inventory_system;
     WorldSystem* world_system;
 
     void InitializeUI();
