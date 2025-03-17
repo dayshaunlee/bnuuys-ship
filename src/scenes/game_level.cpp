@@ -575,6 +575,10 @@ void GameLevel::HandleMouseClick(int button, int action, int mods) {
                     e = createCannon(tile_pos);
                     break;
                 }
+                case LASER_WEAPON: {
+                    e = createLaserWeapon(tile_pos);
+                    break;
+                }
                 default:
                     break;
             }
@@ -660,6 +664,18 @@ void GameLevel::Update(float dt) {
                 p.alive_time_ms -= dt;
             }
         }
+
+        for (Entity e : registry.laserBeams.entities) {
+            if (registry.laserBeams.has(e)) {
+                LaserBeam& l = registry.laserBeams.get(e);
+                if (l.alive_time_ms <= 0) {
+                    registry.remove_all_components_of(e);
+                    continue;
+                }
+                l.alive_time_ms -= dt;
+            }
+        }
+
     }
 
     // Remove disasters.

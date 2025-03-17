@@ -35,7 +35,7 @@ class ECSRegistry {
     ComponentContainer<SteeringWheel> steeringWheels;
     ComponentContainer<SimpleCannon> simpleCannons;
     ComponentContainer<LaserWeapon> laserWeapons;
-    ComponentContainer<LaserBeam> LaserBeams;
+    ComponentContainer<LaserBeam> laserBeams;
 
     ComponentContainer<PlayerProjectile> playerProjectiles;
     ComponentContainer<EnemyProjectile> enemyProjectiles;
@@ -71,7 +71,7 @@ class ECSRegistry {
         registry_list.push_back(&steeringWheels);
         registry_list.push_back(&simpleCannons);
         registry_list.push_back(&laserWeapons);
-        registry_list.push_back(&LaserBeams);
+        registry_list.push_back(&laserBeams);
         registry_list.push_back(&enemies);
         registry_list.push_back(&enemySpawners);
 

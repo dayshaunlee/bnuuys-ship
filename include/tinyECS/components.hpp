@@ -327,7 +327,8 @@ struct LaserWeapon {
 struct LaserBeam {
     float damage;
     float currWidth = 0;
-    float fixLength = 300;
+    float fixLength = 200;
+    float alive_time_ms;
 };
 
 struct Ship {

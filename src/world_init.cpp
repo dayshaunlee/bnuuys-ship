@@ -357,25 +357,27 @@ Entity createLaserWeapon(vec2 tile_pos){
 Entity createLaserBeam(vec2 orig, vec2 dest) {
     Entity e;
 
-    LaserBeam& beam = registry.LaserBeams.emplace(e);
-    beam.damage = 0;
+    LaserBeam& beam = registry.laserBeams.emplace(e);
+    beam.damage = 100;
     beam.currWidth = 1;
+    beam.fixLength = 200.0f;  // Fixed length for the laser
+    beam.alive_time_ms = LASER_LIFETIME;
 
     Motion& m = registry.motions.emplace(e);
-    m.position = orig - CameraSystem::GetInstance()->position;
+    vec2 dir = normalize(dest - orig);
 
-    float length = distance(orig, dest);
-    m.scale = {length, beam.fixLength}; // Adjust height as needed
+    // m.position = orig + dir * (beam.fixLength / 2.0f) - CameraSystem::GetInstance()->position;
+    m.position = orig;
 
-    m.angle = degrees(atan2(dest.y - orig.y, dest.x - orig.x));
-
+    m.scale = {beam.fixLength, beam.fixLength};
+    m.angle = degrees(atan2(dest.y - m.position.y, dest.x - m.position.x)) + 90.0f;
     m.velocity = {0, 0};
 
     registry.backgroundObjects.emplace(e);
     registry.renderRequests.insert(
         e, {TEXTURE_ASSET_ID::TEXTURE_COUNT, EFFECT_ASSET_ID::EGG, GEOMETRY_BUFFER_ID::LASER_SQUARE});
 
-    // TODO: play sound for the laser beam
+    // TODO: Play sound for the laser beam
     if (projectile_shoot == nullptr) {
         // projectile_shoot = Mix_LoadWAV(audio_path("projectile_shoot.wav").c_str());
     }
@@ -383,6 +385,9 @@ Entity createLaserBeam(vec2 orig, vec2 dest) {
 
     return e;
 }
+
+
+
 
 
 void initializeShipModules(Ship& ship) {
@@ -409,6 +414,12 @@ void initializeShipModules(Ship& ship) {
 
     Entity cannon_entity = createCannon(SimpleCannonGridPos);
     tmp_entities[SimpleCannonGridPos.y][SimpleCannonGridPos.x] = cannon_entity;
+
+    // TODO lily: delete later, this is just for testing
+    vec2 laserGridPos = {MIDDLE_GRID_X + 1, MIDDLE_GRID_Y - 1};
+    tmp_modules[laserGridPos.y][laserGridPos.x] = LASER_WEAPON;
+    Entity laser_entity = createLaserWeapon(laserGridPos);
+    tmp_entities[laserGridPos.y][laserGridPos.x] = laser_entity; 
 
     ship.ship_modules = tmp_modules;
     ship.ship_modules_entity = tmp_entities;

@@ -21,5 +21,5 @@ class CameraSystem {
 
    private:
     static CameraSystem* camera;
-    float friction = 0.995f;  // Slow down over time like there's momentum
+    float friction = 0.99f;  // Slow down over time like there's momentum
 };

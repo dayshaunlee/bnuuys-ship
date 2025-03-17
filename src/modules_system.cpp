@@ -93,6 +93,24 @@ void ModulesSystem::step(float elapsed_ms) {
             }
         }
     }
+
+    for (Entity lw_entity : registry.laserWeapons.entities) {
+        LaserWeapon& lw = registry.laserWeapons.get(lw_entity);
+        if (lw.timer_ms > 0)
+            lw.timer_ms -= elapsed_ms;
+        else
+            lw.timer_ms = 0;
+
+        // TODO laser: Check automation.
+        // if (lw.is_automated) {
+        //     AutoCannonContext ctx(lw_entity);
+        //     auto dtree_node = dtree_AutoCannon->decide(ctx);
+        //     while (dtree_node != nullptr) {
+        //         dtree_node->execute(ctx);
+        //         dtree_node = dtree_node->decide(ctx);
+        //     }
+        // }
+    }
 }
 
     
