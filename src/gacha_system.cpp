@@ -19,14 +19,14 @@ GachaSystem::GachaSystem() {
     rng.seed(static_cast<unsigned>(time(nullptr)));
     levelModulePools.resize(5); // Set to 5 levels for now
 
-    setLevelPool(0, {MODULE_TYPES::SIMPLE_CANNON, MODULE_TYPES::HELPER_BUNNY, MODULE_TYPES::PLATFORM});
+    setLevelPool(0, {MODULE_TYPES::SIMPLE_CANNON, MODULE_TYPES::HELPER_BUNNY});
     setLevelPool(1, {MODULE_TYPES::SIMPLE_CANNON, MODULE_TYPES::HELPER_BUNNY, MODULE_TYPES::PLATFORM});
     
     setDropRate(MODULE_TYPES::STEERING_WHEEL, 0);
-    setDropRate(MODULE_TYPES::HELPER_BUNNY, 100);
+    setDropRate(MODULE_TYPES::HELPER_BUNNY, 5);
     setDropRate(MODULE_TYPES::EMPTY, 0);
-    setDropRate(MODULE_TYPES::PLATFORM, 100);
-    setDropRate(MODULE_TYPES::SIMPLE_CANNON, 100);
+    setDropRate(MODULE_TYPES::PLATFORM, 5);
+    setDropRate(MODULE_TYPES::SIMPLE_CANNON, 5);
     setDropRate(MODULE_TYPES::FAST_CANNON, 0);
 }
 
@@ -64,7 +64,7 @@ std::vector<MODULE_TYPES> GachaSystem::getModuleOptions(int level){
     for (float weight : weights) {
         sumWeights += weight;
     }
-    
+
     for (float& weight : weights) {
         weight /= sumWeights;
     }
@@ -89,7 +89,6 @@ TEXTURE_ASSET_ID getTextureFromModuleType(MODULE_TYPES module){
     switch (module)
     {
     case MODULE_TYPES::SIMPLE_CANNON :
-        /* code */
         return TEXTURE_ASSET_ID::SIMPLE_CANNON01;
         break;
     case MODULE_TYPES::FAST_CANNON :

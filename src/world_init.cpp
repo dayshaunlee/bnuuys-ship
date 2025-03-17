@@ -335,6 +335,56 @@ Entity createCannon(vec2 tile_pos) {
     return cannon;
 }
 
+Entity createLaserWeapon(vec2 tile_pos){
+    Entity laser;
+    LaserWeapon& laser_weapon = registry.laserWeapons.emplace(laser);
+    laser_weapon.is_automated = false;
+    laser_weapon.timer_ms = 0; 
+
+    Motion& motion = registry.motions.emplace(laser);
+    vec2 world_pos = TileToVector2(tile_pos.x, tile_pos.y);
+    motion.position.x = world_pos.x;
+    motion.position.y = world_pos.y;
+
+    motion.scale = {GRID_CELL_WIDTH_PX, GRID_CELL_HEIGHT_PX};
+
+    registry.renderRequests.insert(
+        laser, {TEXTURE_ASSET_ID::LASER_WEAPON0, EFFECT_ASSET_ID::TEXTURED, GEOMETRY_BUFFER_ID::SPRITE});
+
+    return laser;
+}
+
+Entity createLaserBeam(vec2 orig, vec2 dest) {
+    Entity e;
+
+    LaserBeam& beam = registry.LaserBeams.emplace(e);
+    beam.damage = 0;
+    beam.currWidth = 1;
+
+    Motion& m = registry.motions.emplace(e);
+    m.position = orig - CameraSystem::GetInstance()->position;
+
+    float length = distance(orig, dest);
+    m.scale = {length, beam.fixLength}; // Adjust height as needed
+
+    m.angle = degrees(atan2(dest.y - orig.y, dest.x - orig.x));
+
+    m.velocity = {0, 0};
+
+    registry.backgroundObjects.emplace(e);
+    registry.renderRequests.insert(
+        e, {TEXTURE_ASSET_ID::TEXTURE_COUNT, EFFECT_ASSET_ID::EGG, GEOMETRY_BUFFER_ID::LASER_SQUARE});
+
+    // TODO: play sound for the laser beam
+    if (projectile_shoot == nullptr) {
+        // projectile_shoot = Mix_LoadWAV(audio_path("projectile_shoot.wav").c_str());
+    }
+    // Mix_PlayChannel(-1, projectile_shoot, 0);
+
+    return e;
+}
+
+
 void initializeShipModules(Ship& ship) {
     auto tmp_modules = std::vector<std::vector<MODULE_TYPES>>(ROW_COUNT, std::vector<MODULE_TYPES>(COL_COUNT, EMPTY));
 

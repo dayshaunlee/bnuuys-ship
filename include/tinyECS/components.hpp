@@ -198,9 +198,11 @@ enum class TEXTURE_ASSET_ID {
     UPGRADE_TITLE = NEXT_LEVEL_BG + 1,
 
     TUTORIAL_BUTTON_NORMAL = UPGRADE_TITLE + 1,
-    TUTORIAL_BUTTON_CLICKED = TUTORIAL_BUTTON_NORMAL + 1, 
+    TUTORIAL_BUTTON_CLICKED = TUTORIAL_BUTTON_NORMAL + 1,
+
+    LASER_WEAPON0 = TUTORIAL_BUTTON_CLICKED + 1,
     
-    TEXTURE_COUNT = TUTORIAL_BUTTON_CLICKED + 1
+    TEXTURE_COUNT = LASER_WEAPON0 + 1
 };
 
 const int texture_count = (int) TEXTURE_ASSET_ID::TEXTURE_COUNT;
@@ -222,8 +224,8 @@ enum class GEOMETRY_BUFFER_ID {
     EGG = SPRITE + 1,
     DEBUG_LINE = EGG + 1,
     SCREEN_TRIANGLE = DEBUG_LINE + 1,
-    SHIP_SQUARE = SCREEN_TRIANGLE + 1,
-    UI_SQUARE = SHIP_SQUARE + 1,
+    LASER_SQUARE = SCREEN_TRIANGLE + 1,
+    UI_SQUARE = LASER_SQUARE + 1,
     GEOMETRY_COUNT = UI_SQUARE + 1
 };
 const int geometry_count = (int) GEOMETRY_BUFFER_ID::GEOMETRY_COUNT;
@@ -283,7 +285,7 @@ enum MODULE_TYPES {
     STEERING_WHEEL,
     SIMPLE_CANNON,
     FAST_CANNON,
-
+    LASER_WEAPON,
     HELPER_BUNNY,
 };
 
@@ -304,6 +306,18 @@ struct EnemyProjectile {
 struct SimpleCannon {
     bool is_automated;
     float timer_ms; // The cooldown period before another shot.
+};
+
+struct LaserWeapon {
+    bool is_automated;
+    float timer_ms;
+    float maxLoadTime_ms = 1500;
+};
+
+struct LaserBeam {
+    float damage;
+    float currWidth = 0;
+    float fixLength = 300;
 };
 
 struct Ship {

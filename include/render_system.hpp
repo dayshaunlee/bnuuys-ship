@@ -196,7 +196,9 @@ class RenderSystem {
 
         // tutorial buttons
         textures_path("ui/buttons/tutorial_neutral.png"),
-        textures_path("ui/buttons/tutorial_clicked.png")
+        textures_path("ui/buttons/tutorial_clicked.png"),
+
+        textures_path("cannons/laser_weapon.png")
     };
 
     std::array<GLuint, effect_count> effects;

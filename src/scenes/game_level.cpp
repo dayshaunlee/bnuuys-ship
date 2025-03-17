@@ -536,6 +536,16 @@ void GameLevel::HandleMouseClick(int button, int action, int mods) {
                     player_comp.player_state = IDLE;
                     return;
                 }
+                case LASER_WEAPON: {
+                    Entity laser_entity = ship.ship_modules_entity[player_tile_y][player_tile_x];
+                    LaserWeapon& lw = registry.laserWeapons.get(laser_entity);
+                    if (lw.timer_ms <= 0) {
+                        vec2 laser_pos = registry.motions.get(laser_entity).position;
+                        createLaserBeam(laser_pos, l1_mouse_pos);
+                        lw.timer_ms = SIMPLE_CANNON_COOLDOWN;
+                    }
+                    return;
+                }
                 default:
                     return;
             }
