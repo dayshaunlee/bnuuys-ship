@@ -17,29 +17,29 @@ void InventorySystem::CreateModuleUI(MODULE_TYPES type, float offset) {
 
     auto module = std::make_shared<bnuui::Box>(vec2(INIT_X + offset, INIT_Y), vec2(40, 40), 0.0f);
     auto cursor = std::make_shared<bnuui::Cursor>(vec2(INIT_X + offset, INIT_Y), vec2(40, 40), 0.0f);
-    auto counter = std::make_shared<bnuui::TextLabel>(vec2(INIT_X + offset, INIT_Y), 1, "Zero");
+    auto counter = std::make_shared<bnuui::TextLabel>(vec2(INIT_X + 5.0f + offset, INIT_Y-10.0f), 1, "0");
 
     cursor->visible = false;
     module->children.push_back(cursor);
     module->children.push_back(counter);
     module->texture = getTextureFromModuleType(type);
-    module->setOnClick([&](bnuui::Element& e) {
-        if (*this->selected_module == type) {
-            *this->selected_module = EMPTY;
+    module->setOnClick([&, type](bnuui::Element& e) {
+        if (*(this->selected_module) == type) {
+            *(this->selected_module) = EMPTY;
         } else {
-            *this->selected_module = type;
+            *(this->selected_module) = type;
         }
     });
-    module->setOnUpdate([&](bnuui::Element& e, float dt) {
+    module->setOnUpdate([&, type, cursor, counter](bnuui::Element& e, float dt) {
         Ship& ship = registry.ships.components[0];
         if (ship.available_modules[type] == 0) {
             e.color = vec3(0.5f, 0, 0);
         } else {
             e.color = vec3(1, 1, 1);
         }
-        /*counter->setText(std::to_string(ship.available_modules[type]));*/
+        counter->setText(std::to_string(ship.available_modules[type]));
 
-        if (*selected_module == type)
+        if (*(this->selected_module) == type)
             cursor->visible = true;
         else
             cursor->visible = false;

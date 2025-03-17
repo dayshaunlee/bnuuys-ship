@@ -299,9 +299,42 @@ void HandleEnemyAnimation(float elapsed_ms) {
     }
 }
 
+void HandleDisasterAnimation(float elapsed_ms) {
+    for (Entity entity : registry.disasters.entities) {
+        Disaster& disaster = registry.disasters.get(entity);
+        TEXTURE_ASSET_ID& texture = registry.renderRequests.get(entity).used_texture;
+        if (disaster.type == DISASTER_TYPE::TORNADO) {
+            if (disaster.timer_ms <= 0) {
+                disaster.timer_ms = 2 * ANIMATION_TIME;
+                texture = TEXTURE_ASSET_ID::TORNADO0;
+            } else if (disaster.timer_ms <= 0.5 * ANIMATION_TIME) {
+                texture = TEXTURE_ASSET_ID::TORNADO1;
+            } else if (disaster.timer_ms <= 1 * ANIMATION_TIME) {
+                texture = TEXTURE_ASSET_ID::TORNADO2;
+            } else if (disaster.timer_ms <= 1.5 * ANIMATION_TIME) {
+                texture = TEXTURE_ASSET_ID::TORNADO1;
+            }
+        } else if (disaster.type == DISASTER_TYPE::WHIRLPOOL) {
+            if (disaster.timer_ms <= 0) {
+                disaster.timer_ms = 2 * ANIMATION_TIME;
+                texture = TEXTURE_ASSET_ID::WHIRLPOOL0;
+            } else if (disaster.timer_ms <= 0.5 * ANIMATION_TIME) {
+                texture = TEXTURE_ASSET_ID::WHIRLPOOL1;
+            } else if (disaster.timer_ms <= 1 * ANIMATION_TIME) {
+                texture = TEXTURE_ASSET_ID::WHIRLPOOL2;
+            } else if (disaster.timer_ms <= 1.5 * ANIMATION_TIME) {
+                texture = TEXTURE_ASSET_ID::WHIRLPOOL1;
+            }
+        }
+
+        disaster.timer_ms -= elapsed_ms;
+    }
+}
+
 void AnimationSystem::step(float elapsed_ms) {
     // Move each entity that has motion.
     HandlePlayerAnimation(elapsed_ms);
     HandleBunnyAnimation(elapsed_ms);
     HandleEnemyAnimation(elapsed_ms);
+    HandleDisasterAnimation(elapsed_ms);
 }

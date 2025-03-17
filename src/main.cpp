@@ -45,8 +45,8 @@ int main() {
 
     // initialize the main systems
     renderer_system.init(window);
-    /*renderer_system.fontInit(font_path("sproutslandfont.ttf"), 16);*/
     world_system.init(&renderer_system);
+    renderer_system.fontInit(font_path("sproutslandfont.ttf"), 16);
 
     // variable timestep loop
     auto t = Clock::now();

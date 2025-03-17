@@ -10,6 +10,7 @@
 #include "sceneManager/scene.hpp"
 #include "tinyECS/components.hpp"
 #include "world_system.hpp"
+#include "render_system.hpp"
 
 // This class describes a parent class for Gameplay Levels.
 class GameLevel : public Scene {

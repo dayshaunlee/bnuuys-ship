@@ -52,8 +52,11 @@ vec2 getMouseTilePosition() {
 }
 
 void GameLevel::Init() {
+    activeShipKeys.clear();
     scene_ui.clear();
-
+    RenderSystem::isRenderingGacha = false;
+    gacha_called = false;
+    upgradesReceived = 0;
     // create player
     Entity player = createPlayer({WINDOW_WIDTH_PX / 2, WINDOW_HEIGHT_PX / 2});
     // load map
@@ -74,11 +77,15 @@ void GameLevel::Init() {
 
     createCamera();
 
+    bunnies_to_win = 0;
     // bunny creation
     for (Entity entity : registry.bunnies.entities) {
         createBunny(entity);
         bunnies_to_win += 1;
     };
+
+    createDisaster({300, 100}, DISASTER_TYPE::TORNADO);
+    createDisaster({300, 100}, DISASTER_TYPE::WHIRLPOOL);
 
     registry.players.components[0].health = 100.0f;
     InitializeUI();
@@ -314,11 +321,9 @@ void GameLevel::HandleInput(int key, int action, int mod) {
         if (player_comp.player_state == BUILDING) {
             inventory_system.CloseInventory();
             player_comp.player_state = IDLE;
-            std::cout << "Returning back to idle\n";
         } else {
             player_comp.player_state = BUILDING;
             inventory_system.OpenInventory();
-            std::cout << "Setting to build mode\n";
         }
         return;
     }
@@ -419,7 +424,7 @@ void GameLevel::HandleMouseClick(int button, int action, int mods) {
         }
     } else if (action == GLFW_RELEASE) {
         for (std::shared_ptr<bnuui::Element> ui_elem : ui_elems) {
-            if (ui_elem->active) {
+            if (ui_elem->active) { 
                 ui_elem->clickButton();
             }
             ui_elem->active = false;
@@ -499,7 +504,7 @@ void GameLevel::HandleMouseClick(int button, int action, int mods) {
     }
 
     // Remove on right click.
-    if (action == GLFW_PRESS && button == GLFW_MOUSE_BUTTON_2) {
+    if (action == GLFW_PRESS && button == GLFW_MOUSE_BUTTON_2 && registry.players.components[0].player_state == BUILDING) {
         vec2 tile_pos = getMouseTilePosition();
         MODULE_TYPES module = getModuleType(tile_pos);
         Ship& ship = registry.ships.components[0];
@@ -522,6 +527,9 @@ void GameLevel::HandleMouseClick(int button, int action, int mods) {
                 ship.available_modules[module]++;
             }
         }
+        // SUPER LAZY AND BAD WAY BUT IM LAZYYYY
+        inventory_system.CloseInventory();
+        inventory_system.OpenInventory();
     }
 
     LevelHandleMouseClick(button, action, mods);
@@ -558,6 +566,19 @@ void GameLevel::Update(float dt) {
                     continue;
                 }
                 p.alive_time_ms -= dt;
+            }
+        }
+
+        // Remove disasters.
+        for (Entity e : registry.disasters.entities) {
+            Disaster& d = registry.disasters.get(e);
+            if (d.type == DISASTER_TYPE::TORNADO) {
+                if (d.alive_time_ms <= 0) {
+                    std::cout << "remove tornado" << std::endl;
+                    registry.remove_all_components_of(e);
+                    continue;
+                }
+                d.alive_time_ms -= dt;
             }
         }
     }

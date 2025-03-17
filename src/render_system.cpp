@@ -316,8 +316,8 @@ void RenderSystem::drawUIElement(bnuui::Element& element, const mat3& projection
     for (auto& child : element.children) {
         if (child->getText() == "")
             drawUIElement(*child, projection);
-        else
-            renderText(child->getText(), child->position.x, WINDOW_HEIGHT_PX - child->position.y, 2.0f, vec3(0,0,0), UI_Matrix);
+        else 
+            renderText(child->getText(), child->position.x, WINDOW_HEIGHT_PX - child->position.y, 1.0f, vec3(0,0,0), UI_Matrix);
     }
 }
 
@@ -425,12 +425,24 @@ void RenderSystem::draw() {
     mat3 projection_2D = createProjectionMatrix();
     glm::mat4 UI_Matrix = mat4(1.0f);
 
+    // Render Disaster whirlpool
+    for (Entity entity : registry.disasters.entities) {
+        if (registry.disasters.get(entity).type == DISASTER_TYPE::WHIRLPOOL)
+            drawTexturedMesh(entity, projection_2D);
+    }
+
     // draw all entities with a render request to the frame buffer
     for (Entity entity : registry.renderRequests.entities) {
         // filter to entities that have a motion component
         if (registry.motions.has(entity)) {
             // SKIP PLAYER TO RENDER THEM LAST.
             if (registry.players.has(entity)) continue;
+
+            if (registry.disasters.has(entity)) {
+                if (registry.disasters.get(entity).type == DISASTER_TYPE::TORNADO) {
+                    continue;
+                }
+            }
 
             // Note, its not very efficient to access elements indirectly via the entity
             // albeit iterating through all Sprites in sequence. A good point to optimize
@@ -442,6 +454,13 @@ void RenderSystem::draw() {
         }
     }
 
+    // Render Disaster tornado above bg/islands/enemies
+    for (Entity entity : registry.disasters.entities) {
+        if (registry.disasters.get(entity).type == DISASTER_TYPE::TORNADO) {
+            drawTexturedMesh(entity, projection_2D);
+        }
+    }
+    
     // Brian: Add draw UI components here.
     SceneManager& sm = SceneManager::getInstance();
     Scene* s = sm.getCurrentScene();
@@ -450,7 +469,7 @@ void RenderSystem::draw() {
         std::vector<std::shared_ptr<bnuui::Element>> elems = scene_ui.getElems();
         for (std::shared_ptr<bnuui::Element> elem : elems) {
             if (elem->getText() != "") {
-                renderText(elem->getText(), elem->position.x, WINDOW_HEIGHT_PX - elem->position.y, 2.0f, vec3(0,0,0), UI_Matrix);
+                renderText(elem->getText(), elem->position.x, WINDOW_HEIGHT_PX - elem->position.y, 1.0f, vec3(0,0,0), UI_Matrix);
             } else {
                 drawUIElement(*elem, projection_2D);
             }
@@ -470,6 +489,7 @@ void RenderSystem::draw() {
     // draw framebuffer to screen
     // adding "vignette" effect when applied
     drawToScreen();
+
 
     // flicker-free display with a double buffer
     glfwSwapBuffers(window);
@@ -539,8 +559,8 @@ void RenderSystem::renderText(std::string text, float x, float y, float scale, c
         // render glyph texture over quad
 
         glBindTexture(GL_TEXTURE_2D, ch.TextureID);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
         /*std::cout << "binding texture: " << ch.character << " = " << ch.TextureID << std::endl;*/
 

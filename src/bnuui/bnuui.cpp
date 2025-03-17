@@ -31,6 +31,9 @@ void SceneUI::update(float dt) {
     for (std::shared_ptr<Element> elem : ui_elems) {
         elem->doUpdate(dt);
     }
+    for (std::shared_ptr<Element> elem : inventory_ui_elems) {
+        elem->doUpdate(dt);
+    }
 }
 
 // API to be used by the inventory system.
