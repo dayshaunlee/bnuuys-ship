@@ -68,6 +68,7 @@ void GameLevel::Init() {
     std::cout << mapSize.x << ", " << mapSize.y << std::endl;
 
     // create the ocean background and then ship
+    createWaterBackground(map_offset.x, map_offset.y);
     createIslandBackground(mapSize.x, mapSize.y, map_offset.x, map_offset.y, texture);
     createShip();
 

@@ -328,6 +328,13 @@
                  "id":106,
                  "name":"",
                  "point":true,
+                 "properties":[
+                        {
+                         "name":"enemy_type_enum",
+                         "propertytype":"enemy_type_enum",
+                         "type":"int",
+                         "value":3
+                        }],
                  "rotation":0,
                  "type":"enemy",
                  "visible":true,
@@ -340,6 +347,13 @@
                  "id":107,
                  "name":"",
                  "point":true,
+                 "properties":[
+                        {
+                         "name":"enemy_type_enum",
+                         "propertytype":"enemy_type_enum",
+                         "type":"int",
+                         "value":3
+                        }],
                  "rotation":0,
                  "type":"enemy",
                  "visible":true,

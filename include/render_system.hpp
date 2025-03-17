@@ -90,7 +90,7 @@ class RenderSystem {
         textures_path("bunny/walk_left1.png"),  // BUNNY_LEFT_WALK1
         
         // water background
-        textures_path("background/water_background.png"),
+        textures_path("background/water_bg.png"),
         
         // island background
         map_path("m2_tutorial.png"),

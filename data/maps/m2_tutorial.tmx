@@ -103,9 +103,15 @@
    <point/>
   </object>
   <object id="106" type="enemy" x="80" y="96">
+   <properties>
+    <property name="enemy_type_enum" type="int" propertytype="enemy_type_enum" value="3"/>
+   </properties>
    <point/>
   </object>
   <object id="107" type="enemy" x="160" y="96">
+   <properties>
+    <property name="enemy_type_enum" type="int" propertytype="enemy_type_enum" value="3"/>
+   </properties>
    <point/>
   </object>
   <object id="108" type="bunny" x="280" y="216">

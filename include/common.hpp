@@ -120,7 +120,7 @@ const int MOVE_LEFT_BUTTON = GLFW_KEY_A;
 
 const float WALK_SPEED = 150.0f;
 const float ANIMATION_TIME = 250.0f;
-const float SHIP_CAMERA_SPEED = 200.0f;
+const float SHIP_CAMERA_SPEED = 100.0f;
 
 const float SIMPLE_CANNON_COOLDOWN = 1000.0f;   // 1 second
 const float SIMPLE_CANNON_DAMAGE = 10.0f;

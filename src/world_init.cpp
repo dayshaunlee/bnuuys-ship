@@ -236,22 +236,6 @@ Entity createBunny(RenderSystem* renderer, vec2 position) {
     return entity;
 }
 
-Entity createWaterBackground() {
-    // create the water entity
-    Entity waterbg = Entity();
-    registry.backgroundObjects.emplace(waterbg);
-    Motion& waterMotion = registry.motions.emplace(waterbg);
-
-    waterMotion.position.x = WINDOW_WIDTH_PX / 2;
-    waterMotion.position.y = WINDOW_HEIGHT_PX / 2;
-    waterMotion.scale.x = WINDOW_WIDTH_PX * 1.5f;
-    waterMotion.scale.y = WINDOW_HEIGHT_PX * 1.5f;
-
-    registry.renderRequests.insert(
-        waterbg, {TEXTURE_ASSET_ID::WATER_BACKGROUND, EFFECT_ASSET_ID::TEXTURED, GEOMETRY_BUFFER_ID::SPRITE});
-    return waterbg;
-}
-
 Entity createCannonProjectile(vec2 orig, vec2 dest) {
     Entity e;
     Motion& m = registry.motions.emplace(e);
@@ -364,6 +348,28 @@ void initializeShipModules(Ship& ship) {
     ship.ship_modules_entity = tmp_entities;
 }
 
+Entity createWaterBackground(int offset_x, int offset_y) {
+    // water background is fixed at 192 x 144 tiles
+    int width = 192 * GRID_CELL_WIDTH_PX;
+    int height = 144 * GRID_CELL_HEIGHT_PX;
+
+    // create the water entity
+    Entity waterbg = Entity();
+    registry.backgroundObjects.emplace(waterbg);
+    Motion& waterMotion = registry.motions.emplace(waterbg);
+    offset_x -= WINDOW_WIDTH_PX / 2 - width / 2;
+    offset_y -= WINDOW_HEIGHT_PX / 2 - height / 2;
+
+    waterMotion.position.x = WINDOW_WIDTH_PX / 2 + offset_x;
+    waterMotion.position.y = WINDOW_HEIGHT_PX / 2 + offset_y;
+    waterMotion.scale.x = width;
+    waterMotion.scale.y = height;
+
+    registry.renderRequests.insert(
+        waterbg, {TEXTURE_ASSET_ID::WATER_BACKGROUND, EFFECT_ASSET_ID::TEXTURED, GEOMETRY_BUFFER_ID::SPRITE});
+    return waterbg;
+}
+
 Entity createIslandBackground(int width, int height, int offset_x, int offset_y, TEXTURE_ASSET_ID island_texture) {
     // create the island background entity
     Entity islandbg = Entity();
@@ -373,7 +379,6 @@ Entity createIslandBackground(int width, int height, int offset_x, int offset_y,
     offset_y -= WINDOW_HEIGHT_PX / 2 - height / 2;
     islMotion.position.x = WINDOW_WIDTH_PX / 2 + offset_x;
     islMotion.position.y = WINDOW_HEIGHT_PX / 2 + offset_y;
-    std::cout << "offset: " << offset_x << ", " << offset_y << std::endl;
     islMotion.scale.x = width;
     islMotion.scale.y = height;
 
