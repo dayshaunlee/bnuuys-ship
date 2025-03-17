@@ -19,7 +19,7 @@ Entity createEnemyProjectile(vec2 orig, vec2 dest);
 Entity createSteeringWheel(vec2 tile_pos);
 Entity createCannon(vec2 tile_pos);
 Entity createLaserWeapon(vec2 tile_pos);
-Entity createLaserBeam(vec2 orig, vec2 dest);
+std::vector<Entity> createLaserBeam(vec2 orig, vec2 dest);
 
 
 Entity createWaterBackground();

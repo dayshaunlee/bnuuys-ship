@@ -354,36 +354,40 @@ Entity createLaserWeapon(vec2 tile_pos){
     return laser;
 }
 
-Entity createLaserBeam(vec2 orig, vec2 dest) {
-    Entity e;
+std::vector<Entity> createLaserBeam(vec2 orig, vec2 dest) {
+    std::vector<Entity>  beams  = {};
+    vec2 positionToRender = orig - normalize(dest - orig)*50.f;
+    for (int i = 0; i< LASER_LENGTH_IN_NUM; i++){
+        Entity e;
+        beams.push_back(e);
+        LaserBeam& beam = registry.laserBeams.emplace(e);
+        beam.damage = 100;
+        // beam.currWidth = 1;
+        // beam.fixLength = 200.0f;  // Fixed length for the laser
+        beam.alive_time_ms = LASER_LIFETIME;
 
-    LaserBeam& beam = registry.laserBeams.emplace(e);
-    beam.damage = 100;
-    beam.currWidth = 1;
-    beam.fixLength = 200.0f;  // Fixed length for the laser
-    beam.alive_time_ms = LASER_LIFETIME;
+        Motion& m = registry.motions.emplace(e);
+        positionToRender += normalize(dest - orig)*150.f;
+        m.position = positionToRender - CameraSystem::GetInstance()->position;
 
-    Motion& m = registry.motions.emplace(e);
-    vec2 dir = normalize(dest - orig);
+        // TODO laser: during update we need to update every single laser beam entity to update their position
 
-    // m.position = orig + dir * (beam.fixLength / 2.0f) - CameraSystem::GetInstance()->position;
-    m.position = orig;
+        m.scale = vec2(150, 150);
+        // m.angle = degrees(atan2(dest.y - m.position.y, dest.x - m.position.x)) + 90.0f;
+        m.angle = degrees(atan2(dest.y - orig.y, dest.x - orig.x)) + 90.0f;
+        m.velocity = {0, 0};
 
-    m.scale = {beam.fixLength, beam.fixLength};
-    m.angle = degrees(atan2(dest.y - m.position.y, dest.x - m.position.x)) + 90.0f;
-    m.velocity = {0, 0};
+        registry.backgroundObjects.emplace(e);
+        registry.renderRequests.insert(
+            e, {TEXTURE_ASSET_ID::LASER_BEAM, EFFECT_ASSET_ID::TEXTURED, GEOMETRY_BUFFER_ID::SPRITE});
 
-    registry.backgroundObjects.emplace(e);
-    registry.renderRequests.insert(
-        e, {TEXTURE_ASSET_ID::TEXTURE_COUNT, EFFECT_ASSET_ID::EGG, GEOMETRY_BUFFER_ID::LASER_SQUARE});
-
-    // TODO: Play sound for the laser beam
-    if (projectile_shoot == nullptr) {
-        // projectile_shoot = Mix_LoadWAV(audio_path("projectile_shoot.wav").c_str());
+        // TODO: Play sound for the laser beam
+        if (projectile_shoot == nullptr) {
+            // projectile_shoot = Mix_LoadWAV(audio_path("projectile_shoot.wav").c_str());
+        }
+        // Mix_PlayChannel(-1, projectile_shoot, 0);
     }
-    // Mix_PlayChannel(-1, projectile_shoot, 0);
-
-    return e;
+    return beams;
 }
 
 

@@ -482,6 +482,12 @@ void GameLevel::HandleMouseMove(vec2 pos) {
                 player_comp.player_state = IDLE;
                 return;
             }
+            case LASER_WEAPON: {
+                Entity laser_entity = ship.ship_modules_entity[player_tile_y][player_tile_x];
+                Motion& m = registry.motions.get(laser_entity);
+                m.angle = degrees(atan2(pos.y - m.position.y, pos.x - m.position.x)) + 90.0f;
+                return; 
+            }
             default:
                 return;
         }
