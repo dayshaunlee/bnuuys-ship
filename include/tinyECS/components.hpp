@@ -125,8 +125,18 @@ enum class TEXTURE_ASSET_ID {
     COW1 = COW0 + 1,
     COW2 = COW1 + 1,
 
+    // Tornado
+    TORNADO0 = COW2 + 1,
+    TORNADO1 = TORNADO0 + 1,
+    TORNADO2 = TORNADO1 + 1,
+
+    // Whirlpool
+    WHIRLPOOL0 = TORNADO2 + 1,
+    WHIRLPOOL1 = WHIRLPOOL0 + 1,
+    WHIRLPOOL2 = WHIRLPOOL1 + 1,
+    
     // UI assets.
-    SQUARE_3_NORMAL = COW2 + 1,
+    SQUARE_3_NORMAL = WHIRLPOOL2 + 1,
     SQUARE_3_HOVER = SQUARE_3_NORMAL + 1,
     SQUARE_3_CLICKED = SQUARE_3_HOVER + 1,
 
@@ -370,4 +380,13 @@ struct Bunny {
 
     float jail_health;  // 0 if is_jailed is false
     int timer_ms;   // field reserved for animation 
+};
+
+// ========= OBSTACLE DETALS =========
+struct Disaster {
+    DISASTER_TYPE type;
+	float timer_ms;
+    int speed;
+    float damage;
+    float alive_time_ms;
 };
