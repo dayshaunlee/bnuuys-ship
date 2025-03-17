@@ -17,6 +17,7 @@
 #include "world_init.hpp"
 #include "bnuui/buttons.hpp"
 #include "map_init.hpp"
+#include "saveload_system.hpp"
 
 /*
  *   Place 'local' scene vars here just so it's easy to manage.
@@ -69,7 +70,19 @@ void GameLevel::Init() {
 
     // create the ocean background and then ship
     createIslandBackground(mapSize.x, mapSize.y, map_offset.x, map_offset.y, texture);
+    
     createShip();
+
+    if (SaveLoadSystem::getInstance().hasLoadedData) {
+        GameData gd = SaveLoadSystem::getInstance().loadedGameData;
+        Ship& ship = registry.ships.components[0];
+        ship.health = gd.ship_health;
+        ship.maxHealth = gd.ship_maxHealth;
+        ship.ship_modules = gd.used_modules;
+        ship.available_modules = gd.unused_modules;
+
+        std::cout << "loaded saved ship" << std::endl;
+    }
 
     // render player
     renderPlayer(player);

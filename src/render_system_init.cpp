@@ -166,7 +166,7 @@ bool RenderSystem::fontInit(const std::string& font_filename, unsigned int font_
     glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), 0);
 
     // release buffers
-    glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(m_VAO);
 
     return true;
