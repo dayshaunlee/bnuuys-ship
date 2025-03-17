@@ -39,4 +39,4 @@ Entity createBunny(Entity bunny);
 Entity createFilledTile(vec2 position, vec2 size);
 
 // Tornado
-Entity createDisaster(vec2 position, DISASTER_TYPE type);
+Entity createDisaster(Entity entity);

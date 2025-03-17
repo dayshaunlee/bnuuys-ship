@@ -97,6 +97,7 @@ class RenderSystem {
         map_path("m3_level1.png"),
         map_path("m3_level2.png"),
         map_path("m3_level3.png"),
+        map_path("m3_level4.png"),
         
       
         // Enemy (balloon/flyer)

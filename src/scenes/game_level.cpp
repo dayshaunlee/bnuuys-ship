@@ -83,9 +83,11 @@ void GameLevel::Init() {
         createBunny(entity);
         bunnies_to_win += 1;
     };
-
-    createDisaster({300, 100}, DISASTER_TYPE::TORNADO);
-    createDisaster({300, 100}, DISASTER_TYPE::WHIRLPOOL);
+    for (Entity entity : registry.disasters.entities) {
+        createDisaster(entity);
+    }
+    /*createDisaster({300, 100}, DISASTER_TYPE::TORNADO);
+    createDisaster({300, 100}, DISASTER_TYPE::WHIRLPOOL);*/
 
     registry.players.components[0].health = 100.0f;
     InitializeUI();
@@ -218,6 +220,9 @@ void GameLevel::Exit() {
     while (registry.renderRequests.entities.size() > 0){
 	    registry.remove_all_components_of(registry.renderRequests.entities.back());
 	}
+    while (registry.renderLayers.entities.size() > 0) {
+        registry.remove_all_components_of(registry.renderLayers.entities.back());
+    }
     while (registry.colors.entities.size() > 0){
 	    registry.remove_all_components_of(registry.colors.entities.back());
 	}
