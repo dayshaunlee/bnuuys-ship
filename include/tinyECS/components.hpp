@@ -384,6 +384,8 @@ struct Bunny {
     bool on_base;
     bool moving_to_base;
 
+    bool on_module;
+
     float jail_health;  // 0 if is_jailed is false
     int timer_ms;   // field reserved for animation 
 };

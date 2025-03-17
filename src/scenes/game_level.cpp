@@ -91,7 +91,6 @@ void GameLevel::Init() {
     InitializeUI();
 
     LevelInit();
-    registry.ships.components[0].available_modules[HELPER_BUNNY] = 1;
 }
 
 void GameLevel::InitializeUI() {
@@ -411,6 +410,30 @@ void GameLevel::HandleMouseMove(vec2 pos) {
     LevelHandleMouseMove(pos);
 }
 
+// Stations the first bunny that's unstationed.
+void stationBunny() {
+    // Set one of the bunny to be on_module
+    for (Bunny& b : registry.bunnies.components) {
+        if (b.on_ship && !b.on_module && !b.on_base) {
+            b.on_ship = false;
+            b.on_module = true;
+            return; 
+        }
+    }
+}
+
+// Unstations the frist stationed bunny.
+void unStationBunny() {
+    // Set one of the bunny to be on_module
+    for (Bunny& b : registry.bunnies.components) {
+        if (b.on_module) {
+            b.on_ship = true;
+            b.on_module = false;
+            return; 
+        }
+    }
+}
+
 void GameLevel::HandleMouseClick(int button, int action, int mods) {
     // Check if hovering over any UI components.
     std::vector<std::shared_ptr<bnuui::Element>> ui_elems = scene_ui.getElems();
@@ -449,9 +472,14 @@ void GameLevel::HandleMouseClick(int button, int action, int mods) {
                     // Rotate the simple cannon.
                     Entity cannon_entity = ship.ship_modules_entity[player_tile_y][player_tile_x];
                     SimpleCannon& sc = registry.simpleCannons.get(cannon_entity);
-                    if (sc.timer_ms <= 0) {
-                        vec2 cannon_pos = registry.motions.get(cannon_entity).position;
+
+
+                    vec2 cannon_pos = registry.motions.get(cannon_entity).position;
+                    for (int i = 0; i < 100; i++) {
+                        cannon_pos.y -= 10;
                         createCannonProjectile(cannon_pos, l1_mouse_pos);
+                    }
+                    if (sc.timer_ms <= 0) {
                         sc.timer_ms = SIMPLE_CANNON_COOLDOWN;
                     }
                     return;
@@ -494,6 +522,7 @@ void GameLevel::HandleMouseClick(int button, int action, int mods) {
                     if (!sc.is_automated) {
                         sc.is_automated = true;
                         ship.available_modules[curr_selected]--;
+                        stationBunny();
                     }
                 }
                 default: {
@@ -517,6 +546,7 @@ void GameLevel::HandleMouseClick(int button, int action, int mods) {
                 if (sc.is_automated) {
                     ship.available_modules[HELPER_BUNNY]++;
                     sc.is_automated = false;
+                    unStationBunny();
                     break;
                 }
             }
@@ -579,6 +609,13 @@ void GameLevel::Update(float dt) {
                     continue;
                 }
                 d.alive_time_ms -= dt;
+            }
+        }
+
+        registry.ships.components[0].available_modules[HELPER_BUNNY] = 0;
+        for (Bunny& bunny : registry.bunnies.components) {
+            if (bunny.on_ship) {
+                registry.ships.components[0].available_modules[HELPER_BUNNY]++;
             }
         }
     }
