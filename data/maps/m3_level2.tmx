@@ -146,7 +146,7 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <objectgroup id="6" name="islands" visible="0">
+ <objectgroup id="6" name="islands">
   <object id="95" type="island" x="0" y="16">
    <polygon points="0,0 16,0 16,448 0,448"/>
   </object>
@@ -187,7 +187,7 @@
    <polygon points="0,-16 0,112 176,112 176,-16"/>
   </object>
  </objectgroup>
- <objectgroup id="7" name="spawnpoints" visible="0">
+ <objectgroup id="7" name="spawnpoints">
   <object id="92" type="player" x="136" y="360">
    <point/>
   </object>
