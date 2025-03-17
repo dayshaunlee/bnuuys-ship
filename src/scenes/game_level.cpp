@@ -86,21 +86,7 @@ void GameLevel::Init() {
     registry.ships.components[0].available_modules[HELPER_BUNNY] = 1;
 }
 
-void GameLevel::InitializeUI() {
-    // Create Healthbar.
-    auto player_box = std::make_shared<bnuui::Box>(vec2(96, 96), vec2(96, 96), 0.0f);
-    // auto temp = new bnuui::PlayerStatus(vec2(96, 96), vec2(60, 60), 0.0f, registry.ships.components[0].health, registry.ships.components[0].maxHealth);
-    auto player_status = std::make_shared<bnuui::PlayerStatus>(
-        vec2(96, 96), vec2(60, 60), 0.0f, registry.ships.components[0].health, registry.ships.components[0].maxHealth);
-    auto slider_bg = std::make_shared<bnuui::LongBox>(vec2(256, 96), vec2(240, 72), 0.0f);
-    auto progress_bar = std::make_shared<bnuui::ProgressBar>(
-        vec2(256, 93), vec2(180, 24), 0.0f, registry.ships.components[0].health, registry.ships.components[0].maxHealth);
-    player_box->children.push_back(slider_bg);
-
-    // Create the tile cursor effect.
-    tile_cursor = std::make_shared<bnuui::Cursor>(vec2(0, 0), vec2(GRID_CELL_WIDTH_PX, GRID_CELL_HEIGHT_PX), 0.0f);
-    tile_cursor->visible = false;
-
+void GameLevel::CreateInventory() {
     // Create the inventory bar.
     auto inventory_slots = std::make_shared<bnuui::LongBox>(vec2(420, 550), vec2(240, 72), 0.0f);
 
@@ -182,6 +168,26 @@ void GameLevel::InitializeUI() {
             e.children[0]->visible = false;
     });
 
+    scene_ui.insert(inventory_slots);
+    scene_ui.insert(steering_wheels);
+    scene_ui.insert(cannons);
+    scene_ui.insert(helper_bunnies);
+}
+
+void GameLevel::InitializeUI() {
+    // Create Healthbar.
+    auto player_box = std::make_shared<bnuui::Box>(vec2(96, 96), vec2(96, 96), 0.0f);
+    // auto temp = new bnuui::PlayerStatus(vec2(96, 96), vec2(60, 60), 0.0f, registry.ships.components[0].health, registry.ships.components[0].maxHealth);
+    auto player_status = std::make_shared<bnuui::PlayerStatus>(
+        vec2(96, 96), vec2(60, 60), 0.0f, registry.ships.components[0].health, registry.ships.components[0].maxHealth);
+    auto slider_bg = std::make_shared<bnuui::LongBox>(vec2(256, 96), vec2(240, 72), 0.0f);
+    auto progress_bar = std::make_shared<bnuui::ProgressBar>(
+        vec2(256, 93), vec2(180, 24), 0.0f, registry.ships.components[0].health, registry.ships.components[0].maxHealth);
+    player_box->children.push_back(slider_bg);
+
+    // Create the tile cursor effect.
+    tile_cursor = std::make_shared<bnuui::Cursor>(vec2(0, 0), vec2(GRID_CELL_WIDTH_PX, GRID_CELL_HEIGHT_PX), 0.0f);
+    tile_cursor->visible = false;
 
 
     // Insert all the stuff.
@@ -189,11 +195,6 @@ void GameLevel::InitializeUI() {
     scene_ui.insert(player_status);
     scene_ui.insert(progress_bar);
     scene_ui.insert(tile_cursor);
-
-    scene_ui.insert(inventory_slots);
-    scene_ui.insert(steering_wheels);
-    scene_ui.insert(cannons);
-    scene_ui.insert(helper_bunnies);
 }
 
 void GameLevel::Exit() {

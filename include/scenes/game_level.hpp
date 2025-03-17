@@ -12,6 +12,9 @@
 
 // This class describes a parent class for Gameplay Levels.
 class GameLevel : public Scene {
+private:
+    void CreateInventory();
+
 protected:
     AISystem ai_system;
     PhysicsSystem physics_system;

@@ -28,12 +28,9 @@ void MainMenuScene::Init() {
         SceneManager::getInstance().switchScene("Level 1");
     });
 
-    auto txt = std::make_shared<bnuui::TextLabel>(vec2(0,50), 2.0f, "HEllo");
-
     scene_ui.insert(bg);
     scene_ui.insert(play_btn);
     scene_ui.insert(tutorial_btn);
-    scene_ui.insert(txt);
 }
 
 void MainMenuScene::Exit() {
