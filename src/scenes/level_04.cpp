@@ -1,4 +1,4 @@
-#include "scenes/level_01.hpp"
+#include "scenes/level_04.hpp"
 #include <glm/ext/vector_float2.hpp>
 #include <string>
 #include "sceneManager/scene_manager.hpp"
@@ -8,31 +8,32 @@
 #include "world_system.hpp"
 #include "gacha_system.hpp"
 
-Level01::Level01(WorldSystem* world_system, std::string map_filename, TEXTURE_ASSET_ID texture) : GameLevel(world_system) {
-    this->name = "Level 1";
+Level04::Level04(WorldSystem* world_system, std::string map_filename, TEXTURE_ASSET_ID texture) : GameLevel(world_system) {
+    this->name = "Level 4";
     this->level_path = map_filename; 
     this->bunnies_to_win = 0;
     this->texture = texture;
     GachaSystem::getInstance().setLevelPool(
-        1, {MODULE_TYPES::SIMPLE_CANNON, MODULE_TYPES::HELPER_BUNNY, MODULE_TYPES::PLATFORM});
+        4, {MODULE_TYPES::SIMPLE_CANNON, MODULE_TYPES::HELPER_BUNNY, MODULE_TYPES::PLATFORM});
 }
 
-Level01::~Level01() {}
+Level04::~Level04() {
+}
 
-void Level01::LevelInit() {}
+void Level04::LevelInit() {}
 
-void Level01::LevelUpdate() {}
+void Level04::LevelUpdate() {}
 
 // GameLevel should already handle clearing all components. So don't have to worry here.
-void Level01::LevelExit() {}
+void Level04::LevelExit() {}
 
-void Level01::LevelHandleInput(int key, int action, int mod) {}
+void Level04::LevelHandleInput(int key, int action, int mod) {}
 
-void Level01::LevelHandleMouseMove(glm::vec2 mousePos) {}
+void Level04::LevelHandleMouseMove(glm::vec2 mousePos) {}
 
-void Level01::LevelHandleMouseClick(int button, int action, int mods) {}
+void Level04::LevelHandleMouseClick(int button, int action, int mods) {}
 
-void Level01::LevelUpdate(float dt) {
+void Level04::LevelUpdate(float dt) {
     // update window title with points
     int points = registry.base.components[0].bunny_count;
     std::string title_points = std::to_string(points);
@@ -43,21 +44,17 @@ void Level01::LevelUpdate(float dt) {
     
     if(upgradesReceived == bunnies_to_win){
         SceneManager& sceneManager = SceneManager::getInstance();
-        sceneManager.setNextLevelScence("Level 2");
+        sceneManager.setNextLevelScence("Level 4");
         std::cout << "Switching to next level scene.." << std::endl;
         sceneManager.switchScene("Next Level Scene");
         return;
     }
 
-    // std::cout << "upgraded: " << this->upgradesReceived << " points " << points << std::endl;
     if(this->upgradesReceived < points){
         if(!this->gacha_called){
-            std::cout << "Gacha popup in level 1.." << std::endl; 
+            std::cout << "Gacha popup in level 4.." << std::endl; 
             this->gacha_called = true;
-            // todo M3: update level 1 pool
-            GachaSystem::getInstance().displayGacha(1, this->scene_ui, *this);
-            // std::cout << "Gacha poped.." << std::endl;
+            GachaSystem::getInstance().displayGacha(4, this->scene_ui, *this);
         }
     }
-    // std::cout << "Gacha end.." << std::endl;
 }
