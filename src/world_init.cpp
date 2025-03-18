@@ -355,24 +355,22 @@ Entity createLaserWeapon(vec2 tile_pos){
 }
 
 std::vector<Entity> createLaserBeam(vec2 orig, vec2 dest) {
-    std::vector<Entity>  beams  = {};
-    vec2 positionToRender = orig - normalize(dest - orig)*50.f;
-    for (int i = 0; i< LASER_LENGTH_IN_NUM; i++){
+    std::vector<Entity> beams = {};
+    vec2 positionToRender = orig + normalize(dest - orig)*15.f;
+
+    for (int i = 0; i< 10; i++){
         Entity e;
         beams.push_back(e);
         LaserBeam& beam = registry.laserBeams.emplace(e);
         beam.damage = 100;
-        // beam.currWidth = 1;
-        // beam.fixLength = 200.0f;  // Fixed length for the laser
         beam.alive_time_ms = LASER_LIFETIME;
+        beam.prevCamPos = CameraSystem::GetInstance()->position;
 
         Motion& m = registry.motions.emplace(e);
-        positionToRender += normalize(dest - orig)*150.f;
+        positionToRender += normalize(dest - orig)*20.f;
         m.position = positionToRender - CameraSystem::GetInstance()->position;
 
-        // TODO laser: during update we need to update every single laser beam entity to update their position
-
-        m.scale = vec2(150, 150);
+        m.scale = vec2(20, 20);
         // m.angle = degrees(atan2(dest.y - m.position.y, dest.x - m.position.x)) + 90.0f;
         m.angle = degrees(atan2(dest.y - orig.y, dest.x - orig.x)) + 90.0f;
         m.velocity = {0, 0};

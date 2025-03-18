@@ -45,6 +45,36 @@ bool SearchForEnemy(AutoCannonContext& ctx) {
     return true;
 }
 
+bool SearchForEnemy(AutoLaserContext& ctx) {
+    if (!registry.motions.has(ctx.laser_entity)) {
+        std::cout << "[LaserWeapon] No motion component found." << std::endl;
+        return false;
+    }
+
+    Motion& laser_motion = registry.motions.get(ctx.laser_entity);
+    vec2 laser_pos = laser_motion.position - CameraSystem::GetInstance()->position;
+
+    float smallest_dist = std::numeric_limits<float>::max();
+    for (Entity enemy_entity : registry.enemies.entities) {
+        if (!registry.motions.has(enemy_entity)) {
+            std::cout << "[LaserWeapon] Enemy without motion component detected." << std::endl;
+            continue;
+        }
+
+        Motion& enemy_motion = registry.motions.get(enemy_entity);
+        vec2 enemy_pos = enemy_motion.position;
+        float dist = glm::distance(enemy_pos, laser_pos);
+
+        if (dist <= 200.0f && dist < smallest_dist) {  // 300 range for lasers
+            smallest_dist = dist;
+            ctx.enemy_entity = enemy_entity;
+            ctx.enemy_pos = enemy_pos;
+        }
+    }
+
+    return (smallest_dist != std::numeric_limits<float>::max());
+}
+
 ModulesSystem::ModulesSystem() {
     // Initialize Decision trees.
 
@@ -72,6 +102,36 @@ ModulesSystem::ModulesSystem() {
 
     searchForEnemyNode->setBranches(shootCannon, nullptr);
     dtree_AutoCannon = searchForEnemyNode;
+
+
+
+    auto shootLaser = std::make_shared<DecisionNode<AutoLaserContext>>(
+        [](AutoLaserContext& ctx) {
+            vec2 laser_pos = registry.motions.get(ctx.laser_entity).position;
+            vec2 enemy_pos = ctx.enemy_pos + CameraSystem::GetInstance()->position;
+            
+            // Set laser direction
+            registry.motions.get(ctx.laser_entity).angle =
+                degrees(atan2(enemy_pos.y - laser_pos.y, enemy_pos.x - laser_pos.x)) + 90.0f;
+            
+            LaserWeapon& lw = registry.laserWeapons.get(ctx.laser_entity);
+            if (lw.timer_ms <= 0) {
+                createLaserBeam(laser_pos, enemy_pos);
+                lw.timer_ms = LASER_COOLDOWN;
+            }
+            return true;
+        }
+    );
+
+    auto searchForEnemyLaserNode = std::make_shared<DecisionNode<AutoLaserContext>>(
+        [](AutoLaserContext& ctx) {
+            return SearchForEnemy(ctx);
+        }
+    );
+    
+    searchForEnemyLaserNode->setBranches(shootLaser, nullptr);
+    dtree_AutoLaser = searchForEnemyLaserNode;
+    
 }
 
 void ModulesSystem::step(float elapsed_ms) {
@@ -100,16 +160,28 @@ void ModulesSystem::step(float elapsed_ms) {
             lw.timer_ms -= elapsed_ms;
         else
             lw.timer_ms = 0;
+    
+        // Check automation.
+        if (lw.is_automated) {
+            AutoLaserContext ctx(lw_entity);
+            auto dtree_node = dtree_AutoLaser->decide(ctx);
+            while (dtree_node != nullptr) {
+                dtree_node->execute(ctx);
+                dtree_node = dtree_node->decide(ctx);
+            }
+        }
+    }
+    
 
-        // TODO laser: Check automation.
-        // if (lw.is_automated) {
-        //     AutoCannonContext ctx(lw_entity);
-        //     auto dtree_node = dtree_AutoCannon->decide(ctx);
-        //     while (dtree_node != nullptr) {
-        //         dtree_node->execute(ctx);
-        //         dtree_node = dtree_node->decide(ctx);
-        //     }
-        // }
+    // update the laser beams to follow the ship (unlike projectiles)
+
+    for (Entity beam : registry.laserBeams.entities) {
+        Motion& lb_motion = registry.motions.get(beam);
+        LaserBeam& laser_beam = registry.laserBeams.get(beam);
+        vec2 currentCamloc = CameraSystem::GetInstance()->position; 
+        vec2 shipDistanceMoved = currentCamloc - laser_beam.prevCamPos;
+        lb_motion.position -= shipDistanceMoved;
+        laser_beam.prevCamPos = currentCamloc;
     }
 }
 

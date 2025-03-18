@@ -599,6 +599,13 @@ void GameLevel::HandleMouseClick(int button, int action, int mods) {
                         ship.available_modules[curr_selected]--;
                     }
                 }
+                case LASER_WEAPON: {
+                    LaserWeapon& lw = registry.laserWeapons.get(ship.ship_modules_entity[tile_pos.y][tile_pos.x]);
+                    if (!lw.is_automated) {
+                        lw.is_automated = true;
+                        ship.available_modules[curr_selected]--;
+                    }
+                }
                 default: {
                     break;
                 }
@@ -620,6 +627,14 @@ void GameLevel::HandleMouseClick(int button, int action, int mods) {
                 if (sc.is_automated) {
                     ship.available_modules[HELPER_BUNNY]++;
                     sc.is_automated = false;
+                    break;
+                }
+            }
+            case LASER_WEAPON: {
+                LaserWeapon& lw = registry.laserWeapons.get(ship.ship_modules_entity[tile_pos.y][tile_pos.x]);
+                if (lw.is_automated) {
+                    ship.available_modules[HELPER_BUNNY]++;
+                    lw.is_automated = false;
                     break;
                 }
             }
