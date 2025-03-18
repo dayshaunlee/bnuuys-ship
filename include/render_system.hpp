@@ -39,7 +39,6 @@ class RenderSystem {
     std::array<ivec2, texture_count> texture_dimensions;
 
 	GLuint m_VAO;
-	GLuint m_VBO;
 
 	// fonts
 	std::map<char, Character> m_ftCharacters;
@@ -90,13 +89,14 @@ class RenderSystem {
         textures_path("bunny/walk_left1.png"),  // BUNNY_LEFT_WALK1
         
         // water background
-        textures_path("background/water_background.png"),
+        textures_path("background/water_bg.png"),
         
         // island background
         map_path("m2_tutorial.png"),
         map_path("m3_level1.png"),
         map_path("m3_level2.png"),
         map_path("m3_level3.png"),
+        map_path("m3_level4.png"),
         
       
         // Enemy (balloon/flyer)

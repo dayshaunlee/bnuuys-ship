@@ -1,0 +1,14 @@
+{ "columns":1,
+ "image":"Water_Base.png",
+ "imageheight":16,
+ "imagewidth":64,
+ "margin":0,
+ "name":"Water_Base",
+ "spacing":0,
+ "tilecount":1,
+ "tiledversion":"1.11.2",
+ "tileheight":16,
+ "tilewidth":64,
+ "type":"tileset",
+ "version":"1.11"
+}

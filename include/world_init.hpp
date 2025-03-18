@@ -22,7 +22,7 @@ Entity createLaserWeapon(vec2 tile_pos);
 std::vector<Entity> createLaserBeam(vec2 orig, vec2 dest);
 
 
-Entity createWaterBackground();
+Entity createWaterBackground(int offset_x, int offset_y);
 Entity createIslandBackground(int width, int height, int offset_x, int offset_y, TEXTURE_ASSET_ID texture);
 
 Entity createShip();
@@ -42,4 +42,4 @@ Entity createBunny(Entity bunny);
 Entity createFilledTile(vec2 position, vec2 size);
 
 // Tornado
-Entity createDisaster(vec2 position, DISASTER_TYPE type);
+Entity createDisaster(Entity entity);

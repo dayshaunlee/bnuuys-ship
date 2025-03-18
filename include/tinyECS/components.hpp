@@ -106,15 +106,16 @@ enum class TEXTURE_ASSET_ID {
     BUNNY_LEFT_WALK1 = BUNNY_LEFT_WALK0 + 1,
 
     WATER_BACKGROUND = BUNNY_LEFT_WALK1 + 1,
-  
-    // TODO: figure out which background to use
+    
+    // Game Maps
     TUTORIAL_BACKGROUND = WATER_BACKGROUND + 1,
     LEVEL01_BACKGROUND = TUTORIAL_BACKGROUND + 1,
     LEVEL02_BACKGROUND = LEVEL01_BACKGROUND + 1,
     LEVEL03_BACKGROUND = LEVEL02_BACKGROUND + 1,
+    LEVEL04_BACKGROUND = LEVEL03_BACKGROUND + 1,
 
     // Enemies
-    BALLOON0 = LEVEL03_BACKGROUND + 1,
+    BALLOON0 = LEVEL04_BACKGROUND + 1,
     BALLOON1 = BALLOON0 + 1,
     BALLOON2 = BALLOON1 + 1,
 
@@ -248,6 +249,15 @@ struct RenderRequest {
     GEOMETRY_BUFFER_ID used_geometry = GEOMETRY_BUFFER_ID::GEOMETRY_COUNT;
 };
 
+/* for ordering of rendering. so far (add to comment to keep track):
+1 = whirlpool
+2 = ship
+3 = tornado
+*/
+struct RenderLayer {
+    int layer = 0;
+};
+
 enum DIRECTION { UP, RIGHT, DOWN, LEFT };
 
 // ========== PLAYER DETAILS ==========
@@ -261,6 +271,7 @@ enum PLAYERSTATE {
     IDLE,
     WALKING,
     STATIONING,
+    BUILDING
 };
 
 // Player component
@@ -277,9 +288,9 @@ struct PlayerAnimation {
     int timer_ms;  // How many ms before switching to the next frame.
 };
 
-// ========= Camera related componenet ======================
+// ========= Camera related components ======================
 // used for updating the objects in the background as camera moves with ship
-// bachgroundObject is anything that doesn't move with the ship
+// backgroundObject is anything that doesn't move with the ship
 
 struct BackgroundObject {};
 struct Camera{
@@ -296,10 +307,30 @@ enum MODULE_TYPES {
     PLATFORM,
     STEERING_WHEEL,
     SIMPLE_CANNON,
-    FAST_CANNON,
     LASER_WEAPON,
     HELPER_BUNNY,
 };
+
+inline TEXTURE_ASSET_ID getTextureFromModuleType(MODULE_TYPES module){
+    switch (module)
+    {
+    case MODULE_TYPES::SIMPLE_CANNON :
+        return TEXTURE_ASSET_ID::SIMPLE_CANNON01;
+        break;
+    case MODULE_TYPES::PLATFORM :
+        return TEXTURE_ASSET_ID::RAFT;
+        break;
+    case MODULE_TYPES::HELPER_BUNNY :
+        return TEXTURE_ASSET_ID::BUNNY_NPC_IDLE_UP0;
+        break;
+    case MODULE_TYPES::STEERING_WHEEL :
+        return TEXTURE_ASSET_ID::SQUARE_3_CLICKED;
+    default:
+        std::cout << "This is not a valid module" << std::endl;
+        return TEXTURE_ASSET_ID::WATER_BACKGROUND; 
+        break;
+    }
+}
 
 struct SteeringWheel {
     bool is_automated;
@@ -379,6 +410,8 @@ struct Bunny {
     bool on_ship;
     bool on_base;
     bool moving_to_base;
+
+    bool on_module;
 
     float jail_health;  // 0 if is_jailed is false
     int timer_ms;   // field reserved for animation 

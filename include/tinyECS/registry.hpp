@@ -11,6 +11,7 @@ class ECSRegistry {
    public:
     // Manually created list of all components this game has
     ComponentContainer<RenderRequest> renderRequests;
+    ComponentContainer<RenderLayer> renderLayers;
     ComponentContainer<GridLine> gridLines;
     ComponentContainer<ScreenState> screenStates;
     ComponentContainer<vec3> colors;
@@ -50,6 +51,7 @@ class ECSRegistry {
     // constructor that adds all containers for looping over them
     ECSRegistry() {
         registry_list.push_back(&renderRequests);
+        registry_list.push_back(&renderLayers);
         registry_list.push_back(&gridLines);
         registry_list.push_back(&screenStates);
         registry_list.push_back(&colors);
