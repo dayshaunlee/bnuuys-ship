@@ -551,6 +551,7 @@ void GameLevel::HandleMouseClick(int button, int action, int mods) {
                     if (!lw.is_automated) {
                         lw.is_automated = true;
                         ship.available_modules[curr_selected]--;
+                        stationBunny();
                     }
                 }
 
@@ -584,6 +585,7 @@ void GameLevel::HandleMouseClick(int button, int action, int mods) {
                 if (lw.is_automated) {
                     ship.available_modules[HELPER_BUNNY]++;
                     lw.is_automated = false;
+                    unStationBunny();
                     break;
                 }
             }
@@ -646,8 +648,6 @@ void GameLevel::Update(float dt) {
                 l.alive_time_ms -= dt;
             }
         }
-
-    }
 
         // Remove disasters.
         for (Entity e : registry.disasters.entities) {
