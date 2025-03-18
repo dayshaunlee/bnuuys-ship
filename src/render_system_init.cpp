@@ -159,6 +159,7 @@ bool RenderSystem::fontInit(const std::string& font_filename, unsigned int font_
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
+
         // now store character for later use
         Character character = {
             texture,

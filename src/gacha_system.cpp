@@ -26,7 +26,6 @@ GachaSystem::GachaSystem() {
     setDropRate(MODULE_TYPES::EMPTY, 0);
     setDropRate(MODULE_TYPES::PLATFORM, 100);
     setDropRate(MODULE_TYPES::SIMPLE_CANNON, 100);
-    setDropRate(MODULE_TYPES::FAST_CANNON, 0);
 }
 
 
@@ -83,30 +82,6 @@ std::vector<MODULE_TYPES> GachaSystem::getModuleOptions(int level){
 // bool GachaSystem::isOnDisplay(){
 //     return onDisplay;
 // }
-
-TEXTURE_ASSET_ID getTextureFromModuleType(MODULE_TYPES module){
-    switch (module)
-    {
-    case MODULE_TYPES::SIMPLE_CANNON :
-        /* code */
-        return TEXTURE_ASSET_ID::SIMPLE_CANNON01;
-        break;
-    case MODULE_TYPES::FAST_CANNON :
-        return TEXTURE_ASSET_ID::SIMPLE_CANNON02; // change in the future
-        break;
-    case MODULE_TYPES::PLATFORM :
-        return TEXTURE_ASSET_ID::RAFT;
-        break;
-    case MODULE_TYPES::HELPER_BUNNY :
-        return TEXTURE_ASSET_ID::BUNNY_NPC_IDLE_UP0;
-        break;
-    default:
-        std::cout << "This is not a valid module" << std::endl;
-        return TEXTURE_ASSET_ID::WATER_BACKGROUND; 
-        break;
-    }
-}
-
 
 void clearGatchaUI(bnuui::SceneUI& scene_ui){
         int uiSize = scene_ui.size();

@@ -416,4 +416,8 @@ void TextLabel::doUpdate(float dt) {
     }
 }
 
+void TextLabel::setText(const std::string& text) {
+    this->text = text;
+}
+
 }  // namespace bnuui

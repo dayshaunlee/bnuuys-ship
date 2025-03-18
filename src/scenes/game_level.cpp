@@ -12,6 +12,7 @@
 #include "bnuui/bnuui.hpp"
 #include "camera_system.hpp"
 #include "common.hpp"
+#include "inventory_system.hpp"
 #include "tinyECS/components.hpp"
 #include "tinyECS/registry.hpp"
 #include "world_init.hpp"
@@ -35,7 +36,7 @@ std::deque<int> keyShipOrder;
 
 
 
-GameLevel::GameLevel(WorldSystem* worldsystem) {
+GameLevel::GameLevel(WorldSystem* worldsystem) : inventory_system(scene_ui, curr_selected) {
     this->world_system = worldsystem;
 }
 
@@ -93,13 +94,11 @@ void GameLevel::Init() {
     InitializeUI();
 
     LevelInit();
-    registry.ships.components[0].available_modules[HELPER_BUNNY] = 1;
 }
 
 void GameLevel::InitializeUI() {
     // Create Healthbar.
     auto player_box = std::make_shared<bnuui::Box>(vec2(96, 96), vec2(96, 96), 0.0f);
-    // auto temp = new bnuui::PlayerStatus(vec2(96, 96), vec2(60, 60), 0.0f, registry.ships.components[0].health, registry.ships.components[0].maxHealth);
     auto player_status = std::make_shared<bnuui::PlayerStatus>(
         vec2(96, 96), vec2(60, 60), 0.0f, registry.ships.components[0].health, registry.ships.components[0].maxHealth);
     auto slider_bg = std::make_shared<bnuui::LongBox>(vec2(256, 96), vec2(240, 72), 0.0f);
@@ -111,99 +110,12 @@ void GameLevel::InitializeUI() {
     tile_cursor = std::make_shared<bnuui::Cursor>(vec2(0, 0), vec2(GRID_CELL_WIDTH_PX, GRID_CELL_HEIGHT_PX), 0.0f);
     tile_cursor->visible = false;
 
-    // Create the inventory bar.
-    auto inventory_slots = std::make_shared<bnuui::LongBox>(vec2(420, 550), vec2(240, 72), 0.0f);
-
-    auto steering_wheels = std::make_shared<bnuui::Box>(vec2(340, 547.5f), vec2(40, 40), 0.0f);
-    auto steering_wheel_selected = std::make_shared<bnuui::Cursor>(vec2(340, 547.5f), vec2(40, 40), 0.0f);
-    steering_wheel_selected->visible = false;
-    steering_wheels->children.push_back(steering_wheel_selected);
-    steering_wheels->texture = TEXTURE_ASSET_ID::SQUARE_3_CLICKED;
-    steering_wheels->setOnClick([](bnuui::Element& e) {
-        if (curr_selected == STEERING_WHEEL) {
-            curr_selected = EMPTY;
-        } else {
-            curr_selected = STEERING_WHEEL;
-        }
-    });
-    steering_wheels->setOnUpdate([](bnuui::Element& e, float dt) {
-        Ship& ship = registry.ships.components[0];
-        if (ship.available_modules[STEERING_WHEEL] == 0) {
-            e.color = vec3(0.5f, 0, 0);
-        } else {
-            e.color = vec3(1, 1, 1);
-        }
-
-        if (curr_selected == STEERING_WHEEL)
-            e.children[0]->visible = true;
-        else
-            e.children[0]->visible = false;
-    });
-
-    auto cannons = std::make_shared<bnuui::Box>(vec2(380, 547.5f), vec2(40, 40), 0.0f);
-    auto cannons_selected = std::make_shared<bnuui::Cursor>(vec2(380, 547.5f), vec2(40, 40), 0.0f);
-    cannons_selected->visible = false;
-    cannons->children.push_back(cannons_selected);
-    cannons->texture = TEXTURE_ASSET_ID::SIMPLE_CANNON01;
-    cannons->setOnClick([](bnuui::Element& e) {
-        if (curr_selected == SIMPLE_CANNON) {
-            curr_selected = EMPTY;
-        } else {
-            curr_selected = SIMPLE_CANNON;
-        }
-    });
-    cannons->setOnUpdate([](bnuui::Element& e, float dt) {
-        Ship& ship = registry.ships.components[0];
-        if (ship.available_modules[SIMPLE_CANNON] == 0) {
-            e.color = vec3(0.5f, 0, 0);
-        } else {
-            e.color = vec3(1, 1, 1);
-        }
-
-        if (curr_selected == SIMPLE_CANNON)
-            e.children[0]->visible = true;
-        else
-            e.children[0]->visible = false;
-    });
-
-    auto helper_bunnies = std::make_shared<bnuui::Box>(vec2(420, 547.5f), vec2(40, 40), 0.0f);
-    auto helper_bunnies_selected = std::make_shared<bnuui::Cursor>(vec2(420, 547.5f), vec2(40, 40), 0.0f);
-    helper_bunnies_selected->visible = false;
-    helper_bunnies->children.push_back(helper_bunnies_selected);
-    helper_bunnies->texture = TEXTURE_ASSET_ID::BUNNY_NPC_IDLE_UP0;
-    helper_bunnies->setOnClick([](bnuui::Element& e) {
-        if (curr_selected == HELPER_BUNNY) {
-            curr_selected = EMPTY;
-        } else {
-            curr_selected = HELPER_BUNNY;
-        }
-    });
-    helper_bunnies->setOnUpdate([](bnuui::Element& e, float dt) {
-        Ship& ship = registry.ships.components[0];
-        if (ship.available_modules[HELPER_BUNNY] == 0) {
-            e.color = vec3(0.5f, 0, 0);
-        } else {
-            e.color = vec3(1, 1, 1);
-        }
-
-        if (curr_selected == HELPER_BUNNY)
-            e.children[0]->visible = true;
-        else
-            e.children[0]->visible = false;
-    });
-
-
 
     // Insert all the stuff.
     scene_ui.insert(player_box);
     scene_ui.insert(player_status);
     scene_ui.insert(progress_bar);
     scene_ui.insert(tile_cursor);
-
-    scene_ui.insert(inventory_slots);
-    scene_ui.insert(steering_wheels);
-    scene_ui.insert(cannons);
-    scene_ui.insert(helper_bunnies);
 }
 
 void GameLevel::Exit() {
@@ -395,7 +307,6 @@ void HandlePlayerStationing(vec2 tile_pos) {
             return;
         case STEERING_WHEEL:
         case SIMPLE_CANNON:
-        case FAST_CANNON:
             player_comp.player_state = STATIONING;
     }
     player_comp.player_state = STATIONING;
@@ -403,11 +314,24 @@ void HandlePlayerStationing(vec2 tile_pos) {
 
 void GameLevel::HandleInput(int key, int action, int mod) {
     Entity player = registry.players.entities[0];
+
     glm::vec2 playerPos = registry.motions.get(player).position;
     int player_tile_x = (int) (playerPos.x / GRID_CELL_WIDTH_PX);
     int player_tile_y = (int) (playerPos.y / GRID_CELL_HEIGHT_PX);
 
     Player& player_comp = registry.players.get(player);
+
+    // Build Mode.
+    if ((action == GLFW_RELEASE) && (key == GLFW_KEY_B) && (player_comp.player_state != STATIONING)) {
+        if (player_comp.player_state == BUILDING) {
+            inventory_system.CloseInventory();
+            player_comp.player_state = IDLE;
+        } else {
+            player_comp.player_state = BUILDING;
+            inventory_system.OpenInventory();
+        }
+        return;
+    }
 
     if ((action == GLFW_RELEASE) && (key == GLFW_KEY_SPACE) &&
         (player_comp.player_state == IDLE || player_comp.player_state == STATIONING)) {
@@ -431,7 +355,7 @@ void GameLevel::HandleInput(int key, int action, int mod) {
             default:
                 return;
         }
-    } else {
+    } else if (player_comp.player_state != BUILDING) {
         HandlePlayerMovement(key, action, mod);
     }
 
@@ -484,16 +408,36 @@ void GameLevel::HandleMouseMove(vec2 pos) {
                 m.angle = degrees(atan2(pos.y - m.position.y, pos.x - m.position.x)) + 90.0f;
                 return;
             }
-            case FAST_CANNON: {
-                player_comp.player_state = IDLE;
-                return;
-            }
             default:
                 return;
         }
     }
 
     LevelHandleMouseMove(pos);
+}
+
+// Stations the first bunny that's unstationed.
+void stationBunny() {
+    // Set one of the bunny to be on_module
+    for (Bunny& b : registry.bunnies.components) {
+        if (b.on_ship && !b.on_module && !b.on_base) {
+            b.on_ship = false;
+            b.on_module = true;
+            return; 
+        }
+    }
+}
+
+// Unstations the frist stationed bunny.
+void unStationBunny() {
+    // Set one of the bunny to be on_module
+    for (Bunny& b : registry.bunnies.components) {
+        if (b.on_module) {
+            b.on_ship = true;
+            b.on_module = false;
+            return; 
+        }
+    }
 }
 
 void GameLevel::HandleMouseClick(int button, int action, int mods) {
@@ -509,7 +453,7 @@ void GameLevel::HandleMouseClick(int button, int action, int mods) {
         }
     } else if (action == GLFW_RELEASE) {
         for (std::shared_ptr<bnuui::Element> ui_elem : ui_elems) {
-            if (ui_elem->active) {
+            if (ui_elem->active) { 
                 ui_elem->clickButton();
             }
             ui_elem->active = false;
@@ -539,10 +483,6 @@ void GameLevel::HandleMouseClick(int button, int action, int mods) {
                         createCannonProjectile(cannon_pos, l1_mouse_pos);
                         sc.timer_ms = SIMPLE_CANNON_COOLDOWN;
                     }
-                    return;
-                }
-                case FAST_CANNON: {
-                    player_comp.player_state = IDLE;
                     return;
                 }
                 default:
@@ -583,6 +523,7 @@ void GameLevel::HandleMouseClick(int button, int action, int mods) {
                     if (!sc.is_automated) {
                         sc.is_automated = true;
                         ship.available_modules[curr_selected]--;
+                        stationBunny();
                     }
                 }
                 default: {
@@ -593,7 +534,7 @@ void GameLevel::HandleMouseClick(int button, int action, int mods) {
     }
 
     // Remove on right click.
-    if (action == GLFW_PRESS && button == GLFW_MOUSE_BUTTON_2) {
+    if (action == GLFW_PRESS && button == GLFW_MOUSE_BUTTON_2 && registry.players.components[0].player_state == BUILDING) {
         vec2 tile_pos = getMouseTilePosition();
         MODULE_TYPES module = getModuleType(tile_pos);
         Ship& ship = registry.ships.components[0];
@@ -606,6 +547,7 @@ void GameLevel::HandleMouseClick(int button, int action, int mods) {
                 if (sc.is_automated) {
                     ship.available_modules[HELPER_BUNNY]++;
                     sc.is_automated = false;
+                    unStationBunny();
                     break;
                 }
             }
@@ -616,15 +558,16 @@ void GameLevel::HandleMouseClick(int button, int action, int mods) {
                 ship.available_modules[module]++;
             }
         }
+        // SUPER LAZY AND BAD WAY BUT IM LAZYYYY
+        inventory_system.CloseInventory();
+        inventory_system.OpenInventory();
     }
 
     LevelHandleMouseClick(button, action, mods);
 }
 
 void GameLevel::Update(float dt) {
-
-    // std::cout << "Camera x: " << CameraSystem::GetInstance()->position.x << "Camera y: " <<  CameraSystem::GetInstance()->position.y << std::endl;
-    if(!RenderSystem::isRenderingGacha){
+    if(!RenderSystem::isRenderingGacha && registry.players.components[0].player_state != BUILDING){
         CameraSystem::GetInstance()->update(dt);
         ai_system.step(dt);
         physics_system.step(dt);
@@ -656,18 +599,25 @@ void GameLevel::Update(float dt) {
                 p.alive_time_ms -= dt;
             }
         }
-    }
 
-    // Remove disasters.
-    for (Entity e : registry.disasters.entities) {
-        Disaster& d = registry.disasters.get(e);
-        if (d.type == DISASTER_TYPE::TORNADO) {
-            if (d.alive_time_ms <= 0) {
-                std::cout << "remove tornado" << std::endl;
-                registry.remove_all_components_of(e);
-                continue;
+        // Remove disasters.
+        for (Entity e : registry.disasters.entities) {
+            Disaster& d = registry.disasters.get(e);
+            if (d.type == DISASTER_TYPE::TORNADO) {
+                if (d.alive_time_ms <= 0) {
+                    std::cout << "remove tornado" << std::endl;
+                    registry.remove_all_components_of(e);
+                    continue;
+                }
+                d.alive_time_ms -= dt;
             }
-            d.alive_time_ms -= dt;
+        }
+
+        registry.ships.components[0].available_modules[HELPER_BUNNY] = 0;
+        for (Bunny& bunny : registry.bunnies.components) {
+            if (bunny.on_ship) {
+                registry.ships.components[0].available_modules[HELPER_BUNNY]++;
+            }
         }
     }
 
