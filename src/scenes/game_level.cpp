@@ -472,14 +472,9 @@ void GameLevel::HandleMouseClick(int button, int action, int mods) {
                     // Rotate the simple cannon.
                     Entity cannon_entity = ship.ship_modules_entity[player_tile_y][player_tile_x];
                     SimpleCannon& sc = registry.simpleCannons.get(cannon_entity);
-
-
-                    vec2 cannon_pos = registry.motions.get(cannon_entity).position;
-                    for (int i = 0; i < 100; i++) {
-                        cannon_pos.y -= 10;
-                        createCannonProjectile(cannon_pos, l1_mouse_pos);
-                    }
                     if (sc.timer_ms <= 0) {
+                        vec2 cannon_pos = registry.motions.get(cannon_entity).position;
+                        createCannonProjectile(cannon_pos, l1_mouse_pos);
                         sc.timer_ms = SIMPLE_CANNON_COOLDOWN;
                     }
                     return;
