@@ -319,6 +319,63 @@ Entity createCannon(vec2 tile_pos) {
     return cannon;
 }
 
+Entity createLaserWeapon(vec2 tile_pos){
+    Entity laser;
+    LaserWeapon& laser_weapon = registry.laserWeapons.emplace(laser);
+    laser_weapon.is_automated = false;
+    laser_weapon.timer_ms = 0; 
+
+    Motion& motion = registry.motions.emplace(laser);
+    vec2 world_pos = TileToVector2(tile_pos.x, tile_pos.y);
+    motion.position.x = world_pos.x;
+    motion.position.y = world_pos.y;
+
+    motion.scale = {GRID_CELL_WIDTH_PX, GRID_CELL_HEIGHT_PX};
+
+    registry.renderRequests.insert(
+        laser, {TEXTURE_ASSET_ID::LASER_WEAPON0, EFFECT_ASSET_ID::TEXTURED, GEOMETRY_BUFFER_ID::SPRITE});
+
+    return laser;
+}
+
+std::vector<Entity> createLaserBeam(vec2 orig, vec2 dest) {
+    std::vector<Entity> beams = {};
+    vec2 positionToRender = orig + normalize(dest - orig)*15.f;
+
+    for (int i = 0; i< 33; i++){
+        Entity e;
+        beams.push_back(e);
+        LaserBeam& beam = registry.laserBeams.emplace(e);
+        beam.damage = 20;
+        beam.alive_time_ms = LASER_LIFETIME;
+        beam.prevCamPos = CameraSystem::GetInstance()->position;
+
+        Motion& m = registry.motions.emplace(e);
+        positionToRender += normalize(dest - orig)*20.f;
+        m.position = positionToRender - CameraSystem::GetInstance()->position;
+
+        m.scale = vec2(20, 20);
+        // m.angle = degrees(atan2(dest.y - m.position.y, dest.x - m.position.x)) + 90.0f;
+        m.angle = degrees(atan2(dest.y - orig.y, dest.x - orig.x)) + 90.0f;
+        m.velocity = {0, 0};
+
+        registry.backgroundObjects.emplace(e);
+        registry.renderRequests.insert(
+            e, {TEXTURE_ASSET_ID::LASER_BEAM, EFFECT_ASSET_ID::TEXTURED, GEOMETRY_BUFFER_ID::SPRITE});
+
+        // TODO: Play sound for the laser beam
+        if (projectile_shoot == nullptr) {
+            // projectile_shoot = Mix_LoadWAV(audio_path("projectile_shoot.wav").c_str());
+        }
+        // Mix_PlayChannel(-1, projectile_shoot, 0);
+    }
+    return beams;
+}
+
+
+
+
+
 void initializeShipModules(Ship& ship) {
     auto tmp_modules = std::vector<std::vector<MODULE_TYPES>>(ROW_COUNT, std::vector<MODULE_TYPES>(COL_COUNT, EMPTY));
 
@@ -343,6 +400,12 @@ void initializeShipModules(Ship& ship) {
 
     Entity cannon_entity = createCannon(SimpleCannonGridPos);
     tmp_entities[SimpleCannonGridPos.y][SimpleCannonGridPos.x] = cannon_entity;
+
+    // TODO lily: delete later, this is just for testing
+    vec2 laserGridPos = {MIDDLE_GRID_X + 1, MIDDLE_GRID_Y - 1};
+    tmp_modules[laserGridPos.y][laserGridPos.x] = LASER_WEAPON;
+    Entity laser_entity = createLaserWeapon(laserGridPos);
+    tmp_entities[laserGridPos.y][laserGridPos.x] = laser_entity; 
 
     ship.ship_modules = tmp_modules;
     ship.ship_modules_entity = tmp_entities;

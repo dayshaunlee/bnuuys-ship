@@ -18,6 +18,9 @@ Entity createCannonProjectile(vec2 orig, vec2 dest);
 Entity createEnemyProjectile(vec2 orig, vec2 dest);
 Entity createSteeringWheel(vec2 tile_pos);
 Entity createCannon(vec2 tile_pos);
+Entity createLaserWeapon(vec2 tile_pos);
+std::vector<Entity> createLaserBeam(vec2 orig, vec2 dest);
+
 
 Entity createWaterBackground(int offset_x, int offset_y);
 Entity createIslandBackground(int width, int height, int offset_x, int offset_y, TEXTURE_ASSET_ID texture);

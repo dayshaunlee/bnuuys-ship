@@ -13,10 +13,19 @@ struct AutoCannonContext {
     AutoCannonContext(Entity c_entity) : cannon_entity(c_entity) {}
 };
 
+struct AutoLaserContext {
+    Entity laser_entity;
+    Entity enemy_entity;
+    glm::vec2 enemy_pos;
+
+    AutoLaserContext(Entity l_entity) : laser_entity(l_entity) {}
+};
+
 class ModulesSystem {
    private:
     std::shared_ptr<DecisionNode<AutoCannonContext>> dtree_AutoCannon;
-
+    std::shared_ptr<DecisionNode<AutoLaserContext>> dtree_AutoLaser;
+    
    public:
     void step(float elapsed_ms);
 

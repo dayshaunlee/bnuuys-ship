@@ -39,7 +39,7 @@ void AISystem::step(float elapsed_ms) {
             vec2 spawner_position = spawner_motion.position;
             Motion& ship_motion = registry.motions.get(registry.ships.entities[0]);
             // make the ship position "move" instead of be stationary
-            vec2& ship_position = ship_motion.position - CameraSystem::GetInstance()->position;
+            vec2 ship_position = ship_motion.position - CameraSystem::GetInstance()->position;
             vec2 direction = ship_position - spawner_position;
             float length = dot(direction, direction);
             int r_squared = (spawner.range * GRID_CELL_WIDTH_PX) *

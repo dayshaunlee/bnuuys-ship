@@ -22,10 +22,11 @@ GachaSystem::GachaSystem() {
     // Dayshaun: put level pool loading in each level.cpp file
     
     setDropRate(MODULE_TYPES::STEERING_WHEEL, 0);
-    setDropRate(MODULE_TYPES::HELPER_BUNNY, 100);
+    setDropRate(MODULE_TYPES::HELPER_BUNNY, 0);
     setDropRate(MODULE_TYPES::EMPTY, 0);
     setDropRate(MODULE_TYPES::PLATFORM, 100);
     setDropRate(MODULE_TYPES::SIMPLE_CANNON, 100);
+    setDropRate(MODULE_TYPES::LASER_WEAPON, 50);
 }
 
 
@@ -62,7 +63,7 @@ std::vector<MODULE_TYPES> GachaSystem::getModuleOptions(int level){
     for (float weight : weights) {
         sumWeights += weight;
     }
-    
+
     for (float& weight : weights) {
         weight /= sumWeights;
     }
@@ -82,6 +83,7 @@ std::vector<MODULE_TYPES> GachaSystem::getModuleOptions(int level){
 // bool GachaSystem::isOnDisplay(){
 //     return onDisplay;
 // }
+
 
 void clearGatchaUI(bnuui::SceneUI& scene_ui){
         int uiSize = scene_ui.size();
