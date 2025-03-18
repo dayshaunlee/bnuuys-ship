@@ -307,6 +307,7 @@ void HandlePlayerStationing(vec2 tile_pos) {
             return;
         case STEERING_WHEEL:
         case SIMPLE_CANNON:
+        case LASER_WEAPON:
             player_comp.player_state = STATIONING;
     }
     player_comp.player_state = STATIONING;
@@ -545,6 +546,7 @@ void GameLevel::HandleMouseClick(int button, int action, int mods) {
                         ship.available_modules[curr_selected]--;
                         stationBunny();
                     }
+                    break;
                 }
                 case LASER_WEAPON: {
                     LaserWeapon& lw = registry.laserWeapons.get(ship.ship_modules_entity[tile_pos.y][tile_pos.x]);
@@ -553,6 +555,7 @@ void GameLevel::HandleMouseClick(int button, int action, int mods) {
                         ship.available_modules[curr_selected]--;
                         stationBunny();
                     }
+                    break;
                 }
 
                 default: {
@@ -579,6 +582,8 @@ void GameLevel::HandleMouseClick(int button, int action, int mods) {
                     unStationBunny();
                     break;
                 }
+                RemoveStation(tile_pos, module); 
+                break;
             }
             case LASER_WEAPON: {
                 LaserWeapon& lw = registry.laserWeapons.get(ship.ship_modules_entity[tile_pos.y][tile_pos.x]);
@@ -588,12 +593,11 @@ void GameLevel::HandleMouseClick(int button, int action, int mods) {
                     unStationBunny();
                     break;
                 }
+                RemoveStation(tile_pos, module);
+                break;
             }
             default: {
-                Ship& ship = registry.ships.components[0];
-                ship.ship_modules[tile_pos.y][tile_pos.x] = PLATFORM;
-                registry.remove_all_components_of(ship.ship_modules_entity[tile_pos.y][tile_pos.x]);
-                ship.available_modules[module]++;
+                RemoveStation(tile_pos, module);
             }
         }
         // SUPER LAZY AND BAD WAY BUT IM LAZYYYY
@@ -602,6 +606,13 @@ void GameLevel::HandleMouseClick(int button, int action, int mods) {
     }
 
     LevelHandleMouseClick(button, action, mods);
+}
+
+void GameLevel::RemoveStation(vec2 tile_pos, MODULE_TYPES module){
+    Ship& ship = registry.ships.components[0];
+    ship.ship_modules[tile_pos.y][tile_pos.x] = PLATFORM;
+    registry.remove_all_components_of(ship.ship_modules_entity[tile_pos.y][tile_pos.x]);
+    ship.available_modules[module]++; 
 }
 
 void GameLevel::Update(float dt) {

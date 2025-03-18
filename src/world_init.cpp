@@ -342,11 +342,11 @@ std::vector<Entity> createLaserBeam(vec2 orig, vec2 dest) {
     std::vector<Entity> beams = {};
     vec2 positionToRender = orig + normalize(dest - orig)*15.f;
 
-    for (int i = 0; i< 10; i++){
+    for (int i = 0; i< 33; i++){
         Entity e;
         beams.push_back(e);
         LaserBeam& beam = registry.laserBeams.emplace(e);
-        beam.damage = 100;
+        beam.damage = 20;
         beam.alive_time_ms = LASER_LIFETIME;
         beam.prevCamPos = CameraSystem::GetInstance()->position;
 

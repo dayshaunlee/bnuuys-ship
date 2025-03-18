@@ -316,20 +316,19 @@ inline TEXTURE_ASSET_ID getTextureFromModuleType(MODULE_TYPES module){
     {
     case MODULE_TYPES::SIMPLE_CANNON :
         return TEXTURE_ASSET_ID::SIMPLE_CANNON01;
-        break;
     case MODULE_TYPES::PLATFORM :
         return TEXTURE_ASSET_ID::RAFT;
-        break;
     case MODULE_TYPES::HELPER_BUNNY :
         return TEXTURE_ASSET_ID::BUNNY_NPC_IDLE_UP0;
-        break;
     case MODULE_TYPES::STEERING_WHEEL :
         return TEXTURE_ASSET_ID::SQUARE_3_CLICKED;
+    case MODULE_TYPES::LASER_WEAPON :
+        return TEXTURE_ASSET_ID::LASER_WEAPON0;
     default:
         std::cout << "This is not a valid module" << std::endl;
         return TEXTURE_ASSET_ID::WATER_BACKGROUND; 
-        break;
     }
+
 }
 
 struct SteeringWheel {
