@@ -126,7 +126,7 @@ Entity createEnemy(Entity entity) {
     Enemy& comp_enemy = registry.enemies.emplace(enemy);
     comp_enemy.type = spawner.type;
     comp_enemy.health = getEnemyHealth(comp_enemy.type);
-    comp_enemy.range = spawner.range;
+    comp_enemy.range = getEnemyRange(comp_enemy.type);
     comp_enemy.timer_ms = 0;
 
     Motion& motion = registry.motions.emplace(enemy);
@@ -156,6 +156,7 @@ Entity createEnemy(Entity entity) {
                 {TEXTURE_ASSET_ID::BALLOON0, EFFECT_ASSET_ID::TEXTURED, GEOMETRY_BUFFER_ID::SPRITE});
             break;
         case SHOOTER:
+            comp_enemy.cooldown_ms = ENEMY_PROJECTILE_COOLDOWN;
             motion.scale = {112, 56};
             registry.renderRequests.insert(
                 enemy,
@@ -264,18 +265,19 @@ Entity createCannonProjectile(vec2 orig, vec2 dest) {
 // TODO: Change the stats and sprite
 Entity createEnemyProjectile(vec2 orig, vec2 dest) {
     Entity e;
+    registry.backgroundObjects.emplace(e);
     Motion& m = registry.motions.emplace(e);
-    m.position = orig;
+    m.position = orig - CameraSystem::GetInstance()->position;
     m.scale = {GRID_CELL_WIDTH_PX / 2, GRID_CELL_HEIGHT_PX / 2};
     m.angle = degrees(atan2(dest.y - dest.x, dest.x - orig.x));
     vec2 velVec = dest - orig;
-    m.velocity = normalize(velVec) * 50.0f;
+    m.velocity = normalize(velVec) * 200.0f;
 
     registry.renderRequests.insert(
-        e, {TEXTURE_ASSET_ID::BUNNY_FACE_ANGRY05, EFFECT_ASSET_ID::TEXTURED, GEOMETRY_BUFFER_ID::SPRITE});
+        e, {TEXTURE_ASSET_ID::BULLET_GREEN, EFFECT_ASSET_ID::TEXTURED, GEOMETRY_BUFFER_ID::SPRITE});
     
-        EnemyProjectile& proj = registry.enemyProjectiles.emplace(e);
-    proj.damage = SIMPLE_CANNON_DAMAGE;
+    EnemyProjectile& proj = registry.enemyProjectiles.emplace(e);
+    proj.damage = 5;
     proj.alive_time_ms = PROJECTILE_LIFETIME;
 
     return e;
