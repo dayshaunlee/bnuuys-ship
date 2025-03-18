@@ -103,7 +103,7 @@ void TutorialLevel::LevelUpdate(float dt) {
             sceneManager.switchScene("Next Level Scene");
 
             SaveLoadSystem& saveLoadSystem = SaveLoadSystem::getInstance();
-            GameData gameData = saveLoadSystem.createGameData("Player1", "Tutorial Level", registry.ships.components[0]);
+            GameData gameData = saveLoadSystem.createGameData("Player1", "Level 1", registry.ships.components[0]);
             saveLoadSystem.saveGame(gameData, "level_save.json");
             std::cout << "tutorial saved" << std::endl;
 

@@ -48,7 +48,7 @@ void Level01::LevelUpdate(float dt) {
         sceneManager.switchScene("Next Level Scene");
 
         SaveLoadSystem& saveLoadSystem = SaveLoadSystem::getInstance();
-        GameData gameData = saveLoadSystem.createGameData("Player1", "Level1", registry.ships.components[0]);
+        GameData gameData = saveLoadSystem.createGameData("Player1", "Level 2", registry.ships.components[0]);
         saveLoadSystem.saveGame(gameData, "level_save.json");
         std::cout << "Level 1 saved" << std::endl;
 
