@@ -22,10 +22,11 @@ GachaSystem::GachaSystem() {
     // Dayshaun: put level pool loading in each level.cpp file
     
     setDropRate(MODULE_TYPES::STEERING_WHEEL, 0);
-    setDropRate(MODULE_TYPES::HELPER_BUNNY, 5);
+    setDropRate(MODULE_TYPES::HELPER_BUNNY, 0);
     setDropRate(MODULE_TYPES::EMPTY, 0);
     setDropRate(MODULE_TYPES::PLATFORM, 100);
     setDropRate(MODULE_TYPES::SIMPLE_CANNON, 100);
+    setDropRate(MODULE_TYPES::LASER_WEAPON, 50);
 }
 
 
