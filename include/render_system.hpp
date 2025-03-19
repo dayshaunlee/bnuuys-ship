@@ -208,8 +208,11 @@ class RenderSystem {
         textures_path("ui/buttons/tutorial_neutral.png"),
         textures_path("ui/buttons/tutorial_clicked.png"),
 
-        textures_path("cannons/laser_weapon.png"),
+        // continue buttons
+        textures_path("ui/buttons/continue_neutral.png"),
+        textures_path("ui/buttons/continue_clicked.png")
 
+        textures_path("cannons/laser_weapon.png"),
         textures_path("cannons/laser_beam.png")
     };
 
