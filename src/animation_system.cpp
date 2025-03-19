@@ -287,11 +287,14 @@ void HandleEnemyAnimation(float elapsed_ms) {
                 texture = TEXTURE_ASSET_ID::BALLOON1;
             }
         } else if (enemy.type == ENEMY_TYPE::SHOOTER) {
+            enemy.cooldown_ms -= elapsed_ms;
             if (enemy.timer_ms <= 0) {
-                enemy.timer_ms = 1 * ANIMATION_TIME;
+                enemy.timer_ms = 1.5 * ANIMATION_TIME;
                 texture = TEXTURE_ASSET_ID::COW0;
             } else if (enemy.timer_ms <= 0.5 * ANIMATION_TIME) {
                 texture = TEXTURE_ASSET_ID::COW1;
+            } else if (enemy.timer_ms <= 1 * ANIMATION_TIME) {
+                texture = TEXTURE_ASSET_ID::COW2;
             }
         }
 

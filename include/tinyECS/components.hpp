@@ -383,6 +383,7 @@ struct Enemy {
 	int timer_ms; // for sprite animation
     int range = 10;
     int speed;
+    int cooldown_ms; // cooldown for enemy projectile
 };
 
 struct EnemySpawner {

@@ -87,7 +87,9 @@ const float ENEMY_TANK_RANGE = 10;
 
 const int ENEMY_SHOOTER_HEALTH = 25;
 const float ENEMY_SHOOTER_SPEED = 0;
-const float ENEMY_SHOOTER_RANGE = 5;
+const float ENEMY_SHOOTER_RANGE = 6;
+
+const float ENEMY_PROJECTILE_COOLDOWN = 1000.0f;
 
 #ifndef M_PI
 #define M_PI 3.14159265358979323846f
