@@ -86,9 +86,15 @@ ModulesSystem::ModulesSystem() {
             vec2 enemy_pos = ctx.enemy_pos + CameraSystem::GetInstance()->position;
             registry.motions.get(ctx.cannon_entity).angle = 
                 degrees(atan2(enemy_pos.y - cannon_pos.y, enemy_pos.x - cannon_pos.x)) + 90.0f;
-            if (registry.simpleCannons.get(ctx.cannon_entity).timer_ms <= 0) {
-                createCannonProjectile(cannon_pos, enemy_pos);
-                registry.simpleCannons.get(ctx.cannon_entity).timer_ms = SIMPLE_CANNON_COOLDOWN;
+            SimpleCannon& sc = registry.simpleCannons.get(ctx.cannon_entity);
+            if (sc.timer_ms <= 0) {
+                if (sc.is_modified) {
+                    CannonModifier& cm = registry.cannonModifiers.get(ctx.cannon_entity);
+                    createModifiedCannonProjectile(cannon_pos, enemy_pos, cm);
+                } else {
+                    createCannonProjectile(cannon_pos, enemy_pos);
+                }
+                sc.timer_ms = SIMPLE_CANNON_COOLDOWN;
             }
             return true;
         }

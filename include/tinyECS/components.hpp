@@ -181,13 +181,18 @@ enum class TEXTURE_ASSET_ID {
     SIMPLE_CANNON05 = SIMPLE_CANNON04 + 1,
     SIMPLE_CANNON06 = SIMPLE_CANNON05 + 1,
 
+    // Bubble Cannon
+    BUBBLE_CANNON = SIMPLE_CANNON06 + 1,
+
     // Projectiles
-    BULLET_GREEN = SIMPLE_CANNON06 + 1,
+    BULLET_GREEN = BUBBLE_CANNON + 1,
     BULLET_BLUE = BULLET_GREEN + 1,
     BULLET_RED = BULLET_BLUE + 1,
 
+    BUBBLE_BULLET = BULLET_RED + 1,
+
     // Bunny npc
-    BUNNY_NPC_JAILED0 = BULLET_RED + 1,
+    BUNNY_NPC_JAILED0 = BUBBLE_BULLET + 1,
     BUNNY_NPC_JAILED1 = BUNNY_NPC_JAILED0 + 1,
 
     BUNNY_NPC_IDLE_UP0 = BUNNY_NPC_JAILED1 + 1,
@@ -332,6 +337,7 @@ enum MODULE_TYPES {
     SIMPLE_CANNON,
     LASER_WEAPON,
     HELPER_BUNNY,
+    BUBBLE_MOD
 };
 
 inline TEXTURE_ASSET_ID getTextureFromModuleType(MODULE_TYPES module){
@@ -347,6 +353,8 @@ inline TEXTURE_ASSET_ID getTextureFromModuleType(MODULE_TYPES module){
         return TEXTURE_ASSET_ID::SQUARE_3_CLICKED;
     case MODULE_TYPES::LASER_WEAPON :
         return TEXTURE_ASSET_ID::LASER_WEAPON0;
+    case MODULE_TYPES::BUBBLE_MOD :
+        return TEXTURE_ASSET_ID::BUBBLE_BULLET;
     default:
         std::cout << "This is not a valid module" << std::endl;
         return TEXTURE_ASSET_ID::WATER_BACKGROUND; 
@@ -359,6 +367,7 @@ struct SteeringWheel {
 };
 
 struct PlayerProjectile {
+    MODIFIER_TYPE mod_type;
     float damage;
     float alive_time_ms; // How long before we remove this projectile.
 };
@@ -370,7 +379,12 @@ struct EnemyProjectile {
 
 struct SimpleCannon {
     bool is_automated;
+    bool is_modified;
     float timer_ms; // The cooldown period before another shot.
+};
+
+struct CannonModifier {
+    MODIFIER_TYPE type;
 };
 
 struct LaserWeapon {
@@ -401,9 +415,11 @@ struct Ship {
 struct Enemy {
     ENEMY_TYPE type;
     int health;
+    bool is_mod_affected;
+    int mod_effect_duration;
 	int timer_ms; // for sprite animation
     int range = 10;
-    int speed;
+    float speed;
     int cooldown_ms; // cooldown for enemy projectile
 };
 

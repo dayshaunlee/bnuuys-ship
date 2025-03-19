@@ -218,6 +218,16 @@ void WorldSystem::handle_collisions() {
 
             enemy.health -= projectile.damage;
 
+            switch (projectile.mod_type) {
+                case NONE:
+                    break;
+                case BUBBLE:
+                    enemy.is_mod_affected = true;
+                    enemy.mod_effect_duration = MODIFIER_EFFECT_DURATION;
+                    enemy.speed *= BUBBLE_MOD_EFFECT_FACTOR;
+                    break;
+            }
+
             if (enemy.health <= 0) registry.remove_all_components_of(e2);
             registry.remove_all_components_of(e1);
             // Play sound
@@ -230,6 +240,17 @@ void WorldSystem::handle_collisions() {
             Enemy& enemy = registry.enemies.get(e1);
 
             enemy.health -= projectile.damage;
+
+            switch (projectile.mod_type) {
+                case NONE:
+                    break;
+                case BUBBLE:
+                    enemy.is_mod_affected = true;
+                    enemy.mod_effect_duration = MODIFIER_EFFECT_DURATION;
+                    enemy.speed *= BUBBLE_MOD_EFFECT_FACTOR;
+                    break;
+            }
+
             if (enemy.health <= 0) registry.remove_all_components_of(e1);
 
             registry.remove_all_components_of(e2);

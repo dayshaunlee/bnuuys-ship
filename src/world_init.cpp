@@ -128,6 +128,9 @@ Entity createEnemy(Entity entity) {
     comp_enemy.health = getEnemyHealth(comp_enemy.type);
     comp_enemy.range = getEnemyRange(comp_enemy.type);
     comp_enemy.timer_ms = 0;
+    comp_enemy.is_mod_affected = false;
+    comp_enemy.mod_effect_duration = 0;
+    comp_enemy.speed = getEnemySpeed(comp_enemy.type);
 
     Motion& motion = registry.motions.emplace(enemy);
     motion = registry.motions.get(entity);
@@ -250,6 +253,37 @@ Entity createCannonProjectile(vec2 orig, vec2 dest) {
         e, {TEXTURE_ASSET_ID::BUNNY_FACE_ANGRY05, EFFECT_ASSET_ID::TEXTURED, GEOMETRY_BUFFER_ID::SPRITE});
 
     PlayerProjectile& proj = registry.playerProjectiles.emplace(e);
+    proj.mod_type = NONE;
+    proj.damage = SIMPLE_CANNON_DAMAGE;
+    proj.alive_time_ms = PROJECTILE_LIFETIME;
+
+    //Play sound
+    if (projectile_shoot == nullptr) {
+        projectile_shoot = Mix_LoadWAV(audio_path("projectile_shoot.wav").c_str());
+    }
+    Mix_PlayChannel(-1, projectile_shoot, 0);
+
+    return e;
+}
+
+Entity createModifiedCannonProjectile(vec2 orig, vec2 dest, CannonModifier cm) {
+    Entity e;
+    Motion& m = registry.motions.emplace(e);
+    m.position = orig - CameraSystem::GetInstance()->position;
+    m.scale = {GRID_CELL_WIDTH_PX / 2, GRID_CELL_HEIGHT_PX / 2};
+    m.angle = degrees(atan2(dest.y - dest.x, dest.x - orig.x));
+    vec2 velVec = dest - orig;
+    m.velocity = normalize(velVec) * 350.0f;
+    registry.backgroundObjects.emplace(e);
+    switch (cm.type) {
+        case BUBBLE:
+            registry.renderRequests.insert(
+                e, {TEXTURE_ASSET_ID::BUBBLE_BULLET, EFFECT_ASSET_ID::TEXTURED, GEOMETRY_BUFFER_ID::SPRITE});
+        break;
+    }
+
+    PlayerProjectile& proj = registry.playerProjectiles.emplace(e);
+    proj.mod_type = cm.type;
     proj.damage = SIMPLE_CANNON_DAMAGE;
     proj.alive_time_ms = PROJECTILE_LIFETIME;
 
@@ -306,6 +340,7 @@ Entity createCannon(vec2 tile_pos) {
     Entity cannon;
     SimpleCannon& simple_cannon = registry.simpleCannons.emplace(cannon);
     simple_cannon.is_automated = false;
+    simple_cannon.is_modified= false;
     simple_cannon.timer_ms = 0;
 
     Motion& motion = registry.motions.emplace(cannon);
@@ -319,6 +354,20 @@ Entity createCannon(vec2 tile_pos) {
         cannon, {TEXTURE_ASSET_ID::SIMPLE_CANNON01, EFFECT_ASSET_ID::TEXTURED, GEOMETRY_BUFFER_ID::SPRITE});
 
     return cannon;
+}
+
+Entity modifyCannon(Entity entity, MODIFIER_TYPE type) {
+    CannonModifier& cannon_modifier = registry.cannonModifiers.emplace(entity);
+    cannon_modifier.type = type;
+
+    SimpleCannon& simple_cannon = registry.simpleCannons.get(entity);
+    simple_cannon.is_modified = true;
+
+    registry.renderRequests.remove(entity);
+    registry.renderRequests.insert(
+        entity, {TEXTURE_ASSET_ID::BUBBLE_CANNON, EFFECT_ASSET_ID::TEXTURED, GEOMETRY_BUFFER_ID::SPRITE});
+
+    return entity;
 }
 
 Entity createLaserWeapon(vec2 tile_pos){
@@ -339,6 +388,7 @@ Entity createLaserWeapon(vec2 tile_pos){
 
     return laser;
 }
+
 
 std::vector<Entity> createLaserBeam(vec2 orig, vec2 dest) {
     std::vector<Entity> beams = {};
@@ -408,6 +458,13 @@ void initializeShipModules(Ship& ship) {
     tmp_modules[laserGridPos.y][laserGridPos.x] = LASER_WEAPON;
     Entity laser_entity = createLaserWeapon(laserGridPos);
     tmp_entities[laserGridPos.y][laserGridPos.x] = laser_entity; 
+
+    vec2 bubbleGridPos = {MIDDLE_GRID_X - 1, MIDDLE_GRID_Y - 1};
+    tmp_modules[bubbleGridPos.y][bubbleGridPos.x] = SIMPLE_CANNON;
+    Entity bubble_cannon_entity = createCannon(bubbleGridPos);
+    tmp_entities[bubbleGridPos.y][bubbleGridPos.x] = bubble_cannon_entity; 
+
+    modifyCannon(bubble_cannon_entity, BUBBLE);
 
     ship.ship_modules = tmp_modules;
     ship.ship_modules_entity = tmp_entities;

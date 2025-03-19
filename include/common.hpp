@@ -47,7 +47,11 @@ inline std::string font_path(const std::string& name) {
 
 enum ENEMY_TYPE { BASIC_GUNNER = 0, FLYER = 1, TANK = 2, SHOOTER = 3 };
 enum DISASTER_TYPE { TORNADO = 0, WHIRLPOOL = 1};
+enum MODIFIER_TYPE { NONE = 0, BUBBLE = 1 };
+
+
 const float DISASTER_LIFETIME = 30000.0f;   // 30 seconds life time 
+const float BUBBLE_MOD_EFFECT_FACTOR = 0;
 
 //
 // game constants
@@ -128,6 +132,9 @@ const float SHIP_CAMERA_SPEED = 100.0f;
 const float SIMPLE_CANNON_COOLDOWN = 1000.0f;   // 1 second
 const float SIMPLE_CANNON_DAMAGE = 10.0f;
 const float PROJECTILE_LIFETIME = 2000.0f;      // Bullets have 5 seconds before getting removed.
+
+const float MODIFIER_EFFECT_DURATION = SIMPLE_CANNON_COOLDOWN;
+
 const float LASER_LIFETIME = 200.0f;
 const int LASER_LENGTH_IN_NUM = 3; // This is how many 50 pixles laser beam we render to stack
 const float LASER_COOLDOWN = 1000.0f;   // 1 second

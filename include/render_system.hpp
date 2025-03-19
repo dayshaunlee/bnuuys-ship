@@ -166,10 +166,15 @@ class RenderSystem {
         textures_path("cannons/simple_cannon004.png"),
         textures_path("cannons/simple_cannon005.png"),
 
+        // Bubble Cannon
+        textures_path("cannons/bubble_cannon.png"),
+
         // Projectiles
         textures_path("effects/bullet0.png"),
         textures_path("effects/bullet1.png"),
         textures_path("effects/bullet2.png"),
+        
+        textures_path("effects/bubble.png"),
 
         // NPC bunny (jailed)
         textures_path("bunny/jailed-bunny0.png"),

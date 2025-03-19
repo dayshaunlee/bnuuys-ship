@@ -300,7 +300,7 @@ void PhysicsSystem::step(float elapsed_ms) {
             motion.position.y = std::clamp(motion.position.y,
                                            ship_mot.position.y - (ship_mot.scale.y / 2) + 16,
                                            ship_mot.position.y + (ship_mot.scale.y / 2) - 16);
-        } else if (registry.walkingPaths.has(entity)) {
+        } else if (registry.walkingPaths.has(entity) && registry.enemies.has(entity)) {
             // walk the path, tile by tile until it reach the end
 			WalkingPath& walkingPath = registry.walkingPaths.get(entity);
             if (walkingPath.path.size() > 0) {
@@ -322,7 +322,17 @@ void PhysicsSystem::step(float elapsed_ms) {
                         direction.x /= length;
                         direction.y /= length;
                     }
-                    motion.velocity = direction * (float) ENEMY_BASE_SPEED;
+                    
+                    Enemy& enemy = registry.enemies.get(entity);
+                    if (enemy.is_mod_affected) {
+                        enemy.mod_effect_duration -= elapsed_ms;
+                        if (enemy.mod_effect_duration <= 0) {
+                            enemy.is_mod_affected = false;
+                            enemy.speed = getEnemySpeed(enemy.type);
+                        }
+                    }
+
+                    motion.velocity = direction * enemy.speed;
 
                     if (motion.velocity.x < 0) {
                         vec2 flip = {-1, 1};
@@ -361,7 +371,18 @@ void PhysicsSystem::step(float elapsed_ms) {
                     direction.y /= length;
                 }
 
-                motion.velocity = direction * getEnemySpeed(enemy.type);
+                
+                Enemy& enemy = registry.enemies.get(entity);
+
+                if (enemy.is_mod_affected) {
+                    enemy.mod_effect_duration -= elapsed_ms;
+                    if (enemy.mod_effect_duration <= 0) {
+                        enemy.is_mod_affected = false;
+                        enemy.speed = getEnemySpeed(enemy.type);
+                    }
+                }
+
+                motion.velocity = direction * enemy.speed;
 
                 if (motion.velocity.x < 0) {
                     vec2 flip = {-1, 1};

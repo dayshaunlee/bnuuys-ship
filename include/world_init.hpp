@@ -16,9 +16,11 @@ Entity createPlayer(RenderSystem* renderer, vec2 position);
 Entity createPlayer(vec2 position);
 Entity renderPlayer(Entity player);
 Entity createCannonProjectile(vec2 orig, vec2 dest);
+Entity createModifiedCannonProjectile(vec2 orig, vec2 dest, CannonModifier cm);
 Entity createEnemyProjectile(vec2 orig, vec2 dest);
 Entity createSteeringWheel(vec2 tile_pos);
 Entity createCannon(vec2 tile_pos);
+Entity modifyCannon(Entity entity, MODIFIER_TYPE type);
 Entity createLaserWeapon(vec2 tile_pos);
 std::vector<Entity> createLaserBeam(vec2 orig, vec2 dest);
 
