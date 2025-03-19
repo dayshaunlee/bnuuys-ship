@@ -4,6 +4,7 @@
 #include <string>
 #include "ai_system.hpp"
 #include "animation_system.hpp"
+#include "inventory_system.hpp"
 #include "modules_system.hpp"
 #include "physics_system.hpp"
 #include "sceneManager/scene.hpp"
@@ -19,10 +20,12 @@ protected:
     PhysicsSystem physics_system;
     AnimationSystem animation_system;
     ModulesSystem module_system;
+    InventorySystem inventory_system;
     WorldSystem* world_system;
     SoundSystem* sound_system;
 
     void InitializeUI();
+    void RemoveStation(vec2 tile_pos, MODULE_TYPES module);
     std::string level_path; // TODO: Make a mapping for level_path and the background.
     // amount of bunnies player has to save to win
     TEXTURE_ASSET_ID texture;

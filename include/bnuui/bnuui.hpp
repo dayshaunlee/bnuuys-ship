@@ -97,11 +97,22 @@ public:
     std::vector<std::shared_ptr<Element>> getElems();
 
     void update(float dt);
-    void clear(){
+    void clear() {
         ui_elems.clear();
     }
+
+    // API to be used by the inventory system.
+    bool InsertModuleInventory(std::shared_ptr<Element> elem);
+    bool RemoveModuleInventory(int idx);
+    std::vector<std::shared_ptr<Element>> getInventoryElems();
+
+    void clearInventory() {
+        inventory_ui_elems.clear();
+    }
+
 private: 
     std::vector<std::shared_ptr<Element>> ui_elems;
+    std::vector<std::shared_ptr<Element>> inventory_ui_elems;
 };
 
 }

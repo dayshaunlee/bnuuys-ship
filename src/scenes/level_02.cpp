@@ -14,7 +14,7 @@ Level02::Level02(WorldSystem* world_system, std::string map_filename, TEXTURE_AS
     this->bunnies_to_win = 0;
     this->texture = texture;
     GachaSystem::getInstance().setLevelPool(
-        2, {MODULE_TYPES::SIMPLE_CANNON, MODULE_TYPES::HELPER_BUNNY, MODULE_TYPES::PLATFORM});
+        2, {MODULE_TYPES::SIMPLE_CANNON, MODULE_TYPES::PLATFORM, MODULE_TYPES::LASER_WEAPON});
 }
 
 Level02::~Level02() {}
