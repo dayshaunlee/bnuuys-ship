@@ -11,6 +11,7 @@ class ECSRegistry {
    public:
     // Manually created list of all components this game has
     ComponentContainer<RenderRequest> renderRequests;
+    ComponentContainer<RenderLayer> renderLayers;
     ComponentContainer<GridLine> gridLines;
     ComponentContainer<ScreenState> screenStates;
     ComponentContainer<vec3> colors;
@@ -34,6 +35,8 @@ class ECSRegistry {
 
     ComponentContainer<SteeringWheel> steeringWheels;
     ComponentContainer<SimpleCannon> simpleCannons;
+    ComponentContainer<LaserWeapon> laserWeapons;
+    ComponentContainer<LaserBeam> laserBeams;
 
     ComponentContainer<PlayerProjectile> playerProjectiles;
     ComponentContainer<EnemyProjectile> enemyProjectiles;
@@ -48,6 +51,7 @@ class ECSRegistry {
     // constructor that adds all containers for looping over them
     ECSRegistry() {
         registry_list.push_back(&renderRequests);
+        registry_list.push_back(&renderLayers);
         registry_list.push_back(&gridLines);
         registry_list.push_back(&screenStates);
         registry_list.push_back(&colors);
@@ -68,6 +72,8 @@ class ECSRegistry {
 
         registry_list.push_back(&steeringWheels);
         registry_list.push_back(&simpleCannons);
+        registry_list.push_back(&laserWeapons);
+        registry_list.push_back(&laserBeams);
         registry_list.push_back(&enemies);
         registry_list.push_back(&enemySpawners);
 

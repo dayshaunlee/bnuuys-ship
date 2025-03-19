@@ -12,6 +12,11 @@
 #include "tinyECS/components.hpp"
 #include "tinyECS/registry.hpp"
 
+void APIENTRY openglDebugCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length,
+                                               const GLchar* message, const void* userParam) {
+    std::cerr << "OpenGL Debug Message: " << message << std::endl;
+}
+
 // Render initialization
 bool RenderSystem::init(GLFWwindow* window_arg) {
     this->window = window_arg;
@@ -62,8 +67,20 @@ bool RenderSystem::init(GLFWwindow* window_arg) {
     initializeGlTextures();
     initializeGlEffects();
     initializeGlGeometryBuffers();
+
+    //// opengl debugging windows only
+    //int flags;
+    //glGetIntegerv(GL_CONTEXT_FLAGS, &flags);
+    //if (flags & GL_CONTEXT_FLAG_DEBUG_BIT) {
+    //    glEnable(GL_DEBUG_OUTPUT);
+    //    glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+    //    glDebugMessageCallback(openglDebugCallback, nullptr);
+    //    glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
+    //}
+
     return true;
 }
+
 
 bool RenderSystem::fontInit(const std::string& font_filename, unsigned int font_default_size) {
     // read in our shader files
@@ -141,6 +158,7 @@ bool RenderSystem::fontInit(const std::string& font_filename, unsigned int font_
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
 
         // now store character for later use
         Character character = {
@@ -324,7 +342,7 @@ void RenderSystem::initializeGlGeometryBuffers() {
     bindVBOandIBO(GEOMETRY_BUFFER_ID::SCREEN_TRIANGLE, screen_vertices, screen_indices);
 
     ///////////////////////////////////////////////////////
-    // Initialize square geometry for the ship
+    // Initialize square geometry for the laser
     std::vector<ColoredVertex> square_vertices;
     std::vector<uint16_t> square_indices;
 
@@ -332,20 +350,20 @@ void RenderSystem::initializeGlGeometryBuffers() {
 
     // Define the four corners of the square (centered at origin)
     square_vertices = {
-        {{-0.5f, -0.5f, square_depth}, {0.6f, 0.3f, 0.1f}},  // Bottom-left (brown color)
-        {{0.5f, -0.5f, square_depth}, {0.6f, 0.3f, 0.1f}},   // Bottom-right
-        {{0.5f, 0.5f, square_depth}, {0.6f, 0.3f, 0.1f}},    // Top-right
-        {{-0.5f, 0.5f, square_depth}, {0.6f, 0.3f, 0.1f}},   // Top-left
+        {{-0.5f, -0.5f, square_depth}, {1.0f, 0.f, 0.f}},  // Bottom-left (brown color)
+        {{0.5f, -0.5f, square_depth}, {1.0f, 0.f, 0.f}},   // Bottom-right
+        {{0.5f, 0.5f, square_depth}, {1.0f, 0.f, 0.f}},    // Top-right
+        {{-0.5f, 0.5f, square_depth}, {1.0f, 0.f, 0.f}},   // Top-left
     };
 
     // Define two triangles forming the square
     square_indices = {0, 1, 3, 1, 2, 3};
 
     // Store in the mesh system
-    int square_geom_index = (int) GEOMETRY_BUFFER_ID::SHIP_SQUARE;
+    int square_geom_index = (int) GEOMETRY_BUFFER_ID::LASER_SQUARE;
     meshes[square_geom_index].vertices = square_vertices;
     meshes[square_geom_index].vertex_indices = square_indices;
-    bindVBOandIBO(GEOMETRY_BUFFER_ID::SHIP_SQUARE, square_vertices, square_indices);
+    bindVBOandIBO(GEOMETRY_BUFFER_ID::LASER_SQUARE, square_vertices, square_indices);
 
     ///////////////////////////////////////////////////////
     // Square Geom for Progressbar.

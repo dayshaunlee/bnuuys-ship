@@ -36,17 +36,32 @@ void AISystem::step(float elapsed_ms) {
             spawner.cooldown_ms = (int)max(spawner.cooldown_ms * 1.0 - elapsed_ms, 0.0); // ensure cooldown isn't negative
         } else {
             Motion& spawner_motion = registry.motions.get(entity);
-            vec2 spawner_position = spawner_motion.position + CameraSystem::GetInstance()->position; // add camera because spawner is background obj
+            vec2 spawner_position = spawner_motion.position;
             Motion& ship_motion = registry.motions.get(registry.ships.entities[0]);
-            vec2& ship_position = ship_motion.position;
+            // make the ship position "move" instead of be stationary
+            vec2 ship_position = ship_motion.position - CameraSystem::GetInstance()->position;
             vec2 direction = ship_position - spawner_position;
             float length = dot(direction, direction);
             int r_squared = (spawner.range * GRID_CELL_WIDTH_PX) *
                     (spawner.range * GRID_CELL_WIDTH_PX);
+            int ship_range = (GRID_CELL_WIDTH_PX * 3) * (GRID_CELL_WIDTH_PX * 3);
             // check if ship is within the range AND spawner is off cooldown
-            // don't respawn shooters or else they could overlap
-            if (length <= r_squared && spawner.cooldown_ms <= 0 && spawner.type != ENEMY_TYPE::SHOOTER) {
-                createEnemy(entity);
+            // don't respawn enemies if there is an existing enemy too close to the spawner (prevents enemy stacking)
+            // don't respawn if too close to ship
+            if (ship_range <= length && length <= r_squared && spawner.cooldown_ms <= 0) {
+                bool should_spawn = true;
+                for (Entity enemy_entity : registry.enemies.entities) {
+                    if (registry.motions.has(enemy_entity) &&
+                        distance(registry.motions.get(enemy_entity).position,
+                                 spawner_position) <=
+                            sqrt(GRID_CELL_WIDTH_PX)) {
+                        should_spawn = false;
+                        break;
+                    }
+                }
+                if (should_spawn) {
+                    createEnemy(entity);
+                }
                 spawner.cooldown_ms = ENEMY_BASE_SPAWN_CD_MS;  // reset spawn cooldown
             }
         }

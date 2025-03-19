@@ -4,6 +4,9 @@
 #include "scenes/death_scene.hpp"
 #include "scenes/next_level_scene.hpp"
 #include "scenes/level_01.hpp"
+#include "scenes/level_02.hpp"
+#include "scenes/level_03.hpp"
+#include "scenes/level_04.hpp"
 #include "scenes/main_menu.hpp"
 #include "scenes/tutorial.hpp"
 #include "scenes/ui_editor.hpp"
@@ -45,8 +48,8 @@ int main() {
 
     // initialize the main systems
     renderer_system.init(window);
-    renderer_system.fontInit(font_path("sproutslandfont.ttf"), 16);
     world_system.init(&renderer_system);
+    renderer_system.fontInit(font_path("sproutslandfont.ttf"), 16);
 
     // variable timestep loop
     auto t = Clock::now();
@@ -54,18 +57,25 @@ int main() {
     SceneManager& scene_manager = SceneManager::getInstance();
 
     Scene* mm = new MainMenuScene();
-    Scene* l1 = new Level01(&world_system, "m3_level1.json", TEXTURE_ASSET_ID::LEVEL01_BACKGROUND);
     Scene* tutorial = new TutorialLevel(&world_system, "m2_tutorial.json", TEXTURE_ASSET_ID::TUTORIAL_BACKGROUND);
+    Scene* l1 = new Level01(&world_system, "m3_level1.json", TEXTURE_ASSET_ID::LEVEL01_BACKGROUND);
+    Scene* l2 = new Level02(&world_system, "m3_level2.json", TEXTURE_ASSET_ID::LEVEL02_BACKGROUND);
+    Scene* l3 = new Level03(&world_system, "m3_level3.json", TEXTURE_ASSET_ID::LEVEL03_BACKGROUND);
+    Scene* l4 = new Level04(&world_system, "m3_level4.json", TEXTURE_ASSET_ID::LEVEL04_BACKGROUND);
     Scene* ui_editor = new EditorUI();
     Scene* death = new DeathScene();
     Scene* levelTransition = new NextLevelScene();
 
     scene_manager.registerScene(mm);
-    scene_manager.registerScene(l1);
     scene_manager.registerScene(ui_editor);
     scene_manager.registerScene(death);
-    scene_manager.registerScene(tutorial);
     scene_manager.registerScene(levelTransition);
+
+    scene_manager.registerScene(tutorial);
+    scene_manager.registerScene(l1);
+    scene_manager.registerScene(l2);
+    scene_manager.registerScene(l3);
+    scene_manager.registerScene(l4);
 
     scene_manager.switchScene("Main Menu");
 

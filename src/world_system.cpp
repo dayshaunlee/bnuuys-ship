@@ -74,6 +74,7 @@ GLFWwindow* WorldSystem::create_window() {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_TRUE);
+
 #if __APPLE__
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 #endif
@@ -233,6 +234,32 @@ void WorldSystem::handle_collisions() {
             // Play sound
             Mix_PlayChannel(-1, projectile_enemy_collision, 0);
         }
+
+        // todo laser: add sound
+        // create laser beam collision with enemy: note one laser beam can have collision with multiple enemies at the same time
+        if (registry.laserBeams.has(e1) && registry.enemies.has(e2)) {
+            LaserBeam& beam = registry.laserBeams.get(e1);
+            Enemy& enemy = registry.enemies.get(e2);
+
+            enemy.health -= beam.damage;
+
+            if (enemy.health <= 0) registry.remove_all_components_of(e2);
+            // registry.remove_all_components_of(e1);
+            // Play sound
+            // Mix_PlayChannel(-1, projectile_enemy_collision, 0);
+
+        } else if (registry.laserBeams.has(e2) && registry.enemies.has(e1)) {
+            LaserBeam& beam = registry.laserBeams.get(e2);;
+            Enemy& enemy = registry.enemies.get(e1);
+
+            enemy.health -= beam.damage;
+            if (enemy.health <= 0) registry.remove_all_components_of(e1);
+
+            // registry.remove_all_components_of(e2);
+            // Play sound
+            // Mix_PlayChannel(-1, projectile_enemy_collision, 0);
+        } 
+
 
         // Projectile - Bunny collision
         if (registry.playerProjectiles.has(e1) && registry.bunnies.has(e2) && registry.bunnies.get(e2).is_jailed) {

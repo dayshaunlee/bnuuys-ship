@@ -33,18 +33,11 @@ void MainMenuScene::Init() {
         SceneManager::getInstance().switchScene("Level 1");
     });
 
-    auto txt = std::make_shared<bnuui::TextLabel>(vec2(0,50), 2.0f, "HEllo");
-
     scene_ui.insert(bg);
     scene_ui.insert(play_btn);
     scene_ui.insert(tutorial_btn);
     scene_ui.insert(txt);
 
-    // std::ifstream file("../data/level_save.json");
-    // if (!file.is_open()) {
-    //     std::cerr << "Failed to open file." << std::endl;
-    //     return;
-    // }
     if (!std::filesystem::is_empty("../data/level_save.json")) {
         auto continue_btn = std::make_shared<bnuui::ContinueButton>(vec2((WINDOW_WIDTH_PX/2) - 180, 0.8*WINDOW_HEIGHT_PX + 90), vec2(300, 100), 0.0f);
         continue_btn->setOnClick([](bnuui::Element& e) {
@@ -59,6 +52,7 @@ void MainMenuScene::Init() {
         });
         scene_ui.insert(continue_btn);
     }
+
 }
 
 void MainMenuScene::Exit() {

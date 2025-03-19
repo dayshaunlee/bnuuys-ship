@@ -236,22 +236,6 @@ Entity createBunny(RenderSystem* renderer, vec2 position) {
     return entity;
 }
 
-Entity createWaterBackground() {
-    // create the water entity
-    Entity waterbg = Entity();
-    registry.backgroundObjects.emplace(waterbg);
-    Motion& waterMotion = registry.motions.emplace(waterbg);
-
-    waterMotion.position.x = WINDOW_WIDTH_PX / 2;
-    waterMotion.position.y = WINDOW_HEIGHT_PX / 2;
-    waterMotion.scale.x = WINDOW_WIDTH_PX * 1.5f;
-    waterMotion.scale.y = WINDOW_HEIGHT_PX * 1.5f;
-
-    registry.renderRequests.insert(
-        waterbg, {TEXTURE_ASSET_ID::WATER_BACKGROUND, EFFECT_ASSET_ID::TEXTURED, GEOMETRY_BUFFER_ID::SPRITE});
-    return waterbg;
-}
-
 Entity createCannonProjectile(vec2 orig, vec2 dest) {
     Entity e;
     Motion& m = registry.motions.emplace(e);
@@ -335,6 +319,63 @@ Entity createCannon(vec2 tile_pos) {
     return cannon;
 }
 
+Entity createLaserWeapon(vec2 tile_pos){
+    Entity laser;
+    LaserWeapon& laser_weapon = registry.laserWeapons.emplace(laser);
+    laser_weapon.is_automated = false;
+    laser_weapon.timer_ms = 0; 
+
+    Motion& motion = registry.motions.emplace(laser);
+    vec2 world_pos = TileToVector2(tile_pos.x, tile_pos.y);
+    motion.position.x = world_pos.x;
+    motion.position.y = world_pos.y;
+
+    motion.scale = {GRID_CELL_WIDTH_PX, GRID_CELL_HEIGHT_PX};
+
+    registry.renderRequests.insert(
+        laser, {TEXTURE_ASSET_ID::LASER_WEAPON0, EFFECT_ASSET_ID::TEXTURED, GEOMETRY_BUFFER_ID::SPRITE});
+
+    return laser;
+}
+
+std::vector<Entity> createLaserBeam(vec2 orig, vec2 dest) {
+    std::vector<Entity> beams = {};
+    vec2 positionToRender = orig + normalize(dest - orig)*15.f;
+
+    for (int i = 0; i< 33; i++){
+        Entity e;
+        beams.push_back(e);
+        LaserBeam& beam = registry.laserBeams.emplace(e);
+        beam.damage = 20;
+        beam.alive_time_ms = LASER_LIFETIME;
+        beam.prevCamPos = CameraSystem::GetInstance()->position;
+
+        Motion& m = registry.motions.emplace(e);
+        positionToRender += normalize(dest - orig)*20.f;
+        m.position = positionToRender - CameraSystem::GetInstance()->position;
+
+        m.scale = vec2(20, 20);
+        // m.angle = degrees(atan2(dest.y - m.position.y, dest.x - m.position.x)) + 90.0f;
+        m.angle = degrees(atan2(dest.y - orig.y, dest.x - orig.x)) + 90.0f;
+        m.velocity = {0, 0};
+
+        registry.backgroundObjects.emplace(e);
+        registry.renderRequests.insert(
+            e, {TEXTURE_ASSET_ID::LASER_BEAM, EFFECT_ASSET_ID::TEXTURED, GEOMETRY_BUFFER_ID::SPRITE});
+
+        // TODO: Play sound for the laser beam
+        if (projectile_shoot == nullptr) {
+            // projectile_shoot = Mix_LoadWAV(audio_path("projectile_shoot.wav").c_str());
+        }
+        // Mix_PlayChannel(-1, projectile_shoot, 0);
+    }
+    return beams;
+}
+
+
+
+
+
 void initializeShipModules(Ship& ship) {
     auto tmp_modules = std::vector<std::vector<MODULE_TYPES>>(ROW_COUNT, std::vector<MODULE_TYPES>(COL_COUNT, EMPTY));
 
@@ -360,8 +401,36 @@ void initializeShipModules(Ship& ship) {
     Entity cannon_entity = createCannon(SimpleCannonGridPos);
     tmp_entities[SimpleCannonGridPos.y][SimpleCannonGridPos.x] = cannon_entity;
 
+    // TODO lily: delete later, this is just for testing
+    vec2 laserGridPos = {MIDDLE_GRID_X + 1, MIDDLE_GRID_Y - 1};
+    tmp_modules[laserGridPos.y][laserGridPos.x] = LASER_WEAPON;
+    Entity laser_entity = createLaserWeapon(laserGridPos);
+    tmp_entities[laserGridPos.y][laserGridPos.x] = laser_entity; 
+
     ship.ship_modules = tmp_modules;
     ship.ship_modules_entity = tmp_entities;
+}
+
+Entity createWaterBackground(int offset_x, int offset_y) {
+    // water background is fixed at 192 x 144 tiles
+    int width = 192 * GRID_CELL_WIDTH_PX;
+    int height = 144 * GRID_CELL_HEIGHT_PX;
+
+    // create the water entity
+    Entity waterbg = Entity();
+    registry.backgroundObjects.emplace(waterbg);
+    Motion& waterMotion = registry.motions.emplace(waterbg);
+    offset_x -= WINDOW_WIDTH_PX / 2 - width / 2;
+    offset_y -= WINDOW_HEIGHT_PX / 2 - height / 2;
+
+    waterMotion.position.x = WINDOW_WIDTH_PX / 2 + offset_x;
+    waterMotion.position.y = WINDOW_HEIGHT_PX / 2 + offset_y;
+    waterMotion.scale.x = width;
+    waterMotion.scale.y = height;
+
+    registry.renderRequests.insert(
+        waterbg, {TEXTURE_ASSET_ID::WATER_BACKGROUND, EFFECT_ASSET_ID::TEXTURED, GEOMETRY_BUFFER_ID::SPRITE});
+    return waterbg;
 }
 
 Entity createIslandBackground(int width, int height, int offset_x, int offset_y, TEXTURE_ASSET_ID island_texture) {
@@ -373,7 +442,6 @@ Entity createIslandBackground(int width, int height, int offset_x, int offset_y,
     offset_y -= WINDOW_HEIGHT_PX / 2 - height / 2;
     islMotion.position.x = WINDOW_WIDTH_PX / 2 + offset_x;
     islMotion.position.y = WINDOW_HEIGHT_PX / 2 + offset_y;
-    std::cout << "offset: " << offset_x << ", " << offset_y << std::endl;
     islMotion.scale.x = width;
     islMotion.scale.y = height;
 
@@ -428,6 +496,8 @@ Entity createShip() {
     // registry.renderRequests.insert(
     //     entity, {TEXTURE_ASSET_ID::TEXTURE_COUNT, EFFECT_ASSET_ID::EGG, GEOMETRY_BUFFER_ID::SHIP_SQUARE});
 
+    RenderLayer& render_layer = registry.renderLayers.emplace(entity);
+    render_layer.layer = 2;
     registry.renderRequests.insert(
         entity, {TEXTURE_ASSET_ID::RAFT, EFFECT_ASSET_ID::TEXTURED, GEOMETRY_BUFFER_ID::SPRITE});
 
@@ -489,10 +559,8 @@ Entity createFilledTile(vec2 position, vec2 size)
 }
 
 // TODO: refactor this after map include disasters
-Entity createDisaster(vec2 position, DISASTER_TYPE type) {
-    auto entity = Entity();
-    registry.backgroundObjects.emplace(entity);
-
+Entity createDisaster(Entity entity) {
+    // added to background object in map_init
     std::random_device dev;
     std::mt19937 rng(dev());
     std::uniform_int_distribution<std::mt19937::result_type> dist(0, 1); // int distribution in range [0, 1]
@@ -500,35 +568,40 @@ Entity createDisaster(vec2 position, DISASTER_TYPE type) {
     int random_signX = dist(rng) == 0 ? 1 : -1;
     int random_signY = dist(rng) == 0 ? 1 : -1;
 
-    Motion& motion = registry.motions.emplace(entity);
-    Disaster& disaster = registry.disasters.emplace(entity);
-    disaster.type = type;
+    Motion& motion = registry.motions.get(entity);
+    Disaster& disaster = registry.disasters.get(entity);
     disaster.alive_time_ms = DISASTER_LIFETIME;
-
+    
     switch (disaster.type) {
-        case TORNADO:
+        case TORNADO: {
             disaster.speed = 100;
             disaster.damage = 0.1;
 
             motion.velocity = {disaster.speed * random_signX, disaster.speed * random_signY};
             motion.scale = {168, 168};
 
-            registry.renderRequests.insert(entity,
-                {TEXTURE_ASSET_ID::TORNADO0, EFFECT_ASSET_ID::TEXTURED, GEOMETRY_BUFFER_ID::SPRITE});
+            RenderLayer& render_layer_tornado = registry.renderLayers.emplace(entity);
+            render_layer_tornado.layer = 3;
+            registry.renderRequests.insert(
+                entity, {TEXTURE_ASSET_ID::TORNADO0, EFFECT_ASSET_ID::TEXTURED, GEOMETRY_BUFFER_ID::SPRITE});
+
             break;
-        case WHIRLPOOL:
+        }
+        case WHIRLPOOL: {
             disaster.speed = 0;
             disaster.damage = 0.1;
 
             motion.scale = {168, 112};
 
-            registry.renderRequests.insert(entity,
-                {TEXTURE_ASSET_ID::WHIRLPOOL0, EFFECT_ASSET_ID::TEXTURED, GEOMETRY_BUFFER_ID::SPRITE});
+            RenderLayer& render_layer_wp = registry.renderLayers.emplace(entity);
+            render_layer_wp.layer = 1;
+            registry.renderRequests.insert(
+                entity, {TEXTURE_ASSET_ID::WHIRLPOOL0, EFFECT_ASSET_ID::TEXTURED, GEOMETRY_BUFFER_ID::SPRITE});
+        }
             break;
     };
 
     motion.angle = 0.f;
-    motion.position = position;
 
     return entity;
 }
