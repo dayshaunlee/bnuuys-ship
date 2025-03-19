@@ -180,6 +180,9 @@ void GameLevel::Exit() {
     while (registry.simpleCannons.entities.size() > 0){
         registry.remove_all_components_of(registry.simpleCannons.entities.back());
     }
+    while (registry.cannonModifiers.entities.size() > 0){
+        registry.remove_all_components_of(registry.simpleCannons.entities.back());
+    }
     // while (registry.projectiles.entities.size() > 0){
     //     registry.remove_all_components_of(registry.projectiles.entities.back());
     // }
@@ -309,6 +312,7 @@ void HandlePlayerStationing(vec2 tile_pos) {
         case SIMPLE_CANNON:
         case LASER_WEAPON:
             player_comp.player_state = STATIONING;
+        case BUBBLE_MOD:
     }
     player_comp.player_state = STATIONING;
 }
@@ -487,8 +491,13 @@ void GameLevel::HandleMouseClick(int button, int action, int mods) {
                     SimpleCannon& sc = registry.simpleCannons.get(cannon_entity);
                     if (sc.timer_ms <= 0) {
                         vec2 cannon_pos = registry.motions.get(cannon_entity).position;
-                        createCannonProjectile(cannon_pos, l1_mouse_pos);
-                        sc.timer_ms = SIMPLE_CANNON_COOLDOWN;
+                        // createCannonProjectile(cannon_pos, l1_mouse_pos);
+                        if (sc.is_modified) {
+                            CannonModifier cm = registry.cannonModifiers.get(cannon_entity);
+                            createModifiedCannonProjectile(cannon_pos, l1_mouse_pos, cm);
+                        } else {
+                            createCannonProjectile(cannon_pos, l1_mouse_pos);
+                        }
                     }
                     return;
                 }
@@ -516,7 +525,7 @@ void GameLevel::HandleMouseClick(int button, int action, int mods) {
             return;
         }
 
-        if (module == PLATFORM && curr_selected != HELPER_BUNNY) {
+        if (module == PLATFORM && curr_selected != HELPER_BUNNY && curr_selected != BUBBLE_MOD) {
             ship.ship_modules[tile_pos.y][tile_pos.x] = curr_selected;
             Entity e;
             switch (curr_selected) {
@@ -562,6 +571,26 @@ void GameLevel::HandleMouseClick(int button, int action, int mods) {
                     break;
                 }
             }
+        } else if (curr_selected == BUBBLE_MOD && module != EMPTY && module != PLATFORM) {
+            switch (module) {
+                case SIMPLE_CANNON: {
+                    SimpleCannon& sc = registry.simpleCannons.get(ship.ship_modules_entity[tile_pos.y][tile_pos.x]);
+                    if (!sc.is_modified) {
+                        ship.available_modules[curr_selected]--;
+                        modifyCannon(ship.ship_modules_entity[tile_pos.y][tile_pos.x], BUBBLE);
+                    }
+                    break;
+                }
+                case LASER_WEAPON: {
+                    break;
+                }
+
+                default: {
+                    break;
+                }
+            }
+        
+        
         }
     }
 
@@ -582,6 +611,13 @@ void GameLevel::HandleMouseClick(int button, int action, int mods) {
                     unStationBunny();
                     break;
                 }
+
+                if (sc.is_modified) {
+                    ship.available_modules[BUBBLE_MOD]++;
+                    sc.is_modified = false;
+                    break;
+                }
+
                 RemoveStation(tile_pos, module); 
                 break;
             }
