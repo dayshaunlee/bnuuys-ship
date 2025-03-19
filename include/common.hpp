@@ -126,5 +126,8 @@ const float SHIP_CAMERA_SPEED = 100.0f;
 const float SIMPLE_CANNON_COOLDOWN = 1000.0f;   // 1 second
 const float SIMPLE_CANNON_DAMAGE = 10.0f;
 const float PROJECTILE_LIFETIME = 2000.0f;      // Bullets have 5 seconds before getting removed.
+const float LASER_LIFETIME = 200.0f;
+const int LASER_LENGTH_IN_NUM = 3; // This is how many 50 pixles laser beam we render to stack
+const float LASER_COOLDOWN = 1000.0f;   // 1 second
 
 const float BUNNY_BASE_DROPOFF_TIME = 1000.0f;  // ship must be in base for 1 second before the bunnies get dropped off

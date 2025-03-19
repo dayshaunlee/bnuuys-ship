@@ -39,7 +39,6 @@ class RenderSystem {
     std::array<ivec2, texture_count> texture_dimensions;
 
 	GLuint m_VAO;
-	GLuint m_VBO;
 
 	// fonts
 	std::map<char, Character> m_ftCharacters;
@@ -207,7 +206,11 @@ class RenderSystem {
 
         // tutorial buttons
         textures_path("ui/buttons/tutorial_neutral.png"),
-        textures_path("ui/buttons/tutorial_clicked.png")
+        textures_path("ui/buttons/tutorial_clicked.png"),
+
+        textures_path("cannons/laser_weapon.png"),
+
+        textures_path("cannons/laser_beam.png")
     };
 
     std::array<GLuint, effect_count> effects;

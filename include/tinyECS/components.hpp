@@ -212,9 +212,13 @@ enum class TEXTURE_ASSET_ID {
     UPGRADE_TITLE = NEXT_LEVEL_BG + 1,
 
     TUTORIAL_BUTTON_NORMAL = UPGRADE_TITLE + 1,
-    TUTORIAL_BUTTON_CLICKED = TUTORIAL_BUTTON_NORMAL + 1, 
+    TUTORIAL_BUTTON_CLICKED = TUTORIAL_BUTTON_NORMAL + 1,
+
+    LASER_WEAPON0 = TUTORIAL_BUTTON_CLICKED + 1,
+
+    LASER_BEAM = LASER_WEAPON0 + 1,
     
-    TEXTURE_COUNT = TUTORIAL_BUTTON_CLICKED + 1
+    TEXTURE_COUNT = LASER_BEAM + 1
 };
 
 const int texture_count = (int) TEXTURE_ASSET_ID::TEXTURE_COUNT;
@@ -248,8 +252,8 @@ enum class GEOMETRY_BUFFER_ID {
     EGG = SPRITE + 1,
     DEBUG_LINE = EGG + 1,
     SCREEN_TRIANGLE = DEBUG_LINE + 1,
-    SHIP_SQUARE = SCREEN_TRIANGLE + 1,
-    UI_SQUARE = SHIP_SQUARE + 1,
+    LASER_SQUARE = SCREEN_TRIANGLE + 1,
+    UI_SQUARE = LASER_SQUARE + 1,
     GEOMETRY_COUNT = UI_SQUARE + 1
 };
 const int geometry_count = (int) GEOMETRY_BUFFER_ID::GEOMETRY_COUNT;
@@ -288,6 +292,7 @@ enum PLAYERSTATE {
     IDLE,
     WALKING,
     STATIONING,
+    BUILDING
 };
 
 // Player component
@@ -323,10 +328,29 @@ enum MODULE_TYPES {
     PLATFORM,
     STEERING_WHEEL,
     SIMPLE_CANNON,
-    FAST_CANNON,
-
+    LASER_WEAPON,
     HELPER_BUNNY,
 };
+
+inline TEXTURE_ASSET_ID getTextureFromModuleType(MODULE_TYPES module){
+    switch (module)
+    {
+    case MODULE_TYPES::SIMPLE_CANNON :
+        return TEXTURE_ASSET_ID::SIMPLE_CANNON01;
+    case MODULE_TYPES::PLATFORM :
+        return TEXTURE_ASSET_ID::RAFT;
+    case MODULE_TYPES::HELPER_BUNNY :
+        return TEXTURE_ASSET_ID::BUNNY_NPC_IDLE_UP0;
+    case MODULE_TYPES::STEERING_WHEEL :
+        return TEXTURE_ASSET_ID::SQUARE_3_CLICKED;
+    case MODULE_TYPES::LASER_WEAPON :
+        return TEXTURE_ASSET_ID::LASER_WEAPON0;
+    default:
+        std::cout << "This is not a valid module" << std::endl;
+        return TEXTURE_ASSET_ID::WATER_BACKGROUND; 
+    }
+
+}
 
 struct SteeringWheel {
     bool is_automated;
@@ -345,6 +369,18 @@ struct EnemyProjectile {
 struct SimpleCannon {
     bool is_automated;
     float timer_ms; // The cooldown period before another shot.
+};
+
+struct LaserWeapon {
+    bool is_automated;
+    float timer_ms;
+    float maxLoadTime_ms = 1500;
+};
+
+struct LaserBeam {
+    float damage;
+    float alive_time_ms;
+    vec2 prevCamPos;
 };
 
 struct Ship {
@@ -394,6 +430,8 @@ struct Bunny {
     bool on_ship;
     bool on_base;
     bool moving_to_base;
+
+    bool on_module;
 
     float jail_health;  // 0 if is_jailed is false
     int timer_ms;   // field reserved for animation 

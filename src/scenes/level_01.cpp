@@ -13,8 +13,9 @@ Level01::Level01(WorldSystem* world_system, std::string map_filename, TEXTURE_AS
     this->level_path = map_filename; 
     this->bunnies_to_win = 0;
     this->texture = texture;
+    //TODO: need to see if we should put platform and laser in level 1 in the actual game, ok for now
     GachaSystem::getInstance().setLevelPool(
-        1, {MODULE_TYPES::SIMPLE_CANNON, MODULE_TYPES::HELPER_BUNNY, MODULE_TYPES::PLATFORM});
+        1, {MODULE_TYPES::SIMPLE_CANNON, MODULE_TYPES::PLATFORM, MODULE_TYPES::LASER_WEAPON});
 }
 
 Level01::~Level01() {}
