@@ -8,6 +8,10 @@
 #include "common.hpp"
 #include "sceneManager/scene_manager.hpp"
 #include "tinyECS/components.hpp"
+#include "saveload_system.hpp"
+#include <filesystem>
+
+namespace fs = std::filesystem;
 
 MainMenuScene::MainMenuScene() {
     this->name = "Main Menu";
@@ -20,6 +24,7 @@ void MainMenuScene::Init() {
     auto bg = std::make_shared<bnuui::Box>(vec2((WINDOW_WIDTH_PX/2), WINDOW_HEIGHT_PX/2), vec2(WINDOW_WIDTH_PX*1.25f, WINDOW_HEIGHT_PX), 0.0f);
 
     bg->texture = TEXTURE_ASSET_ID::MAIN_MENU_BG;
+
     tutorial_btn->setOnClick([](bnuui::Element& e) {
         SceneManager::getInstance().switchScene("Tutorial Level");
     });
@@ -31,6 +36,23 @@ void MainMenuScene::Init() {
     scene_ui.insert(bg);
     scene_ui.insert(play_btn);
     scene_ui.insert(tutorial_btn);
+    scene_ui.insert(txt);
+
+    if (!std::filesystem::is_empty("../data/level_save.json")) {
+        auto continue_btn = std::make_shared<bnuui::ContinueButton>(vec2((WINDOW_WIDTH_PX/2) - 180, 0.8*WINDOW_HEIGHT_PX + 90), vec2(300, 100), 0.0f);
+        continue_btn->setOnClick([](bnuui::Element& e) {
+            SaveLoadSystem& saveLoadSystem = SaveLoadSystem::getInstance();
+            GameData gameData;
+            saveLoadSystem.loadGame(gameData, "level_save.json");
+            std::cout << "game loaded" << std::endl;
+            saveLoadSystem.loadedGameData = gameData;
+            saveLoadSystem.hasLoadedData = true;
+    
+            SceneManager::getInstance().switchScene(gameData.levelName);
+        });
+        scene_ui.insert(continue_btn);
+    }
+
 }
 
 void MainMenuScene::Exit() {

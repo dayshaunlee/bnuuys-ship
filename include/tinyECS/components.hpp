@@ -52,6 +52,9 @@ struct DebugComponent {
 };
 
 // used to hold grid line start and end positions
+// Dayshaun: start_pos is not actually the start of the line, and end_pos is not actually the end position of the line.
+// start_pos = {coords of the middle of the line}
+// end_pos   = {width of the line, height of the line} (basically SCALE)
 struct GridLine {
     vec2 start_pos = {0, 0};
     vec2 end_pos = {10, 10};  // default to diagonal line
@@ -214,10 +217,12 @@ enum class TEXTURE_ASSET_ID {
     UPGRADE_TITLE = NEXT_LEVEL_BG + 1,
 
     TUTORIAL_BUTTON_NORMAL = UPGRADE_TITLE + 1,
-    TUTORIAL_BUTTON_CLICKED = TUTORIAL_BUTTON_NORMAL + 1,
+    TUTORIAL_BUTTON_CLICKED = TUTORIAL_BUTTON_NORMAL + 1, 
 
-    LASER_WEAPON0 = TUTORIAL_BUTTON_CLICKED + 1,
+    CONTINUE_BUTTON_NORMAL = TUTORIAL_BUTTON_CLICKED + 1,
+    CONTINUE_BUTTON_CLICKED = CONTINUE_BUTTON_NORMAL + 1,
 
+    LASER_WEAPON0 = CONTINUE_BUTTON_CLICKED + 1,
     LASER_BEAM = LASER_WEAPON0 + 1,
     
     TEXTURE_COUNT = LASER_BEAM + 1
@@ -236,6 +241,18 @@ enum class EFFECT_ASSET_ID {
 };
 const int effect_count = (int) EFFECT_ASSET_ID::EFFECT_COUNT;
 
+enum class SOUND_ASSET_ID {
+    BACKGROUND_MUSIC,
+    ENEMY_INCOMING,
+    ISLAND_SHIP_COLLISION,
+    ENEMY_SHIP_COLLISION,
+    PROJECTILE_ENEMY_COLLISION,
+    PROJECTILE_JAIL_COLLISION,
+    GAME_OVER,
+    SOUND_COUNT
+};
+const int sound_count = (int) SOUND_ASSET_ID::SOUND_COUNT;
+
 enum class GEOMETRY_BUFFER_ID {
     CHICKEN = 0,
     SPRITE = CHICKEN + 1,
@@ -253,6 +270,12 @@ struct RenderRequest {
     EFFECT_ASSET_ID used_effect = EFFECT_ASSET_ID::EFFECT_COUNT;
     GEOMETRY_BUFFER_ID used_geometry = GEOMETRY_BUFFER_ID::GEOMETRY_COUNT;
 };
+
+struct Sound {
+    SOUND_ASSET_ID sound_type = SOUND_ASSET_ID::ENEMY_INCOMING;
+    bool is_repeating = false;
+};
+
 
 /* for ordering of rendering. so far (add to comment to keep track):
 1 = whirlpool
@@ -397,6 +420,7 @@ struct Enemy {
 	int timer_ms; // for sprite animation
     int range = 10;
     float speed;
+    int cooldown_ms; // cooldown for enemy projectile
 };
 
 struct EnemySpawner {
@@ -432,7 +456,7 @@ struct Bunny {
     int timer_ms;   // field reserved for animation 
 };
 
-// ========= OBSTACLE DETALS =========
+// ========= OBSTACLE DETAILS =========
 struct Disaster {
     DISASTER_TYPE type;
 	float timer_ms;

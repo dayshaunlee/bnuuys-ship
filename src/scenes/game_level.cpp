@@ -18,6 +18,7 @@
 #include "world_init.hpp"
 #include "bnuui/buttons.hpp"
 #include "map_init.hpp"
+#include "saveload_system.hpp"
 
 /*
  *   Place 'local' scene vars here just so it's easy to manage.
@@ -69,9 +70,24 @@ void GameLevel::Init() {
     std::cout << mapSize.x << ", " << mapSize.y << std::endl;
 
     // create the ocean background and then ship
-    createWaterBackground(map_offset.x, map_offset.y);
+    createWaterBackground();
     createIslandBackground(mapSize.x, mapSize.y, map_offset.x, map_offset.y, texture);
+    
     createShip();
+    assert(registry.base.entities.size() > 0);
+    // stored from top left -> clockwise
+    base_corners = createBaseProgressLines(registry.base.entities[0]);
+
+    if (SaveLoadSystem::getInstance().hasLoadedData) {
+        GameData gd = SaveLoadSystem::getInstance().loadedGameData;
+        Ship& ship = registry.ships.components[0];
+        ship.health = gd.ship_health;
+        ship.maxHealth = gd.ship_maxHealth;
+        ship.ship_modules = gd.used_modules;
+        ship.available_modules = gd.unused_modules;
+
+        std::cout << "loaded saved ship" << std::endl;
+    }
 
     // render player
     renderPlayer(player);
@@ -182,6 +198,9 @@ void GameLevel::Exit() {
     }
     while (registry.cannonModifiers.entities.size() > 0){
         registry.remove_all_components_of(registry.simpleCannons.entities.back());
+    }
+    while (registry.sounds.entities.size() > 0) {
+        registry.remove_all_components_of(registry.sounds.entities.back());
     }
     // while (registry.projectiles.entities.size() > 0){
     //     registry.remove_all_components_of(registry.projectiles.entities.back());
@@ -644,12 +663,83 @@ void GameLevel::HandleMouseClick(int button, int action, int mods) {
     LevelHandleMouseClick(button, action, mods);
 }
 
+
+/* Update the four lines of the progress bar
+* 
+*   when a side is full, we add half the width to the length
+    so there are no gaps in the corners
+
+    setting end_pos to (0, 0) effectively makes it invisible
+*/
+void GameLevel::UpdateDropoffProgressBar() {
+    assert(registry.base.entities.size() == 1 && base_corners.size() == 4);
+    Entity& base_entity = registry.base.entities[0];
+    Motion& base_motion = registry.motions.get(base_entity);
+
+    // percentage value from 0 to 1 of dropoff time
+    float dropoffProgress = registry.base.get(base_entity).drop_off_timer / BUNNY_BASE_DROPOFF_TIME;
+
+    float base_width = base_motion.scale.x, base_height = base_motion.scale.y;
+    float base_perimeter = 2 * (base_width + base_height);
+
+    std::vector<tson::Vector2i> original_corners = get_poly_from_motion(base_motion);
+
+    GridLine& lineUL = registry.gridLines.get(base_corners[0]);
+    GridLine& lineUR = registry.gridLines.get(base_corners[1]);
+    GridLine& lineBR = registry.gridLines.get(base_corners[2]);
+    GridLine& lineBL = registry.gridLines.get(base_corners[3]);
+
+    auto setLine = [](GridLine& line, vec2 start, vec2 end) {
+        line.start_pos = start;
+        line.end_pos = end;
+    };
+
+    // percentage thresholds for each side
+    float thresholds[] = {base_width / base_perimeter,
+                          (base_width + base_height) / base_perimeter,
+                          (2 * base_width + base_height) / base_perimeter,
+                          1.0f};
+
+    float new_length = dropoffProgress * base_perimeter;
+
+    setLine(lineUL,
+            {original_corners[0].x + std::min(new_length, base_width) / 2, original_corners[0].y},
+            {std::min(new_length, base_width) + PROGRESS_BAR_LINE_WIDTH_PX / 2, PROGRESS_BAR_LINE_WIDTH_PX});
+    setLine(
+        lineUR,
+        (dropoffProgress > thresholds[0])
+            ? vec2(original_corners[1].x, original_corners[1].y + std::min(new_length - base_width, base_height) / 2)
+            : vec2(0, 0),
+        (dropoffProgress > thresholds[0])
+            ? vec2(PROGRESS_BAR_LINE_WIDTH_PX, std::min(new_length - base_width, base_height))
+            : vec2(0, 0));
+    setLine(lineBR,
+            (dropoffProgress > thresholds[1])
+                ? vec2(original_corners[2].x - std::min(new_length - base_width - base_height, base_width) / 2,
+                       original_corners[2].y)
+                : vec2(0, 0),
+            (dropoffProgress > thresholds[1])
+                ? vec2(std::min(new_length - base_width - base_height, base_width) + PROGRESS_BAR_LINE_WIDTH_PX / 2,
+                       PROGRESS_BAR_LINE_WIDTH_PX)
+                : vec2(0, 0));
+    setLine(lineBL,
+            (dropoffProgress > thresholds[2])
+                ? vec2(original_corners[3].x,
+                       original_corners[3].y - std::min(new_length - 2 * base_width - base_height, base_height) / 2)
+                : vec2(0, 0),
+            (dropoffProgress > thresholds[2])
+                ? vec2(PROGRESS_BAR_LINE_WIDTH_PX, std::min(new_length - 2 * base_width - base_height, base_height))
+                : vec2(0, 0));
+}
+
+
 void GameLevel::RemoveStation(vec2 tile_pos, MODULE_TYPES module){
     Ship& ship = registry.ships.components[0];
     ship.ship_modules[tile_pos.y][tile_pos.x] = PLATFORM;
     registry.remove_all_components_of(ship.ship_modules_entity[tile_pos.y][tile_pos.x]);
     ship.available_modules[module]++; 
 }
+
 
 void GameLevel::Update(float dt) {
     if(!RenderSystem::isRenderingGacha && registry.players.components[0].player_state != BUILDING){
@@ -716,6 +806,8 @@ void GameLevel::Update(float dt) {
             }
         }
     }
+
+    UpdateDropoffProgressBar();
 
     scene_ui.update(dt);
 

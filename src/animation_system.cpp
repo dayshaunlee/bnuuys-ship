@@ -223,8 +223,9 @@ void HandleBunnyAnimation(float elapsed_ms) {
         // bunny -> base
         vec2& bunny_position = bunny_motion.position;
         Entity& base_entity = registry.base.entities[0];
-        vec2 empty_base_location = registry.motions.get(base_entity).position;
-        empty_base_location += vec2(GRID_CELL_WIDTH_PX, GRID_CELL_HEIGHT_PX);
+        vec2 empty_base_location = registry.motions.get(base_entity).position - (registry.motions.get(base_entity).scale / vec2(2, 2));
+        // the bunny house is (2.5, 3) tiles from the top left corner of the base
+        empty_base_location += vec2(GRID_CELL_WIDTH_PX * 2.5, GRID_CELL_HEIGHT_PX * 3);
 
         // set bunny flags if it should start moving to the base from the ship
         if (!bunny.is_jailed && bunny.on_ship && !bunny.moving_to_base &&
@@ -256,6 +257,9 @@ void HandleBunnyAnimation(float elapsed_ms) {
                 base.bunny_count += 1;
                 bunny_motion.velocity = {0, 0};
                 std::cout << "bunny: " << bunny_position.x << ", " << bunny_position.y << std::endl;
+                // remove bunny to make it look like it disappeared into the house
+                // also saves computing resources
+                registry.remove_all_components_of(entity);
             }
         }
     }
@@ -287,11 +291,14 @@ void HandleEnemyAnimation(float elapsed_ms) {
                 texture = TEXTURE_ASSET_ID::BALLOON1;
             }
         } else if (enemy.type == ENEMY_TYPE::SHOOTER) {
+            enemy.cooldown_ms -= elapsed_ms;
             if (enemy.timer_ms <= 0) {
-                enemy.timer_ms = 1 * ANIMATION_TIME;
+                enemy.timer_ms = 1.5 * ANIMATION_TIME;
                 texture = TEXTURE_ASSET_ID::COW0;
             } else if (enemy.timer_ms <= 0.5 * ANIMATION_TIME) {
                 texture = TEXTURE_ASSET_ID::COW1;
+            } else if (enemy.timer_ms <= 1 * ANIMATION_TIME) {
+                texture = TEXTURE_ASSET_ID::COW2;
             }
         }
 

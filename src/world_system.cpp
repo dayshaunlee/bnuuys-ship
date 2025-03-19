@@ -231,7 +231,9 @@ void WorldSystem::handle_collisions() {
             if (enemy.health <= 0) registry.remove_all_components_of(e2);
             registry.remove_all_components_of(e1);
             // Play sound
-            Mix_PlayChannel(-1, projectile_enemy_collision, 0);
+            Entity sound_entity = Entity();
+            registry.sounds.emplace(sound_entity);
+            //Mix_PlayChannel(-1, projectile_enemy_collision, 0);
 
         } else if (registry.playerProjectiles.has(e2) && registry.enemies.has(e1)) {
             PlayerProjectile& projectile = registry.playerProjectiles.get(e2);

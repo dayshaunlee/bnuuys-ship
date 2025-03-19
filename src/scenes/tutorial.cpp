@@ -12,13 +12,14 @@
 #include "world_init.hpp"
 #include "world_system.hpp"
 #include "gacha_system.hpp"
+#include "saveload_system.hpp"
 
 TutorialLevel::TutorialLevel(WorldSystem* world_system, std::string map_filename, TEXTURE_ASSET_ID texture) : GameLevel(world_system) {
     this->name = "Tutorial Level";
     this->level_path = map_filename;
     this->texture = texture;
     GachaSystem::getInstance().setLevelPool(
-        0, {MODULE_TYPES::HELPER_BUNNY});
+        0, {MODULE_TYPES::SIMPLE_CANNON});
 }
 
 TutorialLevel::~TutorialLevel() {}
@@ -89,12 +90,12 @@ void TutorialLevel::LevelUpdate(float dt) {
     }
 
     if (curr_tutorial_phase == SAVE_BUNNIES) {
-        if (registry.bunnies.components[0].on_ship) {
+        if (registry.base.components[0].bunny_count > 0) {
             curr_tutorial_phase = GOTO_BASE;
         }
     }
 
-    if (registry.bunnies.components[0].on_base) {
+    if (registry.base.components[0].bunny_count > 0) {
         // Skip tutorial.
 
         if(upgradesReceived == 1){
@@ -102,6 +103,12 @@ void TutorialLevel::LevelUpdate(float dt) {
             sceneManager.setNextLevelScence("Level 1");
             std::cout << "Switching to next level scene.." << std::endl;
             sceneManager.switchScene("Next Level Scene");
+
+            SaveLoadSystem& saveLoadSystem = SaveLoadSystem::getInstance();
+            GameData gameData = saveLoadSystem.createGameData("Player1", "Level 1", registry.ships.components[0]);
+            saveLoadSystem.saveGame(gameData, "level_save.json");
+            std::cout << "tutorial saved" << std::endl;
+
             return;
         }
 

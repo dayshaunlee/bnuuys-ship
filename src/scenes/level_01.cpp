@@ -7,6 +7,7 @@
 #include "world_init.hpp"
 #include "world_system.hpp"
 #include "gacha_system.hpp"
+#include "saveload_system.hpp"
 
 Level01::Level01(WorldSystem* world_system, std::string map_filename, TEXTURE_ASSET_ID texture) : GameLevel(world_system) {
     this->name = "Level 1";
@@ -47,6 +48,12 @@ void Level01::LevelUpdate(float dt) {
         sceneManager.setNextLevelScence("Level 2");
         std::cout << "Switching to next level scene.." << std::endl;
         sceneManager.switchScene("Next Level Scene");
+
+        SaveLoadSystem& saveLoadSystem = SaveLoadSystem::getInstance();
+        GameData gameData = saveLoadSystem.createGameData("Player1", "Level 2", registry.ships.components[0]);
+        saveLoadSystem.saveGame(gameData, "level_save.json");
+        std::cout << "Level 1 saved" << std::endl;
+
         return;
     }
 

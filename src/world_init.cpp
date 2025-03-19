@@ -126,7 +126,7 @@ Entity createEnemy(Entity entity) {
     Enemy& comp_enemy = registry.enemies.emplace(enemy);
     comp_enemy.type = spawner.type;
     comp_enemy.health = getEnemyHealth(comp_enemy.type);
-    comp_enemy.range = spawner.range;
+    comp_enemy.range = getEnemyRange(comp_enemy.type);
     comp_enemy.timer_ms = 0;
     comp_enemy.is_mod_affected = false;
     comp_enemy.mod_effect_duration = 0;
@@ -159,6 +159,7 @@ Entity createEnemy(Entity entity) {
                 {TEXTURE_ASSET_ID::BALLOON0, EFFECT_ASSET_ID::TEXTURED, GEOMETRY_BUFFER_ID::SPRITE});
             break;
         case SHOOTER:
+            comp_enemy.cooldown_ms = ENEMY_PROJECTILE_COOLDOWN;
             motion.scale = {112, 56};
             registry.renderRequests.insert(
                 enemy,
@@ -298,18 +299,19 @@ Entity createModifiedCannonProjectile(vec2 orig, vec2 dest, CannonModifier cm) {
 // TODO: Change the stats and sprite
 Entity createEnemyProjectile(vec2 orig, vec2 dest) {
     Entity e;
+    registry.backgroundObjects.emplace(e);
     Motion& m = registry.motions.emplace(e);
-    m.position = orig;
+    m.position = orig - CameraSystem::GetInstance()->position;
     m.scale = {GRID_CELL_WIDTH_PX / 2, GRID_CELL_HEIGHT_PX / 2};
     m.angle = degrees(atan2(dest.y - dest.x, dest.x - orig.x));
     vec2 velVec = dest - orig;
-    m.velocity = normalize(velVec) * 50.0f;
+    m.velocity = normalize(velVec) * 200.0f;
 
     registry.renderRequests.insert(
-        e, {TEXTURE_ASSET_ID::BUNNY_FACE_ANGRY05, EFFECT_ASSET_ID::TEXTURED, GEOMETRY_BUFFER_ID::SPRITE});
+        e, {TEXTURE_ASSET_ID::BULLET_GREEN, EFFECT_ASSET_ID::TEXTURED, GEOMETRY_BUFFER_ID::SPRITE});
     
-        EnemyProjectile& proj = registry.enemyProjectiles.emplace(e);
-    proj.damage = SIMPLE_CANNON_DAMAGE;
+    EnemyProjectile& proj = registry.enemyProjectiles.emplace(e);
+    proj.damage = 5;
     proj.alive_time_ms = PROJECTILE_LIFETIME;
 
     return e;
@@ -468,7 +470,7 @@ void initializeShipModules(Ship& ship) {
     ship.ship_modules_entity = tmp_entities;
 }
 
-Entity createWaterBackground(int offset_x, int offset_y) {
+Entity createWaterBackground() {
     // water background is fixed at 192 x 144 tiles
     int width = 192 * GRID_CELL_WIDTH_PX;
     int height = 144 * GRID_CELL_HEIGHT_PX;
@@ -477,11 +479,9 @@ Entity createWaterBackground(int offset_x, int offset_y) {
     Entity waterbg = Entity();
     registry.backgroundObjects.emplace(waterbg);
     Motion& waterMotion = registry.motions.emplace(waterbg);
-    offset_x -= WINDOW_WIDTH_PX / 2 - width / 2;
-    offset_y -= WINDOW_HEIGHT_PX / 2 - height / 2;
 
-    waterMotion.position.x = WINDOW_WIDTH_PX / 2 + offset_x;
-    waterMotion.position.y = WINDOW_HEIGHT_PX / 2 + offset_y;
+    waterMotion.position.x = WINDOW_WIDTH_PX / 2;
+    waterMotion.position.y = WINDOW_HEIGHT_PX / 2;
     waterMotion.scale.x = width;
     waterMotion.scale.y = height;
 
@@ -583,6 +583,54 @@ Entity createGridLine(vec2 start_pos, vec2 end_pos) {
         entity, {TEXTURE_ASSET_ID::TEXTURE_COUNT, EFFECT_ASSET_ID::EGG, GEOMETRY_BUFFER_ID::DEBUG_LINE});
     registry.colors.insert(entity, vec3(0.8f, 0.8f, 0.8f));
     return entity;
+}
+
+
+std::vector<tson::Vector2i> get_poly_from_motion(const Motion& motion) {
+    std::vector<tson::Vector2i> polygon;
+    int posX = motion.position.x;
+    int posY = motion.position.y;
+    int rot = motion.angle;  // in degrees
+    int halfWidth = motion.scale.x / 2;
+    int halfHeight = motion.scale.y / 2;
+
+    double rad = rot * M_PI / 180.0;
+    double cosA = std::cos(rad);
+    double sinA = std::sin(rad);
+
+    std::vector<tson::Vector2i> corners = {
+        {-halfWidth, -halfHeight},  // top left
+        {halfWidth, -halfHeight},   // top right
+        {halfWidth, halfHeight},    // bottom right
+        {-halfWidth, halfHeight}    // bottom left
+    };
+
+    // rotate and translate back because it rotates around origin
+    for (const auto& corner : corners) {
+        int xNew = static_cast<int>(corner.x * cosA + corner.y * sinA) + posX;
+        int yNew = static_cast<int>(-corner.x * sinA + corner.y * cosA) + posY;
+        polygon.push_back(tson::Vector2i(xNew, yNew));
+    }
+
+    return polygon;
+}
+
+std::vector<Entity> createBaseProgressLines(Entity base_entity) {
+    assert(registry.base.entities.size() > 0);
+    std::vector<Entity> out = {};
+    std::vector<tson::Vector2i> corners = get_poly_from_motion(registry.motions.get(base_entity));
+    for (tson::Vector2i pos : corners) {
+        Entity entity = Entity();
+        GridLine& gridLine = registry.gridLines.emplace(entity);
+        gridLine.start_pos = vec2(pos.x, pos.y) + CameraSystem::GetInstance()->position;
+        gridLine.end_pos = vec2(0, 0);
+        registry.backgroundObjects.emplace(entity);
+        registry.renderRequests.insert(
+            entity, {TEXTURE_ASSET_ID::TEXTURE_COUNT, EFFECT_ASSET_ID::EGG, GEOMETRY_BUFFER_ID::DEBUG_LINE});
+        registry.colors.insert(entity, vec3(0.8f, 0.0f, 0.8f)); // purple
+        out.push_back(entity);
+    }
+    return out;
 }
 
 Entity createFilledTile(vec2 position, vec2 size)

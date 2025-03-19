@@ -65,6 +65,7 @@ const int WINDOW_HEIGHT_PX = 616;
 const int GRID_CELL_WIDTH_PX = 56;
 const int GRID_CELL_HEIGHT_PX = 56;
 const int GRID_LINE_WIDTH_PX = 2;
+const int PROGRESS_BAR_LINE_WIDTH_PX = 4;
 
 // middle grid for the center of the ship
 const int MIDDLE_GRID_X = 7;
@@ -91,7 +92,9 @@ const float ENEMY_TANK_RANGE = 10;
 
 const int ENEMY_SHOOTER_HEALTH = 25;
 const float ENEMY_SHOOTER_SPEED = 0;
-const float ENEMY_SHOOTER_RANGE = 5;
+const float ENEMY_SHOOTER_RANGE = 6;
+
+const float ENEMY_PROJECTILE_COOLDOWN = 1000.0f;
 
 #ifndef M_PI
 #define M_PI 3.14159265358979323846f
