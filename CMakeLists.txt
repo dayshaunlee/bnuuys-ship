@@ -79,7 +79,7 @@ if (IS_OS_LINUX OR IS_OS_MAC)
        find_library(CF_LIBRARY CoreFoundation)
        target_link_libraries(${PROJECT_NAME} PUBLIC ${COCOA_LIBRARY} ${CF_LIBRARY})
     endif()
-
+    
     # Increase warning level
     target_compile_options(${PROJECT_NAME} PUBLIC "-Wall")
 elseif (IS_OS_WINDOWS)

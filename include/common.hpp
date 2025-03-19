@@ -61,6 +61,7 @@ const int WINDOW_HEIGHT_PX = 616;
 const int GRID_CELL_WIDTH_PX = 56;
 const int GRID_CELL_HEIGHT_PX = 56;
 const int GRID_LINE_WIDTH_PX = 2;
+const int PROGRESS_BAR_LINE_WIDTH_PX = 4;
 
 // middle grid for the center of the ship
 const int MIDDLE_GRID_X = 7;
