@@ -23,6 +23,7 @@ class ECSRegistry {
 
     ComponentContainer<Motion> motions;
     ComponentContainer<Collision> collisions;
+    ComponentContainer<Sound> sounds;
 
     // backgroundObject component for camera
     ComponentContainer<BackgroundObject> backgroundObjects;
@@ -61,6 +62,7 @@ class ECSRegistry {
         
         registry_list.push_back(&motions);
         registry_list.push_back(&collisions);
+        registry_list.push_back(&sounds);
         
         registry_list.push_back(&backgroundObjects);
         registry_list.push_back(&cameras);

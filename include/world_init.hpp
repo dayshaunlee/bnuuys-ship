@@ -4,6 +4,7 @@
 #include "tinyECS/components.hpp"
 #include "tinyECS/tiny_ecs.hpp"
 #include "render_system.hpp"
+#include "vector"
 
 // Enemy helpers
 int getEnemyHealth(ENEMY_TYPE type);
@@ -19,13 +20,16 @@ Entity createEnemyProjectile(vec2 orig, vec2 dest);
 Entity createSteeringWheel(vec2 tile_pos);
 Entity createCannon(vec2 tile_pos);
 
-Entity createWaterBackground(int offset_x, int offset_y);
+Entity createWaterBackground();
 Entity createIslandBackground(int width, int height, int offset_x, int offset_y, TEXTURE_ASSET_ID texture);
 
 Entity createShip();
 Entity expandShip();
 Entity createCamera();
 Entity createGridLine(vec2 start_pos, vec2 end_pos);
+
+std::vector<tson::Vector2i> get_poly_from_motion(const Motion& motion);
+std::vector<Entity> createBaseProgressLines(Entity base_entity);
 
 // Enemy
 Entity createEnemy(vec2 position);

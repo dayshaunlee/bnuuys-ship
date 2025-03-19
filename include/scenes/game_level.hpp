@@ -10,6 +10,7 @@
 #include "tinyECS/components.hpp"
 #include "world_system.hpp"
 #include "render_system.hpp"
+#include "sound_system.hpp"
 
 // This class describes a parent class for Gameplay Levels.
 class GameLevel : public Scene {
@@ -19,12 +20,14 @@ protected:
     AnimationSystem animation_system;
     ModulesSystem module_system;
     WorldSystem* world_system;
+    SoundSystem* sound_system;
 
     void InitializeUI();
     std::string level_path; // TODO: Make a mapping for level_path and the background.
     // amount of bunnies player has to save to win
     TEXTURE_ASSET_ID texture;
     int bunnies_to_win = 0;
+    std::vector<Entity> base_corners;
     
     virtual void LevelInit() = 0;
     virtual void LevelUpdate() = 0;
@@ -44,6 +47,8 @@ public:
     void HandleMouseMove(glm::vec2 mousePos) override;
     void HandleMouseClick(int button, int action, int mods) override;
     void Update(float dt) override; 
+
+    void UpdateDropoffProgressBar();
 
     virtual ~GameLevel() = default;
 }; 

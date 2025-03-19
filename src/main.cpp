@@ -22,6 +22,7 @@
 #include "render_system.hpp"
 #include "world_system.hpp"
 #include "animation_system.hpp"
+#include "sound_system.hpp"
 
 using Clock = std::chrono::high_resolution_clock;
 
@@ -30,6 +31,7 @@ int main() {
     // global systems
     WorldSystem world_system;
     RenderSystem renderer_system;
+    SoundSystem sound_system;
     AnimationSystem animation_system;
     int frameCounter = 0;
     float msCounter = 0;
@@ -50,6 +52,7 @@ int main() {
     renderer_system.init(window);
     renderer_system.fontInit(font_path("sproutslandfont.ttf"), 16);
     world_system.init(&renderer_system);
+    sound_system.init();
 
     // variable timestep loop
     auto t = Clock::now();
@@ -102,6 +105,7 @@ int main() {
         if (s != nullptr) s->Update(elapsed_ms);
         world_system.step(elapsed_ms);
         renderer_system.draw();
+        sound_system.play();
     }
 
     delete (l1);

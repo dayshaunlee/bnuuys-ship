@@ -134,25 +134,6 @@ bool polyPolyInside(std::vector<tson::Vector2i> p1, std::vector<tson::Vector2i> 
     return collision;
 }
 
-std::vector<tson::Vector2i> get_poly_from_motion(const Motion& motion) {
-    std::vector<tson::Vector2i> polygon;
-    int posX = motion.position.x;
-    int posY = motion.position.y;
-    int halfWidth = motion.scale.x / 2;
-    int halfHeight = motion.scale.y / 2;
-
-    // top left
-    polygon.push_back(tson::Vector2i(posX - halfWidth, posY - halfHeight));
-    // top right
-    polygon.push_back(tson::Vector2i(posX + halfWidth, posY - halfHeight));
-    // bottom right
-    polygon.push_back(tson::Vector2i(posX + halfWidth, posY + halfHeight));
-    // bottom left
-    polygon.push_back(tson::Vector2i(posX - halfWidth, posY + halfHeight));
-
-    return polygon;
-}
-
 // Collision using "axis-aligned" rectangular bounding boxes
 bool collidesAABB(const Motion& motion1, const Motion& motion2) {
     vec2 half_size1 = get_bounding_box(motion1) / 2.f;

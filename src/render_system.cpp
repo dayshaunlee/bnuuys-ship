@@ -25,7 +25,11 @@ void RenderSystem::drawGridLine(Entity entity, const mat3& projection) {
     // specification for more info Incrementally updates transformation matrix,
     // thus ORDER IS IMPORTANT
     Transform transform;
-    transform.translate(gridLine.start_pos);
+    if (registry.backgroundObjects.has(entity)) {
+        transform.translate(gridLine.start_pos + CameraSystem::GetInstance()->position);
+    } else {
+        transform.translate(gridLine.start_pos);
+    }
     transform.scale(gridLine.end_pos);
 
     assert(registry.renderRequests.has(entity));
@@ -107,6 +111,8 @@ void RenderSystem::drawTexturedMesh(Entity entity, const mat3& projection) {
     // BRIAN TODO:
     Transform transform;
     if (registry.backgroundObjects.has(entity)) {
+        if (registry.gridLines.has(entity)) {
+        }
         transform.translate(motion.position + CameraSystem::GetInstance()->position);
     } else {
         transform.translate(motion.position);
