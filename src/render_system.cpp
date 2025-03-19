@@ -111,8 +111,6 @@ void RenderSystem::drawTexturedMesh(Entity entity, const mat3& projection) {
     // BRIAN TODO:
     Transform transform;
     if (registry.backgroundObjects.has(entity)) {
-        if (registry.gridLines.has(entity)) {
-        }
         transform.translate(motion.position + CameraSystem::GetInstance()->position);
     } else {
         transform.translate(motion.position);
