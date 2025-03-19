@@ -18,7 +18,7 @@ TutorialLevel::TutorialLevel(WorldSystem* world_system, std::string map_filename
     this->level_path = map_filename;
     this->texture = texture;
     GachaSystem::getInstance().setLevelPool(
-        0, {MODULE_TYPES::HELPER_BUNNY});
+        0, {MODULE_TYPES::SIMPLE_CANNON});
 }
 
 TutorialLevel::~TutorialLevel() {}
