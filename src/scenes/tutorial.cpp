@@ -89,12 +89,12 @@ void TutorialLevel::LevelUpdate(float dt) {
     }
 
     if (curr_tutorial_phase == SAVE_BUNNIES) {
-        if (registry.bunnies.components[0].on_ship) {
+        if (registry.base.components[0].bunny_count > 0) {
             curr_tutorial_phase = GOTO_BASE;
         }
     }
 
-    if (registry.bunnies.components[0].on_base) {
+    if (registry.base.components[0].bunny_count > 0) {
         // Skip tutorial.
 
         if(upgradesReceived == 1){
