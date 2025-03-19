@@ -8,7 +8,6 @@ std::string SaveLoadSystem::moduleTypeToString(MODULE_TYPES type) {
     case MODULE_TYPES::PLATFORM: return "PLATFORM";
     case MODULE_TYPES::STEERING_WHEEL: return "STEERING_WHEEL";
     case MODULE_TYPES::SIMPLE_CANNON: return "SIMPLE_CANNON";
-    case MODULE_TYPES::FAST_CANNON: return "FAST_CANNON";
     case MODULE_TYPES::HELPER_BUNNY: return "HELPER_BUNNY";
 
     default: return "UNKNOWN";
@@ -20,7 +19,6 @@ MODULE_TYPES SaveLoadSystem::moduleTypeFromString(const std::string& str) {
   if (str == "PLATFORM") return MODULE_TYPES::PLATFORM;
   if (str == "STEERING_WHEEL") return MODULE_TYPES::STEERING_WHEEL;
   if (str == "SIMPLE_CANNON") return MODULE_TYPES::SIMPLE_CANNON;
-  if (str == "FAST_CANNON") return MODULE_TYPES::FAST_CANNON;
   if (str == "HELPER_BUNNY") return MODULE_TYPES::HELPER_BUNNY;
 
   throw std::invalid_argument("Unknown MODULE_TYPE string: " + str);
