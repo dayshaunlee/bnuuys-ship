@@ -112,6 +112,89 @@ void GameLevel::Init() {
     LevelInit();
 }
 
+bool isOffscreen(const glm::vec2& A, const glm::vec2& center) {
+    // Compute screen bounds based on center B
+    float halfWidth = WINDOW_WIDTH_PX / 2.0f;
+    float halfHeight = WINDOW_HEIGHT_PX / 2.0f;
+
+    float left = center.x - halfWidth;
+    float right = center.x + halfWidth;
+    float top = center.y - halfHeight;
+    float bottom = center.y + halfHeight;
+
+    // Check if A is outside the screen bounds
+    return (A.x < left || A.x > right || A.y < top || A.y > bottom);
+}
+
+void GameLevel::InitializeTrackingUI() {
+    auto tracking_ui = std::make_shared<bnuui::Box>(vec2(496, 96), vec2(20, 20), 0.0f);
+    tracking_ui->texture = TEXTURE_ASSET_ID::BULLET_RED;
+
+    tracking_ui->setOnUpdate([](bnuui::Element& e, float dt) {
+        float smallest_dist = std::numeric_limits<float>::max();
+        vec2 shortest_bunny_pos;
+
+        Entity ship_entity = registry.ships.entities[0];
+        vec2 ship_pos = registry.motions.get(ship_entity).position - CameraSystem::GetInstance()->position;
+
+        // First get all the location of bunnies and find the nearest one.
+        for (Entity bunny_entity : registry.bunnies.entities) {
+            Bunny bunny = registry.bunnies.get(bunny_entity);
+            if (bunny.is_jailed && registry.motions.has(bunny_entity)) { 
+                vec2 bunny_pos = registry.motions.get(bunny_entity).position;
+                float dist = glm::distance(bunny_pos, ship_pos);
+                if (dist < smallest_dist) {
+                    smallest_dist = dist;
+                    shortest_bunny_pos = bunny_pos;
+                }
+            }
+        }
+        if (smallest_dist == std::numeric_limits<float>::max()) {
+            e.visible = false;
+            return;
+        }
+
+        vec2 direction = glm::normalize(shortest_bunny_pos - ship_pos);
+
+        if (isOffscreen(shortest_bunny_pos, ship_pos)) {
+
+            vec2 ui_padding = vec2(30, 30);
+
+            // Find the edge of the screen where the UI should be positioned
+            float halfWidth = WINDOW_WIDTH_PX / 2.0f - ui_padding.x;
+            float halfHeight = WINDOW_HEIGHT_PX / 2.0f - ui_padding.y;
+
+            vec2 ui_pos = ship_pos + CameraSystem::GetInstance()->position; // Start at the ship
+
+            // Project position onto screen edge
+            float slope = direction.y / direction.x;
+            vec2 clamped_pos = ui_pos;
+
+            if (direction.x > 0) {  // Right edge
+                clamped_pos.x = ui_pos.x + halfWidth;
+                clamped_pos.y = ui_pos.y + slope * halfWidth;
+            } else {  // Left edge
+                clamped_pos.x = ui_pos.x - halfWidth;
+                clamped_pos.y = ui_pos.y - slope * halfWidth;
+            }
+
+            if (clamped_pos.y > ui_pos.y + halfHeight) {  // Clamp to top edge
+                clamped_pos.y = ui_pos.y + halfHeight;
+                clamped_pos.x = ui_pos.x + halfHeight / slope;
+            } else if (clamped_pos.y < ui_pos.y - halfHeight) {  // Clamp to bottom edge
+                clamped_pos.y = ui_pos.y - halfHeight;
+                clamped_pos.x = ui_pos.x - halfHeight / slope;
+            }
+
+            // Apply final UI position
+            e.position = clamped_pos;// Offset for better UI positioning
+        } else {
+            e.position = shortest_bunny_pos + CameraSystem::GetInstance()->position + vec2(15, -15);
+        }
+    });
+    scene_ui.insert(tracking_ui);
+}
+
 void GameLevel::InitializeUI() {
     // Create Healthbar.
     auto player_box = std::make_shared<bnuui::Box>(vec2(96, 96), vec2(96, 96), 0.0f);
@@ -122,16 +205,29 @@ void GameLevel::InitializeUI() {
         vec2(256, 93), vec2(180, 24), 0.0f, registry.ships.components[0].health, registry.ships.components[0].maxHealth);
     player_box->children.push_back(slider_bg);
 
+    // Create the Remaining Bunny UI.
+    auto bunny_ctr_box = std::make_shared<bnuui::Box>(vec2(WINDOW_WIDTH_PX-96, 96), vec2(72, 72), 0.0f);
+    auto bunny_icon = std::make_shared<bnuui::Box>(vec2(WINDOW_WIDTH_PX-96, 96), vec2(48, 48), 0.0f);
+    bunny_icon->texture = TEXTURE_ASSET_ID::BUNNY_NPC_FACE;
+    bunny_ctr_box->children.push_back(bunny_icon);
+
+    auto ctr_text = std::make_shared<bnuui::TextLabel>(vec2(WINDOW_WIDTH_PX-96,150), 1, "0/0");
+
     // Create the tile cursor effect.
     tile_cursor = std::make_shared<bnuui::Cursor>(vec2(0, 0), vec2(GRID_CELL_WIDTH_PX, GRID_CELL_HEIGHT_PX), 0.0f);
     tile_cursor->visible = false;
 
+    InitializeTrackingUI();
 
     // Insert all the stuff.
     scene_ui.insert(player_box);
     scene_ui.insert(player_status);
     scene_ui.insert(progress_bar);
     scene_ui.insert(tile_cursor);
+
+    scene_ui.insert(bunny_ctr_box);
+    scene_ui.insert(ctr_text);
+
 }
 
 void GameLevel::Exit() {
@@ -346,7 +442,7 @@ void GameLevel::HandleInput(int key, int action, int mod) {
     Player& player_comp = registry.players.get(player);
 
     // Build Mode.
-    if ((action == GLFW_RELEASE) && (key == GLFW_KEY_B) && (player_comp.player_state != STATIONING)) {
+    if ((action == GLFW_RELEASE) && (key == GLFW_KEY_B)) {
         if (player_comp.player_state == BUILDING) {
             inventory_system.CloseInventory();
             player_comp.player_state = IDLE;

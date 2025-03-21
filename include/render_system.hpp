@@ -218,7 +218,9 @@ class RenderSystem {
         textures_path("ui/buttons/continue_clicked.png"),
 
         textures_path("cannons/laser_weapon.png"),
-        textures_path("cannons/laser_beam.png")
+        textures_path("cannons/laser_beam.png"),
+
+        textures_path("bunny/bunny_npc_face.png")
     };
 
     std::array<GLuint, effect_count> effects;

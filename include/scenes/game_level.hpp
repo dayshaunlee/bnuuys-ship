@@ -15,6 +15,9 @@
 
 // This class describes a parent class for Gameplay Levels.
 class GameLevel : public Scene {
+private:
+    void InitializeTrackingUI();
+    void InitializeUI();
 protected:
     AISystem ai_system;
     PhysicsSystem physics_system;
@@ -24,7 +27,6 @@ protected:
     WorldSystem* world_system;
     SoundSystem* sound_system;
 
-    void InitializeUI();
     void RemoveStation(vec2 tile_pos, MODULE_TYPES module);
     std::string level_path; // TODO: Make a mapping for level_path and the background.
     // amount of bunnies player has to save to win
