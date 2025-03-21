@@ -8,6 +8,7 @@
 #include <iostream>
 #include <memory>
 #include <ostream>
+#include <string>
 #include "GLFW/glfw3.h"
 #include "bnuui/bnuui.hpp"
 #include "camera_system.hpp"
@@ -195,6 +196,48 @@ void GameLevel::InitializeTrackingUI() {
     scene_ui.insert(tracking_ui);
 }
 
+void GameLevel::InitializeBunnySavingUI() {
+    // Create the Remaining Bunny UI.
+    auto bunny_ctr_box = std::make_shared<bnuui::Box>(vec2(WINDOW_WIDTH_PX-96, 96), vec2(60, 80), 0.0f);
+    auto bunny_icon = std::make_shared<bnuui::Box>(vec2(WINDOW_WIDTH_PX-96, 82.5f), vec2(30, 30), 0.0f);
+    bunny_icon->texture = TEXTURE_ASSET_ID::BUNNY_NPC_FACE;
+    bunny_ctr_box->children.push_back(bunny_icon);
+
+    auto ctr_text = std::make_shared<bnuui::TextLabel>(vec2(WINDOW_WIDTH_PX-108.0f,115), 1, "0/0");
+    ctr_text->setOnUpdate([&, ctr_text](bnuui::Element& e, float dt) {
+        int free_bunny = registry.base.components[0].bunny_count;
+        std::string s = std::to_string(free_bunny) + "/" + std::to_string(bunnies_to_win);
+        ctr_text->setText(s);
+    });
+
+    auto info_box = std::make_shared<bnuui::LongBox>(vec2(WINDOW_WIDTH_PX-170, 96*2), vec2(240, 72), 0.0f);
+    info_box->setOnUpdate([bunny_ctr_box](bnuui::Element& e, float dt) {
+        if (bunny_ctr_box->hovering) {
+            e.visible = true;
+        } else {
+            e.visible = false;
+        }
+    });
+
+    auto bunnies_in_module = std::make_shared<bnuui::TextLabel>(vec2(WINDOW_WIDTH_PX-250.0f,185), 1, "OH NO");
+    bunnies_in_module->setOnUpdate([bunnies_in_module, info_box](bnuui::Element& e, float dt) {
+        int num = 0;
+        int n = 0;
+        for (Bunny b : registry.bunnies.components) {
+            if (b.on_module)
+                num++;
+            else if (b.on_ship)
+                n++;
+        }
+        std::string s = "Bunnies in module: " + std::to_string(num) + "/" + std::to_string(n);
+        bunnies_in_module->setText(s);
+    });
+    info_box->children.push_back(bunnies_in_module);
+    scene_ui.insert(bunny_ctr_box);
+    scene_ui.insert(ctr_text);
+    scene_ui.insert(info_box);
+}
+
 void GameLevel::InitializeUI() {
     // Create Healthbar.
     auto player_box = std::make_shared<bnuui::Box>(vec2(96, 96), vec2(96, 96), 0.0f);
@@ -203,31 +246,20 @@ void GameLevel::InitializeUI() {
     auto slider_bg = std::make_shared<bnuui::LongBox>(vec2(256, 96), vec2(240, 72), 0.0f);
     auto progress_bar = std::make_shared<bnuui::ProgressBar>(
         vec2(256, 93), vec2(180, 24), 0.0f, registry.ships.components[0].health, registry.ships.components[0].maxHealth);
-    player_box->children.push_back(slider_bg);
-
-    // Create the Remaining Bunny UI.
-    auto bunny_ctr_box = std::make_shared<bnuui::Box>(vec2(WINDOW_WIDTH_PX-96, 96), vec2(72, 72), 0.0f);
-    auto bunny_icon = std::make_shared<bnuui::Box>(vec2(WINDOW_WIDTH_PX-96, 96), vec2(48, 48), 0.0f);
-    bunny_icon->texture = TEXTURE_ASSET_ID::BUNNY_NPC_FACE;
-    bunny_ctr_box->children.push_back(bunny_icon);
-
-    auto ctr_text = std::make_shared<bnuui::TextLabel>(vec2(WINDOW_WIDTH_PX-96,150), 1, "0/0");
+    player_box->children.push_back(slider_bg);    
 
     // Create the tile cursor effect.
     tile_cursor = std::make_shared<bnuui::Cursor>(vec2(0, 0), vec2(GRID_CELL_WIDTH_PX, GRID_CELL_HEIGHT_PX), 0.0f);
     tile_cursor->visible = false;
 
     InitializeTrackingUI();
+    InitializeBunnySavingUI();
 
     // Insert all the stuff.
     scene_ui.insert(player_box);
     scene_ui.insert(player_status);
     scene_ui.insert(progress_bar);
     scene_ui.insert(tile_cursor);
-
-    scene_ui.insert(bunny_ctr_box);
-    scene_ui.insert(ctr_text);
-
 }
 
 void GameLevel::Exit() {
@@ -441,6 +473,14 @@ void GameLevel::HandleInput(int key, int action, int mod) {
 
     Player& player_comp = registry.players.get(player);
 
+    if ((action == GLFW_RELEASE) && (key == GLFW_KEY_K)) {
+        for (Entity e : registry.helperBunnyIcons.entities) {
+            HelperBunnyIcon& icon = registry.helperBunnyIcons.get(e);
+            std::cout << "icon: " << icon.tile_pos.x << ' ' << icon.tile_pos.y << '\n'; 
+        }
+    }
+
+
     // Build Mode.
     if ((action == GLFW_RELEASE) && (key == GLFW_KEY_B)) {
         if (player_comp.player_state == BUILDING) {
@@ -543,25 +583,36 @@ void GameLevel::HandleMouseMove(vec2 pos) {
 }
 
 // Stations the first bunny that's unstationed.
-void stationBunny() {
+void stationBunny(vec2 tile_pos) {
     // Set one of the bunny to be on_module
     for (Bunny& b : registry.bunnies.components) {
         if (b.on_ship && !b.on_module && !b.on_base) {
             b.on_ship = false;
             b.on_module = true;
+            createBunnyIcon(tile_pos);
             return; 
         }
     }
 }
 
-// Unstations the frist stationed bunny.
-void unStationBunny() {
+// Unstations the first stationed bunny.
+void unStationBunny(vec2 tile_pos) {
+    std::cout << "Unstation bunny pos: " << tile_pos.x << ' ' << tile_pos.y << '\n';
     // Set one of the bunny to be on_module
     for (Bunny& b : registry.bunnies.components) {
         if (b.on_module) {
             b.on_ship = true;
             b.on_module = false;
-            return; 
+            break;
+        }
+    }
+    // Find the bunny icon module and remove it.
+    for (Entity e : registry.helperBunnyIcons.entities) {
+        HelperBunnyIcon& icon = registry.helperBunnyIcons.get(e);
+        std::cout << "icon: " << icon.tile_pos.x << ' ' << icon.tile_pos.y << '\n';
+        if (icon.tile_pos == tile_pos) {
+            registry.remove_all_components_of(e);
+            return;
         }
     }
 }
@@ -668,7 +719,7 @@ void GameLevel::HandleMouseClick(int button, int action, int mods) {
                     if (!sc.is_automated) {
                         sc.is_automated = true;
                         ship.available_modules[curr_selected]--;
-                        stationBunny();
+                        stationBunny(tile_pos);
                     }
                     break;
                 }
@@ -677,7 +728,7 @@ void GameLevel::HandleMouseClick(int button, int action, int mods) {
                     if (!lw.is_automated) {
                         lw.is_automated = true;
                         ship.available_modules[curr_selected]--;
-                        stationBunny();
+                        stationBunny(tile_pos);
                     }
                     break;
                 }
@@ -723,7 +774,7 @@ void GameLevel::HandleMouseClick(int button, int action, int mods) {
                 if (sc.is_automated) {
                     ship.available_modules[HELPER_BUNNY]++;
                     sc.is_automated = false;
-                    unStationBunny();
+                    unStationBunny(tile_pos);
                     break;
                 }
 
@@ -741,7 +792,7 @@ void GameLevel::HandleMouseClick(int button, int action, int mods) {
                 if (lw.is_automated) {
                     ship.available_modules[HELPER_BUNNY]++;
                     lw.is_automated = false;
-                    unStationBunny();
+                    unStationBunny(tile_pos);
                     break;
                 }
                 RemoveStation(tile_pos, module);

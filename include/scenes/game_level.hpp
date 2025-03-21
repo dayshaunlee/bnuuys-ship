@@ -17,6 +17,7 @@
 class GameLevel : public Scene {
 private:
     void InitializeTrackingUI();
+    void InitializeBunnySavingUI();
     void InitializeUI();
 protected:
     AISystem ai_system;

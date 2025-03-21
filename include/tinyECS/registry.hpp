@@ -50,6 +50,7 @@ class ECSRegistry {
     ComponentContainer<FilledTile> filledTiles;
 
     ComponentContainer<Disaster> disasters;
+    ComponentContainer<HelperBunnyIcon> helperBunnyIcons;
     
 
     // constructor that adds all containers for looping over them
@@ -91,6 +92,7 @@ class ECSRegistry {
         registry_list.push_back(&filledTiles);
 
         registry_list.push_back(&disasters);
+        registry_list.push_back(&helperBunnyIcons);
     }
 
     void clear_all_components() {

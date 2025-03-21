@@ -44,6 +44,8 @@ Entity createEnemy(Entity entity);
 Entity createBunny(RenderSystem* renderer, vec2 position);
 Entity createBunny(Entity bunny);
 
+Entity createBunnyIcon(vec2 tile_pos);
+
 // filled tile for enemy path 
 Entity createFilledTile(vec2 position, vec2 size);
 
