@@ -321,11 +321,19 @@ void WorldSystem::handle_collisions() {
             Ship& ship = registry.ships.get(e2);
             ship.health -= projectile.damage;
             registry.remove_all_components_of(e1);
+            if (ship.health <= 0.0f) {
+                handle_player_death();
+                return;
+            }
         } else if (registry.enemyProjectiles.has(e2) && registry.ships.has(e1)) {
             EnemyProjectile& projectile = registry.enemyProjectiles.get(e2);
             Ship& ship = registry.ships.get(e1);
             ship.health -= projectile.damage;
             registry.remove_all_components_of(e2);
+            if (ship.health <= 0.0f) {
+                handle_player_death();
+                return;
+            }
         }
 
         // Enemy - Ship collision
