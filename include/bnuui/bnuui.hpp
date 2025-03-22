@@ -99,6 +99,8 @@ public:
     void update(float dt);
     void clear() {
         ui_elems.clear();
+        inventory_ui_elems.clear();
+        gacha_ui_elems.clear();
     }
 
     // API to be used by the inventory system.
@@ -110,9 +112,17 @@ public:
         inventory_ui_elems.clear();
     }
 
+    bool insertGacha(std::shared_ptr<Element> elem);
+    bool removeGacha(int idx);
+    std::vector<std::shared_ptr<Element>> getGachaElems();
+    void clearGacha() {
+        gacha_ui_elems.clear();
+    }
+
 private: 
     std::vector<std::shared_ptr<Element>> ui_elems;
     std::vector<std::shared_ptr<Element>> inventory_ui_elems;
+    std::vector<std::shared_ptr<Element>> gacha_ui_elems;
 };
 
 }

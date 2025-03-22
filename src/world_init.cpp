@@ -710,3 +710,17 @@ Entity createDisaster(Entity entity) {
 
     return entity;
 }
+
+Entity createBunnyIcon(vec2 tile_pos) {
+    Entity e;
+    HelperBunnyIcon& helper_bunny_icon = registry.helperBunnyIcons.emplace(e);
+    helper_bunny_icon.tile_pos = tile_pos;
+
+    Motion& motion = registry.motions.emplace(e);
+    motion.position = TileToVector2(tile_pos.x, tile_pos.y) + vec2(15.0f, -15.0f);
+    motion.scale = {20, 20};
+
+    registry.renderRequests.insert
+        (e, {TEXTURE_ASSET_ID::BUNNY_NPC_FACE, EFFECT_ASSET_ID::TEXTURED, GEOMETRY_BUFFER_ID::SPRITE});
+    return e;
+}

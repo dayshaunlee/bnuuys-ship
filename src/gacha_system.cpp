@@ -39,7 +39,6 @@ void GachaSystem::setLevelPool(int level, const std::vector<MODULE_TYPES>& modul
 }
 
 void GachaSystem::setDropRate(MODULE_TYPES module, float dropRate) {
-    std::cout << "moduleDropRates size before insert: " << moduleDropRates.size() << std::endl;
     moduleDropRates[module] = dropRate;
 }
 
@@ -87,15 +86,7 @@ std::vector<MODULE_TYPES> GachaSystem::getModuleOptions(int level){
 
 
 void clearGatchaUI(bnuui::SceneUI& scene_ui){
-        int uiSize = scene_ui.size();
-        scene_ui.remove(uiSize-1);
-        scene_ui.remove(uiSize-2);
-        scene_ui.remove(uiSize-3);
-        scene_ui.remove(uiSize-4);
-        scene_ui.remove(uiSize-5);
-        scene_ui.remove(uiSize-6);
-        scene_ui.remove(uiSize-7);
-        scene_ui.remove(uiSize-8);
+    scene_ui.clearGacha();
 }
 
 void GachaSystem::handleOptionClick(MODULE_TYPES moduleChose){
@@ -103,74 +94,87 @@ void GachaSystem::handleOptionClick(MODULE_TYPES moduleChose){
         expandShip();
         setDropRate(MODULE_TYPES::PLATFORM, 0);
     } else{
-        std::cout<< "HEREEE" <<std::endl;
-        std::cout <<"Before:" << registry.ships.components[0].available_modules[moduleChose] << std::endl;
         registry.ships.components[0].available_modules[moduleChose]++;
-        std::cout <<"Now:" << registry.ships.components[0].available_modules[moduleChose] << std::endl;
     }
 }
 
-
-
-void GachaSystem::displayGacha(int level, bnuui::SceneUI& scene_ui, GameLevel &currentLevel){
-    // std::cout << "gacha pop up..." << std::endl;
+void GachaSystem::displayGacha(int level, bnuui::SceneUI& scene_ui, GameLevel& currentLevel) {
     RenderSystem::isRenderingGacha = true;
     currentLevel.gacha_called = true;
+    
     std::vector<MODULE_TYPES> threeOptions = getModuleOptions(level);
-    std::cout << "options" << threeOptions[0] << " " << threeOptions[1] << " " << threeOptions[2] << '\n';
 
-    auto gacha_box = std::make_shared<bnuui::Box>(vec2(WINDOW_WIDTH_PX/2, WINDOW_HEIGHT_PX/2 + 40), vec2(450, 250), 0.0f);
-    auto upgrade_title_box = std::make_shared<bnuui::Box>(vec2(WINDOW_WIDTH_PX/2, WINDOW_HEIGHT_PX/2 - 50), vec2(350, 115), 0.0f);
+    auto gacha_box = std::make_shared<bnuui::Box>(vec2(WINDOW_WIDTH_PX / 2, WINDOW_HEIGHT_PX / 2 + 40), vec2(450, 250), 0.0f);
+    auto upgrade_title_box = std::make_shared<bnuui::Box>(vec2(WINDOW_WIDTH_PX / 2, WINDOW_HEIGHT_PX / 2 - 50), vec2(350, 115), 0.0f);
     upgrade_title_box->texture = TEXTURE_ASSET_ID::UPGRADE_TITLE;
 
-    auto module1bg = std::make_shared<bnuui::Box>(vec2(((WINDOW_WIDTH_PX/2) - 100), (WINDOW_HEIGHT_PX/2 + 60)), vec2(90, 90), 0.0f);
-    auto moduleOption1 = std::make_shared<bnuui::Box>(vec2(((WINDOW_WIDTH_PX/2) - 100), (WINDOW_HEIGHT_PX/2 + 60)), vec2(70, 70), 0.0f);
-    moduleOption1->texture = getTextureFromModuleType(threeOptions[0]);
-    moduleOption1->setOnClick([&, threeOptions](bnuui::Element& e) {
-        handleOptionClick(threeOptions[0]);
-        RenderSystem::isRenderingGacha = false;
-        currentLevel.upgradesReceived++;
-        currentLevel.gacha_called = false;
-        clearGatchaUI(scene_ui); 
-    });
-    moduleOption1->setOnHover([](bnuui::Element& e) { // in the future maybe have on hover effect on the module1bg or something so it looks more interactive
-    });
+    scene_ui.insertGacha(gacha_box);
+    scene_ui.insertGacha(upgrade_title_box);
 
-    auto module2bg = std::make_shared<bnuui::Box>(vec2(((WINDOW_WIDTH_PX/2)), (WINDOW_HEIGHT_PX/2 + 60)), vec2(90, 90), 0.0f);
-    auto moduleOption2 = std::make_shared<bnuui::Box>(vec2(WINDOW_WIDTH_PX/2, (WINDOW_HEIGHT_PX/2 + 60)), vec2(70, 70), 0.0f);
-    moduleOption2->texture = getTextureFromModuleType(threeOptions[1]);
-    moduleOption2->setOnClick([&, threeOptions](bnuui::Element& e) {
-        handleOptionClick(threeOptions[1]);
+    // Tooltip.
+    auto tooltip_box = std::make_shared<bnuui::LongBox>(vec2(500, 500), vec2(200, 70), 0.0f);
+    auto tooltip_text = std::make_shared<bnuui::TextLabel>(vec2(350,500), 1, "Module Desc...");
+    tooltip_box->children.push_back(tooltip_text);
+
+    // Positions for the three module options
+    std::array<float, 3> xOffsets = { -100, 0, 100 };
+    float yOffset = (float) WINDOW_HEIGHT_PX / 2 + 60;
+
+    for (size_t i = 0; i < threeOptions.size(); ++i) {
+        vec2 pos((float) WINDOW_WIDTH_PX / 2 + xOffsets[i], yOffset);
+        
+        auto moduleBg = std::make_shared<bnuui::Box>(pos, vec2(90, 90), 0.0f);
+        auto moduleOption = createModuleOption(threeOptions[i], pos, scene_ui, currentLevel);
+
+        moduleOption->setOnUpdate([&, tooltip_box, i](bnuui::Element& e, float dt) {
+            if (e.hovering) {
+                e.color = vec3(0.8,0.8,0.8);
+                hovered_options[i] = true;
+                tooltip_box->position = e.position + vec2(0,90);
+            }
+            else {
+                e.color = vec3(1,1,1);
+                hovered_options[i] = false;
+            }
+        });
+        
+        scene_ui.insertGacha(moduleBg);
+        scene_ui.insertGacha(moduleOption);
+    }
+    tooltip_box->setOnUpdate([&, tooltip_text](bnuui::Element& e, float dt) {
+        tooltip_text->setText(tooltip_str);
+        tooltip_text->position = e.position - vec2(e.scale.x/2 - 20.0f, -5.0f);
+        for (int i = 0; i < 3; i++) {
+            if (hovered_options[i]) {
+                e.visible = true;
+                return;
+            }
+        }
+        e.visible = false;
+    });
+    scene_ui.insertGacha(tooltip_box);
+}
+
+std::shared_ptr<bnuui::Box> GachaSystem::createModuleOption(
+    MODULE_TYPES moduleType, vec2 position, 
+    bnuui::SceneUI& scene_ui, GameLevel& currentLevel) {
+    
+    auto moduleOption = std::make_shared<bnuui::Box>(position, vec2(70, 70), 0.0f);
+    moduleOption->texture = getTextureFromModuleType(moduleType);
+
+    moduleOption->setOnClick([&, moduleType](bnuui::Element& e) {
+        handleOptionClick(moduleType);
         RenderSystem::isRenderingGacha = false;
         currentLevel.upgradesReceived++;
         currentLevel.gacha_called = false;
         clearGatchaUI(scene_ui);
     });
-    moduleOption2->setOnHover([](bnuui::Element& e) { 
+
+    moduleOption->setOnHover([&, moduleType](bnuui::Element& e) {
+        tooltip_str = getModuleName(moduleType);
     });
 
-    auto module3bg = std::make_shared<bnuui::Box>(vec2(((WINDOW_WIDTH_PX/2) +100), ((WINDOW_HEIGHT_PX/2 + 60))), vec2(90, 90), 0.0f);
-    auto moduleOption3 = std::make_shared<bnuui::Box>(vec2(((WINDOW_WIDTH_PX/2) + 100), (WINDOW_HEIGHT_PX/2 + 60)), vec2(70, 70), 0.0f);
-    moduleOption3->texture = getTextureFromModuleType(threeOptions[2]);
-    moduleOption3->setOnClick([&, threeOptions](bnuui::Element& e) {
-        handleOptionClick(threeOptions[2]);
-        RenderSystem::isRenderingGacha = false;
-        currentLevel.upgradesReceived++;
-        currentLevel.gacha_called = false;
-        clearGatchaUI(scene_ui);
-    });
-    moduleOption3->setOnHover([](bnuui::Element& e) { 
-    });
-
-    scene_ui.insert(gacha_box);
-    scene_ui.insert(upgrade_title_box);
-    scene_ui.insert(module1bg);
-    scene_ui.insert(moduleOption1);
-    scene_ui.insert(module2bg);
-    scene_ui.insert(moduleOption2);
-    scene_ui.insert(module3bg);
-    scene_ui.insert(moduleOption3); 
-
+    return moduleOption;
 }
 
 

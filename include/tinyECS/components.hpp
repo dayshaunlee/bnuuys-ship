@@ -226,8 +226,10 @@ enum class TEXTURE_ASSET_ID {
 
     LASER_WEAPON0 = CONTINUE_BUTTON_CLICKED + 1,
     LASER_BEAM = LASER_WEAPON0 + 1,
+
+    BUNNY_NPC_FACE = LASER_BEAM + 1,
     
-    TEXTURE_COUNT = LASER_BEAM + 1
+    TEXTURE_COUNT = BUNNY_NPC_FACE + 1
 };
 
 const int texture_count = (int) TEXTURE_ASSET_ID::TEXTURE_COUNT;
@@ -342,7 +344,7 @@ enum MODULE_TYPES {
     BUBBLE_MOD
 };
 
-inline TEXTURE_ASSET_ID getTextureFromModuleType(MODULE_TYPES module){
+inline TEXTURE_ASSET_ID getTextureFromModuleType(MODULE_TYPES module) {
     switch (module)
     {
     case MODULE_TYPES::SIMPLE_CANNON :
@@ -361,7 +363,21 @@ inline TEXTURE_ASSET_ID getTextureFromModuleType(MODULE_TYPES module){
         std::cout << "This is not a valid module" << std::endl;
         return TEXTURE_ASSET_ID::WATER_BACKGROUND; 
     }
+}
 
+inline std::string getModuleName(MODULE_TYPES module) {
+    switch (module) {
+    case MODULE_TYPES::SIMPLE_CANNON :
+        return "Simple Cannon";
+    case MODULE_TYPES::PLATFORM :
+        return "Expand Ship";
+    case MODULE_TYPES::LASER_WEAPON :
+        return "P.I.S.S Module";
+    case MODULE_TYPES::BUBBLE_MOD :
+        return "Bubble Buff";
+    default:
+        return "This shouldn't be a module bruh.";
+    }
 }
 
 struct SteeringWheel {
@@ -410,6 +426,10 @@ struct Ship {
 
     // This defines how many of each modules is in our inventory. 
     std::unordered_map<MODULE_TYPES, uint> available_modules;
+};
+
+struct HelperBunnyIcon {
+    vec2 tile_pos;
 };
 
 // ========== ENEMY DETAILS ==========

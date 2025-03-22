@@ -30,4 +30,11 @@ private:
     std::vector<std::unordered_set<MODULE_TYPES>> levelModulePools;
     std::unordered_map<MODULE_TYPES, float> moduleDropRates;
     std::default_random_engine rng;
+
+    // Scuffed implementation but ig it's fine.
+    std::vector<bool> hovered_options = {false, false, false};
+
+    std::string tooltip_str = " ";
+    std::shared_ptr<bnuui::Box> createModuleOption(MODULE_TYPES moduleType, vec2 position, 
+                                                   bnuui::SceneUI& scene_ui, GameLevel& currentLevel);
 };
