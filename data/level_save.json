@@ -4,9 +4,8 @@
     "ship_health": 100.0,
     "ship_maxHealth": 100.0,
     "unused_modules": {
-        "HELPER_BUNNY": 1,
-        "SIMPLE_CANNON": 1,
-        "STEERING_WHEEL": 0
+        "HELPER_BUNNY": 0,
+        "SIMPLE_CANNON": 1
     },
     "used_modules": [
         [
@@ -84,9 +83,9 @@
             "EMPTY",
             "EMPTY",
             "EMPTY",
-            "PLATFORM",
             "SIMPLE_CANNON",
-            "PLATFORM",
+            "SIMPLE_CANNON",
+            "UNKNOWN",
             "EMPTY",
             "EMPTY",
             "EMPTY",

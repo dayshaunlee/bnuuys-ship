@@ -757,6 +757,7 @@ void GameLevel::Update(float dt) {
             if (registry.playerProjectiles.has(e)) {
                 PlayerProjectile& p = registry.playerProjectiles.get(e);
                 if (p.alive_time_ms <= 0) {
+                    // std::cout << "removing projectile" << std::endl;
                     registry.remove_all_components_of(e);
                     continue;
                 }
