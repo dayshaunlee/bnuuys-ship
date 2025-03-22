@@ -96,4 +96,11 @@ public:
     void setText(const std::string& text);
 };
 
+class DialogueBox : public Element {
+    public:
+        DialogueBox(vec2 pos, vec2 scale, float rot);
+        ~DialogueBox() = default;
+        void doUpdate(float dt) override;
+    };
+
 }

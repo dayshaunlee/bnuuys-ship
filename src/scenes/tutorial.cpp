@@ -13,6 +13,7 @@
 #include "world_system.hpp"
 #include "gacha_system.hpp"
 #include "saveload_system.hpp"
+#include "camera_system.hpp"
 
 TutorialLevel::TutorialLevel(WorldSystem* world_system, std::string map_filename, TEXTURE_ASSET_ID texture) : GameLevel(world_system) {
     this->name = "Tutorial Level";
@@ -29,6 +30,10 @@ float x = 100.0f;
 enum TUTORIAL_PHASE {
     WASD_KEYS,
     SPACEBAR_KEY,
+    STERRING_PAD,
+    CANNON_SHOOT,
+    ENEMIES_MOVE,
+    ENEMIES_DAMAGE,
     SAVE_BUNNIES,
     GOTO_BASE,
 };
@@ -41,27 +46,58 @@ void TutorialLevel::LevelInit() {
     auto tutorial_talk = std::make_shared<bnuui::PlayerStatus>(
         vec2(765, 540), vec2(-60, 60), 0.0f, x, x);
     auto player_box = std::make_shared<bnuui::Box>(vec2(765, 540), vec2(96, 96), 0.0f);
-    // Create the press tutorial dialog.
-    auto tutorial_dialog = std::make_shared<bnuui::Box>(
-        vec2(650, 425), vec2(200, 200), 0.0f
+    // Create the press tutorial dialogue.
+    auto tutorial_dialogue = std::make_shared<bnuui::DialogueBox>(
+        vec2(600, 475), vec2(288, 96), 0.0f
     );
-    tutorial_dialog->texture = TEXTURE_ASSET_ID::TUTORIAL_WASD_UI;
 
-    tutorial_dialog->setOnUpdate([](bnuui::Element& e, float dt) {
+    // freetype doesnt support \n, probably should use a helper ;-;
+    auto dialogue_txt_first = std::make_shared<bnuui::TextLabel>(vec2(480, 460), 2.0f, ":3");
+    auto dialogue_txt_second = std::make_shared<bnuui::TextLabel>(vec2(480, 480), 2.0f, " ");
+
+    dialogue_txt_first->setOnUpdate([](bnuui::Element& e, float dt) {
         if (curr_tutorial_phase == WASD_KEYS) {
-            e.texture = TEXTURE_ASSET_ID::TUTORIAL_WASD_UI;
+            static_cast<bnuui::TextLabel&>(e).setText("Press WASD to move the player.");
         } else if (curr_tutorial_phase == SPACEBAR_KEY) {
-            e.texture = TEXTURE_ASSET_ID::TUTORIAL_SPACE_UI;
+            static_cast<bnuui::TextLabel&>(e).setText("Press space bar to interact");
+        } else if (curr_tutorial_phase == STERRING_PAD) {
+            static_cast<bnuui::TextLabel&>(e).setText("Try using the steering pad");
+        } else if (curr_tutorial_phase == CANNON_SHOOT) {
+            static_cast<bnuui::TextLabel&>(e).setText("Try using the cannon.");
+        }  else if (curr_tutorial_phase == ENEMIES_MOVE) {
+            static_cast<bnuui::TextLabel&>(e).setText("Enemies are approaching.");
+        } else if (curr_tutorial_phase == ENEMIES_DAMAGE) {
+            static_cast<bnuui::TextLabel&>(e).setText("Enemies can do damage to your");
         } else if (curr_tutorial_phase == SAVE_BUNNIES) {
-            e.texture = TEXTURE_ASSET_ID::TUTORIAL_MOUSE_UI;
+            static_cast<bnuui::TextLabel&>(e).setText("Use the cannon to rescue");
         } else if (curr_tutorial_phase == GOTO_BASE) {
-            e.texture = TEXTURE_ASSET_ID::TUTORIAL_HOME_UI;
-        }
+            static_cast<bnuui::TextLabel&>(e).setText("Bring them back to ");
+        } 
+    });
+
+    dialogue_txt_second->setOnUpdate([](bnuui::Element& e, float dt) {
+        if (curr_tutorial_phase == SPACEBAR_KEY) {
+            static_cast<bnuui::TextLabel&>(e).setText("with/exit ship modules.");
+        } else if (curr_tutorial_phase == STERRING_PAD) {
+            static_cast<bnuui::TextLabel&>(e).setText("to move the ship.");
+        } else if (curr_tutorial_phase == CANNON_SHOOT) {
+            static_cast<bnuui::TextLabel&>(e).setText("Use left click to shoot.");
+        } else if (curr_tutorial_phase == ENEMIES_MOVE) {
+            static_cast<bnuui::TextLabel&>(e).setText("KILL THEM!!");
+        } else if (curr_tutorial_phase == ENEMIES_DAMAGE) {
+            static_cast<bnuui::TextLabel&>(e).setText("ship’s health. Be careful.");
+        } else if (curr_tutorial_phase == SAVE_BUNNIES) {
+            static_cast<bnuui::TextLabel&>(e).setText("jailed bunnies on islands.");
+        } else if (curr_tutorial_phase == GOTO_BASE) {
+            static_cast<bnuui::TextLabel&>(e).setText("highlighted area.");
+        } 
     });
     // Create a press spacebar
     scene_ui.insert(player_box);
     scene_ui.insert(tutorial_talk);
-    scene_ui.insert(tutorial_dialog);
+    scene_ui.insert(tutorial_dialogue);
+    scene_ui.insert(dialogue_txt_first);
+    scene_ui.insert(dialogue_txt_second);
 }
 
 void TutorialLevel::LevelUpdate() {}
@@ -83,19 +119,55 @@ void TutorialLevel::LevelHandleMouseMove(vec2 pos) {}
 void TutorialLevel::LevelHandleMouseClick(int button, int action, int mods) {}
 
 void TutorialLevel::LevelUpdate(float dt) {
-    if (curr_tutorial_phase == SPACEBAR_KEY) {
+    if (curr_tutorial_phase == WASD_KEYS || 
+        curr_tutorial_phase == SPACEBAR_KEY ||
+        curr_tutorial_phase == STERRING_PAD ||
+        curr_tutorial_phase == CANNON_SHOOT) {
+            for (Entity entity: registry.enemies.entities) {
+                Enemy& enemy = registry.enemies.get(entity);
+                enemy.speed = 0;
+            }
+        }
+
+    if (dialogue_timer_ms > 0) {
+        dialogue_timer_ms -= dt;
+    } else if (curr_tutorial_phase == SPACEBAR_KEY) {
         if (registry.players.components[0].player_state == PLAYERSTATE::STATIONING) {
-            curr_tutorial_phase = SAVE_BUNNIES;
+            curr_tutorial_phase = STERRING_PAD;
+            dialogue_timer_ms = DIALOGUE_TIME_MS;
         }
-    }
-
-    if (curr_tutorial_phase == SAVE_BUNNIES) {
-        if (registry.base.components[0].bunny_count > 0) {
-            curr_tutorial_phase = GOTO_BASE;
+    } else if (curr_tutorial_phase == STERRING_PAD) {
+        if (CameraSystem::GetInstance()->position.x != 0 || CameraSystem::GetInstance()->position.y != 0) {
+            curr_tutorial_phase = CANNON_SHOOT;
+            dialogue_timer_ms = DIALOGUE_TIME_MS;
         }
-    }
-
-    if (registry.base.components[0].bunny_count > 0) {
+    } else if (curr_tutorial_phase == CANNON_SHOOT) {
+        if (registry.playerProjectiles.components.size() > 0) {
+            for (Entity entity: registry.enemies.entities) {
+                Enemy& enemy = registry.enemies.get(entity);
+                enemy.speed = getEnemySpeed(enemy.type);
+            }
+            curr_tutorial_phase = ENEMIES_MOVE;
+            dialogue_timer_ms = DIALOGUE_TIME_MS;
+        }
+    } else if (curr_tutorial_phase == ENEMIES_MOVE) {
+        if (registry.enemies.entities.size() == 0) {
+            curr_tutorial_phase = ENEMIES_DAMAGE;
+            dialogue_timer_ms = DIALOGUE_TIME_MS;
+        }
+    } else if (curr_tutorial_phase == ENEMIES_DAMAGE) {
+        if (registry.bunnies.components.size() > 0 || 
+            registry.base.components[0].bunny_count > 0) {
+                curr_tutorial_phase = SAVE_BUNNIES;
+                dialogue_timer_ms = DIALOGUE_TIME_MS;
+        }
+    } else if (curr_tutorial_phase == SAVE_BUNNIES) {
+        if (registry.bunnies.components.size() > 0 || 
+            registry.base.components[0].bunny_count > 0) {
+                curr_tutorial_phase = GOTO_BASE;
+                dialogue_timer_ms = DIALOGUE_TIME_MS;
+        }
+    } else if (registry.base.components[0].bunny_count > 0) {
         // Skip tutorial.
 
         if(upgradesReceived == 1){
