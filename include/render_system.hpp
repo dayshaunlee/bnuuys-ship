@@ -198,6 +198,7 @@ class RenderSystem {
         textures_path("background/game_over_bg.png"),
         
         // Tutorial Dialog.
+        textures_path("ui/tutorial_ui/dialogue_square.png"),
         textures_path("ui/tutorial_ui/movementKeyTutorial.png"),
         textures_path("ui/tutorial_ui/spaceKeyTutorial.png"),
         textures_path("ui/tutorial_ui/mouseTutorial.png"),

@@ -459,4 +459,33 @@ void TextLabel::setText(const std::string& text) {
     this->text = text;
 }
 
+DialogueBox::DialogueBox(vec2 pos, vec2 scale, float rot) {
+    this->position = pos;
+    this->scale = scale;
+    this->rotation = rot;
+
+    this->offset = {0, 0};
+    this->color = {1, 1, 1};
+
+    this->texture = TEXTURE_ASSET_ID::TUTORIAL_DIALOGUE_BOX_UI;
+    this->effect = EFFECT_ASSET_ID::TEXTURED;
+    this->geometry = GEOMETRY_BUFFER_ID::SPRITE;
+    this->visible = true;
+}
+
+void DialogueBox::doUpdate(float dt) {
+    if (this->hovering && this->onHover) {
+        this->onHover(*this);
+    }
+
+    if (this->active && this->onActive) {
+        this->onActive(*this);
+    }
+
+    if (this->onUpdate) {
+        this->onUpdate(*this, dt);
+    }
+}
+
+
 }  // namespace bnuui

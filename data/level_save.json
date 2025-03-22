@@ -5,8 +5,7 @@
     "ship_maxHealth": 100.0,
     "unused_modules": {
         "HELPER_BUNNY": 0,
-        "SIMPLE_CANNON": 0,
-        "UNKNOWN": 1
+        "SIMPLE_CANNON": 1
     },
     "used_modules": [
         [

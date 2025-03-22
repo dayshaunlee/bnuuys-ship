@@ -770,7 +770,8 @@ void GameLevel::HandleMouseClick(int button, int action, int mods) {
             case PLATFORM:
                 return;
             case SIMPLE_CANNON: {
-                SimpleCannon& sc = registry.simpleCannons.get(ship.ship_modules_entity[tile_pos.y][tile_pos.x]);
+                Entity& cannon_entity = ship.ship_modules_entity[tile_pos.y][tile_pos.x];
+                SimpleCannon& sc = registry.simpleCannons.get(cannon_entity);
                 if (sc.is_automated) {
                     ship.available_modules[HELPER_BUNNY]++;
                     sc.is_automated = false;
@@ -781,6 +782,11 @@ void GameLevel::HandleMouseClick(int button, int action, int mods) {
                 if (sc.is_modified) {
                     ship.available_modules[BUBBLE_MOD]++;
                     sc.is_modified = false;
+                    registry.cannonModifiers.remove(cannon_entity);
+                
+                    registry.renderRequests.remove(cannon_entity);
+                    registry.renderRequests.insert(
+                        cannon_entity, {TEXTURE_ASSET_ID::SIMPLE_CANNON01, EFFECT_ASSET_ID::TEXTURED, GEOMETRY_BUFFER_ID::SPRITE});
                     break;
                 }
 
@@ -904,6 +910,7 @@ void GameLevel::Update(float dt) {
             if (registry.playerProjectiles.has(e)) {
                 PlayerProjectile& p = registry.playerProjectiles.get(e);
                 if (p.alive_time_ms <= 0) {
+                    // std::cout << "removing projectile" << std::endl;
                     registry.remove_all_components_of(e);
                     continue;
                 }
