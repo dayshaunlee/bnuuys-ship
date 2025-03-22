@@ -209,7 +209,7 @@ void GameLevel::InitializeBunnySavingUI() {
     ctr_text->setOnUpdate([&](bnuui::Element& e, float dt) {  
         int free_bunny = registry.base.components[0].bunny_count;
         std::string s = std::to_string(free_bunny) + "/" + std::to_string(bunnies_to_win);
-        static_cast<bnuui::TextLabel&>(e).setText("Press WASD to move the player.");
+        static_cast<bnuui::TextLabel&>(e).setText(s);
     });
 
     auto info_box = std::make_shared<bnuui::LongBox>(vec2(WINDOW_WIDTH_PX-170, 96*2), vec2(240, 72), 0.0f);
