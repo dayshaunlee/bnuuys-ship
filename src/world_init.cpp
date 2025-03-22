@@ -363,9 +363,8 @@ Entity modifyCannon(Entity entity, MODIFIER_TYPE type) {
     SimpleCannon& simple_cannon = registry.simpleCannons.get(entity);
     simple_cannon.is_modified = true;
 
-    registry.renderRequests.remove(entity);
-    registry.renderRequests.insert(
-        entity, {TEXTURE_ASSET_ID::BUBBLE_CANNON, EFFECT_ASSET_ID::TEXTURED, GEOMETRY_BUFFER_ID::SPRITE});
+    TEXTURE_ASSET_ID& texture = registry.renderRequests.get(entity).used_texture;
+    texture = TEXTURE_ASSET_ID::BUBBLE_CANNON;
 
     return entity;
 }

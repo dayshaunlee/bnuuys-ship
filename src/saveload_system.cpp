@@ -8,18 +8,23 @@ std::string SaveLoadSystem::moduleTypeToString(MODULE_TYPES type) {
     case MODULE_TYPES::PLATFORM: return "PLATFORM";
     case MODULE_TYPES::STEERING_WHEEL: return "STEERING_WHEEL";
     case MODULE_TYPES::SIMPLE_CANNON: return "SIMPLE_CANNON";
+    case MODULE_TYPES::LASER_WEAPON: return "LASER_WEAPON";
     case MODULE_TYPES::HELPER_BUNNY: return "HELPER_BUNNY";
+    case MODULE_TYPES::BUBBLE_MOD: return "BUBBLE_MOD";
 
     default: return "UNKNOWN";
   }
 }
+
 
 MODULE_TYPES SaveLoadSystem::moduleTypeFromString(const std::string& str) {
   if (str == "EMPTY") return MODULE_TYPES::EMPTY;
   if (str == "PLATFORM") return MODULE_TYPES::PLATFORM;
   if (str == "STEERING_WHEEL") return MODULE_TYPES::STEERING_WHEEL;
   if (str == "SIMPLE_CANNON") return MODULE_TYPES::SIMPLE_CANNON;
+  if (str == "LASER_WEAPON") return MODULE_TYPES::LASER_WEAPON;
   if (str == "HELPER_BUNNY") return MODULE_TYPES::HELPER_BUNNY;
+  if (str == "BUBBLE_MOD") return MODULE_TYPES::BUBBLE_MOD;
 
   throw std::invalid_argument("Unknown MODULE_TYPE string: " + str);
 }
@@ -98,7 +103,7 @@ void SaveLoadSystem::saveGame(const GameData& data, const std::string& fileName)
   toJson(j, data);
 
   std::string path;
-  path = "../data/" + fileName;
+  path = data_path() + "/" + fileName;
 
   std::ofstream file(path);
   if (!file.is_open()) {
@@ -110,7 +115,7 @@ void SaveLoadSystem::saveGame(const GameData& data, const std::string& fileName)
 
 bool SaveLoadSystem::loadGame(GameData& data, const std::string& fileName) {
   std::string path;
-  path = "../data/" + fileName;
+    path = data_path() + "/" + fileName;
 
   std::ifstream file(path);
   if (!file.is_open()) {

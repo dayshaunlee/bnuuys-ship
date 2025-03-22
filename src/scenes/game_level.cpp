@@ -780,10 +780,9 @@ void GameLevel::HandleMouseClick(int button, int action, int mods) {
                     ship.available_modules[BUBBLE_MOD]++;
                     sc.is_modified = false;
                     registry.cannonModifiers.remove(cannon_entity);
-                
-                    registry.renderRequests.remove(cannon_entity);
-                    registry.renderRequests.insert(
-                        cannon_entity, {TEXTURE_ASSET_ID::SIMPLE_CANNON01, EFFECT_ASSET_ID::TEXTURED, GEOMETRY_BUFFER_ID::SPRITE});
+                    
+                    TEXTURE_ASSET_ID& texture = registry.renderRequests.get(cannon_entity).used_texture;
+                    texture = TEXTURE_ASSET_ID::SIMPLE_CANNON01;
                     break;
                 }
 
