@@ -1,3 +1,4 @@
+#include "camera_system.hpp"
 #include "common.hpp"
 #include "sceneManager/scene.hpp"
 #include "sceneManager/scene_manager.hpp"
@@ -108,9 +109,16 @@ int main() {
         sound_system.play();
     }
 
-    delete (l1);
     delete (mm);
+    delete (tutorial);
+    delete (l1);
+    delete (l2);
+    delete (l3);
+    delete (l4);
     delete (ui_editor);
+    delete (death);
+    delete (levelTransition);
+    delete (CameraSystem::GetInstance());
 
     return EXIT_SUCCESS;
 }
