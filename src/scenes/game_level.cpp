@@ -222,7 +222,7 @@ void GameLevel::InitializeBunnySavingUI() {
     });
 
     auto bunnies_in_module = std::make_shared<bnuui::TextLabel>(vec2(WINDOW_WIDTH_PX-250.0f,185), 1, "OH NO");
-    bunnies_in_module->setOnUpdate([info_box](bnuui::Element& e, float dt) {
+    bunnies_in_module->setOnUpdate([](bnuui::Element& e, float dt) {
         int num = 0;
         int n = 0;
         for (Bunny b : registry.bunnies.components) {
@@ -231,8 +231,8 @@ void GameLevel::InitializeBunnySavingUI() {
             else if (b.on_ship)
                 n++;
         }
-        std::string s = "Bunnies in module: " + std::to_string(num) + "/" + std::to_string(n); 
-        static_cast<bnuui::TextLabel&>(e).setText(s);
+        static_cast<bnuui::TextLabel&>(e).setText("Bunnies in module: " + std::to_string(num) + "/" +
+                                                  std::to_string(n));
     });
     info_box->children.push_back(bunnies_in_module);
 

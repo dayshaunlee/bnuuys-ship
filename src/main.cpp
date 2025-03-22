@@ -18,9 +18,6 @@
 // stdlib
 #include <chrono>
 #include <iostream>
-#define _CRTDBG_MAP_ALLOC
-#include <stdlib.h>
-#include <crtdbg.h>
 
 // internal
 #include "render_system.hpp"
@@ -32,7 +29,6 @@ using Clock = std::chrono::high_resolution_clock;
 
 // Entry point
 int main() {
-    _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
     // global systems
     WorldSystem world_system;
     RenderSystem renderer_system;

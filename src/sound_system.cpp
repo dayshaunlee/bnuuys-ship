@@ -47,10 +47,10 @@ bool SoundSystem::init() {
 
 SoundSystem::~SoundSystem() {
     for (uint i = 0; i < sound_mix_repeating.size(); i++) {
-        if (sound_mix_repeating[i] != nullptr) Mix_FreeMusic(sound_mix_repeating[i]);
+        //if (sound_mix_repeating[i] != nullptr) Mix_FreeMusic(sound_mix_repeating[i]);
     }
     for (uint i = 0; i < sound_paths_chunk.size(); i++) {
-        if (sound_mix_chunk[i] != nullptr) Mix_FreeChunk(sound_mix_chunk[i]);
+        //if (sound_mix_chunk[i] != nullptr) Mix_FreeChunk(sound_mix_chunk[i]);
     }
     Mix_CloseAudio();
 }
