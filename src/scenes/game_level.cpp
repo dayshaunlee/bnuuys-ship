@@ -455,11 +455,8 @@ void HandlePlayerStationing(vec2 tile_pos) {
         case EMPTY:
         case PLATFORM:
             return;
-        case STEERING_WHEEL:
-        case SIMPLE_CANNON:
-        case LASER_WEAPON:
+        default:
             player_comp.player_state = STATIONING;
-        case BUBBLE_MOD:
     }
     player_comp.player_state = STATIONING;
 }

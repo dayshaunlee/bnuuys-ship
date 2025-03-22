@@ -25,15 +25,15 @@ WorldSystem::WorldSystem() {
 
 WorldSystem::~WorldSystem() {
     // Destroy music components
-    if (background_music != nullptr) Mix_FreeMusic(background_music);
+    /*if (background_music != nullptr) Mix_FreeMusic(background_music);
     if (enemy_incoming != nullptr) Mix_FreeMusic(enemy_incoming);
     if (island_ship_collision != nullptr) Mix_FreeChunk(island_ship_collision);
-    if (enemy_ship_collision != nullptr) Mix_FreeChunk(enemy_ship_collision);
+    if (enemy_ship_collision != nullptr) Mix_FreeChunk(enemy_ship_collision);*/
     //if (projectile_shoot != nullptr) Mix_FreeChunk(projectile_shoot);
-    if (projectile_jail_collision != nullptr) Mix_FreeChunk(projectile_jail_collision);
+    /*if (projectile_jail_collision != nullptr) Mix_FreeChunk(projectile_jail_collision);
     if (projectile_enemy_collision != nullptr) Mix_FreeChunk(projectile_enemy_collision);
     if (game_over != nullptr) Mix_FreeChunk(game_over);
-    Mix_CloseAudio();
+    Mix_CloseAudio();*/
 
     // Destroy all created components
     registry.clear_all_components();
