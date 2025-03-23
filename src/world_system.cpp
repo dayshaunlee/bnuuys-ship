@@ -82,7 +82,7 @@ GLFWwindow* WorldSystem::create_window() {
     // CK: setting GLFW_SCALE_TO_MONITOR to true will rescale window but then you
     // must handle different scalings glfwWindowHint(GLFW_SCALE_TO_MONITOR,
     // GL_TRUE);		// GLFW 3.3+
-    glfwWindowHint(GLFW_SCALE_TO_MONITOR, GL_FALSE);  // GLFW 3.3+
+    glfwWindowHint(GLFW_SCALE_TO_MONITOR, GL_TRUE);  // GLFW 3.3+
 
     // Create the main window (for rendering, keyboard, and mouse input)
     std::string title = "Bnuuy's Ship      FPS: " + std::to_string(fpsCounter);
@@ -169,6 +169,9 @@ void WorldSystem::init(RenderSystem* renderer_arg) {
 
 // Update our game world
 bool WorldSystem::step(float elapsed_ms_since_last_update) {
+    int current_width, current_height;
+    glfwGetWindowSize(window, &current_width, &current_height);
+
     std::string title = "Bnuuy's Ship      FPS: " + std::to_string(fpsCounter) + "        " + title_points;
     glfwSetWindowTitle(window, title.c_str());
     assert(registry.screenStates.components.size() <= 1);
@@ -458,12 +461,20 @@ void WorldSystem::on_key(int key, int, int action, int mod) {
 }
 
 void WorldSystem::on_mouse_move(vec2 mouse_position) {
+    // Scale mouse coordinates based on the actual window size vs. design size
+    float scale_x = (float) WINDOW_WIDTH_PX / window_width_px;
+    float scale_y = (float) WINDOW_HEIGHT_PX / window_height_px;
+
+    // Scale the mouse position to match the game's coordinate system
+    vec2 scaled_position = {mouse_position.x * scale_x, mouse_position.y * scale_y};
+
     // record the current mouse position
-    mouse_pos_x = mouse_position.x;
-    mouse_pos_y = mouse_position.y;
+    mouse_pos_x = scaled_position.x;
+    mouse_pos_y = scaled_position.y;
+
     Scene* scene = SceneManager::getInstance().getCurrentScene();
     if (scene) {
-        scene->HandleMouseMove(mouse_position);
+        scene->HandleMouseMove(scaled_position);
     }
 }
 
