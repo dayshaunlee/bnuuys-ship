@@ -437,8 +437,6 @@ Entity createHealModule(vec2 tile_pos) {
 
     motion.scale = vec2(GRID_CELL_WIDTH_PX, GRID_CELL_HEIGHT_PX);
 
-    registry.healModules.emplace(heal);
-
     registry.renderRequests.insert(
         heal, {TEXTURE_ASSET_ID::HEAL, EFFECT_ASSET_ID::TEXTURED, GEOMETRY_BUFFER_ID::SPRITE});
 

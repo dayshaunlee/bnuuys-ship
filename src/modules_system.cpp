@@ -199,10 +199,9 @@ void ModulesSystem::step(float elapsed_ms) {
             heal.cooldown_ms = 0;
 
         if (heal.is_automated && heal.cooldown_ms <= 0) {
-            if (registry.ships.has(heal_entity)) {
-                Ship& ship = registry.ships.get(heal_entity);
-                ship.health += HEAL_AMOUNT;
-            }
+            assert(registry.ships.size() == 1);
+            Ship& ship = registry.ships.components[0];
+            ship.health += HEAL_AMOUNT;
             heal.cooldown_ms = HEAL_COOLDOWN;
         }
     }

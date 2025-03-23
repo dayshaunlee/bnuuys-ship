@@ -169,9 +169,6 @@ class RenderSystem {
         // Bubble Cannon
         textures_path("cannons/bubble_cannon.png"),
 
-        // Heal
-        textures_path("heal.png"),
-
         // Projectiles
         textures_path("effects/bullet0.png"),
         textures_path("effects/bullet1.png"),
@@ -224,7 +221,10 @@ class RenderSystem {
         textures_path("cannons/laser_weapon.png"),
         textures_path("cannons/laser_beam.png"),
 
-        textures_path("bunny/bunny_npc_face.png")
+        textures_path("bunny/bunny_npc_face.png"),
+
+        // Heal
+        textures_path("heal.png"),
     };
 
     std::array<GLuint, effect_count> effects;

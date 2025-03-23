@@ -447,6 +447,9 @@ void RenderSystem::draw() {
                     continue;
                 }
             }
+            if (registry.bunnies.has(entity)) {
+                if (registry.bunnies.get(entity).on_ship) continue;
+            }
 
             // Note, its not very efficient to access elements indirectly via the entity
             // albeit iterating through all Sprites in sequence. A good point to optimize

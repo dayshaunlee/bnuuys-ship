@@ -689,7 +689,7 @@ void GameLevel::HandleMouseClick(int button, int action, int mods) {
                 }
                 case HEAL: {
                     Entity heal_entity = ship.ship_modules_entity[player_tile_y][player_tile_x];
-                    Heal healModule = registry.healModules.get(heal_entity);
+                    Heal& healModule = registry.healModules.get(heal_entity);
 
                     if (healModule.cooldown_ms <= 0) {
                         ship.health = std::min(ship.health + HEAL_AMOUNT, ship.maxHealth);
