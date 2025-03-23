@@ -20,6 +20,6 @@ private:
 public:
     TutorialLevel(WorldSystem* worldsystem, std::string map_path, TEXTURE_ASSET_ID texture);
     ~TutorialLevel() override;
-    float DIALOGUE_TIME_MS = 3000.f;
+    float DIALOGUE_TIME_MS = 5000.f;
     float dialogue_timer_ms = DIALOGUE_TIME_MS;
 }; 

@@ -36,6 +36,7 @@ enum TUTORIAL_PHASE {
     ENEMIES_DAMAGE,
     SAVE_BUNNIES,
     GOTO_BASE,
+    BUILD_MODE,
 };
 
 vec2 tutorial_mouse_pos;
@@ -72,6 +73,8 @@ void TutorialLevel::LevelInit() {
             static_cast<bnuui::TextLabel&>(e).setText("Use the cannon to rescue");
         } else if (curr_tutorial_phase == GOTO_BASE) {
             static_cast<bnuui::TextLabel&>(e).setText("Bring them back to ");
+        } else if (curr_tutorial_phase == BUILD_MODE) {
+            static_cast<bnuui::TextLabel&>(e).setText("Press B to pause and enter");
         } 
     });
 
@@ -90,6 +93,8 @@ void TutorialLevel::LevelInit() {
             static_cast<bnuui::TextLabel&>(e).setText("jailed bunnies on islands.");
         } else if (curr_tutorial_phase == GOTO_BASE) {
             static_cast<bnuui::TextLabel&>(e).setText("highlighted area.");
+        } else if (curr_tutorial_phase == BUILD_MODE) {
+            static_cast<bnuui::TextLabel&>(e).setText("build mode.");
         } 
     });
     // Create a press spacebar
@@ -106,10 +111,13 @@ void TutorialLevel::LevelUpdate() {}
 void TutorialLevel::LevelExit() {}
 
 void TutorialLevel::LevelHandleInput(int key, int action, int mod) {
-    if (curr_tutorial_phase == WASD_KEYS) {
+    if (dialogue_timer_ms > 0) {
+        return;
+    } else if (curr_tutorial_phase == WASD_KEYS) {
         if (action == GLFW_PRESS && 
         (key == MOVE_UP_BUTTON || key == MOVE_DOWN_BUTTON || key == MOVE_LEFT_BUTTON || key == MOVE_RIGHT_BUTTON)) { 
             curr_tutorial_phase = SPACEBAR_KEY;
+            dialogue_timer_ms = DIALOGUE_TIME_MS;
         }
     }
 }
@@ -167,6 +175,9 @@ void TutorialLevel::LevelUpdate(float dt) {
                 curr_tutorial_phase = GOTO_BASE;
                 dialogue_timer_ms = DIALOGUE_TIME_MS;
         }
+    } else if (curr_tutorial_phase == GOTO_BASE) {
+        curr_tutorial_phase = BUILD_MODE;
+        dialogue_timer_ms = DIALOGUE_TIME_MS;
     } else if (registry.base.components[0].bunny_count > 0) {
         // Skip tutorial.
 
