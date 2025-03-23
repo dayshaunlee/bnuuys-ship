@@ -115,7 +115,7 @@ bool AISystem::find_path(std::vector<ivec2> & path, Entity enemy_entity, Entity 
             path = retrace_path(closed_nodes, enemy_node, ship_node);
             for (ivec2 p : path) {
                 vec2 fill_pos = {p.x * GRID_CELL_WIDTH_PX + GRID_CELL_WIDTH_PX / 2, p.y * GRID_CELL_HEIGHT_PX + GRID_CELL_HEIGHT_PX / 2};
-                //createFilledTile(fill_pos, {56, 56});
+                // createFilledTile(fill_pos, {56, 56});
             }
             return true;
         }
