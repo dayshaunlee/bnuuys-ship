@@ -516,6 +516,7 @@ Entity expandShip() {
     Ship& shipStat = registry.ships.get(ship);
     shipStat.health = EXPANDED_SHIP_HEALTH;
     shipStat.maxHealth = EXPANDED_SHIP_HEALTH;
+    shipStat.is_expanded = true;
 
     shipStat.ship_modules[MIDDLE_GRID_Y - 2][MIDDLE_GRID_X - 2] = PLATFORM;
     shipStat.ship_modules[MIDDLE_GRID_Y - 1][MIDDLE_GRID_X - 2] = PLATFORM;
@@ -560,6 +561,7 @@ Entity createShip() {
     Ship& ship = registry.ships.emplace(entity);
     ship.health = SHIP_BASE_HEALTH;
     ship.maxHealth = SHIP_BASE_HEALTH;
+    ship.is_expanded = false;
 
     initializeShipModules(ship);
     return entity;
