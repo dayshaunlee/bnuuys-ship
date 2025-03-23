@@ -424,12 +424,28 @@ std::vector<Entity> createLaserBeam(vec2 orig, vec2 dest) {
 }
 
 
+Entity createHealModule(vec2 tile_pos) {
+    Entity heal;
+    Heal& heal_module = registry.healModules.emplace(heal);
+    heal_module.is_automated = false;
+    heal_module.cooldown_ms = 0;
 
+    Motion& motion = registry.motions.emplace(heal);
+    vec2 world_pos = TileToVector2(tile_pos.x, tile_pos.y);
+    motion.position.x = world_pos.x;
+    motion.position.y = world_pos.y;
+
+    motion.scale = vec2(GRID_CELL_WIDTH_PX, GRID_CELL_HEIGHT_PX);
+
+    registry.renderRequests.insert(
+        heal, {TEXTURE_ASSET_ID::HEAL, EFFECT_ASSET_ID::TEXTURED, GEOMETRY_BUFFER_ID::SPRITE});
+
+    return heal;
+}
 
 
 void initializeShipModules(Ship& ship) {
     auto tmp_modules = std::vector<std::vector<MODULE_TYPES>>(ROW_COUNT, std::vector<MODULE_TYPES>(COL_COUNT, EMPTY));
-
     // This will make a ROW_COUNT * COL_COUNT new entities, which is fine i guess as they are just numbers.
     auto tmp_entities = std::vector<std::vector<Entity>>(ROW_COUNT, std::vector<Entity>(COL_COUNT));
 

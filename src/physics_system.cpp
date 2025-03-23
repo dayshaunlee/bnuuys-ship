@@ -28,7 +28,7 @@ bool lineLine(int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4) {
     float uB = ((x2 - x1) * (y1 - y3) - (y2 - y1) * (x1 - x3)) / denom;
 
     // if uA and uB are between 0-1, lines are colliding
-    if (uA > 0 && uA < 1 && uB > 0 && uB < 1) {
+    if (uA >= 0 && uA <= 1 && uB >= 0 && uB <= 1) {
         return true;
     }
     return false;

@@ -16,7 +16,8 @@ Level01::Level01(WorldSystem* world_system, std::string map_filename, TEXTURE_AS
     this->texture = texture;
     //TODO: need to see if we should put platform and laser in level 1 in the actual game, ok for now
     GachaSystem::getInstance().setLevelPool(
-        1, {MODULE_TYPES::SIMPLE_CANNON, MODULE_TYPES::LASER_WEAPON, MODULE_TYPES::BUBBLE_MOD});
+        1, {MODULE_TYPES::SIMPLE_CANNON, MODULE_TYPES::LASER_WEAPON, MODULE_TYPES::BUBBLE_MOD,
+            MODULE_TYPES::HEAL});
 }
 
 Level01::~Level01() {}

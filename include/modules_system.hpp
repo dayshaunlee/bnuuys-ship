@@ -21,6 +21,12 @@ struct AutoLaserContext {
     AutoLaserContext(Entity l_entity) : laser_entity(l_entity) {}
 };
 
+struct AutoHealContext {
+    Entity heal_entity;
+    Entity ship_entity;
+    AutoHealContext(Entity h_entity) : heal_entity(h_entity) {}
+};
+
 class ModulesSystem {
    private:
     std::shared_ptr<DecisionNode<AutoCannonContext>> dtree_AutoCannon;

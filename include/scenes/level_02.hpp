@@ -5,6 +5,7 @@
 #include "scenes/game_level.hpp"
 #include "tinyECS/components.hpp"
 #include "world_system.hpp"
+#include "saveload_system.hpp"
 
 class Level02 : public GameLevel {
 private:

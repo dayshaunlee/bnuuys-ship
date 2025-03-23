@@ -23,6 +23,7 @@ Entity createCannon(vec2 tile_pos);
 Entity modifyCannon(Entity entity, MODIFIER_TYPE type);
 Entity createLaserWeapon(vec2 tile_pos);
 std::vector<Entity> createLaserBeam(vec2 orig, vec2 dest);
+Entity createHealModule(vec2 tile_pos);
 
 
 Entity createWaterBackground();

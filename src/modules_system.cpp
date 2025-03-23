@@ -189,6 +189,22 @@ void ModulesSystem::step(float elapsed_ms) {
         lb_motion.position -= shipDistanceMoved;
         laser_beam.prevCamPos = currentCamloc;
     }
+
+    // Heal module
+    for (Entity heal_entity : registry.healModules.entities) {
+        Heal& heal = registry.healModules.get(heal_entity);
+        if (heal.cooldown_ms > 0)
+            heal.cooldown_ms -= elapsed_ms;
+        else
+            heal.cooldown_ms = 0;
+
+        if (heal.is_automated && heal.cooldown_ms <= 0) {
+            assert(registry.ships.size() == 1);
+            Ship& ship = registry.ships.components[0];
+            ship.health += HEAL_AMOUNT;
+            heal.cooldown_ms = HEAL_COOLDOWN;
+        }
+    }
 }
 
     

@@ -28,6 +28,7 @@ GachaSystem::GachaSystem() {
     setDropRate(MODULE_TYPES::SIMPLE_CANNON, 100);
     setDropRate(MODULE_TYPES::LASER_WEAPON, 50);
     setDropRate(MODULE_TYPES::BUBBLE_MOD, 50);
+    setDropRate(MODULE_TYPES::HEAL, 50);
 }
 
 

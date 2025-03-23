@@ -12,6 +12,7 @@ std::string SaveLoadSystem::moduleTypeToString(MODULE_TYPES type) {
     case MODULE_TYPES::LASER_WEAPON: return "LASER_WEAPON";
     case MODULE_TYPES::HELPER_BUNNY: return "HELPER_BUNNY";
     case MODULE_TYPES::BUBBLE_MOD: return "BUBBLE_MOD";
+    case MODULE_TYPES::HEAL: return "HEAL";
 
     default: return "UNKNOWN";
   }
@@ -26,6 +27,7 @@ MODULE_TYPES SaveLoadSystem::moduleTypeFromString(const std::string& str) {
   if (str == "LASER_WEAPON") return MODULE_TYPES::LASER_WEAPON;
   if (str == "HELPER_BUNNY") return MODULE_TYPES::HELPER_BUNNY;
   if (str == "BUBBLE_MOD") return MODULE_TYPES::BUBBLE_MOD;
+  if (str == "HEAL") return MODULE_TYPES::HEAL;
 
   throw std::invalid_argument("Unknown MODULE_TYPE string: " + str);
 }

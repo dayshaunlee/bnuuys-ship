@@ -16,6 +16,10 @@
 // Container for all our entities and game logic.
 // Individual rendering / updates are deferred to the update() methods.
 class WorldSystem {
+   private:
+    int window_width_px;
+    int window_height_px;
+
    public:
     
     int fpsCounter;
