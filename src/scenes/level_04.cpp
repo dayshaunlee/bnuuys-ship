@@ -44,15 +44,11 @@ void Level04::LevelUpdate(float dt) {
     
     if(upgradesReceived == bunnies_to_win){
         SceneManager& sceneManager = SceneManager::getInstance();
-        sceneManager.setNextLevelScence("Level 4");
-        std::cout << "Switching to next level scene.." << std::endl;
-        sceneManager.switchScene("Next Level Scene");
-
+        sceneManager.switchScene("Main Menu");
         SaveLoadSystem& saveLoadSystem = SaveLoadSystem::getInstance();
         GameData gameData = saveLoadSystem.createGameData("Player1", "Level 4", registry.ships.components[0]);
         saveLoadSystem.saveGame(gameData, "level_save.json");
         std::cout << "Level 4 saved" << std::endl;
-
         return;
     }
 

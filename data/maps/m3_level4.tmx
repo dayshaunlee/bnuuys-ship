@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.11" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="44" height="44" tilewidth="16" tileheight="16" infinite="0" nextlayerid="11" nextobjectid="273">
+<map version="1.11" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="44" height="44" tilewidth="16" tileheight="16" infinite="0" nextlayerid="11" nextobjectid="418">
  <editorsettings>
   <export target="m3_level4.json" format="json"/>
  </editorsettings>
@@ -122,10 +122,10 @@
 275,66,0,0,0,0,66,66,229,66,66,229,66,66,229,66,66,229,66,66,229,66,66,229,66,66,229,66,66,229,66,66,229,66,66,229,66,66,0,66,0,0,0,275,
 274,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,0,66,0,0,0,275,
 274,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,0,66,0,0,0,275,
-275,66,0,0,0,0,66,66,228,66,66,228,66,66,228,66,66,229,66,66,229,66,66,229,66,66,229,66,66,229,66,66,229,66,66,229,66,66,0,66,66,0,0,275,
+275,66,0,0,0,0,66,66,229,66,66,229,66,66,229,66,66,229,66,66,229,66,66,229,66,66,229,66,66,229,66,66,229,66,66,229,66,66,0,66,66,0,0,275,
 274,66,66,66,0,0,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,0,66,66,66,66,274,
 275,66,66,66,0,0,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,0,66,66,0,66,274,
-274,66,0,66,0,0,66,66,228,66,66,228,66,66,228,66,66,228,66,66,229,66,66,229,66,66,229,66,66,229,66,66,229,66,66,229,66,66,0,66,66,0,0,274,
+274,66,0,66,0,0,66,66,229,66,66,229,66,66,229,66,66,228,66,66,229,66,66,229,66,66,229,66,66,229,66,66,229,66,66,229,66,66,0,66,66,0,0,274,
 274,66,0,66,0,0,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,0,0,66,0,0,275,
 275,66,0,66,0,0,66,66,66,66,66,66,66,66,66,66,156,157,158,0,0,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,0,0,0,0,0,274,
 275,66,0,66,0,0,66,66,229,66,66,229,66,66,229,66,167,168,169,0,0,66,66,66,66,66,229,66,66,229,66,66,229,66,66,229,66,66,0,0,0,0,0,275,
@@ -202,7 +202,7 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 </data>
  </layer>
- <objectgroup id="6" name="islands" locked="1">
+ <objectgroup id="6" name="islands">
   <object id="95" type="island" x="0" y="16">
    <polygon points="0,0 16,0 16,672 0,672"/>
   </object>
@@ -221,6 +221,273 @@
   <object id="210" type="island" x="16" y="0">
    <polygon points="0,0 0,16 672,16 672,0"/>
   </object>
+  <object id="273" type="island" x="181" y="129">
+   <polygon points="0,0 -2,1 -2,11 1,14 5,14 8,11 8,1 6,0"/>
+  </object>
+  <object id="274" type="island" x="181" y="177">
+   <polygon points="0,0 -2,1 -2,11 1,14 5,14 8,11 8,1 6,0"/>
+  </object>
+  <object id="275" type="island" x="133" y="177">
+   <polygon points="0,0 -2,1 -2,11 1,14 5,14 8,11 8,1 6,0"/>
+  </object>
+  <object id="276" type="island" x="229" y="129">
+   <polygon points="0,0 -2,1 -2,11 1,14 5,14 8,11 8,1 6,0"/>
+  </object>
+  <object id="277" type="island" x="229" y="177">
+   <polygon points="0,0 -2,1 -2,11 1,14 5,14 8,11 8,1 6,0"/>
+  </object>
+  <object id="278" type="island" x="277" y="129">
+   <polygon points="0,0 -2,1 -2,11 1,14 5,14 8,11 8,1 6,0"/>
+  </object>
+  <object id="279" type="island" x="277" y="177">
+   <polygon points="0,0 -2,1 -2,11 1,14 5,14 8,11 8,1 6,0"/>
+  </object>
+  <object id="280" type="island" x="325" y="129">
+   <polygon points="0,0 -2,1 -2,11 1,14 5,14 8,11 8,1 6,0"/>
+  </object>
+  <object id="281" type="island" x="325" y="177">
+   <polygon points="0,0 -2,1 -2,11 1,14 5,14 8,11 8,1 6,0"/>
+  </object>
+  <object id="288" type="island" x="277" y="225">
+   <polygon points="0,0 -2,1 -2,11 1,14 5,14 8,11 8,1 6,0"/>
+  </object>
+  <object id="289" type="island" x="277" y="273">
+   <polygon points="0,0 -2,1 -2,11 1,14 5,14 8,11 8,1 6,0"/>
+  </object>
+  <object id="290" type="island" x="325" y="225">
+   <polygon points="0,0 -2,1 -2,11 1,14 5,14 8,11 8,1 6,0"/>
+  </object>
+  <object id="291" type="island" x="325" y="273">
+   <polygon points="0,0 -2,1 -2,11 1,14 5,14 8,11 8,1 6,0"/>
+  </object>
+  <object id="293" type="island" x="373" y="177">
+   <polygon points="0,0 -2,1 -2,11 1,14 5,14 8,11 8,1 6,0"/>
+  </object>
+  <object id="294" type="island" x="373" y="225">
+   <polygon points="0,0 -2,1 -2,11 1,14 5,14 8,11 8,1 6,0"/>
+  </object>
+  <object id="295" type="island" x="421" y="177">
+   <polygon points="0,0 -2,1 -2,11 1,14 5,14 8,11 8,1 6,0"/>
+  </object>
+  <object id="296" type="island" x="421" y="225">
+   <polygon points="0,0 -2,1 -2,11 1,14 5,14 8,11 8,1 6,0"/>
+  </object>
+  <object id="297" name="basic_gunner" type="enemy" x="400" y="208">
+   <properties>
+    <property name="enemy_type_enum" type="int" propertytype="enemy_type_enum" value="0"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="308" type="island" x="373" y="273">
+   <polygon points="0,0 -2,1 -2,11 1,14 5,14 8,11 8,1 6,0"/>
+  </object>
+  <object id="310" type="island" x="421" y="273">
+   <polygon points="0,0 -2,1 -2,11 1,14 5,14 8,11 8,1 6,0"/>
+  </object>
+  <object id="311" type="island" x="421" y="321">
+   <polygon points="0,0 -2,1 -2,11 1,14 5,14 8,11 8,1 6,0"/>
+  </object>
+  <object id="312" type="island" x="469" y="273">
+   <polygon points="0,0 -2,1 -2,11 1,14 5,14 8,11 8,1 6,0"/>
+  </object>
+  <object id="313" type="island" x="469" y="321">
+   <polygon points="0,0 -2,1 -2,11 1,14 5,14 8,11 8,1 6,0"/>
+  </object>
+  <object id="314" type="island" x="517" y="273">
+   <polygon points="0,0 -2,1 -2,11 1,14 5,14 8,11 8,1 6,0"/>
+  </object>
+  <object id="315" type="island" x="517" y="321">
+   <polygon points="0,0 -2,1 -2,11 1,14 5,14 8,11 8,1 6,0"/>
+  </object>
+  <object id="316" type="island" x="565" y="273">
+   <polygon points="0,0 -2,1 -2,11 1,14 5,14 8,11 8,1 6,0"/>
+  </object>
+  <object id="317" type="island" x="565" y="321">
+   <polygon points="0,0 -2,1 -2,11 1,14 5,14 8,11 8,1 6,0"/>
+  </object>
+  <object id="320" type="island" x="421" y="369">
+   <polygon points="0,0 -2,1 -2,11 1,14 5,14 8,11 8,1 6,0"/>
+  </object>
+  <object id="321" type="island" x="421" y="417">
+   <polygon points="0,0 -2,1 -2,11 1,14 5,14 8,11 8,1 6,0"/>
+  </object>
+  <object id="322" type="island" x="469" y="369">
+   <polygon points="0,0 -2,1 -2,11 1,14 5,14 8,11 8,1 6,0"/>
+  </object>
+  <object id="323" type="island" x="469" y="417">
+   <polygon points="0,0 -2,1 -2,11 1,14 5,14 8,11 8,1 6,0"/>
+  </object>
+  <object id="324" type="island" x="517" y="369">
+   <polygon points="0,0 -2,1 -2,11 1,14 5,14 8,11 8,1 6,0"/>
+  </object>
+  <object id="325" type="island" x="517" y="417">
+   <polygon points="0,0 -2,1 -2,11 1,14 5,14 8,11 8,1 6,0"/>
+  </object>
+  <object id="326" type="island" x="565" y="369">
+   <polygon points="0,0 -2,1 -2,11 1,14 5,14 8,11 8,1 6,0"/>
+  </object>
+  <object id="327" type="island" x="565" y="417">
+   <polygon points="0,0 -2,1 -2,11 1,14 5,14 8,11 8,1 6,0"/>
+  </object>
+  <object id="332" type="island" x="421" y="465">
+   <polygon points="0,0 -2,1 -2,11 1,14 5,14 8,11 8,1 6,0"/>
+  </object>
+  <object id="333" type="island" x="421" y="513">
+   <polygon points="0,0 -2,1 -2,11 1,14 5,14 8,11 8,1 6,0"/>
+  </object>
+  <object id="334" type="island" x="469" y="465">
+   <polygon points="0,0 -2,1 -2,11 1,14 5,14 8,11 8,1 6,0"/>
+  </object>
+  <object id="335" type="island" x="469" y="513">
+   <polygon points="0,0 -2,1 -2,11 1,14 5,14 8,11 8,1 6,0"/>
+  </object>
+  <object id="336" type="island" x="517" y="465">
+   <polygon points="0,0 -2,1 -2,11 1,14 5,14 8,11 8,1 6,0"/>
+  </object>
+  <object id="337" type="island" x="517" y="513">
+   <polygon points="0,0 -2,1 -2,11 1,14 5,14 8,11 8,1 6,0"/>
+  </object>
+  <object id="338" type="island" x="565" y="465">
+   <polygon points="0,0 -2,1 -2,11 1,14 5,14 8,11 8,1 6,0"/>
+  </object>
+  <object id="339" type="island" x="565" y="513">
+   <polygon points="0,0 -2,1 -2,11 1,14 5,14 8,11 8,1 6,0"/>
+  </object>
+  <object id="340" type="island" x="421" y="561">
+   <polygon points="0,0 -2,1 -2,11 1,14 5,14 8,11 8,1 6,0"/>
+  </object>
+  <object id="342" type="island" x="469" y="561">
+   <polygon points="0,0 -2,1 -2,11 1,14 5,14 8,11 8,1 6,0"/>
+  </object>
+  <object id="344" type="island" x="517" y="561">
+   <polygon points="0,0 -2,1 -2,11 1,14 5,14 8,11 8,1 6,0"/>
+  </object>
+  <object id="348" type="island" x="133" y="417">
+   <polygon points="0,0 -2,1 -2,11 1,14 5,14 8,11 8,1 6,0"/>
+  </object>
+  <object id="349" type="island" x="133" y="465">
+   <polygon points="0,0 -2,1 -2,11 1,14 5,14 8,11 8,1 6,0"/>
+  </object>
+  <object id="350" type="island" x="181" y="417">
+   <polygon points="0,0 -2,1 -2,11 1,14 5,14 8,11 8,1 6,0"/>
+  </object>
+  <object id="351" type="island" x="181" y="465">
+   <polygon points="0,0 -2,1 -2,11 1,14 5,14 8,11 8,1 6,0"/>
+  </object>
+  <object id="352" type="island" x="229" y="417">
+   <polygon points="0,0 -2,1 -2,11 1,14 5,14 8,11 8,1 6,0"/>
+  </object>
+  <object id="353" type="island" x="229" y="465">
+   <polygon points="0,0 -2,1 -2,11 1,14 5,14 8,11 8,1 6,0"/>
+  </object>
+  <object id="354" type="island" x="277" y="417">
+   <polygon points="0,0 -2,1 -2,11 1,14 5,14 8,11 8,1 6,0"/>
+  </object>
+  <object id="355" type="island" x="277" y="465">
+   <polygon points="0,0 -2,1 -2,11 1,14 5,14 8,11 8,1 6,0"/>
+  </object>
+  <object id="356" type="island" x="229" y="513">
+   <polygon points="0,0 -2,1 -2,11 1,14 5,14 8,11 8,1 6,0"/>
+  </object>
+  <object id="357" type="island" x="229" y="561">
+   <polygon points="0,0 -2,1 -2,11 1,14 5,14 8,11 8,1 6,0"/>
+  </object>
+  <object id="358" type="island" x="277" y="513">
+   <polygon points="0,0 -2,1 -2,11 1,14 5,14 8,11 8,1 6,0"/>
+  </object>
+  <object id="359" type="island" x="277" y="561">
+   <polygon points="0,0 -2,1 -2,11 1,14 5,14 8,11 8,1 6,0"/>
+  </object>
+  <object id="360" type="island" x="133" y="513">
+   <polygon points="0,0 -2,1 -2,11 1,14 5,14 8,11 8,1 6,0"/>
+  </object>
+  <object id="362" type="island" x="181" y="513">
+   <polygon points="0,0 -2,1 -2,11 1,14 5,14 8,11 8,1 6,0"/>
+  </object>
+  <object id="363" type="island" x="181" y="561">
+   <polygon points="0,0 -2,1 -2,11 1,14 5,14 8,11 8,1 6,0"/>
+  </object>
+  <object id="369" type="island" x="133" y="321">
+   <polygon points="0,0 -2,1 -2,11 1,14 5,14 8,11 8,1 6,0"/>
+  </object>
+  <object id="371" type="island" x="181" y="321">
+   <polygon points="0,0 -2,1 -2,11 1,14 5,14 8,11 8,1 6,0"/>
+  </object>
+  <object id="372" type="island" x="133" y="369">
+   <polygon points="0,0 -2,1 -2,11 1,14 5,14 8,11 8,1 6,0"/>
+  </object>
+  <object id="374" type="island" x="181" y="369">
+   <polygon points="0,0 -2,1 -2,11 1,14 5,14 8,11 8,1 6,0"/>
+  </object>
+  <object id="376" type="island" x="229" y="321">
+   <polygon points="0,0 -2,1 -2,11 1,14 5,14 8,11 8,1 6,0"/>
+  </object>
+  <object id="377" type="island" x="229" y="369">
+   <polygon points="0,0 -2,1 -2,11 1,14 5,14 8,11 8,1 6,0"/>
+  </object>
+  <object id="380" type="island" x="133" y="225">
+   <polygon points="0,0 -2,1 -2,11 1,14 5,14 8,11 8,1 6,0"/>
+  </object>
+  <object id="381" type="island" x="133" y="273">
+   <polygon points="0,0 -2,1 -2,11 1,14 5,14 8,11 8,1 6,0"/>
+  </object>
+  <object id="382" type="island" x="181" y="225">
+   <polygon points="0,0 -2,1 -2,11 1,14 5,14 8,11 8,1 6,0"/>
+  </object>
+  <object id="383" type="island" x="181" y="273">
+   <polygon points="0,0 -2,1 -2,11 1,14 5,14 8,11 8,1 6,0"/>
+  </object>
+  <object id="384" type="island" x="229" y="225">
+   <polygon points="0,0 -2,1 -2,11 1,14 5,14 8,11 8,1 6,0"/>
+  </object>
+  <object id="385" type="island" x="229" y="273">
+   <polygon points="0,0 -2,1 -2,11 1,14 5,14 8,11 8,1 6,0"/>
+  </object>
+  <object id="388" type="island" x="134" y="130">
+   <polygon points="0,0 -4,4 -4,24 0,28 20,28 24,24 24,4 20,0"/>
+  </object>
+  <object id="389" type="island" x="342" y="50">
+   <polygon points="0,0 -4,4 -4,24 0,28 20,28 24,24 24,4 20,0"/>
+  </object>
+  <object id="390" type="island" x="550" y="130">
+   <polygon points="0,0 -4,4 -4,24 0,28 20,28 24,24 24,4 20,0"/>
+  </object>
+  <object id="391" type="island" x="550" y="546">
+   <polygon points="0,0 -4,4 -4,24 0,28 20,28 24,24 24,4 20,0"/>
+  </object>
+  <object id="392" type="island" x="134" y="546">
+   <polygon points="0,0 -4,4 -4,24 0,28 20,28 24,24 24,4 20,0"/>
+  </object>
+  <object id="393" type="island" x="469" y="177">
+   <polygon points="0,0 -2,1 -2,11 1,14 5,14 8,11 8,1 6,0"/>
+  </object>
+  <object id="394" type="island" x="469" y="225">
+   <polygon points="0,0 -2,1 -2,11 1,14 5,14 8,11 8,1 6,0"/>
+  </object>
+  <object id="395" type="island" x="517" y="177">
+   <polygon points="0,0 -2,1 -2,11 1,14 5,14 8,11 8,1 6,0"/>
+  </object>
+  <object id="396" type="island" x="517" y="225">
+   <polygon points="0,0 -2,1 -2,11 1,14 5,14 8,11 8,1 6,0"/>
+  </object>
+  <object id="397" type="island" x="565" y="177">
+   <polygon points="0,0 -2,1 -2,11 1,14 5,14 8,11 8,1 6,0"/>
+  </object>
+  <object id="398" type="island" x="565" y="225">
+   <polygon points="0,0 -2,1 -2,11 1,14 5,14 8,11 8,1 6,0"/>
+  </object>
+  <object id="406" type="island" x="469" y="129">
+   <polygon points="0,0 -2,1 -2,11 1,14 5,14 8,11 8,1 6,0"/>
+  </object>
+  <object id="408" type="island" x="517" y="129">
+   <polygon points="0,0 -2,1 -2,11 1,14 5,14 8,11 8,1 6,0"/>
+  </object>
+  <object id="410" type="island" x="373" y="129">
+   <polygon points="0,0 -2,1 -2,11 1,14 5,14 8,11 8,1 6,0"/>
+  </object>
+  <object id="412" type="island" x="421" y="129">
+   <polygon points="0,0 -2,1 -2,11 1,14 5,14 8,11 8,1 6,0"/>
+  </object>
  </objectgroup>
  <objectgroup id="7" name="spawnpoints">
   <object id="92" type="player" x="352" y="352">
@@ -238,12 +505,6 @@
   <object id="214" type="bunny" x="144" y="560">
    <point/>
   </object>
-  <object id="215" name="basic_gunner" type="enemy" x="208" y="160">
-   <properties>
-    <property name="enemy_type_enum" type="int" propertytype="enemy_type_enum" value="0"/>
-   </properties>
-   <point/>
-  </object>
   <object id="216" name="basic_gunner" type="enemy" x="160" y="208">
    <properties>
     <property name="enemy_type_enum" type="int" propertytype="enemy_type_enum" value="0"/>
@@ -256,55 +517,7 @@
    </properties>
    <point/>
   </object>
-  <object id="218" name="basic_gunner" type="enemy" x="304" y="160">
-   <properties>
-    <property name="enemy_type_enum" type="int" propertytype="enemy_type_enum" value="0"/>
-   </properties>
-   <point/>
-  </object>
-  <object id="219" name="basic_gunner" type="enemy" x="352" y="208">
-   <properties>
-    <property name="enemy_type_enum" type="int" propertytype="enemy_type_enum" value="0"/>
-   </properties>
-   <point/>
-  </object>
-  <object id="220" name="basic_gunner" type="enemy" x="448" y="208">
-   <properties>
-    <property name="enemy_type_enum" type="int" propertytype="enemy_type_enum" value="0"/>
-   </properties>
-   <point/>
-  </object>
-  <object id="221" name="basic_gunner" type="enemy" x="400" y="160">
-   <properties>
-    <property name="enemy_type_enum" type="int" propertytype="enemy_type_enum" value="0"/>
-   </properties>
-   <point/>
-  </object>
   <object id="222" name="basic_gunner" type="enemy" x="544" y="208">
-   <properties>
-    <property name="enemy_type_enum" type="int" propertytype="enemy_type_enum" value="0"/>
-   </properties>
-   <point/>
-  </object>
-  <object id="223" name="basic_gunner" type="enemy" x="496" y="160">
-   <properties>
-    <property name="enemy_type_enum" type="int" propertytype="enemy_type_enum" value="0"/>
-   </properties>
-   <point/>
-  </object>
-  <object id="224" name="basic_gunner" type="enemy" x="496" y="256">
-   <properties>
-    <property name="enemy_type_enum" type="int" propertytype="enemy_type_enum" value="0"/>
-   </properties>
-   <point/>
-  </object>
-  <object id="225" name="basic_gunner" type="enemy" x="448" y="304">
-   <properties>
-    <property name="enemy_type_enum" type="int" propertytype="enemy_type_enum" value="0"/>
-   </properties>
-   <point/>
-  </object>
-  <object id="226" name="basic_gunner" type="enemy" x="496" y="352">
    <properties>
     <property name="enemy_type_enum" type="int" propertytype="enemy_type_enum" value="0"/>
    </properties>
@@ -316,19 +529,7 @@
    </properties>
    <point/>
   </object>
-  <object id="228" name="basic_gunner" type="enemy" x="448" y="400">
-   <properties>
-    <property name="enemy_type_enum" type="int" propertytype="enemy_type_enum" value="0"/>
-   </properties>
-   <point/>
-  </object>
-  <object id="229" name="basic_gunner" type="enemy" x="544" y="400">
-   <properties>
-    <property name="enemy_type_enum" type="int" propertytype="enemy_type_enum" value="0"/>
-   </properties>
-   <point/>
-  </object>
-  <object id="230" name="basic_gunner" type="enemy" x="496" y="448">
+  <object id="228" name="basic_gunner" type="enemy" x="496" y="400">
    <properties>
     <property name="enemy_type_enum" type="int" propertytype="enemy_type_enum" value="0"/>
    </properties>
@@ -346,19 +547,7 @@
    </properties>
    <point/>
   </object>
-  <object id="233" name="basic_gunner" type="enemy" x="496" y="544">
-   <properties>
-    <property name="enemy_type_enum" type="int" propertytype="enemy_type_enum" value="0"/>
-   </properties>
-   <point/>
-  </object>
   <object id="234" name="basic_gunner" type="enemy" x="160" y="496">
-   <properties>
-    <property name="enemy_type_enum" type="int" propertytype="enemy_type_enum" value="0"/>
-   </properties>
-   <point/>
-  </object>
-  <object id="235" name="basic_gunner" type="enemy" x="208" y="544">
    <properties>
     <property name="enemy_type_enum" type="int" propertytype="enemy_type_enum" value="0"/>
    </properties>
@@ -370,43 +559,13 @@
    </properties>
    <point/>
   </object>
-  <object id="237" name="basic_gunner" type="enemy" x="208" y="448">
-   <properties>
-    <property name="enemy_type_enum" type="int" propertytype="enemy_type_enum" value="0"/>
-   </properties>
-   <point/>
-  </object>
-  <object id="238" name="basic_gunner" type="enemy" x="160" y="400">
-   <properties>
-    <property name="enemy_type_enum" type="int" propertytype="enemy_type_enum" value="0"/>
-   </properties>
-   <point/>
-  </object>
-  <object id="239" name="basic_gunner" type="enemy" x="208" y="352">
+  <object id="238" name="basic_gunner" type="enemy" x="208" y="400">
    <properties>
     <property name="enemy_type_enum" type="int" propertytype="enemy_type_enum" value="0"/>
    </properties>
    <point/>
   </object>
   <object id="240" name="basic_gunner" type="enemy" x="160" y="304">
-   <properties>
-    <property name="enemy_type_enum" type="int" propertytype="enemy_type_enum" value="0"/>
-   </properties>
-   <point/>
-  </object>
-  <object id="241" name="basic_gunner" type="enemy" x="208" y="256">
-   <properties>
-    <property name="enemy_type_enum" type="int" propertytype="enemy_type_enum" value="0"/>
-   </properties>
-   <point/>
-  </object>
-  <object id="242" name="basic_gunner" type="enemy" x="304" y="256">
-   <properties>
-    <property name="enemy_type_enum" type="int" propertytype="enemy_type_enum" value="0"/>
-   </properties>
-   <point/>
-  </object>
-  <object id="243" name="basic_gunner" type="enemy" x="400" y="256">
    <properties>
     <property name="enemy_type_enum" type="int" propertytype="enemy_type_enum" value="0"/>
    </properties>
@@ -466,7 +625,7 @@
   <object id="268" name="tornado" type="disaster" x="80" y="432">
    <point/>
   </object>
-  <object id="269" name="tornado" type="disaster" x="624" y="416">
+  <object id="269" name="tornado" type="disaster" x="624" y="432">
    <point/>
   </object>
   <object id="270" name="tornado" type="disaster" x="624" y="240">
@@ -476,6 +635,18 @@
    <point/>
   </object>
   <object id="272" name="tornado" type="disaster" x="496" y="640">
+   <point/>
+  </object>
+  <object id="413" name="tornado" type="disaster" x="208" y="432">
+   <point/>
+  </object>
+  <object id="414" name="tornado" type="disaster" x="496" y="432">
+   <point/>
+  </object>
+  <object id="415" name="tornado" type="disaster" x="496" y="240">
+   <point/>
+  </object>
+  <object id="416" name="tornado" type="disaster" x="208" y="240">
    <point/>
   </object>
  </objectgroup>
