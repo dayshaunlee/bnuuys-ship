@@ -24,17 +24,6 @@ WorldSystem::WorldSystem() {
 }
 
 WorldSystem::~WorldSystem() {
-    // Destroy music components
-    /*if (background_music != nullptr) Mix_FreeMusic(background_music);
-    if (enemy_incoming != nullptr) Mix_FreeMusic(enemy_incoming);
-    if (island_ship_collision != nullptr) Mix_FreeChunk(island_ship_collision);
-    if (enemy_ship_collision != nullptr) Mix_FreeChunk(enemy_ship_collision);*/
-    //if (projectile_shoot != nullptr) Mix_FreeChunk(projectile_shoot);
-    /*if (projectile_jail_collision != nullptr) Mix_FreeChunk(projectile_jail_collision);
-    if (projectile_enemy_collision != nullptr) Mix_FreeChunk(projectile_enemy_collision);
-    if (game_over != nullptr) Mix_FreeChunk(game_over);
-    Mix_CloseAudio();*/
-
     // Destroy all created components
     registry.clear_all_components();
 
@@ -169,8 +158,7 @@ void WorldSystem::init(RenderSystem* renderer_arg) {
 
 // Update our game world
 bool WorldSystem::step(float elapsed_ms_since_last_update) {
-    int current_width, current_height;
-    glfwGetWindowSize(window, &current_width, &current_height);
+    glfwGetWindowSize(window, &window_width_px, &window_height_px);
 
     std::string title = "Bnuuy's Ship      FPS: " + std::to_string(fpsCounter) + "        " + title_points;
     glfwSetWindowTitle(window, title.c_str());
