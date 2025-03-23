@@ -35,6 +35,7 @@ void SaveLoadSystem::toJson(json& j, const GameData& data) {
 
   j["ship_health"] = data.ship_health;
   j["ship_maxHealth"] = data.ship_maxHealth;
+  j["ship_is_expanded"] = data.ship_is_expanded;
 
   // Serialize used_modules
   json usedModulesJson = json::array();
@@ -61,6 +62,7 @@ void SaveLoadSystem::fromJson(const json& j, GameData& data) {
 
   data.ship_health = j.at("ship_health").get<int>();
   data.ship_maxHealth = j.at("ship_maxHealth").get<int>();
+  data.ship_is_expanded = j.at("ship_is_expanded").get<int>();
 
   // Deserialize used_modules
   const auto& usedModulesJson = j.at("used_modules");
@@ -92,6 +94,7 @@ GameData SaveLoadSystem::createGameData(std::string _playerName, std::string _le
   data.levelName = _levelName;
   data.ship_health = ship.health;
   data.ship_maxHealth = ship.maxHealth;
+  data.ship_is_expanded = ship.is_expanded;
   data.used_modules = ship.ship_modules;
   data.unused_modules = ship.available_modules;
 
@@ -111,6 +114,10 @@ void SaveLoadSystem::saveGame(const GameData& data, const std::string& fileName)
       return;
   }
   file << j.dump(4);
+
+  SaveLoadSystem::getInstance().loadedGameData = data;
+  SaveLoadSystem::getInstance().hasLoadedData = true;
+
 }
 
 bool SaveLoadSystem::loadGame(GameData& data, const std::string& fileName) {

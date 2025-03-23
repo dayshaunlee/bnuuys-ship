@@ -78,16 +78,23 @@ void GameLevel::Init() {
     assert(registry.base.entities.size() > 0);
     // stored from top left -> clockwise
     base_corners = createBaseProgressLines(registry.base.entities[0]);
+    Ship& ship = registry.ships.components[0];
 
     if (SaveLoadSystem::getInstance().hasLoadedData) {
         GameData gd = SaveLoadSystem::getInstance().loadedGameData;
-        Ship& ship = registry.ships.components[0];
         ship.health = gd.ship_health;
         ship.maxHealth = gd.ship_maxHealth;
+        ship.is_expanded = gd.ship_is_expanded;
         ship.ship_modules = gd.used_modules;
         ship.available_modules = gd.unused_modules;
 
         std::cout << "loaded saved ship" << std::endl;
+    }
+
+    if (ship.is_expanded) {
+        Motion& shipMotion = registry.motions.get(registry.ships.entities[0]);
+        shipMotion.scale.x = GRID_CELL_WIDTH_PX * 5;
+        shipMotion.scale.y = GRID_CELL_HEIGHT_PX * 5;
     }
 
     // render player

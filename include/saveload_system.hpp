@@ -21,6 +21,7 @@ struct GameData {
   std::string levelName;
   float ship_health;
   float ship_maxHealth;
+  bool ship_is_expanded;
   std::vector<std::vector<MODULE_TYPES>> used_modules;
   std::unordered_map<MODULE_TYPES, uint> unused_modules;
 };

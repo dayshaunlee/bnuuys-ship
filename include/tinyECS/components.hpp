@@ -420,6 +420,7 @@ struct LaserBeam {
 struct Ship {
     float health;
     float maxHealth;
+    bool is_expanded;
     // This defines what the module is AND the corresponding entity.
     std::vector<std::vector<MODULE_TYPES>> ship_modules;
     std::vector<std::vector<Entity>> ship_modules_entity;
