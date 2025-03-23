@@ -137,8 +137,8 @@ bool isOffscreen(const glm::vec2& A, const glm::vec2& center) {
 }
 
 void GameLevel::InitializeTrackingUI() {
-    auto tracking_ui = std::make_shared<bnuui::Box>(vec2(496, 96), vec2(20, 20), 0.0f);
-    tracking_ui->texture = TEXTURE_ASSET_ID::BULLET_RED;
+    auto tracking_ui = std::make_shared<bnuui::Box>(vec2(496, 96), vec2(35, 35), 0.0f);
+    tracking_ui->texture = TEXTURE_ASSET_ID::BUNNY_INDICATOR;
 
     tracking_ui->setOnUpdate([](bnuui::Element& e, float dt) {
         float smallest_dist = std::numeric_limits<float>::max();
@@ -335,14 +335,23 @@ void GameLevel::Exit() {
         registry.remove_all_components_of(registry.simpleCannons.entities.back());
     }
     while (registry.cannonModifiers.entities.size() > 0){
-        registry.remove_all_components_of(registry.simpleCannons.entities.back());
+        registry.remove_all_components_of(registry.cannonModifiers.entities.back());
     }
-    while (registry.sounds.entities.size() > 0) {
+    while (registry.laserWeapons.entities.size() > 0){
+        registry.remove_all_components_of(registry.laserWeapons.entities.back());
+    }
+    while (registry.laserBeams.entities.size() > 0){
+        registry.remove_all_components_of(registry.laserBeams.entities.back());
+    }
+    while (registry.sounds.entities.size() > 0){
         registry.remove_all_components_of(registry.sounds.entities.back());
     }
-    // while (registry.projectiles.entities.size() > 0){
-    //     registry.remove_all_components_of(registry.projectiles.entities.back());
-    // }
+    while (registry.disasters.entities.size() > 0){
+        registry.remove_all_components_of(registry.disasters.entities.back());
+    }
+    while (registry.helperBunnyIcons.entities.size() > 0){
+        registry.remove_all_components_of(registry.helperBunnyIcons.entities.back());
+    }
     LevelExit();
 }
 
