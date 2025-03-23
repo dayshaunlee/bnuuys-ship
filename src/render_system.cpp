@@ -448,7 +448,7 @@ void RenderSystem::draw() {
                 }
             }
             if (registry.bunnies.has(entity)) {
-                if (registry.bunnies.get(entity).on_ship) continue;
+                if (registry.bunnies.get(entity).on_module) continue;
             }
 
             // Note, its not very efficient to access elements indirectly via the entity
