@@ -340,6 +340,9 @@ void GameLevel::Exit() {
     while (registry.sounds.entities.size() > 0) {
         registry.remove_all_components_of(registry.sounds.entities.back());
     }
+    while (registry.healModules.entities.size() > 0) {
+        registry.remove_all_components_of(registry.healModules.entities.back());
+    }
     // while (registry.projectiles.entities.size() > 0){
     //     registry.remove_all_components_of(registry.projectiles.entities.back());
     // }
@@ -684,6 +687,22 @@ void GameLevel::HandleMouseClick(int button, int action, int mods) {
                     }
                     return;
                 }
+                case HEAL: {
+                    Entity heal_entity = ship.ship_modules_entity[player_tile_y][player_tile_x];
+                    Heal healModule = registry.healModules.get(heal_entity);
+
+                    if (healModule.cooldown_ms <= 0) {
+                        ship.health = std::min(ship.health + HEAL_AMOUNT, ship.maxHealth);
+
+                        healModule.cooldown_ms = HEAL_COOLDOWN;
+
+                        std::cout << "Ship healed for " << HEAL_AMOUNT << " health points" << std::endl;
+                    } else {
+                        std::cout << "Healing on cooldown: " << healModule.cooldown_ms / HEAL_COOLDOWN
+                                  << " seconds remaining" << std::endl;
+                    }
+                    return;
+                }
                 default:
                     return;
             }
@@ -714,6 +733,10 @@ void GameLevel::HandleMouseClick(int button, int action, int mods) {
                     e = createLaserWeapon(tile_pos);
                     break;
                 }
+                case HEAL: {
+                    e = createHealModule(tile_pos);
+                    break;
+                }
                 default:
                     break;
             }
@@ -739,6 +762,15 @@ void GameLevel::HandleMouseClick(int button, int action, int mods) {
                     }
                     break;
                 }
+                case HEAL: {
+                    Heal& heal = registry.healModules.get(ship.ship_modules_entity[tile_pos.y][tile_pos.x]);
+                    if (!heal.is_automated) {
+                        heal.is_automated = true;
+                        ship.available_modules[curr_selected]--;
+                        stationBunny(tile_pos);
+                    }
+                    break;
+                }
 
                 default: {
                     break;
@@ -755,6 +787,9 @@ void GameLevel::HandleMouseClick(int button, int action, int mods) {
                     break;
                 }
                 case LASER_WEAPON: {
+                    break;
+                }
+                case HEAL: {
                     break;
                 }
 
@@ -804,6 +839,17 @@ void GameLevel::HandleMouseClick(int button, int action, int mods) {
                 if (lw.is_automated) {
                     ship.available_modules[HELPER_BUNNY]++;
                     lw.is_automated = false;
+                    unStationBunny(tile_pos);
+                    break;
+                }
+                RemoveStation(tile_pos, module);
+                break;
+            }
+            case HEAL: {
+                Heal& hm = registry.healModules.get(ship.ship_modules_entity[tile_pos.y][tile_pos.x]);
+                if (hm.is_automated) {
+                    ship.available_modules[HELPER_BUNNY]++;
+                    hm.is_automated = false;
                     unStationBunny(tile_pos);
                     break;
                 }

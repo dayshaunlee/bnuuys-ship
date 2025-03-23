@@ -228,8 +228,10 @@ enum class TEXTURE_ASSET_ID {
     LASER_BEAM = LASER_WEAPON0 + 1,
 
     BUNNY_NPC_FACE = LASER_BEAM + 1,
+
+    HEAL = BUNNY_NPC_FACE + 1,
     
-    TEXTURE_COUNT = BUNNY_NPC_FACE + 1
+    TEXTURE_COUNT = HEAL + 1
 };
 
 const int texture_count = (int) TEXTURE_ASSET_ID::TEXTURE_COUNT;
@@ -340,6 +342,7 @@ enum MODULE_TYPES {
     STEERING_WHEEL,
     SIMPLE_CANNON,
     LASER_WEAPON,
+    HEAL,
     HELPER_BUNNY,
     BUBBLE_MOD
 };
@@ -359,6 +362,8 @@ inline TEXTURE_ASSET_ID getTextureFromModuleType(MODULE_TYPES module) {
         return TEXTURE_ASSET_ID::LASER_WEAPON0;
     case MODULE_TYPES::BUBBLE_MOD :
         return TEXTURE_ASSET_ID::BUBBLE_BULLET;
+    case MODULE_TYPES::HEAL:
+        return TEXTURE_ASSET_ID::HEAL;
     default:
         std::cout << "This is not a valid module" << std::endl;
         return TEXTURE_ASSET_ID::WATER_BACKGROUND; 
@@ -375,6 +380,8 @@ inline std::string getModuleName(MODULE_TYPES module) {
         return "P.I.S.S Module";
     case MODULE_TYPES::BUBBLE_MOD :
         return "Bubble Buff";
+    case MODULE_TYPES::HEAL:
+        return "Heal Module";
     default:
         return "This shouldn't be a module bruh.";
     }
@@ -415,6 +422,11 @@ struct LaserBeam {
     float damage;
     float alive_time_ms;
     vec2 prevCamPos;
+};
+
+struct Heal {
+    bool is_automated;
+    float cooldown_ms;  // The cooldown period before another heal.
 };
 
 struct Ship {

@@ -42,6 +42,8 @@ class ECSRegistry {
     ComponentContainer<LaserWeapon> laserWeapons;
     ComponentContainer<LaserBeam> laserBeams;
 
+    ComponentContainer<Heal> healModules;
+
     ComponentContainer<PlayerProjectile> playerProjectiles;
     ComponentContainer<EnemyProjectile> enemyProjectiles;
     ComponentContainer<Bunny> bunnies;
@@ -83,6 +85,8 @@ class ECSRegistry {
 
         registry_list.push_back(&laserWeapons);
         registry_list.push_back(&laserBeams);
+
+        registry_list.push_back(&healModules);
         
         registry_list.push_back(&enemies);
         registry_list.push_back(&enemySpawners);

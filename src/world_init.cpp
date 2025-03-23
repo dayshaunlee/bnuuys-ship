@@ -424,7 +424,26 @@ std::vector<Entity> createLaserBeam(vec2 orig, vec2 dest) {
 }
 
 
+Entity createHealModule(vec2 tile_pos) {
+    Entity heal;
+    Heal& heal_module = registry.healModules.emplace(heal);
+    heal_module.is_automated = false;
+    heal_module.cooldown_ms = 0;
 
+    Motion& motion = registry.motions.emplace(heal);
+    vec2 world_pos = TileToVector2(tile_pos.x, tile_pos.y);
+    motion.position.x = world_pos.x;
+    motion.position.y = world_pos.y;
+
+    motion.scale = vec2(GRID_CELL_WIDTH_PX, GRID_CELL_HEIGHT_PX);
+
+    registry.healModules.emplace(heal);
+
+    registry.renderRequests.insert(
+        heal, {TEXTURE_ASSET_ID::HEAL, EFFECT_ASSET_ID::TEXTURED, GEOMETRY_BUFFER_ID::SPRITE});
+
+    return heal;
+}
 
 
 void initializeShipModules(Ship& ship) {
@@ -461,7 +480,12 @@ void initializeShipModules(Ship& ship) {
     vec2 bubbleGridPos = {MIDDLE_GRID_X - 1, MIDDLE_GRID_Y - 1};
     tmp_modules[bubbleGridPos.y][bubbleGridPos.x] = SIMPLE_CANNON;
     Entity bubble_cannon_entity = createCannon(bubbleGridPos);
-    tmp_entities[bubbleGridPos.y][bubbleGridPos.x] = bubble_cannon_entity; 
+    tmp_entities[bubbleGridPos.y][bubbleGridPos.x] = bubble_cannon_entity;
+
+    vec2 HealModuleGridPos = {MIDDLE_GRID_X, MIDDLE_GRID_Y + 1};
+    tmp_modules[HealModuleGridPos.y][HealModuleGridPos.x] = HEAL;
+    Entity heal_entity = createHealModule(HealModuleGridPos);
+    tmp_entities[HealModuleGridPos.y][HealModuleGridPos.x] = heal_entity;
 
     modifyCannon(bubble_cannon_entity, BUBBLE);
 

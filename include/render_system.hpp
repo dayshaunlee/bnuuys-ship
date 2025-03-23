@@ -169,6 +169,9 @@ class RenderSystem {
         // Bubble Cannon
         textures_path("cannons/bubble_cannon.png"),
 
+        // Heal
+        textures_path("heal.png"),
+
         // Projectiles
         textures_path("effects/bullet0.png"),
         textures_path("effects/bullet1.png"),
