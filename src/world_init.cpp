@@ -507,6 +507,8 @@ Entity createIslandBackground(int width, int height, int offset_x, int offset_y,
 }
 
 Entity expandShip() {
+    CameraSystem::GetInstance()->position = vec2(0,0);
+    
     Entity ship = registry.ships.entities[0];
     
     Motion& shipMotion = registry.motions.get(ship);
