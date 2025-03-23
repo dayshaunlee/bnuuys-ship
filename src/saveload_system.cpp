@@ -1,4 +1,5 @@
 #include "saveload_system.hpp"
+#include "common.hpp"
 
 NLOHMANN_DEFINE_TYPE_NON_INTRUSIVE(tile_position, x, y);
 

@@ -111,6 +111,8 @@ void GameLevel::Init() {
     InitializeUI();
 
     LevelInit();
+
+    std::cout << "Num of ships: " << registry.ships.components.size() << std::endl;
 }
 
 bool isOffscreen(const glm::vec2& A, const glm::vec2& center) {
@@ -204,10 +206,10 @@ void GameLevel::InitializeBunnySavingUI() {
     bunny_ctr_box->children.push_back(bunny_icon);
 
     auto ctr_text = std::make_shared<bnuui::TextLabel>(vec2(WINDOW_WIDTH_PX-108.0f,115), 1, "0/0");
-    ctr_text->setOnUpdate([&, ctr_text](bnuui::Element& e, float dt) {
+    ctr_text->setOnUpdate([&](bnuui::Element& e, float dt) {  
         int free_bunny = registry.base.components[0].bunny_count;
         std::string s = std::to_string(free_bunny) + "/" + std::to_string(bunnies_to_win);
-        ctr_text->setText(s);
+        static_cast<bnuui::TextLabel&>(e).setText(s);
     });
 
     auto info_box = std::make_shared<bnuui::LongBox>(vec2(WINDOW_WIDTH_PX-170, 96*2), vec2(240, 72), 0.0f);
@@ -220,7 +222,7 @@ void GameLevel::InitializeBunnySavingUI() {
     });
 
     auto bunnies_in_module = std::make_shared<bnuui::TextLabel>(vec2(WINDOW_WIDTH_PX-250.0f,185), 1, "OH NO");
-    bunnies_in_module->setOnUpdate([bunnies_in_module, info_box](bnuui::Element& e, float dt) {
+    bunnies_in_module->setOnUpdate([](bnuui::Element& e, float dt) {
         int num = 0;
         int n = 0;
         for (Bunny b : registry.bunnies.components) {
@@ -229,10 +231,11 @@ void GameLevel::InitializeBunnySavingUI() {
             else if (b.on_ship)
                 n++;
         }
-        std::string s = "Bunnies in module: " + std::to_string(num) + "/" + std::to_string(n);
-        bunnies_in_module->setText(s);
+        static_cast<bnuui::TextLabel&>(e).setText("Bunnies in module: " + std::to_string(num) + "/" +
+                                                  std::to_string(n));
     });
     info_box->children.push_back(bunnies_in_module);
+
     scene_ui.insert(bunny_ctr_box);
     scene_ui.insert(ctr_text);
     scene_ui.insert(info_box);
