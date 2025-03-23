@@ -106,7 +106,7 @@ void SaveLoadSystem::saveGame(const GameData& data, const std::string& fileName)
   toJson(j, data);
 
   std::string path;
-  path = "../data/" + fileName;
+  path = data_path() + "/" + fileName;
 
   std::ofstream file(path);
   if (!file.is_open()) {
@@ -122,7 +122,7 @@ void SaveLoadSystem::saveGame(const GameData& data, const std::string& fileName)
 
 bool SaveLoadSystem::loadGame(GameData& data, const std::string& fileName) {
   std::string path;
-  path = "../data/" + fileName;
+    path = data_path() + "/" + fileName;
 
   std::ifstream file(path);
   if (!file.is_open()) {
