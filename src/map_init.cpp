@@ -158,7 +158,7 @@ std::pair<tson::Vector2i, tson::Vector2i> loadMap(const std::string& name) {
             } else if (obj.getClassType() == "disaster") {
                 Entity e = Entity();
                 Disaster& dis = registry.disasters.emplace(e);
-                tson::EnumValue dis_type = obj.get<tson::EnumValue>("disaster_type_enum");
+                tson::EnumValue dis_type = obj.get<tson::EnumValue>("disaster_type");
                 dis.type = static_cast<DISASTER_TYPE>(dis_type.getValue());
                 Motion& mot = registry.motions.emplace(e);
                 mot.position = {obj.getPosition().x * scaling_factor_x + offset.x,
