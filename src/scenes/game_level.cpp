@@ -654,13 +654,13 @@ void GameLevel::HandleMouseClick(int button, int action, int mods) {
                     SimpleCannon& sc = registry.simpleCannons.get(cannon_entity);
                     if (sc.timer_ms <= 0) {
                         vec2 cannon_pos = registry.motions.get(cannon_entity).position;
-                        // createCannonProjectile(cannon_pos, l1_mouse_pos);
                         if (sc.is_modified) {
                             CannonModifier cm = registry.cannonModifiers.get(cannon_entity);
                             createModifiedCannonProjectile(cannon_pos, l1_mouse_pos, cm);
                         } else {
                             createCannonProjectile(cannon_pos, l1_mouse_pos);
                         }
+                        sc.timer_ms = SIMPLE_CANNON_COOLDOWN;
                     }
                     return;
                 }
