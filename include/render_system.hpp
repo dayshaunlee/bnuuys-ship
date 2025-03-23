@@ -223,6 +223,8 @@ class RenderSystem {
 
         textures_path("bunny/bunny_npc_face.png"),
 
+        textures_path("bunny/bunny_indicator.png"),
+
         // Heal
         textures_path("heal.png"),
     };

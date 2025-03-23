@@ -446,7 +446,6 @@ Entity createHealModule(vec2 tile_pos) {
 
 void initializeShipModules(Ship& ship) {
     auto tmp_modules = std::vector<std::vector<MODULE_TYPES>>(ROW_COUNT, std::vector<MODULE_TYPES>(COL_COUNT, EMPTY));
-
     // This will make a ROW_COUNT * COL_COUNT new entities, which is fine i guess as they are just numbers.
     auto tmp_entities = std::vector<std::vector<Entity>>(ROW_COUNT, std::vector<Entity>(COL_COUNT));
 
@@ -468,24 +467,6 @@ void initializeShipModules(Ship& ship) {
 
     Entity cannon_entity = createCannon(SimpleCannonGridPos);
     tmp_entities[SimpleCannonGridPos.y][SimpleCannonGridPos.x] = cannon_entity;
-
-    // TODO lily: delete later, this is just for testing
-    vec2 laserGridPos = {MIDDLE_GRID_X + 1, MIDDLE_GRID_Y - 1};
-    tmp_modules[laserGridPos.y][laserGridPos.x] = LASER_WEAPON;
-    Entity laser_entity = createLaserWeapon(laserGridPos);
-    tmp_entities[laserGridPos.y][laserGridPos.x] = laser_entity; 
-
-    vec2 bubbleGridPos = {MIDDLE_GRID_X - 1, MIDDLE_GRID_Y - 1};
-    tmp_modules[bubbleGridPos.y][bubbleGridPos.x] = SIMPLE_CANNON;
-    Entity bubble_cannon_entity = createCannon(bubbleGridPos);
-    tmp_entities[bubbleGridPos.y][bubbleGridPos.x] = bubble_cannon_entity;
-
-    vec2 HealModuleGridPos = {MIDDLE_GRID_X, MIDDLE_GRID_Y + 1};
-    tmp_modules[HealModuleGridPos.y][HealModuleGridPos.x] = HEAL;
-    Entity heal_entity = createHealModule(HealModuleGridPos);
-    tmp_entities[HealModuleGridPos.y][HealModuleGridPos.x] = heal_entity;
-
-    modifyCannon(bubble_cannon_entity, BUBBLE);
 
     ship.ship_modules = tmp_modules;
     ship.ship_modules_entity = tmp_entities;
