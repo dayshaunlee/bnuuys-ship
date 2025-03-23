@@ -9,6 +9,7 @@
 #include "tinyECS/entity.hpp"
 #include "tinyECS/registry.hpp"
 #include <random>
+#include "saveload_system.hpp"
 
 ENEMY_TYPE getRandEnemyType() {
     std::random_device rd;
@@ -366,6 +367,7 @@ Entity modifyCannon(Entity entity, MODIFIER_TYPE type) {
     TEXTURE_ASSET_ID& texture = registry.renderRequests.get(entity).used_texture;
     texture = TEXTURE_ASSET_ID::BUBBLE_CANNON;
 
+
     return entity;
 }
 
@@ -445,31 +447,88 @@ Entity createHealModule(vec2 tile_pos) {
 
 
 void initializeShipModules(Ship& ship) {
-    auto tmp_modules = std::vector<std::vector<MODULE_TYPES>>(ROW_COUNT, std::vector<MODULE_TYPES>(COL_COUNT, EMPTY));
-    // This will make a ROW_COUNT * COL_COUNT new entities, which is fine i guess as they are just numbers.
-    auto tmp_entities = std::vector<std::vector<Entity>>(ROW_COUNT, std::vector<Entity>(COL_COUNT));
+    if (SaveLoadSystem::getInstance().hasLoadedData) {
+        auto& ship_modules = SaveLoadSystem::getInstance().loadedGameData.used_modules;
+        auto tmp_entities = std::vector<std::vector<Entity>>(ROW_COUNT, std::vector<Entity>(COL_COUNT));
 
-    // Make a 3x3 platform from the middle.
-    for (int i = MIDDLE_GRID_Y - 1; i <= MIDDLE_GRID_Y + 1; i++) {
-        for (int j = MIDDLE_GRID_X - 1; j <= MIDDLE_GRID_X + 1; j++) {
-            tmp_modules[i][j] = PLATFORM;
+        for (size_t i = 0; i < ship_modules.size(); ++i) {
+            for (size_t j = 0; j < ship_modules[i].size(); ++j) {
+                MODULE_TYPES& module = ship_modules[i][j];
+
+                switch (module) {
+                    case MODULE_TYPES::EMPTY: continue;
+                    case MODULE_TYPES::PLATFORM: continue;
+                    case MODULE_TYPES::STEERING_WHEEL: {
+                        vec2 SteeringWheelGridPos = {j, i};
+                        Entity wheel_entity = createSteeringWheel(SteeringWheelGridPos);
+                        tmp_entities[i][j] = wheel_entity;
+                        break;
+                    };
+                    case MODULE_TYPES::SIMPLE_CANNON: {
+                        vec2 SimpleCannonGridPos = {j, i};
+                        Entity cannon_entity = createCannon(SimpleCannonGridPos);
+                        tmp_entities[i][j] = cannon_entity;
+                        break;
+                    }
+                    case MODULE_TYPES::LASER_WEAPON: {
+                        vec2 LaserWeaponGridPos = {j, i};
+                        Entity laser_entity = createLaserWeapon(LaserWeaponGridPos);
+                        tmp_entities[i][j] = laser_entity;
+                        break;
+                    }
+                    case MODULE_TYPES::HELPER_BUNNY: {
+                        // right now no chance of getting helper bunny in gacha so this will do for now
+                        break;
+                    }
+                    case MODULE_TYPES::BUBBLE_MOD: {
+                        std::cout << "hihihi bubble" << std::endl;
+                        vec2 bubbleGridPos = {j, i};
+                        Entity bubble_cannon_entity = createCannon(bubbleGridPos);
+                        tmp_entities[i][j] = bubble_cannon_entity;
+                        modifyCannon(bubble_cannon_entity, MODIFIER_TYPE::BUBBLE);
+                        break;
+                    }
+                    case MODULE_TYPES::HEAL: {
+                        vec2 HealGridPos = {j, i};
+                        Entity heal_entity = createHealModule(HealGridPos);
+                        tmp_entities[i][j] = heal_entity;
+                        break;
+                    }
+                
+                    default: break;
+                  }
+            }
         }
+
+        ship.ship_modules_entity = tmp_entities;
+
+    } else {
+        auto tmp_modules = std::vector<std::vector<MODULE_TYPES>>(ROW_COUNT, std::vector<MODULE_TYPES>(COL_COUNT, EMPTY));
+        // This will make a ROW_COUNT * COL_COUNT new entities, which is fine i guess as they are just numbers.
+        auto tmp_entities = std::vector<std::vector<Entity>>(ROW_COUNT, std::vector<Entity>(COL_COUNT));
+
+        // Make a 3x3 platform from the middle.
+        for (int i = MIDDLE_GRID_Y - 1; i <= MIDDLE_GRID_Y + 1; i++) {
+            for (int j = MIDDLE_GRID_X - 1; j <= MIDDLE_GRID_X + 1; j++) {
+                tmp_modules[i][j] = PLATFORM;
+            }
+        }
+
+        vec2 SteeringWheelGridPos = {MIDDLE_GRID_X, MIDDLE_GRID_Y};
+        tmp_modules[SteeringWheelGridPos.y][SteeringWheelGridPos.x] = STEERING_WHEEL;
+
+        Entity wheel_entity = createSteeringWheel(SteeringWheelGridPos);
+        tmp_entities[SteeringWheelGridPos.y][SteeringWheelGridPos.x] = wheel_entity;
+
+        vec2 SimpleCannonGridPos = {MIDDLE_GRID_X, MIDDLE_GRID_Y - 1};
+        tmp_modules[SimpleCannonGridPos.y][SimpleCannonGridPos.x] = SIMPLE_CANNON;
+
+        Entity cannon_entity = createCannon(SimpleCannonGridPos);
+        tmp_entities[SimpleCannonGridPos.y][SimpleCannonGridPos.x] = cannon_entity;
+
+        ship.ship_modules = tmp_modules;
+        ship.ship_modules_entity = tmp_entities;
     }
-
-    vec2 SteeringWheelGridPos = {MIDDLE_GRID_X, MIDDLE_GRID_Y};
-    tmp_modules[SteeringWheelGridPos.y][SteeringWheelGridPos.x] = STEERING_WHEEL;
-
-    Entity wheel_entity = createSteeringWheel(SteeringWheelGridPos);
-    tmp_entities[SteeringWheelGridPos.y][SteeringWheelGridPos.x] = wheel_entity;
-
-    vec2 SimpleCannonGridPos = {MIDDLE_GRID_X, MIDDLE_GRID_Y - 1};
-    tmp_modules[SimpleCannonGridPos.y][SimpleCannonGridPos.x] = SIMPLE_CANNON;
-
-    Entity cannon_entity = createCannon(SimpleCannonGridPos);
-    tmp_entities[SimpleCannonGridPos.y][SimpleCannonGridPos.x] = cannon_entity;
-
-    ship.ship_modules = tmp_modules;
-    ship.ship_modules_entity = tmp_entities;
 }
 
 Entity createWaterBackground() {

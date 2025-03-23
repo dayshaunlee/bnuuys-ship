@@ -596,6 +596,12 @@ void GameLevel::HandleMouseMove(vec2 pos) {
                 m.angle = degrees(atan2(pos.y - m.position.y, pos.x - m.position.x)) + 90.0f;
                 return; 
             }
+            case BUBBLE_MOD: {
+                Entity cannon_entity = ship.ship_modules_entity[player_tile_y][player_tile_x];
+                Motion& m = registry.motions.get(cannon_entity);
+                m.angle = degrees(atan2(pos.y - m.position.y, pos.x - m.position.x)) + 90.0f;
+                return;
+            }
             default:
                 return;
         }
@@ -679,12 +685,7 @@ void GameLevel::HandleMouseClick(int button, int action, int mods) {
                     SimpleCannon& sc = registry.simpleCannons.get(cannon_entity);
                     if (sc.timer_ms <= 0) {
                         vec2 cannon_pos = registry.motions.get(cannon_entity).position;
-                        if (sc.is_modified) {
-                            CannonModifier cm = registry.cannonModifiers.get(cannon_entity);
-                            createModifiedCannonProjectile(cannon_pos, l1_mouse_pos, cm);
-                        } else {
-                            createCannonProjectile(cannon_pos, l1_mouse_pos);
-                        }
+                        createCannonProjectile(cannon_pos, l1_mouse_pos);
                         sc.timer_ms = SIMPLE_CANNON_COOLDOWN;
                     }
                     return;
@@ -712,6 +713,18 @@ void GameLevel::HandleMouseClick(int button, int action, int mods) {
                     } else {
                         std::cout << "Healing on cooldown: " << healModule.cooldown_ms / HEAL_COOLDOWN
                                   << " seconds remaining" << std::endl;
+                    }
+                    return;
+                }
+                case BUBBLE_MOD: {
+                    // Rotate the simple cannon.
+                    Entity cannon_entity = ship.ship_modules_entity[player_tile_y][player_tile_x];
+                    SimpleCannon& sc = registry.simpleCannons.get(cannon_entity);
+                    if (sc.timer_ms <= 0) {
+                        vec2 cannon_pos = registry.motions.get(cannon_entity).position;
+                        CannonModifier cm = registry.cannonModifiers.get(cannon_entity);
+                        createModifiedCannonProjectile(cannon_pos, l1_mouse_pos, cm);
+                        sc.timer_ms = SIMPLE_CANNON_COOLDOWN;
                     }
                     return;
                 }
@@ -795,6 +808,7 @@ void GameLevel::HandleMouseClick(int button, int action, int mods) {
                     if (!sc.is_modified) {
                         ship.available_modules[curr_selected]--;
                         modifyCannon(ship.ship_modules_entity[tile_pos.y][tile_pos.x], BUBBLE);
+                        ship.ship_modules[tile_pos.y][tile_pos.x] = BUBBLE_MOD;
                     }
                     break;
                 }
@@ -866,6 +880,27 @@ void GameLevel::HandleMouseClick(int button, int action, int mods) {
                     break;
                 }
                 RemoveStation(tile_pos, module);
+                break;
+            }
+            case BUBBLE_MOD: {
+                Entity& cannon_entity = ship.ship_modules_entity[tile_pos.y][tile_pos.x];
+                SimpleCannon& sc = registry.simpleCannons.get(cannon_entity);
+                if (sc.is_automated) {
+                    ship.available_modules[HELPER_BUNNY]++;
+                    sc.is_automated = false;
+                    unStationBunny(tile_pos);
+                    break;
+                } else {
+                    ship.available_modules[BUBBLE_MOD]++;
+                    sc.is_modified = false;
+                    registry.cannonModifiers.remove(cannon_entity);
+                    
+                    TEXTURE_ASSET_ID& texture = registry.renderRequests.get(cannon_entity).used_texture;
+                    texture = TEXTURE_ASSET_ID::SIMPLE_CANNON01;
+                    break;
+                }
+
+                RemoveStation(tile_pos, module); 
                 break;
             }
             default: {
