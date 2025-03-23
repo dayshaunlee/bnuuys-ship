@@ -79,7 +79,7 @@ void GameLevel::Init() {
     // stored from top left -> clockwise
     base_corners = createBaseProgressLines(registry.base.entities[0]);
     Ship& ship = registry.ships.components[0];
-
+    ship.health = ship.maxHealth;
     if (SaveLoadSystem::getInstance().hasLoadedData) {
         GameData gd = SaveLoadSystem::getInstance().loadedGameData;
         ship.health = gd.ship_health;

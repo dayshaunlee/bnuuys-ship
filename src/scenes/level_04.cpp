@@ -44,9 +44,7 @@ void Level04::LevelUpdate(float dt) {
     
     if(upgradesReceived == bunnies_to_win){
         SceneManager& sceneManager = SceneManager::getInstance();
-        sceneManager.setNextLevelScence("Level 4");
-        std::cout << "Switching to next level scene.." << std::endl;
-        sceneManager.switchScene("Next Level Scene");
+        sceneManager.switchScene("Main Menu");
         return;
     }
 
