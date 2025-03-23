@@ -21,8 +21,6 @@ WorldSystem::WorldSystem() {
     // seeding rng with random device
     rng = std::default_random_engine(std::random_device()());
     fpsCounter = 0;
-    window_width_px = WINDOW_WIDTH_PX;
-    window_height_px = WINDOW_HEIGHT_PX;
 }
 
 WorldSystem::~WorldSystem() {
@@ -173,11 +171,6 @@ void WorldSystem::init(RenderSystem* renderer_arg) {
 bool WorldSystem::step(float elapsed_ms_since_last_update) {
     int current_width, current_height;
     glfwGetWindowSize(window, &current_width, &current_height);
-    if (current_width != window_width_px || current_height != window_height_px) {
-        window_width_px = current_width;
-        window_height_px = current_height;
-        std::cout << "Window size updated: " << window_width_px << "x" << window_height_px << std::endl;
-    }
 
     std::string title = "Bnuuy's Ship      FPS: " + std::to_string(fpsCounter) + "        " + title_points;
     glfwSetWindowTitle(window, title.c_str());
