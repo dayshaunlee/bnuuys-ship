@@ -897,6 +897,7 @@ void GameLevel::HandleMouseClick(int button, int action, int mods) {
                     
                     TEXTURE_ASSET_ID& texture = registry.renderRequests.get(cannon_entity).used_texture;
                     texture = TEXTURE_ASSET_ID::SIMPLE_CANNON01;
+                    ship.ship_modules[tile_pos.y][tile_pos.x] = MODULE_TYPES::SIMPLE_CANNON;
                     break;
                 }
 
