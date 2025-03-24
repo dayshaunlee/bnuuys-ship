@@ -27,6 +27,21 @@ We implemented A* searching algorithm to the enemies for the creative component.
 https://github.students.cs.ubc.ca/CPSC427-2024W-T2/team-05/blob/77722e7b2ae66384a6abcae13dd449b4db39f287/src/ai_system.cpp#L33-L193
 
 # M3
+## Features Added
+- Better Tutorial Level
+- Randomized Reward System (Gacha System)
+- More Levels
+- Ship Expansion
+- Laser Weapon
+- Bubble Buff
+- Build Mode
+- Enemies Respawning
+- Radar System
+- Different Enemy Types
+- Healing Module
+- Obstacles (Whirlpool & Tornado)
+
+## Creative Components
 
 ### Audio Feedback
 Different game states will play audio feedbacks accordingly. Such as, when an enemy collided with the ship, or when an projectile is shot
