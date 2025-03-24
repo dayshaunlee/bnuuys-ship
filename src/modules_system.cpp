@@ -201,7 +201,7 @@ void ModulesSystem::step(float elapsed_ms) {
         if (heal.is_automated && heal.cooldown_ms <= 0) {
             assert(registry.ships.size() == 1);
             Ship& ship = registry.ships.components[0];
-            ship.health += HEAL_AMOUNT;
+            ship.health = std::min(ship.health + HEAL_AMOUNT, ship.maxHealth);
             heal.cooldown_ms = HEAL_COOLDOWN;
         }
     }
