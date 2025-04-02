@@ -98,6 +98,7 @@ public:
 class TextLabel : public Element {
 public:
     TextLabel(vec2 pos, float font_size, const std::string& text);
+    TextLabel(vec2 pos, float font_size, vec3 color, const std::string& text);
     ~TextLabel() = default;
     void doUpdate(float dt) override;
     void setText(const std::string& text);

@@ -96,7 +96,7 @@ void IntroCutscene::Update(float dt) {
     if (dialogue_timer_ms > 0) {
         dialogue_timer_ms -= dt;
     } else {
-        curr_line = dialog_parts[phase]
+        curr_line = dialog_parts[phase];
         /*rendered_dialog_text = " ";*/
         char_index = 0;
         dialogue_timer_ms = DIALOGUE_TIME_MS;

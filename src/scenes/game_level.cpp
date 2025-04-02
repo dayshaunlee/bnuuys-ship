@@ -215,34 +215,35 @@ void GameLevel::InitializeBookUI(){
     book->visible = false;
     
 
-    auto header_text = std::make_shared<bnuui::TextLabel>(vec2(WINDOW_WIDTH_PX/2-200,WINDOW_HEIGHT_PX/2 -100), 1, "OH NO");
-    auto header_text2 = std::make_shared<bnuui::TextLabel>(vec2(WINDOW_WIDTH_PX/2+60,WINDOW_HEIGHT_PX/2 -100), 1, "OH NO");
+    auto header_text = std::make_shared<bnuui::TextLabel>(vec2(WINDOW_WIDTH_PX/2-200,WINDOW_HEIGHT_PX/2 -100), 1, vec3(96.f/255.f, 63.f/255.f, 44.f/255.f), "OH NO");
+    auto header_text2 = std::make_shared<bnuui::TextLabel>(vec2(WINDOW_WIDTH_PX/2+60,WINDOW_HEIGHT_PX/2 -100), 1, vec3(96.f/255.f, 63.f/255.f, 44.f/255.f), "OH NO");
 
     auto module_icon1 = std::make_shared<bnuui::Box>(vec2(WINDOW_WIDTH_PX/2 -200, WINDOW_HEIGHT_PX/2 - 50), vec2(60, 60), 0.0f); 
     module_icon1->texture = TEXTURE_ASSET_ID::SIMPLE_CANNON01;
     module_icon1->visible = false;
-    auto module_text1 = std::make_shared<bnuui::TextLabel>(vec2(WINDOW_WIDTH_PX/2 - 170,WINDOW_HEIGHT_PX/2 -50), 1, "OH NO");
+    auto module_text1 = std::make_shared<bnuui::TextLabel>(vec2(WINDOW_WIDTH_PX/2 - 170,WINDOW_HEIGHT_PX/2 -50), 1, vec3(96.f/255.f, 63.f/255.f, 44.f/255.f),"OH NO");
 
     auto module_icon2 = std::make_shared<bnuui::Box>(vec2(WINDOW_WIDTH_PX/2 -200, WINDOW_HEIGHT_PX/2), vec2(55, 55), 0.0f); 
     module_icon2->texture = TEXTURE_ASSET_ID::BUBBLE_CANNON;
     module_icon2->visible = false;
-    auto module_text2 = std::make_shared<bnuui::TextLabel>(vec2(WINDOW_WIDTH_PX/2 - 170, WINDOW_HEIGHT_PX/2), 1, "OH NO");
+    auto module_text2 = std::make_shared<bnuui::TextLabel>(vec2(WINDOW_WIDTH_PX/2 - 170, WINDOW_HEIGHT_PX/2), 1,vec3(96.f/255.f, 63.f/255.f, 44.f/255.f), "OH NO");
 
     auto module_icon3 = std::make_shared<bnuui::Box>(vec2(WINDOW_WIDTH_PX/2 -200, WINDOW_HEIGHT_PX/2 + 50), vec2(55, 55), 0.0f); 
     module_icon3->texture = TEXTURE_ASSET_ID::LASER_WEAPON0;
     module_icon3->visible = false;
-    auto module_text3 = std::make_shared<bnuui::TextLabel>(vec2(WINDOW_WIDTH_PX/2 - 170,WINDOW_HEIGHT_PX/2 + 50), 1, "OH NO");
+    auto module_text3 = std::make_shared<bnuui::TextLabel>(vec2(WINDOW_WIDTH_PX/2 - 170,WINDOW_HEIGHT_PX/2 + 50), 1, vec3(96.f/255.f, 63.f/255.f, 44.f/255.f), "OH NO");
 
-    auto module_icon4 = std::make_shared<bnuui::Box>(vec2(WINDOW_WIDTH_PX/2 -200, WINDOW_HEIGHT_PX/2 + 100), vec2(55, 55), 0.0f); 
+    auto module_icon4 = std::make_shared<bnuui::Box>(vec2(WINDOW_WIDTH_PX/2 -200, WINDOW_HEIGHT_PX/2 + 100), vec2(50, 50), 0.0f);
     module_icon4->texture = TEXTURE_ASSET_ID::HEAL;
     module_icon4->visible = false;
-    auto module_text4 = std::make_shared<bnuui::TextLabel>(vec2(WINDOW_WIDTH_PX/2 - 170,WINDOW_HEIGHT_PX/2 + 100), 1, "OH NO");
+    auto module_text4 = std::make_shared<bnuui::TextLabel>(vec2(WINDOW_WIDTH_PX/2 - 170,WINDOW_HEIGHT_PX/2 + 100), 1, vec3(96.f/255.f, 63.f/255.f, 44.f/255.f), "OH NO");
 
     //TODO lily: add modules description
-    auto module_desc1 = std::make_shared<bnuui::TextLabel>(vec2(WINDOW_WIDTH_PX/2 + 20,WINDOW_HEIGHT_PX/2 - 70), 0.5f, "OH NO");
-    auto module_desc2 = std::make_shared<bnuui::TextLabel>(vec2(WINDOW_WIDTH_PX/2 + 20,WINDOW_HEIGHT_PX/2 - 20), 0.5f, "OH NO");
-    auto module_desc3 = std::make_shared<bnuui::TextLabel>(vec2(WINDOW_WIDTH_PX/2 + 20,WINDOW_HEIGHT_PX/2 + 30), 0.5f, "OH NO");
-    auto module_desc4 = std::make_shared<bnuui::TextLabel>(vec2(WINDOW_WIDTH_PX/2 + 20,WINDOW_HEIGHT_PX/2 + 80), 0.5f, "OH NO");
+    auto module_desc1 = std::make_shared<bnuui::TextLabel>(vec2(WINDOW_WIDTH_PX/2 + 50,WINDOW_HEIGHT_PX/2 - 70), 0.8f, vec3(96.f/255.f, 63.f/255.f, 44.f/255.f), "OH NO");
+    //126, 94, 79
+    auto module_desc2 = std::make_shared<bnuui::TextLabel>(vec2(WINDOW_WIDTH_PX/2 + 50,WINDOW_HEIGHT_PX/2 - 20), 0.8f,vec3(96.f/255.f, 63.f/255.f, 44.f/255.f), "OH NO");
+    auto module_desc3 = std::make_shared<bnuui::TextLabel>(vec2(WINDOW_WIDTH_PX/2 + 50,WINDOW_HEIGHT_PX/2 + 30), 0.8f,vec3(96.f/255.f, 63.f/255.f, 44.f/255.f), "OH NO");
+    auto module_desc4 = std::make_shared<bnuui::TextLabel>(vec2(WINDOW_WIDTH_PX/2 + 50,WINDOW_HEIGHT_PX/2 + 80), 0.8f,vec3(96.f/255.f, 63.f/255.f, 44.f/255.f),"OH NO");
 
 
     book_icon->setOnClick([book, module_icon1, module_icon2, module_icon3, module_icon4](bnuui::Element& e) {
@@ -357,6 +358,7 @@ void GameLevel::InitializeBookUI(){
     book->children.push_back(module_desc2);
     book->children.push_back(module_desc3);
     book->children.push_back(module_desc4);
+
     scene_ui.insert(book_icon);
     scene_ui.insert(book);
 }
@@ -420,13 +422,15 @@ void GameLevel::InitializeUI() {
 
     InitializeTrackingUI();
     InitializeBunnySavingUI();
-    InitializeBookUI();
 
     // Insert all the stuff.
     scene_ui.insert(player_box);
     scene_ui.insert(player_status);
     scene_ui.insert(progress_bar);
     scene_ui.insert(tile_cursor);
+
+    InitializeBookUI();
+
 }
 
 void GameLevel::Exit() {
@@ -663,6 +667,9 @@ void GameLevel::HandleInput(int key, int action, int mod) {
 
     // Build Mode.
     if ((action == GLFW_RELEASE) && (key == GLFW_KEY_B)) {
+        if(RenderSystem::isRenderingBook){
+            return;
+        }
         if (player_comp.player_state == BUILDING) {
             inventory_system.CloseInventory();
             player_comp.player_state = IDLE;
