@@ -39,6 +39,13 @@ class ContinueButton : public Element {
         void doUpdate(float dt) override;
     };
 
+class Book : public Element {
+    public:
+        Book(vec2 pos, vec2 scale, float rot);
+        ~Book() = default;
+        void doUpdate(float dt) override;
+    };
+
 class Box : public Element {
 public:
     Box(vec2 pos, vec2 scale, float rot);

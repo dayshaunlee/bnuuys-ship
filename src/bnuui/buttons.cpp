@@ -205,6 +205,35 @@ void ContinueButton::doUpdate(float dt) {
     }
 }
 
+
+Book::Book(vec2 pos, vec2 scale, float rot) {
+    this->position = pos;
+    this->scale = scale;
+    this->rotation = rot;
+
+    this->offset = {0, 0};
+    this->color = {1, 1, 1};
+
+    this->texture = TEXTURE_ASSET_ID::BOOK;
+    this->effect = EFFECT_ASSET_ID::TEXTURED;
+    this->geometry = GEOMETRY_BUFFER_ID::SPRITE;
+    this->visible = true;
+}
+
+void Book::doUpdate(float dt) {
+    if (this->hovering && this->onHover) {
+        this->onHover(*this);
+    }
+
+    if (this->active && this->onActive) {
+        this->onActive(*this);
+    }
+
+    if (this->onUpdate) {
+        this->onUpdate(*this, dt);
+    }
+}
+
 Box::Box(vec2 pos, vec2 scale, float rot) {
     this->position = pos;
     this->scale = scale;

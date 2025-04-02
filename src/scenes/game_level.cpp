@@ -135,6 +135,7 @@ bool isOffscreen(const glm::vec2& A, const glm::vec2& center) {
     return (A.x < left || A.x > right || A.y < top || A.y > bottom);
 }
 
+
 void GameLevel::InitializeTrackingUI() {
     auto tracking_ui = std::make_shared<bnuui::Box>(vec2(496, 96), vec2(45, 45), 0.0f);
     tracking_ui->texture = TEXTURE_ASSET_ID::BUNNY_INDICATOR;
@@ -205,6 +206,46 @@ void GameLevel::InitializeTrackingUI() {
     scene_ui.insert(tracking_ui);
 }
 
+void GameLevel::InitializeBookUI(){
+    auto book_icon = std::make_shared<bnuui::Box>(vec2(WINDOW_WIDTH_PX-180, 82), vec2(100, 100), 0.0f);
+    book_icon->texture = TEXTURE_ASSET_ID::BOOK_ICON;
+
+    auto book = std::make_shared<bnuui::Book>(vec2(WINDOW_WIDTH_PX/2, WINDOW_HEIGHT_PX/2 + 50), vec2(700, 700), 0.0f);
+
+    book->visible = false;
+    
+
+    auto ctr_text = std::make_shared<bnuui::TextLabel>(vec2(WINDOW_WIDTH_PX/2,WINDOW_HEIGHT_PX/2), 1, "OH NO");
+
+    book_icon->setOnClick([book](bnuui::Element& e) {
+        book->visible = !book->visible;
+    });
+
+    // book->setOnUpdate([book_icon](bnuui::Element& e, float dt) {
+    //     if (book_icon->active) {
+    //         e.visible = true;
+    //     } else {
+    //         e.visible = false;
+    //     }
+    // });
+
+
+    ctr_text->setOnUpdate([book](bnuui::Element& e, float dt) {
+        if(book->visible){
+            static_cast<bnuui::TextLabel&>(e).setText("TEST TEST HERE");
+            // TODO lily: add the text and picture box here 
+        } else{
+            static_cast<bnuui::TextLabel&>(e).setText(" "); 
+        }
+    });
+
+    book->children.push_back(ctr_text);
+
+    scene_ui.insert(book_icon);
+    scene_ui.insert(ctr_text);
+    scene_ui.insert(book);
+}
+
 void GameLevel::InitializeBunnySavingUI() {
     // Create the Remaining Bunny UI.
     auto bunny_ctr_box = std::make_shared<bnuui::Box>(vec2(WINDOW_WIDTH_PX-96, 96), vec2(60, 80), 0.0f);
@@ -264,6 +305,7 @@ void GameLevel::InitializeUI() {
 
     InitializeTrackingUI();
     InitializeBunnySavingUI();
+    InitializeBookUI();
 
     // Insert all the stuff.
     scene_ui.insert(player_box);
