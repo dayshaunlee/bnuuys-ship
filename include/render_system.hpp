@@ -276,6 +276,7 @@ class RenderSystem {
 
     // this is used to check that if redendering Gacha UI we don't render player on top
     static bool isRenderingGacha;
+    static bool isRenderingBook;
 
     // Destroy resources associated to one or all entities created by the system
     ~RenderSystem();

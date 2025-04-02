@@ -18,6 +18,7 @@
 #include "gacha_system.hpp"
 
 bool RenderSystem::isRenderingGacha = false;
+bool RenderSystem::isRenderingBook = false;
 void RenderSystem::drawGridLine(Entity entity, const mat3& projection) {
     GridLine& gridLine = registry.gridLines.get(entity);
 
@@ -485,7 +486,7 @@ void RenderSystem::draw() {
   
     // if there is no gacha ui displayed
     // std::cout << "Gacha rendering? " << isRenderingGacha<< std::endl; 
-    if(!isRenderingGacha){
+    if(!isRenderingGacha && !isRenderingBook){
         // Render Player.
         for (Entity entity : registry.players.entities) {
             if (registry.motions.has(entity) && registry.renderRequests.has(entity))
