@@ -62,7 +62,7 @@ void SoundSystem::play() {
             Mix_PauseMusic();
             Mix_PlayMusic(sound_mix_repeating[(int)sound.sound_type], -1);
         } else {
-            Mix_PlayChannel(-1, sound_mix_chunk[(sound_paths_repeating.size() - 1) + (int) sound.sound_type], 0);
+            Mix_PlayChannel(-1, sound_mix_chunk[(int) sound.sound_type - sound_paths_repeating.size()], 0);
             registry.remove_all_components_of(entity);
         }
     }

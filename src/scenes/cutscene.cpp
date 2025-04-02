@@ -5,6 +5,7 @@
 #include "bnuui/bnuui.hpp"
 #include "bnuui/buttons.hpp"
 #include "common.hpp"
+#include "sceneManager/scene_manager.hpp"
 #include "tinyECS/components.hpp"
 #include "tinyECS/registry.hpp"
 
@@ -13,8 +14,6 @@ IntroCutscene::IntroCutscene() {
 }
 
 void IntroCutscene::Init() {
-    phase = PHASE_0;
-
     cutscene_image = std::make_shared<bnuui::Box>(vec2(WINDOW_WIDTH_PX / 2, WINDOW_HEIGHT_PX / 2 + 40), vec2(450, 450), 0.0f);
     auto black_bg = std::make_shared<bnuui::Box>(vec2(WINDOW_WIDTH_PX / 2, WINDOW_HEIGHT_PX / 2), vec2(WINDOW_WIDTH_PX, WINDOW_HEIGHT_PX), 0.0f);
     black_bg->color = vec3(0,0,0);
@@ -24,7 +23,6 @@ void IntroCutscene::Init() {
     rendered_dialog_text = " ";
     dialog->color = vec3(1,1,1);
     cutscene_image->texture = TEXTURE_ASSET_ID::CUTSCENE_1;
-    cutscene_image->color = vec3(0,0,0);
 
     dialog->setOnUpdate([&](bnuui::Element& e, float dt) {
         static_cast<bnuui::TextLabel&>(e).setText(rendered_dialog_text);
@@ -37,6 +35,8 @@ void IntroCutscene::Init() {
     Sound bg_music;
     bg_music.sound_type = SOUND_ASSET_ID::CUTSCENE_MUSIC;
     registry.sounds.insert(Entity(), bg_music);
+
+    curr_line = dialog_parts[0];
 }
 
 void IntroCutscene::Exit() {
@@ -79,35 +79,7 @@ void IntroCutscene::HandleMouseClick(int button, int action, int mods) {
     }
 }
 
-void IntroCutscene::Update(float dt) {
-    scene_ui.update(dt);
-
-    if (dialogue_timer_ms > 0) {
-        dialogue_timer_ms -= dt;
-    } else {
-        if (dialog_index < dialog_parts[phase].size()) {
-            // Move to the next line within the current phase
-            curr_line = dialog_parts[phase][dialog_index++];
-        } else {
-            // If all lines in phase are finished, move to the next phase
-            dialog_index = 0;
-            phase = static_cast<CutscenePhase>(phase + 1);
-            std::cout << phase << std::endl;
-            if (phase >= PHASE_END) {
-                // No more dialogue, end cutscene
-                std::cout << "Yup it's over.";
-                return;
-            }
-
-            curr_line = dialog_parts[phase][dialog_index++];
-        }
-
-        rendered_dialog_text = " ";
-        char_index = 0;
-        dialogue_timer_ms = DIALOGUE_TIME_MS;
-    }
-
-    // Gradually reveal characters
+void IntroCutscene::revealCharacters(float dt) {
     if (char_index < curr_line.size()) {
         static float char_timer = 0;
         char_timer += dt;
@@ -117,4 +89,17 @@ void IntroCutscene::Update(float dt) {
             rendered_dialog_text += curr_line[char_index++];
         }
     }
+}
+
+void IntroCutscene::Update(float dt) {
+    scene_ui.update(dt);
+    if (dialogue_timer_ms > 0) {
+        dialogue_timer_ms -= dt;
+    } else {
+        curr_line = dialog_parts[phase]
+        /*rendered_dialog_text = " ";*/
+        char_index = 0;
+        dialogue_timer_ms = DIALOGUE_TIME_MS;
+    }
+    revealCharacters(dt);
 }
