@@ -380,7 +380,7 @@ inline std::string getModuleName(MODULE_TYPES module) {
     case MODULE_TYPES::PLATFORM :
         return "Expand Ship";
     case MODULE_TYPES::LASER_WEAPON :
-        return "P.I.S.S Module";
+        return "Laser Module";
     case MODULE_TYPES::BUBBLE_MOD :
         return "Bubble Buff";
     case MODULE_TYPES::HEAL:
