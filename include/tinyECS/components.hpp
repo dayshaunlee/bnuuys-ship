@@ -235,8 +235,10 @@ enum class TEXTURE_ASSET_ID {
     HEAL = BUNNY_INDICATOR + 1,
     
     HOME_INDICATOR  = HEAL + 1,
+
+    VICTORY_BG = HOME_INDICATOR + 1,
     
-    TEXTURE_COUNT = HOME_INDICATOR + 1
+    TEXTURE_COUNT = VICTORY_BG + 1
 };
 
 const int texture_count = (int) TEXTURE_ASSET_ID::TEXTURE_COUNT;

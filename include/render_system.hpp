@@ -230,6 +230,7 @@ class RenderSystem {
 
         // home indicator
         textures_path("bunny/home_indicator.png"),
+        textures_path("background/game_victory_bg.png"),
     };
 
     std::array<GLuint, effect_count> effects;
