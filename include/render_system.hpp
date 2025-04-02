@@ -227,6 +227,9 @@ class RenderSystem {
 
         // Heal
         textures_path("heal.png"),
+
+        // home indicator
+        textures_path("bunny/home_indicator.png"),
     };
 
     std::array<GLuint, effect_count> effects;

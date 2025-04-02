@@ -136,7 +136,7 @@ bool isOffscreen(const glm::vec2& A, const glm::vec2& center) {
 }
 
 void GameLevel::InitializeTrackingUI() {
-    auto tracking_ui = std::make_shared<bnuui::Box>(vec2(496, 96), vec2(35, 35), 0.0f);
+    auto tracking_ui = std::make_shared<bnuui::Box>(vec2(496, 96), vec2(45, 45), 0.0f);
     tracking_ui->texture = TEXTURE_ASSET_ID::BUNNY_INDICATOR;
 
     tracking_ui->setOnUpdate([](bnuui::Element& e, float dt) {
@@ -159,8 +159,9 @@ void GameLevel::InitializeTrackingUI() {
             }
         }
         if (smallest_dist == std::numeric_limits<float>::max()) {
-            e.visible = false;
-            return;
+            // e.visible = false;
+            e.texture = TEXTURE_ASSET_ID::HOME_INDICATOR;
+            shortest_bunny_pos = vec2(WINDOW_WIDTH_PX / 2, WINDOW_HEIGHT_PX / 2);
         }
 
         vec2 direction = glm::normalize(shortest_bunny_pos - ship_pos);
