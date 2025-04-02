@@ -223,20 +223,26 @@ void GameLevel::InitializeBookUI(){
     module_icon1->visible = false;
     auto module_text1 = std::make_shared<bnuui::TextLabel>(vec2(WINDOW_WIDTH_PX/2 - 170,WINDOW_HEIGHT_PX/2 -50), 1, "OH NO");
 
-    auto module_icon3 = std::make_shared<bnuui::Box>(vec2(WINDOW_WIDTH_PX/2 -200, WINDOW_HEIGHT_PX/2), vec2(55, 55), 0.0f); 
-    module_icon3->texture = TEXTURE_ASSET_ID::BUBBLE_CANNON;
-    module_icon3->visible = false;
-    auto module_text3 = std::make_shared<bnuui::TextLabel>(vec2(WINDOW_WIDTH_PX/2 - 170, WINDOW_HEIGHT_PX/2), 1, "OH NO");
-
-    auto module_icon2 = std::make_shared<bnuui::Box>(vec2(WINDOW_WIDTH_PX/2 -200, WINDOW_HEIGHT_PX/2 + 50), vec2(55, 55), 0.0f); 
-    module_icon2->texture = TEXTURE_ASSET_ID::LASER_WEAPON0;
+    auto module_icon2 = std::make_shared<bnuui::Box>(vec2(WINDOW_WIDTH_PX/2 -200, WINDOW_HEIGHT_PX/2), vec2(55, 55), 0.0f); 
+    module_icon2->texture = TEXTURE_ASSET_ID::BUBBLE_CANNON;
     module_icon2->visible = false;
-    auto module_text2 = std::make_shared<bnuui::TextLabel>(vec2(WINDOW_WIDTH_PX/2 - 170,WINDOW_HEIGHT_PX/2 + 50), 1, "OH NO");
+    auto module_text2 = std::make_shared<bnuui::TextLabel>(vec2(WINDOW_WIDTH_PX/2 - 170, WINDOW_HEIGHT_PX/2), 1, "OH NO");
+
+    auto module_icon3 = std::make_shared<bnuui::Box>(vec2(WINDOW_WIDTH_PX/2 -200, WINDOW_HEIGHT_PX/2 + 50), vec2(55, 55), 0.0f); 
+    module_icon3->texture = TEXTURE_ASSET_ID::LASER_WEAPON0;
+    module_icon3->visible = false;
+    auto module_text3 = std::make_shared<bnuui::TextLabel>(vec2(WINDOW_WIDTH_PX/2 - 170,WINDOW_HEIGHT_PX/2 + 50), 1, "OH NO");
 
     auto module_icon4 = std::make_shared<bnuui::Box>(vec2(WINDOW_WIDTH_PX/2 -200, WINDOW_HEIGHT_PX/2 + 100), vec2(55, 55), 0.0f); 
     module_icon4->texture = TEXTURE_ASSET_ID::HEAL;
     module_icon4->visible = false;
     auto module_text4 = std::make_shared<bnuui::TextLabel>(vec2(WINDOW_WIDTH_PX/2 - 170,WINDOW_HEIGHT_PX/2 + 100), 1, "OH NO");
+
+    //TODO lily: add modules description
+    auto module_desc1 = std::make_shared<bnuui::TextLabel>(vec2(WINDOW_WIDTH_PX/2 + 20,WINDOW_HEIGHT_PX/2 - 70), 0.5f, "OH NO");
+    auto module_desc2 = std::make_shared<bnuui::TextLabel>(vec2(WINDOW_WIDTH_PX/2 + 20,WINDOW_HEIGHT_PX/2 - 20), 0.5f, "OH NO");
+    auto module_desc3 = std::make_shared<bnuui::TextLabel>(vec2(WINDOW_WIDTH_PX/2 + 20,WINDOW_HEIGHT_PX/2 + 30), 0.5f, "OH NO");
+    auto module_desc4 = std::make_shared<bnuui::TextLabel>(vec2(WINDOW_WIDTH_PX/2 + 20,WINDOW_HEIGHT_PX/2 + 80), 0.5f, "OH NO");
 
 
     book_icon->setOnClick([book, module_icon1, module_icon2, module_icon3, module_icon4](bnuui::Element& e) {
@@ -281,7 +287,7 @@ void GameLevel::InitializeBookUI(){
         }
     });
 
-    module_text2->setOnUpdate([book](bnuui::Element& e, float dt) {
+    module_text3->setOnUpdate([book](bnuui::Element& e, float dt) {
         if(book->visible){
             static_cast<bnuui::TextLabel&>(e).setText("Laser weapon");
         } else{
@@ -289,7 +295,7 @@ void GameLevel::InitializeBookUI(){
         }
     });
 
-    module_text3->setOnUpdate([book](bnuui::Element& e, float dt) {
+    module_text2->setOnUpdate([book](bnuui::Element& e, float dt) {
         if(book->visible){
             static_cast<bnuui::TextLabel&>(e).setText("Bubble cannon");
         } else{
@@ -298,6 +304,38 @@ void GameLevel::InitializeBookUI(){
     });
 
     module_text4->setOnUpdate([book](bnuui::Element& e, float dt) {
+        if(book->visible){
+            static_cast<bnuui::TextLabel&>(e).setText("Healing Station");
+        } else{
+            static_cast<bnuui::TextLabel&>(e).setText(" "); 
+        }
+    });
+
+    module_desc1->setOnUpdate([book](bnuui::Element& e, float dt) {
+        if(book->visible){
+            static_cast<bnuui::TextLabel&>(e).setText("Healing Station");
+        } else{
+            static_cast<bnuui::TextLabel&>(e).setText(" "); 
+        }
+    });
+
+    module_desc2->setOnUpdate([book](bnuui::Element& e, float dt) {
+        if(book->visible){
+            static_cast<bnuui::TextLabel&>(e).setText("Healing Station");
+        } else{
+            static_cast<bnuui::TextLabel&>(e).setText(" "); 
+        }
+    });
+
+    module_desc3->setOnUpdate([book](bnuui::Element& e, float dt) {
+        if(book->visible){
+            static_cast<bnuui::TextLabel&>(e).setText("Healing Station");
+        } else{
+            static_cast<bnuui::TextLabel&>(e).setText(" "); 
+        }
+    });
+    
+    module_desc4->setOnUpdate([book](bnuui::Element& e, float dt) {
         if(book->visible){
             static_cast<bnuui::TextLabel&>(e).setText("Healing Station");
         } else{
@@ -315,7 +353,10 @@ void GameLevel::InitializeBookUI(){
     book->children.push_back(module_text3);
     book->children.push_back(module_icon4);
     book->children.push_back(module_text4);    
-
+    book->children.push_back(module_desc1);
+    book->children.push_back(module_desc2);
+    book->children.push_back(module_desc3);
+    book->children.push_back(module_desc4);
     scene_ui.insert(book_icon);
     scene_ui.insert(book);
 }
@@ -654,7 +695,7 @@ void GameLevel::HandleInput(int key, int action, int mod) {
             default:
                 return;
         }
-    } else if (player_comp.player_state != BUILDING) {
+    } else if (player_comp.player_state != BUILDING && !RenderSystem::isRenderingBook) {
         HandlePlayerMovement(key, action, mod);
     }
 
@@ -1112,7 +1153,7 @@ void GameLevel::RemoveStation(vec2 tile_pos, MODULE_TYPES module){
 
 
 void GameLevel::Update(float dt) {
-    if(!RenderSystem::isRenderingGacha && registry.players.components[0].player_state != BUILDING){
+    if(!RenderSystem::isRenderingGacha && registry.players.components[0].player_state != BUILDING && !RenderSystem::isRenderingBook){
         CameraSystem::GetInstance()->update(dt);
         ai_system.step(dt);
         physics_system.step(dt);
