@@ -18,7 +18,11 @@ struct Motion {
 struct Collision {
     // Note, the first object is stored in the ECS container.entities
     Entity other;  // the second object involved in the collision
-    Collision(Entity& other) { this->other = other; };
+    vec2 normal;
+    Collision(Entity& other, vec2 normal = {0.0, 0.0}) {
+        this->other = other;
+        this->normal = normal;
+    }
 };
 
 // Sets the brightness of the screen

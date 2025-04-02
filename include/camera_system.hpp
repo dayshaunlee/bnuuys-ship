@@ -12,7 +12,7 @@ class CameraSystem {
    public:
     static CameraSystem* GetInstance();
     void update(float deltaTime);
-    void setToPreviousPosition();
+    void setToPreviousPosition(vec2 normal);
     bool IsEnemyOnScreen();
 
     vec2 position = {0.0f, 0.0f};

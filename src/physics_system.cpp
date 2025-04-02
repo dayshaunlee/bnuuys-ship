@@ -19,7 +19,7 @@ vec2 get_bounding_box(const Motion& motion) {
 // ADVANCED CREATIVE FEATURE: PRECISE COLLISION
 
 // LINE/LINE
-bool lineLine(int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4) {
+bool lineLine(int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4, vec2& normal) {
     float denom = (y4 - y3) * (x2 - x1) - (x4 - x3) * (y2 - y1);
     if (denom == 0) return false;
 
@@ -29,13 +29,18 @@ bool lineLine(int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4) {
 
     // if uA and uB are between 0-1, lines are colliding
     if (uA >= 0 && uA <= 1 && uB >= 0 && uB <= 1) {
+        float edgeX = x4 - x3;
+        float edgeY = y4 - y3;
+        normal.x = -edgeY;
+        normal.y = edgeX;
+        normal = normalize(normal);
         return true;
     }
     return false;
 }
 
 // POLYGON/LINE
-bool polyLine(std::vector<tson::Vector2i> vertices, int x1, int y1, int x2, int y2) {
+bool polyLine(std::vector<tson::Vector2i> vertices, int x1, int y1, int x2, int y2, vec2& normal) {
     // go through each of the vertices, plus the next
     // vertex in the list
     int next = 0;
@@ -55,7 +60,7 @@ bool polyLine(std::vector<tson::Vector2i> vertices, int x1, int y1, int x2, int 
         // do a Line/Line comparison
         // if true, return 'true' immediately and
         // stop testing (faster)
-        bool hit = lineLine(x1, y1, x2, y2, x3, y3, x4, y4);
+        bool hit = lineLine(x1, y1, x2, y2, x3, y3, x4, y4, normal);
         if (hit) {
             return true;
         }
@@ -97,7 +102,7 @@ bool polyPoint(std::vector<tson::Vector2i> vertices, float px, float py) {
 
 // POLYGON/POLYGON: all of this along with helpers from
 // (https://www.jeffreythompson.org/collision-detection/poly-poly.php)
-bool polyPoly(std::vector<tson::Vector2i> p1, std::vector<tson::Vector2i> p2) {
+bool polyPoly(std::vector<tson::Vector2i> p1, std::vector<tson::Vector2i> p2, vec2& normal) {
     // go through each of the vertices, plus the next
     // vertex in the list
     int next = 0;
@@ -114,7 +119,7 @@ bool polyPoly(std::vector<tson::Vector2i> p1, std::vector<tson::Vector2i> p2) {
 
         // now we can use these two points (a line) to compare
         // to the other polygon's vertices using polyLine()
-        bool collision = polyLine(p2, vc.x, vc.y, vn.x, vn.y);
+        bool collision = polyLine(p2, vc.x, vc.y, vn.x, vn.y, normal);
         if (collision) return true;
     }
 
@@ -197,54 +202,30 @@ bool collidesSphericalShip(const Entity e1, const Entity e2) {
 }
 
 // Brian's Additional Feedback: I added the Camera Offset, but it might not be the EXACT outputs.
-// Polygon - Polygon collision
-// TODO Dayshaun: this function is mega scuffed and has repeating code WILL FIX SOON TM
-bool collidesPoly(const Entity e1, const Entity e2) {
-    // discard if the bounding boxes do not collide
-    Motion& e1_mot = registry.motions.get(e1);
-    Motion& e2_mot = registry.motions.get(e2);
-    std::vector<tson::Vector2i> islandPolygon;
-    std::vector<tson::Vector2i> basePolygon;
-    std::vector<tson::Vector2i> shipPolygon;
-    if (registry.islands.has(e1)) {  // e1 is the Island, e2 is the Ship
-        islandPolygon = registry.islands.get(e1).polygon;
-        shipPolygon = get_poly_from_motion(e2_mot);
-        for (auto& p : islandPolygon) {  // account for camera affecting position
-            p.x += e1_mot.position.x + CameraSystem::GetInstance()->position.x;
-            p.y += e1_mot.position.y + CameraSystem::GetInstance()->position.y;
-        }
-        if (!collidesAABB(registry.motions.get(e1), registry.motions.get(e2))) return false;
-        return polyPoly(islandPolygon, shipPolygon);
-    } else if (registry.islands.has(e2)) {  // e2 is the Island, e1 is the Ship
-        islandPolygon = registry.islands.get(e2).polygon;
-        shipPolygon = get_poly_from_motion(e1_mot);
-        for (auto& p : islandPolygon) {  // account for camera affecting position
-            p.x += e2_mot.position.x + CameraSystem::GetInstance()->position.x;
-            p.y += e2_mot.position.y + CameraSystem::GetInstance()->position.y;
-        }
-        if (!collidesAABB(registry.motions.get(e2), registry.motions.get(e1))) return false;
-        return polyPoly(islandPolygon, shipPolygon);
-    } else if (registry.base.has(e1)) {  // e1 is the Base, e2 is the Ship
-        basePolygon = registry.base.get(e1).polygon;
-        shipPolygon = get_poly_from_motion(e2_mot);
-        for (auto& p : basePolygon) {  // account for camera affecting position
-            p.x += e1_mot.position.x + CameraSystem::GetInstance()->position.x;
-            p.y += e1_mot.position.y + CameraSystem::GetInstance()->position.y;
-        }
-        if (!collidesAABB(registry.motions.get(e1), registry.motions.get(e2))) return false;
-        return polyPolyInside(basePolygon, shipPolygon);
-    } else {  // e2 is the Base, e1 is the Ship
-        basePolygon = registry.base.get(e2).polygon;
-        shipPolygon = get_poly_from_motion(e1_mot);
-        for (auto& p : basePolygon) {  // account for camera affecting position
-            p.x += e2_mot.position.x + CameraSystem::GetInstance()->position.x;
-            p.y += e2_mot.position.y + CameraSystem::GetInstance()->position.y;
-        }
-        if (!collidesAABB(registry.motions.get(e2), registry.motions.get(e1))) return false;
-        return polyPolyInside(basePolygon, shipPolygon);
+bool shipCollides(const std::vector<tson::Vector2i>& entityPolygon, Entity entity, Entity ship, bool checkInside, vec2& normal) {
+    Motion& entityMot = registry.motions.get(entity);
+    Motion& shipMot = registry.motions.get(ship);
+
+    std::vector<tson::Vector2i> adjustedPolygon = entityPolygon;
+    vec2 cameraPos = CameraSystem::GetInstance()->position;
+    for (auto& p : adjustedPolygon) {
+        p.x += entityMot.position.x + cameraPos.x;
+        p.y += entityMot.position.y + cameraPos.y;
     }
-    // should never reach
-    return false;
+
+    if (!collidesAABB(entityMot, shipMot)) return false;
+    return checkInside ? polyPolyInside(get_poly_from_motion(shipMot), adjustedPolygon)
+                       : polyPoly(get_poly_from_motion(shipMot), adjustedPolygon, normal);
+}
+
+// Polygon - Polygon collision
+bool collidesPoly(const Entity e1, const Entity e2, vec2& normal) {
+    if (registry.islands.has(e1)) return shipCollides(registry.islands.get(e1).polygon, e1, e2, false, normal);
+    if (registry.islands.has(e2)) return shipCollides(registry.islands.get(e2).polygon, e2, e1, false, normal);
+    if (registry.base.has(e1)) return shipCollides(registry.base.get(e1).polygon, e1, e2, true, normal);
+    if (registry.base.has(e2)) return shipCollides(registry.base.get(e2).polygon, e2, e1, true, normal);
+
+    return false;  // should never reach
 }
 
 std::vector<tson::Vector2i> get_poly_from_node_pos(ivec2 node_pos) {
@@ -277,7 +258,7 @@ bool PhysicsSystem::collidesPolyVec(Entity island_entity, ivec2 node_pos) {
         p.y += island_motion.position.y;
     }
 
-    return polyPoly(islandPolygon, nodePolygon);
+    return polyPoly(islandPolygon, nodePolygon, vec2{0.0, 0.0});
 }
 
 void PhysicsSystem::step(float elapsed_ms) {
@@ -404,17 +385,18 @@ void PhysicsSystem::step(float elapsed_ms) {
         for (uint j = i + 1; j < motion_container.components.size(); j++) {
             Entity entity_j = motion_container.entities[j];
             Motion& motion_j = motion_container.components[j];
+            vec2 normal = {0.0, 0.0};
             if ((registry.islands.has(entity_i) || registry.islands.has(entity_j)) &&
                 (registry.ships.has(entity_i) || registry.ships.has(entity_j))) {
                 // Poly collision only for islands.
-                if (collidesPoly(entity_i, entity_j)) {
-                    registry.collisions.emplace_with_duplicates(entity_i, entity_j);
+                if (collidesPoly(entity_i, entity_j, normal)) {
+                    registry.collisions.emplace_with_duplicates(entity_i, entity_j, normal);
                 }
             } else if ((registry.base.has(entity_i) || registry.base.has(entity_j)) &&
                        (registry.ships.has(entity_i) || registry.ships.has(entity_j))) {
                 // Poly collision for base
-                if (collidesPoly(entity_i, entity_j)) {
-                    registry.collisions.emplace_with_duplicates(entity_i, entity_j);
+                if (collidesPoly(entity_i, entity_j, normal)) {
+                    registry.collisions.emplace_with_duplicates(entity_i, entity_j, normal);
                     if (!base.ship_in_base) base.ship_in_base = true;
                     else base.drop_off_timer += elapsed_ms;
                 } else {

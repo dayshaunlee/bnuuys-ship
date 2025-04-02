@@ -40,8 +40,23 @@ void CameraSystem::update(float deltaTime) {
     position += vel * step_seconds;
 }
 
-void CameraSystem::setToPreviousPosition() {
+void CameraSystem::setToPreviousPosition(vec2 normal) {
+    /*std::cout << "position: " << position.x << ", " << position.y << std::endl;
+    std::cout << "prev_pos: " << prev_pos.x << ", " << prev_pos.y << std::endl;*/
+    if (length(position - prev_pos) < 0.0001f || glm::dot(normal, normal) < 0.0001f) {
+        return;  // avoid division by 0
+    }
+
+    vec2 ship_vector = position - prev_pos;
+    ship_vector = normalize(ship_vector);
+    // component of ship direction that is perpendicular to wall, parallel to the normal
+    vec2 perpendicular_vec = (glm::dot(ship_vector, normal) / glm::dot(normal, normal)) * normal;
+
+    vec2 parallel_vec = (ship_vector - perpendicular_vec) * length(position - prev_pos);
+    std::cout << "ship_vector: " << ship_vector.x << ", " << ship_vector.y << std::endl;
+    std::cout << "normal: " << normal.x << ", " << normal.y << std::endl;
     position = prev_pos;
+
 }
 
 bool IsEnemyOnScreen() {

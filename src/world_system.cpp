@@ -369,9 +369,10 @@ void WorldSystem::handle_collisions() {
             (registry.ships.has(e2) && registry.islands.has(e1))) {
             collisions_to_remove.push_back(e1);
             collisions_to_remove.push_back(e2);
+            vec2 normal = registry.collisions.get(e1).normal;
             // Play sound
             Mix_PlayChannel(-1, island_ship_collision, 0);
-            CameraSystem::GetInstance()->setToPreviousPosition();
+            CameraSystem::GetInstance()->setToPreviousPosition(normal);
         }
 
         // Ship - Base collision
