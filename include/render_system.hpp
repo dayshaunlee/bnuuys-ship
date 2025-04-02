@@ -227,6 +227,13 @@ class RenderSystem {
 
         // Heal
         textures_path("heal.png"),
+
+        // For cutscenes
+        textures_path("cutscenes/c1.png"),
+        textures_path("cutscenes/c2.png"),
+        textures_path("cutscenes/c3.png"),
+        textures_path("cutscenes/c4.png"),
+
     };
 
     std::array<GLuint, effect_count> effects;

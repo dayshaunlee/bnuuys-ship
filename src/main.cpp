@@ -2,6 +2,7 @@
 #include "common.hpp"
 #include "sceneManager/scene.hpp"
 #include "sceneManager/scene_manager.hpp"
+#include "scenes/cutscene.hpp"
 #include "scenes/death_scene.hpp"
 #include "scenes/next_level_scene.hpp"
 #include "scenes/level_01.hpp"
@@ -69,6 +70,7 @@ int main() {
     Scene* ui_editor = new EditorUI();
     Scene* death = new DeathScene();
     Scene* levelTransition = new NextLevelScene();
+    Scene* cutscene = new IntroCutscene();
 
     scene_manager.registerScene(mm);
     scene_manager.registerScene(ui_editor);
@@ -81,7 +83,9 @@ int main() {
     scene_manager.registerScene(l3);
     scene_manager.registerScene(l4);
 
-    scene_manager.switchScene("Main Menu");
+    scene_manager.registerScene(cutscene);
+
+    scene_manager.switchScene("IntroCutscene");
 
     while (!world_system.is_over()) {
         glfwPollEvents();
