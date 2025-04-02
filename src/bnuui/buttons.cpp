@@ -465,7 +465,7 @@ TextLabel::TextLabel(vec2 pos, float font_size, const std::string& text) {
     std::cout << this->scale.x << ' ' << this->scale.y << '\n';
 
     this->offset = {0, 0};
-    this->color = {1, 1, 1};
+    this->color = {0,0,0};
 
     this->visible = true;
 }

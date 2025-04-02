@@ -954,6 +954,16 @@ void GameLevel::HandleMouseClick(int button, int action, int mods) {
                     }
                     break;
                 }
+                case BUBBLE_MOD: {
+                    SimpleCannon& sc = registry.simpleCannons.get(ship.ship_modules_entity[tile_pos.y][tile_pos.x]);
+                    if (!sc.is_automated) {
+                        sc.is_automated = true;
+                        ship.available_modules[curr_selected]--;
+                        stationBunny(tile_pos);
+                    }
+                    break;
+                }
+
 
                 default: {
                     break;

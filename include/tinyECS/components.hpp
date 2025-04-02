@@ -231,10 +231,14 @@ enum class TEXTURE_ASSET_ID {
 
     BUNNY_INDICATOR = BUNNY_NPC_FACE + 1,
     
-
     HEAL = BUNNY_INDICATOR + 1,
+
+    CUTSCENE_1 = HEAL + 1,
+    CUTSCENE_2 = CUTSCENE_1 + 1,
+    CUTSCENE_3 = CUTSCENE_2 + 1,
+    CUTSCENE_4 = CUTSCENE_3 + 1,
     
-    HOME_INDICATOR  = HEAL + 1,
+    HOME_INDICATOR  = CUTSCENE_4 + 1,
 
     VICTORY_BG = HOME_INDICATOR + 1,
     
@@ -264,6 +268,7 @@ enum class SOUND_ASSET_ID {
     PROJECTILE_ENEMY_COLLISION,
     PROJECTILE_JAIL_COLLISION,
     GAME_OVER,
+    CUTSCENE_MUSIC,
     SOUND_COUNT
 };
 const int sound_count = (int) SOUND_ASSET_ID::SOUND_COUNT;
@@ -386,7 +391,7 @@ inline std::string getModuleName(MODULE_TYPES module) {
     case MODULE_TYPES::PLATFORM :
         return "Expand Ship";
     case MODULE_TYPES::LASER_WEAPON :
-        return "P.I.S.S Module";
+        return "Laser Module";
     case MODULE_TYPES::BUBBLE_MOD :
         return "Bubble Buff";
     case MODULE_TYPES::HEAL:

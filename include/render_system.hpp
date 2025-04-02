@@ -228,6 +228,13 @@ class RenderSystem {
         // Heal
         textures_path("heal.png"),
 
+        // For cutscenes
+        textures_path("cutscenes/c1.png"),
+        textures_path("cutscenes/c2.png"),
+        textures_path("cutscenes/c3.png"),
+        textures_path("cutscenes/c4.png"),
+
+
         // home indicator
         textures_path("bunny/home_indicator.png"),
         textures_path("background/game_victory_bg.png"),
