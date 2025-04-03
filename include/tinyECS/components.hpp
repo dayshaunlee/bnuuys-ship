@@ -244,7 +244,12 @@ enum class TEXTURE_ASSET_ID {
     
     BOOK_ICON = VICTORY_BG + 1,
     BOOK = BOOK_ICON + 1,
-    TEXTURE_COUNT = BOOK + 1
+
+    //Curved texts
+    MODULETYPE_TEXT = BOOK + 1,
+
+    MODULEDESCRIPTION_TEXT = MODULETYPE_TEXT + 1,
+    TEXTURE_COUNT = MODULEDESCRIPTION_TEXT + 1
 };
 
 const int texture_count = (int) TEXTURE_ASSET_ID::TEXTURE_COUNT;

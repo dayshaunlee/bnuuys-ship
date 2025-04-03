@@ -210,41 +210,55 @@ void GameLevel::InitializeBookUI(){
     auto book_icon = std::make_shared<bnuui::Box>(vec2(WINDOW_WIDTH_PX-180, 82), vec2(100, 100), 0.0f);
     book_icon->texture = TEXTURE_ASSET_ID::BOOK_ICON;
 
-    auto book = std::make_shared<bnuui::Book>(vec2(WINDOW_WIDTH_PX/2, WINDOW_HEIGHT_PX/2 + 50), vec2(700, 700), 0.0f);
+    auto book = std::make_shared<bnuui::Book>(vec2(WINDOW_WIDTH_PX/2, WINDOW_HEIGHT_PX/2 + 50), vec2(700, 730), 0.0f);
 
     book->visible = false;
+    vec3 textColour = vec3(115.f/255.f, 75.f/255.f, 50.f/255.f);
     
 
-    auto header_text = std::make_shared<bnuui::TextLabel>(vec2(WINDOW_WIDTH_PX/2-200,WINDOW_HEIGHT_PX/2 -100), 1, vec3(96.f/255.f, 63.f/255.f, 44.f/255.f), "OH NO");
-    auto header_text2 = std::make_shared<bnuui::TextLabel>(vec2(WINDOW_WIDTH_PX/2+60,WINDOW_HEIGHT_PX/2 -100), 1, vec3(96.f/255.f, 63.f/255.f, 44.f/255.f), "OH NO");
+    // auto header_text = std::make_shared<bnuui::TextLabel>(vec2(WINDOW_WIDTH_PX/2-200,WINDOW_HEIGHT_PX/2 -100), 1, textColour, "OH NO");
+    // auto header_text2 = std::make_shared<bnuui::TextLabel>(vec2(WINDOW_WIDTH_PX/2+60,WINDOW_HEIGHT_PX/2 -100), 1, textColour, "OH NO");
 
-    auto module_icon1 = std::make_shared<bnuui::Box>(vec2(WINDOW_WIDTH_PX/2 -200, WINDOW_HEIGHT_PX/2 - 50), vec2(60, 60), 0.0f); 
+    auto module_iconBox1 = std::make_shared<bnuui::Box>(vec2(WINDOW_WIDTH_PX/2 -200, WINDOW_HEIGHT_PX/2 - 50), vec2(50, 50), 0.0f);
+    auto module_icon1 = std::make_shared<bnuui::Box>(vec2(WINDOW_WIDTH_PX/2 -200, WINDOW_HEIGHT_PX/2 - 50), vec2(40, 40), 0.0f); 
+    module_iconBox1->children.push_back(module_icon1);
     module_icon1->texture = TEXTURE_ASSET_ID::SIMPLE_CANNON01;
     module_icon1->visible = false;
-    auto module_text1 = std::make_shared<bnuui::TextLabel>(vec2(WINDOW_WIDTH_PX/2 - 170,WINDOW_HEIGHT_PX/2 -50), 1, vec3(96.f/255.f, 63.f/255.f, 44.f/255.f),"OH NO");
+    auto module_text1 = std::make_shared<bnuui::TextLabel>(vec2(WINDOW_WIDTH_PX/2 - 170,WINDOW_HEIGHT_PX/2 -50), 0.9, textColour,"OH NO");
 
-    auto module_icon2 = std::make_shared<bnuui::Box>(vec2(WINDOW_WIDTH_PX/2 -200, WINDOW_HEIGHT_PX/2), vec2(55, 55), 0.0f); 
+    auto module_iconBox2 = std::make_shared<bnuui::Box>(vec2(WINDOW_WIDTH_PX/2 -200, WINDOW_HEIGHT_PX/2 + 15), vec2(50, 50), 0.0f);
+    auto module_icon2 = std::make_shared<bnuui::Box>(vec2(WINDOW_WIDTH_PX/2 -200, WINDOW_HEIGHT_PX/2 + 15), vec2(40, 40), 0.0f); 
+    module_iconBox2->children.push_back(module_icon2);
     module_icon2->texture = TEXTURE_ASSET_ID::BUBBLE_CANNON;
     module_icon2->visible = false;
-    auto module_text2 = std::make_shared<bnuui::TextLabel>(vec2(WINDOW_WIDTH_PX/2 - 170, WINDOW_HEIGHT_PX/2), 1,vec3(96.f/255.f, 63.f/255.f, 44.f/255.f), "OH NO");
+    auto module_text2 = std::make_shared<bnuui::TextLabel>(vec2(WINDOW_WIDTH_PX/2 - 170, WINDOW_HEIGHT_PX/2 + 15), 0.9,textColour, "OH NO");
 
-    auto module_icon3 = std::make_shared<bnuui::Box>(vec2(WINDOW_WIDTH_PX/2 -200, WINDOW_HEIGHT_PX/2 + 50), vec2(55, 55), 0.0f); 
+    auto module_iconBox3 = std::make_shared<bnuui::Box>(vec2(WINDOW_WIDTH_PX/2 -200, WINDOW_HEIGHT_PX/2 + 80), vec2(50, 50), 0.0f);
+    auto module_icon3 = std::make_shared<bnuui::Box>(vec2(WINDOW_WIDTH_PX/2 -200, WINDOW_HEIGHT_PX/2 + 80), vec2(35, 35), 0.0f); 
+    module_iconBox3->children.push_back(module_icon3);
     module_icon3->texture = TEXTURE_ASSET_ID::LASER_WEAPON0;
     module_icon3->visible = false;
-    auto module_text3 = std::make_shared<bnuui::TextLabel>(vec2(WINDOW_WIDTH_PX/2 - 170,WINDOW_HEIGHT_PX/2 + 50), 1, vec3(96.f/255.f, 63.f/255.f, 44.f/255.f), "OH NO");
+    auto module_text3 = std::make_shared<bnuui::TextLabel>(vec2(WINDOW_WIDTH_PX/2 - 170,WINDOW_HEIGHT_PX/2 + 80), 0.9, textColour, "OH NO");
 
-    auto module_icon4 = std::make_shared<bnuui::Box>(vec2(WINDOW_WIDTH_PX/2 -200, WINDOW_HEIGHT_PX/2 + 100), vec2(50, 50), 0.0f);
+    auto module_iconBox4 = std::make_shared<bnuui::Box>(vec2(WINDOW_WIDTH_PX/2 -200, WINDOW_HEIGHT_PX/2 + 145), vec2(50, 50), 0.0f);
+    auto module_icon4 = std::make_shared<bnuui::Box>(vec2(WINDOW_WIDTH_PX/2 -200, WINDOW_HEIGHT_PX/2 + 145), vec2(30, 30), 0.0f);
+    module_iconBox4->children.push_back(module_icon4);
     module_icon4->texture = TEXTURE_ASSET_ID::HEAL;
     module_icon4->visible = false;
-    auto module_text4 = std::make_shared<bnuui::TextLabel>(vec2(WINDOW_WIDTH_PX/2 - 170,WINDOW_HEIGHT_PX/2 + 100), 1, vec3(96.f/255.f, 63.f/255.f, 44.f/255.f), "OH NO");
+    auto module_text4 = std::make_shared<bnuui::TextLabel>(vec2(WINDOW_WIDTH_PX/2 - 170,WINDOW_HEIGHT_PX/2 + 145), 0.9, textColour, "OH NO");
 
     //TODO lily: add modules description
-    auto module_desc1 = std::make_shared<bnuui::TextLabel>(vec2(WINDOW_WIDTH_PX/2 + 50,WINDOW_HEIGHT_PX/2 - 70), 0.8f, vec3(96.f/255.f, 63.f/255.f, 44.f/255.f), "OH NO");
-    //126, 94, 79
-    auto module_desc2 = std::make_shared<bnuui::TextLabel>(vec2(WINDOW_WIDTH_PX/2 + 50,WINDOW_HEIGHT_PX/2 - 20), 0.8f,vec3(96.f/255.f, 63.f/255.f, 44.f/255.f), "OH NO");
-    auto module_desc3 = std::make_shared<bnuui::TextLabel>(vec2(WINDOW_WIDTH_PX/2 + 50,WINDOW_HEIGHT_PX/2 + 30), 0.8f,vec3(96.f/255.f, 63.f/255.f, 44.f/255.f), "OH NO");
-    auto module_desc4 = std::make_shared<bnuui::TextLabel>(vec2(WINDOW_WIDTH_PX/2 + 50,WINDOW_HEIGHT_PX/2 + 80), 0.8f,vec3(96.f/255.f, 63.f/255.f, 44.f/255.f),"OH NO");
+    auto module_desc1 = std::make_shared<bnuui::TextLabel>(vec2(WINDOW_WIDTH_PX/2 + 50,WINDOW_HEIGHT_PX/2 - 60), 0.8f, textColour, "OH NO");
+    auto module_desc2 = std::make_shared<bnuui::TextLabel>(vec2(WINDOW_WIDTH_PX/2 + 50,WINDOW_HEIGHT_PX/2 + 5), 0.8f,textColour, "OH NO");
+    auto module_desc3 = std::make_shared<bnuui::TextLabel>(vec2(WINDOW_WIDTH_PX/2 + 50,WINDOW_HEIGHT_PX/2 + 70), 0.8f,textColour, "OH NO");
+    auto module_desc4 = std::make_shared<bnuui::TextLabel>(vec2(WINDOW_WIDTH_PX/2 + 50,WINDOW_HEIGHT_PX/2 + 135), 0.8f,textColour, "OH NO");
 
+
+    auto moduletype_text = std::make_shared<bnuui::Box>(vec2(WINDOW_WIDTH_PX/2-120,WINDOW_HEIGHT_PX/2 -60), vec2(450, 250), 0.0f);
+    moduletype_text->texture = TEXTURE_ASSET_ID::MODULETYPE_TEXT;
+
+    auto moduledesc_text = std::make_shared<bnuui::Box>(vec2(WINDOW_WIDTH_PX/2+150,WINDOW_HEIGHT_PX/2 -60), vec2(400, 250), 0.0f);
+    moduledesc_text->texture = TEXTURE_ASSET_ID::MODULEDESCRIPTION_TEXT;
 
     book_icon->setOnClick([book, module_icon1, module_icon2, module_icon3, module_icon4](bnuui::Element& e) {
         RenderSystem::isRenderingBook = !RenderSystem::isRenderingBook;
@@ -263,22 +277,21 @@ void GameLevel::InitializeBookUI(){
     //     }
     // });
 
+    // header_text->setOnUpdate([book](bnuui::Element& e, float dt) {
+    //     if(book->visible){
+    //         static_cast<bnuui::TextLabel&>(e).setText("Module types");
+    //     } else{
+    //         static_cast<bnuui::TextLabel&>(e).setText(" "); 
+    //     }
+    // });
 
-    header_text->setOnUpdate([book](bnuui::Element& e, float dt) {
-        if(book->visible){
-            static_cast<bnuui::TextLabel&>(e).setText("Module types");
-        } else{
-            static_cast<bnuui::TextLabel&>(e).setText(" "); 
-        }
-    });
-
-    header_text2->setOnUpdate([book](bnuui::Element& e, float dt) {
-        if(book->visible){
-            static_cast<bnuui::TextLabel&>(e).setText("Module Description");
-        } else{
-            static_cast<bnuui::TextLabel&>(e).setText(" ");
-        }
-    });
+    // header_text2->setOnUpdate([book](bnuui::Element& e, float dt) {
+    //     if(book->visible){
+    //         static_cast<bnuui::TextLabel&>(e).setText("Module Description");
+    //     } else{
+    //         static_cast<bnuui::TextLabel&>(e).setText(" ");
+    //     }
+    // });
 
     module_text1->setOnUpdate([book](bnuui::Element& e, float dt) {
         if(book->visible){
@@ -344,15 +357,17 @@ void GameLevel::InitializeBookUI(){
         }
     });
 
-    book->children.push_back(header_text);
-    book->children.push_back(header_text2);
-    book->children.push_back(module_icon1);
+    // book->children.push_back(header_text);
+    book->children.push_back(moduletype_text);
+    // book->children.push_back(header_text2);
+    book->children.push_back(moduledesc_text);
+    book->children.push_back(module_iconBox1);
     book->children.push_back(module_text1);
-    book->children.push_back(module_icon2);
+    book->children.push_back(module_iconBox2);
     book->children.push_back(module_text2);
-    book->children.push_back(module_icon3);
+    book->children.push_back(module_iconBox3);
     book->children.push_back(module_text3);
-    book->children.push_back(module_icon4);
+    book->children.push_back(module_iconBox4);
     book->children.push_back(module_text4);    
     book->children.push_back(module_desc1);
     book->children.push_back(module_desc2);

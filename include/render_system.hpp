@@ -240,6 +240,8 @@ class RenderSystem {
         textures_path("background/game_victory_bg.png"),
         textures_path("ui/books/book_icon.png"),
         textures_path("ui/books/book.png"),
+        textures_path("texts/moduletype.png"),
+        textures_path("texts/moduledescription.png"),
     };
 
     std::array<GLuint, effect_count> effects;
