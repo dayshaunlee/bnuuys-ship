@@ -17,6 +17,49 @@ void APIENTRY openglDebugCallback(GLenum source, GLenum type, GLuint id, GLenum 
     std::cerr << "OpenGL Debug Message: " << message << std::endl;
 }
 
+bool RenderSystem::particleSystemInit() {
+    float vertices[] = {
+        -0.5f, -0.5f, 0.0f,
+        0.5f, -0.5f, 0.0f,
+        0.5f,  0.5f, 0.0f,
+        -0.5f,  0.5f, 0.0f
+    };
+
+    glGenVertexArrays(1, &m_QuadVAO);
+    glBindVertexArray(m_QuadVAO);
+
+    GLuint quadVB, quadIB;
+    glGenBuffers(1, &quadVB);
+    glBindBuffer(GL_ARRAY_BUFFER, quadVB);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), 0);
+
+    uint32_t indices[] = {
+        0, 1, 2, 2, 3, 0
+    };
+
+    glGenBuffers(1, &quadIB);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, quadIB);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
+    const GLuint particle_effect_enum = (GLuint) EFFECT_ASSET_ID::PARTICLE;
+    m_Particle_shaderProgram = (GLuint) effects[particle_effect_enum];
+    m_ParticleShaderViewProj = glGetUniformLocation(m_Particle_shaderProgram, "u_ViewProj");
+    assert(m_ParticleShaderViewProj > -1);
+    m_ParticleShaderTransform = glGetUniformLocation(m_Particle_shaderProgram, "u_Transform");
+    assert(m_ParticleShaderTransform > -1);
+    m_ParticleShaderColor = glGetUniformLocation(m_Particle_shaderProgram, "u_Color");
+    assert(m_ParticleShaderColor > -1);
+
+    // release buffers [ I MIGHT NEED THIS IN CASE IT CRASHES ]
+    // glBindBuffer(GL_ARRAY_BUFFER, 0);
+    // glBindVertexArray(m_VAO);
+
+    return true;
+}
+
 // Render initialization
 bool RenderSystem::init(GLFWwindow* window_arg) {
     this->window = window_arg;
@@ -58,7 +101,6 @@ bool RenderSystem::init(GLFWwindow* window_arg) {
 
     // We are not really using VAO's but without at least one bound we will crash in
     // some systems.
-    /*GLuint vao;*/
     glGenVertexArrays(1, &m_VAO);
     glBindVertexArray(m_VAO);
     gl_has_errors();
@@ -78,6 +120,7 @@ bool RenderSystem::init(GLFWwindow* window_arg) {
     //    glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
     //}
 
+    particleSystemInit();
     return true;
 }
 

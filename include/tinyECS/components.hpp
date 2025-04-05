@@ -250,7 +250,8 @@ enum class EFFECT_ASSET_ID {
     TEXTURED = CHICKEN + 1,
     VIGNETTE = TEXTURED + 1,
     FONT = VIGNETTE + 1,
-    EFFECT_COUNT = FONT + 1
+    PARTICLE = FONT + 1,
+    EFFECT_COUNT = PARTICLE + 1
 };
 const int effect_count = (int) EFFECT_ASSET_ID::EFFECT_COUNT;
 
@@ -506,4 +507,32 @@ struct Disaster {
     int speed;
     float damage;
     float alive_time_ms;
+};
+
+// Particle System following (https://www.youtube.com/watch?v=GK0jHlv3e3w)
+struct ParticleProps {
+	vec2 Position;
+	vec2 Velocity, VelocityVariation;
+	vec4 ColorBegin, ColorEnd;
+	float SizeBegin, SizeEnd, SizeVariation;
+	float LifeTime = 1.0f;
+};
+
+struct Particle {
+    glm::vec2 Position;
+    glm::vec2 Velocity;
+    glm::vec4 ColorBegin, ColorEnd;
+    float Rotation = 0.0f;
+    float SizeBegin, SizeEnd;
+
+    float LifeTime = 1.0f * 500.0f;
+    float LifeRemaining = 0.0f;
+
+    bool Active = false;
+};
+
+struct ParticleEmitter {
+    ParticleProps props;
+    std::vector<Particle> particles;
+    uint32_t poolIndex = 999;
 };

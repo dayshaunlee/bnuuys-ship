@@ -19,10 +19,11 @@ void IntroCutscene::Init() {
     black_bg->color = vec3(0,0,0);
     black_bg->texture = TEXTURE_ASSET_ID::MAIN_MENU_BG; 
 
-    auto dialog = std::make_shared<bnuui::TextLabel>(vec2(0,100), 1.5f, " ");
+    dialog = std::make_shared<bnuui::TextLabel>(vec2(0,100), 1.5f, " ");
     rendered_dialog_text = " ";
     dialog->color = vec3(1,1,1);
     cutscene_image->texture = TEXTURE_ASSET_ID::CUTSCENE_1;
+    cutscene_image->color = vec3(0,0,0);
 
     dialog->setOnUpdate([&](bnuui::Element& e, float dt) {
         static_cast<bnuui::TextLabel&>(e).setText(rendered_dialog_text);
@@ -91,15 +92,59 @@ void IntroCutscene::revealCharacters(float dt) {
     }
 }
 
-void IntroCutscene::Update(float dt) {
-    scene_ui.update(dt);
+void IntroCutscene::checkDialogs(float dt) {
+    if (phase == 13) {
+        dialog->position = vec2((float) WINDOW_WIDTH_PX/2 - 150.0f, WINDOW_HEIGHT_PX/2);
+        cutscene_image->visible = false;
+    } else if (phase == 0) {
+        dialog->position = vec2((float) WINDOW_WIDTH_PX/2 - 250.0f, WINDOW_HEIGHT_PX/2);
+        cutscene_image->visible = false;
+    } else {
+        dialog->position = vec2(100, 100);
+        cutscene_image->visible = true;
+    }
+
     if (dialogue_timer_ms > 0) {
         dialogue_timer_ms -= dt;
     } else {
-        curr_line = dialog_parts[phase]
-        /*rendered_dialog_text = " ";*/
+        phase++;
+        curr_line = dialog_parts[phase];
+        rendered_dialog_text = " ";
         char_index = 0;
-        dialogue_timer_ms = DIALOGUE_TIME_MS;
+        if (phase >= 3 && phase <= 5) {
+            cutscene_image->texture = TEXTURE_ASSET_ID::CUTSCENE_2;
+            dialogue_timer_ms = PHASE1_TIME;
+        } else if (phase >= 6 && phase <= 9) {
+            cutscene_image->texture = TEXTURE_ASSET_ID::CUTSCENE_3;
+            dialogue_timer_ms = PHASE2_TIME;
+        } else if (phase >= 10) {
+            cutscene_image->texture = TEXTURE_ASSET_ID::CUTSCENE_4;
+            cutscene_image->scale = vec2(450, 650);
+            dialogue_timer_ms = PHASE3_TIME;
+            cutscene_image->visible = true;
+        } else {
+            dialogue_timer_ms = PHASE0_TIME;
+        }
+        if (phase == 1 || phase == 3 || phase == 6 || phase == 10) {
+            cutscene_image->color = vec3(0,0,0);
+        }
     }
+}
+
+void IntroCutscene::undarkenImage(float dt) {
+    static float dark_timer = 0;
+    dark_timer += dt;
+
+    if (dark_timer >= CHAR_TIME_MS) {
+        dark_timer = 0;
+        cutscene_image->color += (vec3(1,1,1) - cutscene_image->color) * 0.0025f * dt; 
+        cutscene_image->color = glm::clamp(cutscene_image->color, vec3(0,0,0), vec3(1,1,1));
+    }
+}
+
+void IntroCutscene::Update(float dt) {
+    scene_ui.update(dt);
+    checkDialogs(dt);
     revealCharacters(dt);
+    undarkenImage(dt);
 }

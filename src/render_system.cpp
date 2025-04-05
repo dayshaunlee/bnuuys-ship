@@ -2,7 +2,9 @@
 #include <glm/ext/matrix_clip_space.hpp>
 #include <glm/ext/matrix_float4x4.hpp>
 #include <glm/ext/matrix_transform.hpp>
+#include <glm/ext/quaternion_common.hpp>
 #include <glm/ext/vector_float3.hpp>
+#include <glm/gtc/type_ptr.hpp>
 #include <glm/trigonometric.hpp>
 #include <iostream>
 #include <memory>
@@ -144,7 +146,6 @@ void RenderSystem::drawTexturedMesh(Entity entity, const mat3& projection) {
         GLint in_texcoord_loc = glGetAttribLocation(program, "in_texcoord");
         gl_has_errors();
         assert(in_texcoord_loc >= 0);
-
 
         glEnableVertexAttribArray(in_position_loc);
         glVertexAttribPointer(in_position_loc, 3, GL_FLOAT, GL_FALSE, sizeof(TexturedVertex), (void*) 0);
@@ -325,6 +326,44 @@ void RenderSystem::drawUIElement(bnuui::Element& element, const mat3& projection
     }
 }
 
+void RenderSystem::drawParticles(Entity entity, const mat3& projection) {
+    ParticleEmitter& emitter = registry.particleEmitters.get(entity);
+    glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    glUseProgram(m_Particle_shaderProgram);
+    glUniformMatrix3fv(m_ParticleShaderViewProj, 1, GL_FALSE, (float*) &projection);
+
+    for (auto& particle : emitter.particles)
+    {
+        if (!particle.Active)
+            continue;
+
+        // Fade away particles
+        float life = particle.LifeRemaining / particle.LifeTime;
+        vec4 color = glm::mix(particle.ColorEnd, particle.ColorBegin, life);
+        float size = glm::mix(particle.SizeEnd, particle.SizeBegin, life);
+
+        Transform transform;
+        if (registry.backgroundObjects.has(entity)) {
+            transform.translate(particle.Position + CameraSystem::GetInstance()->position);
+        } else {
+            transform.translate(particle.Position);
+        }
+        transform.rotate(particle.Rotation);
+        transform.scale({size * 10.0f, size * 10.0f});
+
+        glUniformMatrix3fv(m_ParticleShaderTransform, 1, GL_FALSE, (float*) &transform.mat);
+
+        glUniform4fv(m_ParticleShaderColor, 1, glm::value_ptr(color));
+        glBindVertexArray(m_QuadVAO);
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+    }
+
+    glBindVertexArray(m_VAO);
+    glBindTexture(GL_TEXTURE_2D, 0);
+}
+
 // first draw to an intermediate texture,
 // apply the "vignette" texture, when requested
 // then draw the intermediate texture
@@ -481,6 +520,11 @@ void RenderSystem::draw() {
                 drawUIElement(*elem, projection_2D);
             }
         }
+    }
+    
+    // TODO: Move up later.
+    for (Entity e : registry.particleEmitters.entities) {
+        drawParticles(e, projection_2D);
     }
   
     // if there is no gacha ui displayed
