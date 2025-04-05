@@ -2,7 +2,7 @@
 
 #include "sceneManager/scene.hpp"
 class NextLevelScene : public Scene {
-public:
+   public:
     NextLevelScene();
     void Init() override;
     void Exit() override;
