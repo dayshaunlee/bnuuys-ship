@@ -293,10 +293,7 @@ bool polyPolyMTV(const std::vector<tson::Vector2i>& poly1, const std::vector<tso
         return false;
     }
 
-    std::cout << "axis: " << smallestAxis.x << ", " << smallestAxis.y << std::endl;
-    std::cout << "overlap: " << minOverlap << std::endl;
     mtv = smallestAxis * minOverlap;
-    std::cout << "mtv: " << mtv.x << ", " << mtv.y << std::endl;
     return true;
 }
 
