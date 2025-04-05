@@ -271,6 +271,9 @@ class RenderSystem {
     // this is used to check that if redendering Gacha UI we don't render player on top
     static bool isRenderingGacha;
 
+    // for checking if player motion exists to avoid segmentation fault
+    static bool isInGame;
+
     // Destroy resources associated to one or all entities created by the system
     ~RenderSystem();
 
@@ -292,6 +295,9 @@ class RenderSystem {
 
     // Drawing function for UI elements
     void drawUIElement(bnuui::Element& element, const mat3& projection);
+
+    // draw highlight square for modules
+    void drawSquareOutline(vec2 position, vec2 size, vec3 color, const mat3& projection);
 
     // Window handle
     GLFWwindow* window;
