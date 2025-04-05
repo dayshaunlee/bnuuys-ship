@@ -24,7 +24,7 @@ vec2 get_bounding_box(const Motion& motion) {
 // ADVANCED CREATIVE FEATURE: PRECISE COLLISION
 
 // LINE/LINE
-bool lineLine(int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4, vec2& normal) {
+bool lineLine(int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4) {
     float denom = (y4 - y3) * (x2 - x1) - (x4 - x3) * (y2 - y1);
     if (denom == 0) return false;
 
@@ -34,18 +34,13 @@ bool lineLine(int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4, ve
 
     // if uA and uB are between 0-1, lines are colliding
     if (uA >= 0 && uA <= 1 && uB >= 0 && uB <= 1) {
-        float edgeX = x4 - x3;
-        float edgeY = y4 - y3;
-        normal.x = -edgeY;
-        normal.y = edgeX;
-        normal = normalize(normal);
         return true;
     }
     return false;
 }
 
 // POLYGON/LINE
-bool polyLine(std::vector<tson::Vector2i> vertices, int x1, int y1, int x2, int y2, vec2& normal) {
+bool polyLine(std::vector<tson::Vector2i> vertices, int x1, int y1, int x2, int y2) {
     // go through each of the vertices, plus the next
     // vertex in the list
     int next = 0;
@@ -65,7 +60,7 @@ bool polyLine(std::vector<tson::Vector2i> vertices, int x1, int y1, int x2, int 
         // do a Line/Line comparison
         // if true, return 'true' immediately and
         // stop testing (faster)
-        bool hit = lineLine(x1, y1, x2, y2, x3, y3, x4, y4, normal);
+        bool hit = lineLine(x1, y1, x2, y2, x3, y3, x4, y4);
         if (hit) {
             return true;
         }
@@ -107,7 +102,7 @@ bool polyPoint(std::vector<tson::Vector2i> vertices, float px, float py) {
 
 // POLYGON/POLYGON: all of this along with helpers from
 // (https://www.jeffreythompson.org/collision-detection/poly-poly.php)
-bool polyPoly(std::vector<tson::Vector2i> p1, std::vector<tson::Vector2i> p2, vec2& normal) {
+bool polyPoly(std::vector<tson::Vector2i> p1, std::vector<tson::Vector2i> p2) {
     // go through each of the vertices, plus the next
     // vertex in the list
     int next = 0;
@@ -124,7 +119,7 @@ bool polyPoly(std::vector<tson::Vector2i> p1, std::vector<tson::Vector2i> p2, ve
 
         // now we can use these two points (a line) to compare
         // to the other polygon's vertices using polyLine()
-        bool collision = polyLine(p2, vc.x, vc.y, vn.x, vn.y, normal);
+        bool collision = polyLine(p2, vc.x, vc.y, vn.x, vn.y);
         if (collision) return true;
     }
 
@@ -405,7 +400,7 @@ bool PhysicsSystem::collidesPolyVec(Entity island_entity, ivec2 node_pos) {
         p.y += island_motion.position.y;
     }
 
-    return polyPoly(islandPolygon, nodePolygon, vec2{0.0, 0.0});
+    return polyPoly(islandPolygon, nodePolygon);
 }
 
 void PhysicsSystem::step(float elapsed_ms) {
