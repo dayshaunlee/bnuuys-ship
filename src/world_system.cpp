@@ -231,7 +231,9 @@ void WorldSystem::handle_collisions() {
             registry.remove_all_components_of(e1);
             // Play sound
             Entity sound_entity = Entity();
-            registry.sounds.emplace(sound_entity);
+            Sound& sound = registry.sounds.emplace(sound_entity);
+            sound.sound_type = SOUND_ASSET_ID::PROJECTILE_ENEMY_COLLISION;
+
             //Mix_PlayChannel(-1, projectile_enemy_collision, 0);
 
         } else if (registry.playerProjectiles.has(e2) && registry.enemies.has(e1)) {
@@ -254,7 +256,9 @@ void WorldSystem::handle_collisions() {
 
             registry.remove_all_components_of(e2);
             // Play sound
-            Mix_PlayChannel(-1, projectile_enemy_collision, 0);
+            Entity sound_entity = Entity();
+            Sound& sound = registry.sounds.emplace(sound_entity);
+            sound.sound_type = SOUND_ASSET_ID::PROJECTILE_ENEMY_COLLISION;
         }
 
         // todo laser: add sound
@@ -292,7 +296,9 @@ void WorldSystem::handle_collisions() {
 
             if (bunny.jail_health <= 0) {
                 // Play sound
-                Mix_PlayChannel(-1, projectile_jail_collision, 0);
+                Entity sound_entity = Entity();
+                Sound& sound = registry.sounds.emplace(sound_entity);
+                sound.sound_type = SOUND_ASSET_ID::PROJECTILE_JAIL_COLLISION;
                 registry.motions.get(e2).scale = {28, 28};
                 registry.renderRequests.get(e2).used_texture = TEXTURE_ASSET_ID::BUNNY_NPC_IDLE_UP0;
                 bunny.is_jailed = false;
@@ -306,7 +312,9 @@ void WorldSystem::handle_collisions() {
             bunny.jail_health -= projectile.damage;
 
             if (bunny.jail_health <= 0) {
-                Mix_PlayChannel(-1, projectile_jail_collision, 0);
+                Entity sound_entity = Entity();
+                Sound& sound = registry.sounds.emplace(sound_entity);
+                sound.sound_type = SOUND_ASSET_ID::PROJECTILE_JAIL_COLLISION;
                 registry.motions.get(e1).scale = {28, 28};
                 registry.renderRequests.get(e1).used_texture = TEXTURE_ASSET_ID::BUNNY_NPC_IDLE_UP0;
                 bunny.is_jailed = false;
@@ -341,7 +349,9 @@ void WorldSystem::handle_collisions() {
             // registry.ships.get(e2).health -= 50;
             registry.remove_all_components_of(e1);
             // Play sound
-            Mix_PlayChannel(-1, enemy_ship_collision, 0);
+            Entity sound_entity = Entity();
+            Sound& sound = registry.sounds.emplace(sound_entity);
+            sound.sound_type = SOUND_ASSET_ID::ENEMY_SHIP_COLLISION;
 
             // When Player dies (ship health is <= 0)
             if(registry.ships.get(e2).health <= 0.0f){
@@ -354,7 +364,9 @@ void WorldSystem::handle_collisions() {
             // registry.ships.get(e1).health -= 50;
             registry.remove_all_components_of(e2);
             // Play sound
-            Mix_PlayChannel(-1, enemy_ship_collision, 0);
+            Entity sound_entity = Entity();
+            Sound& sound = registry.sounds.emplace(sound_entity);
+            sound.sound_type = SOUND_ASSET_ID::ENEMY_SHIP_COLLISION;
 
             // When Player dies (ship health is <= 0)
             if(registry.ships.get(e1).health <= 0.0f){
@@ -369,9 +381,12 @@ void WorldSystem::handle_collisions() {
             (registry.ships.has(e2) && registry.islands.has(e1))) {
             collisions_to_remove.push_back(e1);
             collisions_to_remove.push_back(e2);
+            vec2 normal = registry.collisions.get(e1).normal;
             // Play sound
-            Mix_PlayChannel(-1, island_ship_collision, 0);
-            CameraSystem::GetInstance()->setToPreviousPosition();
+            Entity sound_entity = Entity();
+            Sound& sound = registry.sounds.emplace(sound_entity);
+            sound.sound_type = SOUND_ASSET_ID::ISLAND_SHIP_COLLISION;
+            CameraSystem::GetInstance()->setToPreviousPosition(normal);
         }
 
         // Ship - Base collision
@@ -388,7 +403,9 @@ void WorldSystem::handle_collisions() {
             registry.ships.get(e2).health -= registry.disasters.get(e1).damage;
             CameraSystem::GetInstance()->vel /= vec2(3, 3);
             // Play sound
-            Mix_PlayChannel(-1, enemy_ship_collision, 0);
+            Entity sound_entity = Entity();
+            Sound& sound = registry.sounds.emplace(sound_entity);
+            sound.sound_type = SOUND_ASSET_ID::ENEMY_SHIP_COLLISION;
 
             // When Player dies (ship health is <= 0)
             if(registry.ships.get(e2).health <= 0.0f){
@@ -400,7 +417,9 @@ void WorldSystem::handle_collisions() {
             registry.ships.get(e1).health -= registry.disasters.get(e2).damage;
             CameraSystem::GetInstance()->vel /= vec2(3, 3);
             // Play sound
-            Mix_PlayChannel(-1, enemy_ship_collision, 0);
+            Entity sound_entity = Entity();
+            Sound& sound = registry.sounds.emplace(sound_entity);
+            sound.sound_type = SOUND_ASSET_ID::ENEMY_SHIP_COLLISION;
 
             // When Player dies (ship health is <= 0)
             if(registry.ships.get(e1).health <= 0.0f){

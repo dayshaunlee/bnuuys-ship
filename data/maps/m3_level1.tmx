@@ -10,7 +10,7 @@
  <tileset firstgid="233" source="tilesets/Grass_Biome.json"/>
  <tileset firstgid="278" source="tilesets/Water_Base.json"/>
  <tileset firstgid="279" source="tilesets/Free_Chicken_House.json"/>
- <layer id="2" name="water_tiles" width="36" height="30">
+ <layer id="2" name="water_tiles" width="36" height="30" visible="0">
   <data encoding="csv">
 78,0,0,0,78,0,0,0,78,0,0,0,78,0,0,0,78,0,0,0,78,0,0,0,78,0,0,0,78,0,0,0,78,0,0,0,
 78,0,0,0,78,0,0,0,78,0,0,0,78,0,0,0,78,0,0,0,78,0,0,0,78,0,0,0,78,0,0,0,78,0,0,0,
