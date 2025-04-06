@@ -1,9 +1,9 @@
 #pragma once
 
 #include "sceneManager/scene.hpp"
-class NextLevelScene : public Scene {
-   public:
-    NextLevelScene();
+class VictoryScene : public Scene {
+public:
+    VictoryScene();
     void Init() override;
     void Exit() override;
     void HandleInput(int key, int action, int mod) override;
