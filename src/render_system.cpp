@@ -500,7 +500,7 @@ void RenderSystem::draw() {
     // adding "vignette" effect when applied
     drawToScreen();
 
-    if (isInGame && !isRenderingGacha) {
+    if (isInGame && !isRenderingGacha && !isRenderingBook) {
         Player& player = registry.players.components[0];
         if (player.player_state == STATIONING) {
             vec2& player_position = registry.motions.get(registry.players.entities[0]).position;

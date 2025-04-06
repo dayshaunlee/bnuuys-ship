@@ -252,7 +252,7 @@ void GameLevel::InitializeBookUI(){
     auto module_iconBox4 = std::make_shared<bnuui::Box>(itemBasePos + itemSpaceY, itemBoxSize, 0.0f);
     auto module_icon4 = std::make_shared<bnuui::Box>(itemBasePos + itemSpaceY, itemIconSize, 0.0f);
     module_iconBox4->children.push_back(module_icon4);
-    module_icon4->texture = TEXTURE_ASSET_ID::HEAL;
+    module_icon4->texture = TEXTURE_ASSET_ID::HEAL_MODULE;
     module_icon4->visible = false;
 
     auto module_iconBox5 = std::make_shared<bnuui::Box>(itemBasePos + itemSpaceY + itemSpaceX, itemBoxSize, 0.0f);
