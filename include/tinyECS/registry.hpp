@@ -53,6 +53,8 @@ class ECSRegistry {
 
     ComponentContainer<Disaster> disasters;
     ComponentContainer<HelperBunnyIcon> helperBunnyIcons;
+
+    ComponentContainer<ParticleEmitter> particleEmitters;
     
 
     // constructor that adds all containers for looping over them
@@ -97,6 +99,8 @@ class ECSRegistry {
 
         registry_list.push_back(&disasters);
         registry_list.push_back(&helperBunnyIcons);
+
+        registry_list.push_back(&particleEmitters);
     }
 
     void clear_all_components() {

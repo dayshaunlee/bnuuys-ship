@@ -143,3 +143,5 @@ const float HEAL_COOLDOWN = 10000.0f;  // 10 second
 const float HEAL_AMOUNT = 10.0f;
 
 const float BUNNY_BASE_DROPOFF_TIME = 1000.0f;  // ship must be in base for 1 second before the bunnies get dropped off
+
+const float DEFAULT_PARTICLE_TIME = 50.0f;

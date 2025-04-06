@@ -46,6 +46,13 @@ class RenderSystem {
 	GLuint m_font_VAO;
 	GLuint m_font_VBO;
 
+    // Particles
+    GLuint m_QuadVAO;
+	GLuint m_Particle_shaderProgram;
+	GLint m_ParticleShaderViewProj;
+    GLuint m_InstanceTransformVBO;
+    GLuint m_InstanceColorVBO;
+
     // Make sure these paths remain in sync with the associated enumerators.
     // Associated id with .obj path
     const std::vector<std::pair<GEOMETRY_BUFFER_ID, std::string>> mesh_paths = {
@@ -259,6 +266,7 @@ class RenderSystem {
         shader_path("textured"), 
         shader_path("vignette"),
         shader_path("font"),
+        shader_path("particle"),
     };
 
     std::array<GLuint, geometry_count> vertex_buffers;
@@ -270,6 +278,8 @@ class RenderSystem {
     bool init(GLFWwindow* window);
 
 	bool fontInit(const std::string& font_filename, unsigned int font_default_size);
+
+    bool particleSystemInit();
 
     template <class T>
     void bindVBOandIBO(GEOMETRY_BUFFER_ID gid, std::vector<T> vertices, std::vector<uint16_t> indices);
@@ -318,8 +328,12 @@ class RenderSystem {
     // Drawing function for UI elements
     void drawUIElement(bnuui::Element& element, const mat3& projection);
 
+    // Instance rendering for particle emitters.
+    void drawParticles(Entity entity, const mat3& projection);
+  
     // draw highlight square for modules
     void drawSquareOutline(vec2 position, vec2 size, vec3 color, const mat3& projection);
+
 
     // Window handle
     GLFWwindow* window;

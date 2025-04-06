@@ -1,5 +1,6 @@
 #include "camera_system.hpp"
 #include "common.hpp"
+#include "particle_system.hpp"
 #include "sceneManager/scene.hpp"
 #include "sceneManager/scene_manager.hpp"
 #include "scenes/cutscene.hpp"
@@ -36,6 +37,7 @@ int main() {
     RenderSystem renderer_system;
     SoundSystem sound_system;
     AnimationSystem animation_system;
+    ParticleSystem particle_system;
     int frameCounter = 0;
     float msCounter = 0;
 
@@ -112,8 +114,10 @@ int main() {
         Scene* s = scene_manager.getCurrentScene();
         if (s != nullptr) s->Update(elapsed_ms);
         world_system.step(elapsed_ms);
+        particle_system.step(elapsed_ms);
         renderer_system.draw();
         sound_system.play();
+        
     }
 
     delete (mm);
@@ -125,6 +129,7 @@ int main() {
     delete (ui_editor);
     delete (death);
     delete (levelTransition);
+    delete (cutscene);
     delete (CameraSystem::GetInstance());
 
     return EXIT_SUCCESS;

@@ -53,8 +53,8 @@ void TutorialLevel::LevelInit() {
     );
 
     // freetype doesnt support \n, probably should use a helper ;-;
-    auto dialogue_txt_first = std::make_shared<bnuui::TextLabel>(vec2(480, 460), 2.0f, ":3");
-    auto dialogue_txt_second = std::make_shared<bnuui::TextLabel>(vec2(480, 480), 2.0f, " ");
+    auto dialogue_txt_first = std::make_shared<bnuui::TextLabel>(vec2(480, 460), 1.0f, ":3");
+    auto dialogue_txt_second = std::make_shared<bnuui::TextLabel>(vec2(480, 480), 1.0f, " ");
 
     dialogue_txt_first->setOnUpdate([](bnuui::Element& e, float dt) {
         if (curr_tutorial_phase == WASD_KEYS) {

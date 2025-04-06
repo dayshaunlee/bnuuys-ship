@@ -82,25 +82,19 @@ Entity createPlayer(vec2 position) {
     comp_motion.position = position;
     registry.motions.emplace(player, comp_motion);
 
-    return player;
-}
-
-// Seems like it's broken.
-Entity createPlayer(RenderSystem* renderer, vec2 position) {
-    Entity player;
-
-    Player comp_player;
-    comp_player.is_sailing_ship = false;
-    comp_player.name = "Player 1";
-    comp_player.direction = DIRECTION::DOWN;
-    comp_player.player_state = PLAYERSTATE::IDLE;
-    registry.players.emplace(player, comp_player);
-
-    Motion comp_motion;
-    comp_motion.angle = 0.0f;
-    comp_motion.scale = {120, 120};
-    comp_motion.position = position;
-    registry.motions.emplace(player, comp_motion);
+    ParticleEmitter pe;
+    pe.particles.resize(1000);
+    ParticleProps props;
+    props.ColorBegin = { 1, 1, 1, 1 };
+    props.ColorEnd = { 53 / 255.0f, 55 / 255.0f, 59 / 255.0f, 0.0f };
+	props.SizeBegin = 0.75f, props.SizeVariation = 0.3f, props.SizeEnd = 0.0f;
+	props.LifeTime = 1.0f * 500.0f;
+	props.Velocity = { 0.0f, 0.0f };
+	props.VelocityVariation = { 3.0f, 10.0f };
+	props.Position = position;
+    props.Offset = { 0, 10.0f };
+    pe.props = props;
+    registry.particleEmitters.emplace(player, pe);
 
     return player;
 }
@@ -191,6 +185,20 @@ Entity createBunny(Entity entity) {
     registry.renderRequests.insert(
         entity, {TEXTURE_ASSET_ID::BUNNY_NPC_JAILED0, EFFECT_ASSET_ID::TEXTURED, GEOMETRY_BUFFER_ID::SPRITE});
 
+    ParticleEmitter pe;
+    pe.particles.resize(1000);
+    ParticleProps props;
+    props.ColorBegin = { 1, 1, 1, 1 };
+    props.ColorEnd = { 53 / 255.0f, 55 / 255.0f, 59 / 255.0f, 0.0f };
+	props.SizeBegin = 1.f, props.SizeVariation = 0.3f, props.SizeEnd = 0.0f;
+	props.LifeTime = 1.0f * 500.0f;
+	props.Velocity = { 50.0f, -150.0f };
+	props.VelocityVariation = { 13.0f, 100.0f };
+    props.Offset = { 0, 10.0f };
+    pe.props = props;
+    registry.particleEmitters.emplace(entity, pe);
+
+
     return entity;
 }
 
@@ -258,6 +266,19 @@ Entity createCannonProjectile(vec2 orig, vec2 dest) {
     proj.damage = SIMPLE_CANNON_DAMAGE;
     proj.alive_time_ms = PROJECTILE_LIFETIME;
 
+    ParticleEmitter pe;
+    pe.particles.resize(1000);
+    ParticleProps props;
+    props.ColorBegin = { 254 / 255.0f, 212 / 255.0f, 123 / 255.0f, 1.0f };
+	props.ColorEnd = { 254 / 255.0f, 109 / 255.0f, 41 / 255.0f, 0.5f };
+	props.SizeBegin = 1.25f, props.SizeVariation = 0.3f, props.SizeEnd = 0.0f;
+	props.LifeTime = 1.0f * 1000.0f;
+	props.Velocity = {0,0};
+	props.VelocityVariation = { 5.0f, 1.0f };
+
+    pe.props = props;
+    registry.particleEmitters.emplace(e, pe);
+
     //Play sound
     if (projectile_shoot == nullptr) {
         projectile_shoot = Mix_LoadWAV(audio_path("projectile_shoot.wav").c_str());
@@ -287,6 +308,19 @@ Entity createModifiedCannonProjectile(vec2 orig, vec2 dest, CannonModifier cm) {
     proj.mod_type = cm.type;
     proj.damage = SIMPLE_CANNON_DAMAGE;
     proj.alive_time_ms = PROJECTILE_LIFETIME;
+
+    ParticleEmitter pe;
+    pe.particles.resize(1000);
+    ParticleProps props;
+    props.ColorEnd = { 148 / 255.0f, 255.0f / 255.0f, 255.0f / 255.0f, 1.0f };
+	props.ColorBegin = { 1, 1, 1, 0 };
+	props.SizeBegin = 1.25f, props.SizeVariation = 0.5f, props.SizeEnd = 0.0f;
+	props.LifeTime = 1.0f * 750.0f;
+	props.Velocity = { 0.0f, 0.0f };
+	props.VelocityVariation = { 3.0f, 1.0f };
+	props.Position = orig;
+    pe.props = props;
+    registry.particleEmitters.emplace(e, pe);
 
     //Play sound
     if (projectile_shoot == nullptr) {
