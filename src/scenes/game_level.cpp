@@ -263,13 +263,15 @@ void GameLevel::InitializeBookUI(){
     itemDesc->texture = TEXTURE_ASSET_ID::DESC_INTRO_TEXT;
 
     book_icon->setOnClick([book, module_icon1, module_icon2, module_icon3, module_icon4, module_icon5](bnuui::Element& e) {
-        RenderSystem::isRenderingBook = !RenderSystem::isRenderingBook;
-        book->visible = !book->visible;
-        module_icon1->visible = !module_icon1->visible;
-        module_icon2->visible = !module_icon2->visible;
-        module_icon3->visible = !module_icon3->visible;
-        module_icon4->visible = !module_icon4->visible;
-        module_icon5->visible = !module_icon5->visible;
+        if(!RenderSystem::isRenderingGacha){
+            RenderSystem::isRenderingBook = !RenderSystem::isRenderingBook;
+            book->visible = !book->visible;
+            module_icon1->visible = !module_icon1->visible;
+            module_icon2->visible = !module_icon2->visible;
+            module_icon3->visible = !module_icon3->visible;
+            module_icon4->visible = !module_icon4->visible;
+            module_icon5->visible = !module_icon5->visible;
+        }
     });
 
 
