@@ -187,10 +187,11 @@ void TutorialLevel::LevelUpdate(float dt) {
             std::cout << "Switching to next level scene.." << std::endl;
             sceneManager.switchScene("Next Level Scene");
 
-            SaveLoadSystem& saveLoadSystem = SaveLoadSystem::getInstance();
-            GameData gameData = saveLoadSystem.createGameData("Player1", "Level 1", registry.ships.components[0]);
-            saveLoadSystem.saveGame(gameData, "level_save.json");
-            std::cout << "tutorial saved" << std::endl;
+            // tutorial upgrades will not carry over to actual levels
+            // SaveLoadSystem& saveLoadSystem = SaveLoadSystem::getInstance();
+            // GameData gameData = saveLoadSystem.createGameData("Player1", "Level 1", registry.ships.components[0]);
+            // saveLoadSystem.saveGame(gameData, "level_save.json");
+            // std::cout << "tutorial saved" << std::endl;
 
             return;
         }
