@@ -87,7 +87,7 @@ int main() {
 
     scene_manager.registerScene(cutscene);
 
-    scene_manager.switchScene("Main Menu");
+    scene_manager.switchScene("IntroCutscene");
 
     while (!world_system.is_over()) {
         glfwPollEvents();

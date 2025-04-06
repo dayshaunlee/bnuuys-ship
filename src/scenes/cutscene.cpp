@@ -92,15 +92,22 @@ void IntroCutscene::revealCharacters(float dt) {
     }
 }
 
-void IntroCutscene::checkDialogs(float dt) {
-    if (phase == 13) {
-        dialog->position = vec2((float) WINDOW_WIDTH_PX/2 - 150.0f, WINDOW_HEIGHT_PX/2);
-        cutscene_image->visible = false;
-    } else if (phase == 0) {
+void IntroCutscene::checkDialogs(float dt) { 
+    if (phase == 0) {
         dialog->position = vec2((float) WINDOW_WIDTH_PX/2 - 250.0f, WINDOW_HEIGHT_PX/2);
         cutscene_image->visible = false;
-    } else {
-        dialog->position = vec2(100, 100);
+    } else if (phase == 1) {
+        cutscene_image->position = vec2(WINDOW_WIDTH_PX*0.65, WINDOW_HEIGHT_PX/2);
+        dialog->position = vec2(200, WINDOW_HEIGHT_PX-25.0f);
+        cutscene_image->visible = true;
+    } else if (false) {
+
+    } else if (phase == 13) {
+        dialog->position = vec2((float) WINDOW_WIDTH_PX/2 - 150.0f, WINDOW_HEIGHT_PX/2);
+        cutscene_image->visible = false;
+    }
+    else {
+        dialog->position = vec2(100, WINDOW_HEIGHT_PX-25.0f);
         cutscene_image->visible = true;
     }
 
@@ -112,16 +119,11 @@ void IntroCutscene::checkDialogs(float dt) {
         rendered_dialog_text = " ";
         char_index = 0;
         if (phase >= 3 && phase <= 5) {
-            cutscene_image->texture = TEXTURE_ASSET_ID::CUTSCENE_2;
             dialogue_timer_ms = PHASE1_TIME;
         } else if (phase >= 6 && phase <= 9) {
-            cutscene_image->texture = TEXTURE_ASSET_ID::CUTSCENE_3;
             dialogue_timer_ms = PHASE2_TIME;
         } else if (phase >= 10) {
-            cutscene_image->texture = TEXTURE_ASSET_ID::CUTSCENE_4;
-            cutscene_image->scale = vec2(450, 650);
             dialogue_timer_ms = PHASE3_TIME;
-            cutscene_image->visible = true;
         } else {
             dialogue_timer_ms = PHASE0_TIME;
         }

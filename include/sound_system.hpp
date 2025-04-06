@@ -23,11 +23,11 @@ class SoundSystem {
         audio_path("projectile-enemy_collision.wav"),
         audio_path("projectile-jail_collision.wav"),
         audio_path("game_over.wav"),
-        audio_path("BnuuyIntro.mp3"),
+        audio_path("BnuuyIntro.wav"),
     };
 
     std::array<Mix_Music*, 2> sound_mix_repeating;
-    std::array<Mix_Chunk*, 5> sound_mix_chunk;
+    std::array<Mix_Chunk*, 6> sound_mix_chunk;
    public:
 
     bool init();
