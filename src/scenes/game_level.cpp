@@ -274,6 +274,7 @@ void GameLevel::InitializeUI() {
 }
 
 void GameLevel::Exit() {
+    RenderSystem::isInGame = false;
     scene_ui.clear();
     CameraSystem* cs = CameraSystem::GetInstance();
     cs->position = {0.0f, 0.0f};
