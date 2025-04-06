@@ -144,10 +144,22 @@ void ModulesSystem::step(float elapsed_ms) {
     // Simple cannon module.
     for (Entity sc_entity : registry.simpleCannons.entities) {
         SimpleCannon& sc = registry.simpleCannons.get(sc_entity);
-        if (sc.timer_ms > 0)
+        TEXTURE_ASSET_ID& texture = registry.renderRequests.get(sc_entity).used_texture;
+        if (sc.timer_ms > 0) {
             sc.timer_ms -= elapsed_ms;
-        else
+            if (!sc.is_modified) {
+                texture = TEXTURE_ASSET_ID::SIMPLE_CANNON01_SHADED;
+            } else {
+                texture = TEXTURE_ASSET_ID::BUBBLE_CANNON_SHADED;       // if have more cannon mods, this needs to be edited
+            }
+        } else {
             sc.timer_ms = 0;
+            if (!sc.is_modified) {
+                texture = TEXTURE_ASSET_ID::SIMPLE_CANNON01;
+            } else {
+                texture = TEXTURE_ASSET_ID::BUBBLE_CANNON;              // if have more cannon mods, this needs to be edited
+            }
+        }
 
         // Check automation.
         if (sc.is_automated) {
@@ -162,10 +174,14 @@ void ModulesSystem::step(float elapsed_ms) {
 
     for (Entity lw_entity : registry.laserWeapons.entities) {
         LaserWeapon& lw = registry.laserWeapons.get(lw_entity);
-        if (lw.timer_ms > 0)
+        TEXTURE_ASSET_ID& texture = registry.renderRequests.get(lw_entity).used_texture;
+        if (lw.timer_ms > 0) {
             lw.timer_ms -= elapsed_ms;
-        else
+            texture = TEXTURE_ASSET_ID::LASER_WEAPON0_SHADED;
+        } else {
             lw.timer_ms = 0;
+            texture = TEXTURE_ASSET_ID::LASER_WEAPON0;
+        }
     
         // Check automation.
         if (lw.is_automated) {
@@ -193,10 +209,15 @@ void ModulesSystem::step(float elapsed_ms) {
     // Heal module
     for (Entity heal_entity : registry.healModules.entities) {
         Heal& heal = registry.healModules.get(heal_entity);
-        if (heal.cooldown_ms > 0)
+        TEXTURE_ASSET_ID& texture = registry.renderRequests.get(heal_entity).used_texture;
+        if (heal.cooldown_ms > 0) {
             heal.cooldown_ms -= elapsed_ms;
-        else
+            texture = TEXTURE_ASSET_ID::HEAL_MODULE_SHADED;
+        } else {
             heal.cooldown_ms = 0;
+            texture = TEXTURE_ASSET_ID::HEAL_MODULE;
+        }
+            
 
         if (heal.is_automated && heal.cooldown_ms <= 0) {
             assert(registry.ships.size() == 1);

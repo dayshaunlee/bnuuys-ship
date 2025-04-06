@@ -119,6 +119,8 @@ void GameLevel::Init() {
     LevelInit();
 
     std::cout << "Num of ships: " << registry.ships.components.size() << std::endl;
+
+    RenderSystem::isInGame = true;
 }
 
 bool isOffscreen(const glm::vec2& A, const glm::vec2& center) {
@@ -272,6 +274,7 @@ void GameLevel::InitializeUI() {
 }
 
 void GameLevel::Exit() {
+    RenderSystem::isInGame = false;
     scene_ui.clear();
     CameraSystem* cs = CameraSystem::GetInstance();
     cs->position = {0.0f, 0.0f};

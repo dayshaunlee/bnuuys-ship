@@ -332,7 +332,7 @@ Entity createSteeringWheel(vec2 tile_pos) {
     motion.scale = {GRID_CELL_WIDTH_PX, GRID_CELL_HEIGHT_PX};
 
     registry.renderRequests.insert(
-        entity, {TEXTURE_ASSET_ID::SQUARE_3_CLICKED, EFFECT_ASSET_ID::TEXTURED, GEOMETRY_BUFFER_ID::SPRITE});
+        entity, {TEXTURE_ASSET_ID::STEERING_WHEEL, EFFECT_ASSET_ID::TEXTURED, GEOMETRY_BUFFER_ID::SPRITE});
 
     return entity;
 }
@@ -440,7 +440,7 @@ Entity createHealModule(vec2 tile_pos) {
     motion.scale = vec2(GRID_CELL_WIDTH_PX, GRID_CELL_HEIGHT_PX);
 
     registry.renderRequests.insert(
-        heal, {TEXTURE_ASSET_ID::HEAL, EFFECT_ASSET_ID::TEXTURED, GEOMETRY_BUFFER_ID::SPRITE});
+        heal, {TEXTURE_ASSET_ID::HEAL_MODULE, EFFECT_ASSET_ID::TEXTURED, GEOMETRY_BUFFER_ID::SPRITE});
 
     return heal;
 }

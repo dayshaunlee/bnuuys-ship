@@ -159,15 +159,12 @@ class RenderSystem {
         textures_path("raft.png"),
 
         // Simple Cannon
-        textures_path("cannons/simple_cannon000.png"),
-        textures_path("cannons/simple_cannon001.png"),
-        textures_path("cannons/simple_cannon002.png"),
-        textures_path("cannons/simple_cannon003.png"),
-        textures_path("cannons/simple_cannon004.png"),
-        textures_path("cannons/simple_cannon005.png"),
+        textures_path("ship_modules/cannons/simple_cannon000.png"),
+        textures_path("ship_modules/cannons/simple_cannon000_shaded.png"),
 
         // Bubble Cannon
-        textures_path("cannons/bubble_cannon.png"),
+        textures_path("ship_modules/cannons/bubble_cannon.png"),
+        textures_path("ship_modules/cannons/bubble_cannon_shaded.png"),
 
         // Projectiles
         textures_path("effects/bullet0.png"),
@@ -218,15 +215,20 @@ class RenderSystem {
         textures_path("ui/buttons/continue_neutral.png"),
         textures_path("ui/buttons/continue_clicked.png"),
 
-        textures_path("cannons/laser_weapon.png"),
-        textures_path("cannons/laser_beam.png"),
+        textures_path("ship_modules/cannons/laser_weapon.png"),
+        textures_path("ship_modules/cannons/laser_weapon_shaded.png"),
+        textures_path("ship_modules/cannons/laser_beam.png"),
 
         textures_path("bunny/bunny_npc_face.png"),
 
         textures_path("bunny/bunny_indicator.png"),
 
         // Heal
-        textures_path("heal.png"),
+        textures_path("ship_modules/healing_module.png"),
+        textures_path("ship_modules/healing_module_shaded.png"),
+
+        // Steering wheel
+        textures_path("ship_modules/steering_wheel.png"),
     };
 
     std::array<GLuint, effect_count> effects;
@@ -271,6 +273,9 @@ class RenderSystem {
     // this is used to check that if redendering Gacha UI we don't render player on top
     static bool isRenderingGacha;
 
+    // for checking if player motion exists to avoid segmentation fault
+    static bool isInGame;
+
     // Destroy resources associated to one or all entities created by the system
     ~RenderSystem();
 
@@ -292,6 +297,9 @@ class RenderSystem {
 
     // Drawing function for UI elements
     void drawUIElement(bnuui::Element& element, const mat3& projection);
+
+    // draw highlight square for modules
+    void drawSquareOutline(vec2 position, vec2 size, vec3 color, const mat3& projection);
 
     // Window handle
     GLFWwindow* window;
