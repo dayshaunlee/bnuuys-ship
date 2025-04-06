@@ -242,6 +242,12 @@ class RenderSystem {
         textures_path("ui/books/book.png"),
         textures_path("texts/moduletype.png"),
         textures_path("texts/moduledescription.png"),
+        textures_path("texts/simpleCannonText.png"),
+        textures_path("texts/itemDescIntro.png"),
+        textures_path("texts/bubbleBuffText.png"), 
+        textures_path("texts/bubbleCannonText.png"),
+        textures_path("texts/healingModuleText.png"),
+        textures_path("texts/laserModuleText.png"),
     };
 
     std::array<GLuint, effect_count> effects;

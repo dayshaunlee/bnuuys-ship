@@ -114,9 +114,9 @@ void GameLevel::Init() {
     createDisaster({300, 100}, DISASTER_TYPE::WHIRLPOOL);*/
 
     registry.players.components[0].health = 100.0f;
-    InitializeUI();
 
     LevelInit();
+    InitializeUI();
 
     std::cout << "Num of ships: " << registry.ships.components.size() << std::endl;
 }
@@ -206,230 +206,126 @@ void GameLevel::InitializeTrackingUI() {
     scene_ui.insert(tracking_ui);
 }
 
+
+
 void GameLevel::InitializeBookUI(){
     auto book_icon = std::make_shared<bnuui::Box>(vec2(WINDOW_WIDTH_PX-180, 95), vec2(100, 100), 0.0f);
     book_icon->texture = TEXTURE_ASSET_ID::BOOK_ICON;
 
     auto book = std::make_shared<bnuui::Book>(vec2(WINDOW_WIDTH_PX/2, WINDOW_HEIGHT_PX/2 + 50), vec2(730, 730), 0.0f);
-
     book->visible = false;
+
     vec3 textColour = vec3(115.f/255.f, 75.f/255.f, 50.f/255.f);
-    
-
-    // auto header_text = std::make_shared<bnuui::TextLabel>(vec2(WINDOW_WIDTH_PX/2-200,WINDOW_HEIGHT_PX/2 -100), 1, textColour, "OH NO");
-    // auto header_text2 = std::make_shared<bnuui::TextLabel>(vec2(WINDOW_WIDTH_PX/2+60,WINDOW_HEIGHT_PX/2 -100), 1, textColour, "OH NO");
-
-    auto module_iconBox1 = std::make_shared<bnuui::Box>(vec2(WINDOW_WIDTH_PX/2 -200, WINDOW_HEIGHT_PX/2 - 54), vec2(50, 50), 0.0f);
-    auto module_icon1 = std::make_shared<bnuui::Box>(vec2(WINDOW_WIDTH_PX/2 -200, WINDOW_HEIGHT_PX/2 - 54), vec2(40, 40), 0.0f); 
-    module_iconBox1->children.push_back(module_icon1);
-    module_icon1->texture = TEXTURE_ASSET_ID::SIMPLE_CANNON01;
-    module_icon1->visible = false;
-    auto module_text1 = std::make_shared<bnuui::TextLabel>(vec2(WINDOW_WIDTH_PX/2 - 170,WINDOW_HEIGHT_PX/2 -50), 0.9, textColour,"OH NO");
-
-    auto module_iconBox2 = std::make_shared<bnuui::Box>(vec2(WINDOW_WIDTH_PX/2 -200, WINDOW_HEIGHT_PX/2 + 11), vec2(50, 50), 0.0f);
-    auto module_icon2 = std::make_shared<bnuui::Box>(vec2(WINDOW_WIDTH_PX/2 -200, WINDOW_HEIGHT_PX/2 + 11), vec2(40, 40), 0.0f); 
-    module_iconBox2->children.push_back(module_icon2);
-    module_icon2->texture = TEXTURE_ASSET_ID::BUBBLE_CANNON;
-    module_icon2->visible = false;
-    auto module_text2 = std::make_shared<bnuui::TextLabel>(vec2(WINDOW_WIDTH_PX/2 - 170, WINDOW_HEIGHT_PX/2 + 15), 0.9,textColour, "OH NO");
-
-    auto module_iconBox3 = std::make_shared<bnuui::Box>(vec2(WINDOW_WIDTH_PX/2 -200, WINDOW_HEIGHT_PX/2 + 76), vec2(50, 50), 0.0f);
-    auto module_icon3 = std::make_shared<bnuui::Box>(vec2(WINDOW_WIDTH_PX/2 -200, WINDOW_HEIGHT_PX/2 + 76), vec2(35, 35), 0.0f); 
-    module_iconBox3->children.push_back(module_icon3);
-    module_icon3->texture = TEXTURE_ASSET_ID::LASER_WEAPON0;
-    module_icon3->visible = false;
-    auto module_text3 = std::make_shared<bnuui::TextLabel>(vec2(WINDOW_WIDTH_PX/2 - 170,WINDOW_HEIGHT_PX/2 + 80), 0.9, textColour, "OH NO");
-
-    auto module_iconBox4 = std::make_shared<bnuui::Box>(vec2(WINDOW_WIDTH_PX/2 -200, WINDOW_HEIGHT_PX/2 + 141), vec2(50, 50), 0.0f);
-    auto module_icon4 = std::make_shared<bnuui::Box>(vec2(WINDOW_WIDTH_PX/2 -200, WINDOW_HEIGHT_PX/2 + 141), vec2(30, 30), 0.0f);
-    module_iconBox4->children.push_back(module_icon4);
-    module_icon4->texture = TEXTURE_ASSET_ID::HEAL;
-    module_icon4->visible = false;
-    auto module_text4 = std::make_shared<bnuui::TextLabel>(vec2(WINDOW_WIDTH_PX/2 - 170,WINDOW_HEIGHT_PX/2 + 145), 0.9, textColour, "OH NO");
-
-    //TODO lily: add modules description
-    auto module_desc1_1 = std::make_shared<bnuui::TextLabel>(vec2(WINDOW_WIDTH_PX/2 + 25,WINDOW_HEIGHT_PX/2 - 65), 0.84f, textColour, "OH NO");
-    auto module_desc1_2 = std::make_shared<bnuui::TextLabel>(vec2(WINDOW_WIDTH_PX/2 + 25,WINDOW_HEIGHT_PX/2 - 48), 0.84f, textColour, "OH NO");
-    auto module_desc1_3 = std::make_shared<bnuui::TextLabel>(vec2(WINDOW_WIDTH_PX/2 + 25,WINDOW_HEIGHT_PX/2 - 31), 0.84f, textColour, "OH NO");
-    auto module_desc2_1 = std::make_shared<bnuui::TextLabel>(vec2(WINDOW_WIDTH_PX/2 + 25,WINDOW_HEIGHT_PX/2 + 0), 0.84f,textColour, "OH NO");
-    auto module_desc2_2 = std::make_shared<bnuui::TextLabel>(vec2(WINDOW_WIDTH_PX/2 + 25,WINDOW_HEIGHT_PX/2 + 17), 0.84f,textColour, "OH NO");
-    auto module_desc2_3 = std::make_shared<bnuui::TextLabel>(vec2(WINDOW_WIDTH_PX/2 + 25,WINDOW_HEIGHT_PX/2 + 34), 0.84f,textColour, "OH NO");
-    auto module_desc3_1 = std::make_shared<bnuui::TextLabel>(vec2(WINDOW_WIDTH_PX/2 + 25,WINDOW_HEIGHT_PX/2 + 65), 0.84f,textColour, "OH NO");
-    auto module_desc3_2 = std::make_shared<bnuui::TextLabel>(vec2(WINDOW_WIDTH_PX/2 + 25,WINDOW_HEIGHT_PX/2 + 82), 0.84f,textColour, "OH NO");
-    auto module_desc3_3 = std::make_shared<bnuui::TextLabel>(vec2(WINDOW_WIDTH_PX/2 + 25,WINDOW_HEIGHT_PX/2 + 99), 0.84f,textColour, "OH NO");
-    auto module_desc4_1 = std::make_shared<bnuui::TextLabel>(vec2(WINDOW_WIDTH_PX/2 + 25,WINDOW_HEIGHT_PX/2 + 130), 0.84f,textColour, "OH NO");
-    auto module_desc4_2 = std::make_shared<bnuui::TextLabel>(vec2(WINDOW_WIDTH_PX/2 + 25,WINDOW_HEIGHT_PX/2 + 147), 0.84f,textColour, "OH NO");
-    auto module_desc4_3 = std::make_shared<bnuui::TextLabel>(vec2(WINDOW_WIDTH_PX/2 + 25,WINDOW_HEIGHT_PX/2 + 164), 0.84f,textColour, "OH NO");
-
+    vec2 itemBasePos = vec2(WINDOW_WIDTH_PX/2 -210, WINDOW_HEIGHT_PX/2 - 55);
+    vec2 itemBoxSize = vec2{60,60};
+    vec2 itemIconSize = vec2{50,50};
+    vec2 itemSpaceX = vec2{70,0};
+    vec2 itemSpaceY = vec2{0,70};
 
     auto moduletype_text = std::make_shared<bnuui::Box>(vec2(WINDOW_WIDTH_PX/2-130,WINDOW_HEIGHT_PX/2 -65), vec2(450, 250), 0.0f);
     moduletype_text->texture = TEXTURE_ASSET_ID::MODULETYPE_TEXT;
 
     auto moduledesc_text = std::make_shared<bnuui::Box>(vec2(WINDOW_WIDTH_PX/2+150,WINDOW_HEIGHT_PX/2 -69), vec2(400, 250), 0.0f);
     moduledesc_text->texture = TEXTURE_ASSET_ID::MODULEDESCRIPTION_TEXT;
+    
 
-    book_icon->setOnClick([book, module_icon1, module_icon2, module_icon3, module_icon4](bnuui::Element& e) {
+    auto module_iconBox1 = std::make_shared<bnuui::Box>(itemBasePos, itemBoxSize, 0.0f);
+    auto module_icon1 = std::make_shared<bnuui::Box>(itemBasePos, itemIconSize, 0.0f); 
+    module_iconBox1->children.push_back(module_icon1);
+    module_icon1->texture = TEXTURE_ASSET_ID::SIMPLE_CANNON01;
+    module_icon1->visible = false;
+
+    auto module_iconBox2 = std::make_shared<bnuui::Box>(itemBasePos + itemSpaceX, itemBoxSize, 0.0f);
+    auto module_icon2 = std::make_shared<bnuui::Box>(itemBasePos + itemSpaceX, itemIconSize, 0.0f); 
+    module_iconBox2->children.push_back(module_icon2);
+    module_icon2->texture = TEXTURE_ASSET_ID::BUBBLE_CANNON;
+    module_icon2->visible = false;
+
+    auto module_iconBox3 = std::make_shared<bnuui::Box>(itemBasePos + 2.f*itemSpaceX, itemBoxSize, 0.0f);
+    auto module_icon3 = std::make_shared<bnuui::Box>(itemBasePos + 2.f*itemSpaceX, itemIconSize, 0.0f); 
+    module_iconBox3->children.push_back(module_icon3);
+    module_icon3->texture = TEXTURE_ASSET_ID::LASER_WEAPON0;
+    module_icon3->visible = false;
+
+    auto module_iconBox4 = std::make_shared<bnuui::Box>(itemBasePos + itemSpaceY, itemBoxSize, 0.0f);
+    auto module_icon4 = std::make_shared<bnuui::Box>(itemBasePos + itemSpaceY, itemIconSize, 0.0f);
+    module_iconBox4->children.push_back(module_icon4);
+    module_icon4->texture = TEXTURE_ASSET_ID::HEAL;
+    module_icon4->visible = false;
+
+    auto module_iconBox5 = std::make_shared<bnuui::Box>(itemBasePos + itemSpaceY + itemSpaceX, itemBoxSize, 0.0f);
+    auto module_icon5 = std::make_shared<bnuui::Box>(itemBasePos + itemSpaceY + itemSpaceX, itemIconSize*0.8f, 0.0f);
+    module_iconBox5->children.push_back(module_icon4);
+    module_icon5->texture = TEXTURE_ASSET_ID::BUBBLE_BULLET;
+    module_icon5->visible = false;
+
+    auto itemDesc = std::make_shared<bnuui::Box>(vec2(WINDOW_WIDTH_PX/2 + 20, WINDOW_HEIGHT_PX/2 + 80), vec2(800, 500), 0.0f);
+    itemDesc->texture = TEXTURE_ASSET_ID::DESC_INTRO_TEXT;
+
+    book_icon->setOnClick([book, module_icon1, module_icon2, module_icon3, module_icon4, module_icon5](bnuui::Element& e) {
         RenderSystem::isRenderingBook = !RenderSystem::isRenderingBook;
         book->visible = !book->visible;
         module_icon1->visible = !module_icon1->visible;
         module_icon2->visible = !module_icon2->visible;
         module_icon3->visible = !module_icon3->visible;
         module_icon4->visible = !module_icon4->visible;
+        module_icon5->visible = !module_icon5->visible;
     });
 
-    module_text1->setOnUpdate([book](bnuui::Element& e, float dt) {
-        if(book->visible){
-            static_cast<bnuui::TextLabel&>(e).setText("Simple cannon");
-        } else{
-            static_cast<bnuui::TextLabel&>(e).setText(" "); 
-        }
-    });
 
-    module_text3->setOnUpdate([book](bnuui::Element& e, float dt) {
+    module_icon1->setOnClick([&, book, itemDesc](bnuui::Element& e) {
         if(book->visible){
-            static_cast<bnuui::TextLabel&>(e).setText("Laser weapon");
-        } else{
-            static_cast<bnuui::TextLabel&>(e).setText(" "); 
+            itemDesc->texture = TEXTURE_ASSET_ID::SIMPLE_CANNON_TEXT;
+            itemDesc->visible = true;
         }
     });
 
-    module_text2->setOnUpdate([book](bnuui::Element& e, float dt) {
+    module_icon2->setOnClick([&, book, itemDesc](bnuui::Element& e) {
         if(book->visible){
-            static_cast<bnuui::TextLabel&>(e).setText("Bubble cannon");
-        } else{
-            static_cast<bnuui::TextLabel&>(e).setText(" "); 
+            itemDesc->texture = TEXTURE_ASSET_ID::BUBBLE_CANNON_TEXT;
+            itemDesc->visible = true;
         }
     });
 
-    module_text4->setOnUpdate([book](bnuui::Element& e, float dt) {
+    module_icon3->setOnClick([&, book, itemDesc](bnuui::Element& e) {
         if(book->visible){
-            static_cast<bnuui::TextLabel&>(e).setText("Healing Station");
-        } else{
-            static_cast<bnuui::TextLabel&>(e).setText(" "); 
+            itemDesc->texture = TEXTURE_ASSET_ID::LASER_MODULE_TEXT;
+            itemDesc->visible = true;
         }
     });
 
-    module_desc1_1->setOnUpdate([book](bnuui::Element& e, float dt) {
+    module_icon4->setOnClick([&, book, itemDesc](bnuui::Element& e) {
         if(book->visible){
-            static_cast<bnuui::TextLabel&>(e).setText("Deals 1 damage, x sec cool down");
-        } else{
-            static_cast<bnuui::TextLabel&>(e).setText(" "); 
+            itemDesc->texture = TEXTURE_ASSET_ID::HEALING_MODULE_TEXT;
+            itemDesc->visible = true;
         }
     });
 
-    module_desc1_2->setOnUpdate([book](bnuui::Element& e, float dt) {
+    module_icon5->setOnClick([&, book, itemDesc](bnuui::Element& e) {
         if(book->visible){
-            static_cast<bnuui::TextLabel&>(e).setText("Aim with mouse, left click to shoot");
-        } else{
-            static_cast<bnuui::TextLabel&>(e).setText(" "); 
+            itemDesc->texture = TEXTURE_ASSET_ID::BUBBLE_BUFF_TEXT;
+            itemDesc->visible = true;
         }
     });
 
-    module_desc1_3->setOnUpdate([book](bnuui::Element& e, float dt) {
-        if(book->visible){
-            static_cast<bnuui::TextLabel&>(e).setText("Obtained: at spawn, from reward");
-        } else{
-            static_cast<bnuui::TextLabel&>(e).setText(" "); 
-        }
-    });
-
-    module_desc2_1->setOnUpdate([book](bnuui::Element& e, float dt) {
-        if(book->visible){
-            static_cast<bnuui::TextLabel&>(e).setText("Healing Station");
-        } else{
-            static_cast<bnuui::TextLabel&>(e).setText(" "); 
-        }
-    });
-
-    module_desc2_2->setOnUpdate([book](bnuui::Element& e, float dt) {
-        if(book->visible){
-            static_cast<bnuui::TextLabel&>(e).setText("Healing Station");
-        } else{
-            static_cast<bnuui::TextLabel&>(e).setText(" "); 
-        }
-    });
-
-    module_desc2_3->setOnUpdate([book](bnuui::Element& e, float dt) {
-        if(book->visible){
-            static_cast<bnuui::TextLabel&>(e).setText("Healing Station");
-        } else{
-            static_cast<bnuui::TextLabel&>(e).setText(" "); 
-        }
-    });
-
-    module_desc3_1->setOnUpdate([book](bnuui::Element& e, float dt) {
-        if(book->visible){
-            static_cast<bnuui::TextLabel&>(e).setText("Healing Station");
-        } else{
-            static_cast<bnuui::TextLabel&>(e).setText(" "); 
-        }
-    });
-
-    module_desc3_2->setOnUpdate([book](bnuui::Element& e, float dt) {
-        if(book->visible){
-            static_cast<bnuui::TextLabel&>(e).setText("Healing Station");
-        } else{
-            static_cast<bnuui::TextLabel&>(e).setText(" "); 
-        }
-    });
-
-    module_desc3_3->setOnUpdate([book](bnuui::Element& e, float dt) {
-        if(book->visible){
-            static_cast<bnuui::TextLabel&>(e).setText("Healing Station");
-        } else{
-            static_cast<bnuui::TextLabel&>(e).setText(" "); 
-        }
-    });
-    
-    module_desc4_1->setOnUpdate([book](bnuui::Element& e, float dt) {
-        if(book->visible){
-            static_cast<bnuui::TextLabel&>(e).setText("Healing Station");
-        } else{
-            static_cast<bnuui::TextLabel&>(e).setText(" "); 
-        }
-    });
-
-    module_desc4_2->setOnUpdate([book](bnuui::Element& e, float dt) {
-        if(book->visible){
-            static_cast<bnuui::TextLabel&>(e).setText("Healing Station");
-        } else{
-            static_cast<bnuui::TextLabel&>(e).setText(" "); 
-        }
-    });
-
-    module_desc4_3->setOnUpdate([book](bnuui::Element& e, float dt) {
-        if(book->visible){
-            static_cast<bnuui::TextLabel&>(e).setText("Healing Station");
-        } else{
-            static_cast<bnuui::TextLabel&>(e).setText(" "); 
-        }
-    });
 
     book->children.push_back(moduletype_text);
     book->children.push_back(moduledesc_text);
     book->children.push_back(module_iconBox1);
-    book->children.push_back(module_text1);
     book->children.push_back(module_iconBox2);
-    book->children.push_back(module_text2);
     book->children.push_back(module_iconBox3);
-    book->children.push_back(module_text3);
     book->children.push_back(module_iconBox4);
-    book->children.push_back(module_text4);    
-    book->children.push_back(module_desc1_1);
-    book->children.push_back(module_desc1_2);
-    book->children.push_back(module_desc1_3);
-    book->children.push_back(module_desc2_1);
-    book->children.push_back(module_desc2_2);
-    book->children.push_back(module_desc2_3);
-    book->children.push_back(module_desc3_1);
-    book->children.push_back(module_desc3_2);
-    book->children.push_back(module_desc3_3);
-    book->children.push_back(module_desc4_1);
-    book->children.push_back(module_desc4_2);
-    book->children.push_back(module_desc4_3);
+    book->children.push_back(module_iconBox5);
+    book->children.push_back(itemDesc);
+
 
     scene_ui.insert(book_icon);
     scene_ui.insert(book);
+    scene_ui.insert(module_icon1);
+    scene_ui.insert(module_icon2);
+    scene_ui.insert(module_icon3);
+    scene_ui.insert(module_icon4);
+    scene_ui.insert(module_icon5);
 }
 
 void GameLevel::InitializeBunnySavingUI() {
@@ -1307,7 +1203,7 @@ void GameLevel::Update(float dt) {
 
     UpdateDropoffProgressBar();
 
-    scene_ui.update(dt);
 
     LevelUpdate(dt);
+    scene_ui.update(dt);
 }
