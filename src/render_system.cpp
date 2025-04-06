@@ -326,20 +326,22 @@ void RenderSystem::drawUIElement(bnuui::Element& element, const mat3& projection
     }
 }
 
+
 void RenderSystem::drawParticles(Entity entity, const mat3& projection) {
-    ParticleEmitter& emitter = registry.particleEmitters.get(entity);
+    ParticleEmitter& emitter = registry.particleEmitters.get(entity); 
     glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     glUseProgram(m_Particle_shaderProgram);
-    glUniformMatrix3fv(m_ParticleShaderViewProj, 1, GL_FALSE, (float*) &projection);
+    glUniformMatrix3fv(m_ParticleShaderViewProj, 1, GL_FALSE, (float*)&projection);
 
-    for (auto& particle : emitter.particles)
-    {
+    std::vector<mat3> transforms;
+    std::vector<vec4> colors;
+
+    for (auto& particle : emitter.particles) {
         if (!particle.Active)
             continue;
 
-        // Fade away particles
         float life = particle.LifeRemaining / particle.LifeTime;
         vec4 color = glm::mix(particle.ColorEnd, particle.ColorBegin, life);
         float size = glm::mix(particle.SizeEnd, particle.SizeBegin, life);
@@ -351,14 +353,27 @@ void RenderSystem::drawParticles(Entity entity, const mat3& projection) {
             transform.translate(particle.Position);
         }
         transform.rotate(particle.Rotation);
-        transform.scale({size * 10.0f, size * 10.0f});
+        transform.scale({ size * 10.0f, size * 10.0f });
 
-        glUniformMatrix3fv(m_ParticleShaderTransform, 1, GL_FALSE, (float*) &transform.mat);
-
-        glUniform4fv(m_ParticleShaderColor, 1, glm::value_ptr(color));
-        glBindVertexArray(m_QuadVAO);
-        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+        transforms.push_back(transform.mat);
+        colors.push_back(color);
     }
+
+    // Determine the number of instances.
+    unsigned int instanceCount = transforms.size();
+    if (instanceCount == 0)
+        return;
+
+    glBindBuffer(GL_ARRAY_BUFFER, m_InstanceTransformVBO);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, instanceCount * sizeof(mat3), transforms.data());
+
+    glBindBuffer(GL_ARRAY_BUFFER, m_InstanceColorVBO);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, instanceCount * sizeof(vec4), colors.data());
+
+    glBindVertexArray(m_QuadVAO);
+
+    // INSTANCE RENDERING: LOOK HERE TA THIS IS THE CODE!!!!
+    glDrawElementsInstanced(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr, instanceCount);
 
     glBindVertexArray(m_VAO);
     glBindTexture(GL_TEXTURE_2D, 0);
@@ -500,6 +515,10 @@ void RenderSystem::draw() {
         }
     }
 
+    for (Entity e : registry.particleEmitters.entities) {
+        drawParticles(e, projection_2D);
+    }
+
     // Render Disaster tornado above bg/islands/enemies
     for (Entity entity : registry.disasters.entities) {
         if (registry.disasters.get(entity).type == DISASTER_TYPE::TORNADO) {
@@ -520,11 +539,6 @@ void RenderSystem::draw() {
                 drawUIElement(*elem, projection_2D);
             }
         }
-    }
-    
-    // TODO: Move up later.
-    for (Entity e : registry.particleEmitters.entities) {
-        drawParticles(e, projection_2D);
     }
   
     // if there is no gacha ui displayed

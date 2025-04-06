@@ -17,6 +17,4 @@ private:
     std::random_device rd;
     std::mt19937 generator;
     std::uniform_real_distribution<float> float_distribution;
-
-    float time;
 };

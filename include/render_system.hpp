@@ -49,7 +49,9 @@ class RenderSystem {
     // Particles
     GLuint m_QuadVAO;
 	GLuint m_Particle_shaderProgram;
-	GLint m_ParticleShaderViewProj, m_ParticleShaderTransform, m_ParticleShaderColor;
+	GLint m_ParticleShaderViewProj;
+    GLuint m_InstanceTransformVBO;
+    GLuint m_InstanceColorVBO;
 
     // Make sure these paths remain in sync with the associated enumerators.
     // Associated id with .obj path

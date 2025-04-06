@@ -20,8 +20,8 @@ void APIENTRY openglDebugCallback(GLenum source, GLenum type, GLuint id, GLenum 
 bool RenderSystem::particleSystemInit() {
     float vertices[] = {
         -0.5f, -0.5f, 0.0f,
-        0.5f, -0.5f, 0.0f,
-        0.5f,  0.5f, 0.0f,
+         0.5f, -0.5f, 0.0f,
+         0.5f,  0.5f, 0.0f,
         -0.5f,  0.5f, 0.0f
     };
 
@@ -33,30 +33,59 @@ bool RenderSystem::particleSystemInit() {
     glBindBuffer(GL_ARRAY_BUFFER, quadVB);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
+    // Set up vertex attribute for position (location = 1).
     glEnableVertexAttribArray(1);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), 0);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 
-    uint32_t indices[] = {
-        0, 1, 2, 2, 3, 0
-    };
-
+    // Create and upload index buffer.
+    uint32_t indices[] = { 0, 1, 2, 2, 3, 0 };
     glGenBuffers(1, &quadIB);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, quadIB);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
+    // ---- Set Up Instance Attributes ----
+
+    // Generate instance transform VBO (for a 3x3 matrix per instance).
+    glGenBuffers(1, &m_InstanceTransformVBO);
+    glBindBuffer(GL_ARRAY_BUFFER, m_InstanceTransformVBO);
+    // Allocate space for instance transforms (e.g., space for 1000 instances; adjust as needed).
+    glBufferData(GL_ARRAY_BUFFER, 1000 * sizeof(mat3), nullptr, GL_DYNAMIC_DRAW);
+
+    // Setup three vertex attributes for the transform matrix at locations 2, 3, and 4.
+    // Each row of the 3x3 matrix is sent as a vec3.
+    for (int i = 0; i < 3; i++) {
+        glEnableVertexAttribArray(2 + i);
+        glVertexAttribPointer(2 + i, 3, GL_FLOAT, GL_FALSE, sizeof(mat3), (void*)(i * sizeof(vec3)));
+        // Tell OpenGL these attributes update once per instance.
+        glVertexAttribDivisor(2 + i, 1);
+    }
+
+    // Generate instance color VBO.
+    glGenBuffers(1, &m_InstanceColorVBO);
+    glBindBuffer(GL_ARRAY_BUFFER, m_InstanceColorVBO);
+    // Allocate space for instance colors (vec4 per instance).
+    glBufferData(GL_ARRAY_BUFFER, 1000 * sizeof(vec4), nullptr, GL_DYNAMIC_DRAW);
+
+    // Setup the vertex attribute for color at location 5.
+    glEnableVertexAttribArray(5);
+    glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, sizeof(vec4), (void*)0);
+    glVertexAttribDivisor(5, 1);
+
+    // Unbind the VAO (and array buffer) to avoid accidental modifications.
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindVertexArray(0);
+
+    // ---- Shader Setup ----
+
+    // Retrieve the shader program.
     const GLuint particle_effect_enum = (GLuint) EFFECT_ASSET_ID::PARTICLE;
     m_Particle_shaderProgram = (GLuint) effects[particle_effect_enum];
+
+    // Get the uniform location for the view-projection matrix (remains a uniform).
     m_ParticleShaderViewProj = glGetUniformLocation(m_Particle_shaderProgram, "u_ViewProj");
     assert(m_ParticleShaderViewProj > -1);
-    m_ParticleShaderTransform = glGetUniformLocation(m_Particle_shaderProgram, "u_Transform");
-    assert(m_ParticleShaderTransform > -1);
-    m_ParticleShaderColor = glGetUniformLocation(m_Particle_shaderProgram, "u_Color");
-    assert(m_ParticleShaderColor > -1);
 
-    // release buffers [ I MIGHT NEED THIS IN CASE IT CRASHES ]
-    // glBindBuffer(GL_ARRAY_BUFFER, 0);
-    // glBindVertexArray(m_VAO);
-
+    // Note: We no longer need uniforms for transform or color as they are now per-instance.
     return true;
 }
 

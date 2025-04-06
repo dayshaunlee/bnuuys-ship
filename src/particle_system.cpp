@@ -1,11 +1,12 @@
 #include "particle_system.hpp"
 #include <cmath>
+#include "common.hpp"
 #include "tinyECS/registry.hpp"
 
 void ParticleSystem::Emit(ParticleEmitter& emitter, float dt) {
     Particle& particle = emitter.particles[emitter.poolIndex];
     particle.Active = true;
-    particle.Position = emitter.props.Position;
+    particle.Position = emitter.props.Position + emitter.props.Offset;
 	particle.Rotation = M_PI * 2 * float_distribution(generator);
 
 	// Velocity
@@ -42,12 +43,12 @@ void ParticleSystem::step(float dt) {
             particle.Rotation += 0.01 * dt / 1000.0f;
         }
 
-        // For now we can just always emit a particle.
-        if (time <= 0) {
-            Emit(particle_emitter, dt);
-            time = 20.0f;
+        if (particle_emitter.delay_ms <= 0) {
+            for (int i = 0; i < 5; i++)
+                Emit(particle_emitter, dt);
+            particle_emitter.delay_ms = DEFAULT_PARTICLE_TIME;
         } else {
-            time -= dt;
+            particle_emitter.delay_ms -= dt;
         }
     }
 }

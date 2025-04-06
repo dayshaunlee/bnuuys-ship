@@ -512,6 +512,7 @@ struct Disaster {
 // Particle System following (https://www.youtube.com/watch?v=GK0jHlv3e3w)
 struct ParticleProps {
 	vec2 Position;
+    vec2 Offset = {0,0};
 	vec2 Velocity, VelocityVariation;
 	vec4 ColorBegin, ColorEnd;
 	float SizeBegin, SizeEnd, SizeVariation;
@@ -535,4 +536,6 @@ struct ParticleEmitter {
     ParticleProps props;
     std::vector<Particle> particles;
     uint32_t poolIndex = 999;
+
+    float delay_ms = DEFAULT_PARTICLE_TIME;
 };
