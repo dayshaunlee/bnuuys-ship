@@ -40,8 +40,8 @@ void CameraSystem::update(float deltaTime) {
     position += vel * step_seconds;
 }
 
-void CameraSystem::setToPreviousPosition() {
-    position = prev_pos;
+void CameraSystem::setToPreviousPosition(vec2 normal) {
+    position = prev_pos + normal;
 }
 
 bool IsEnemyOnScreen() {

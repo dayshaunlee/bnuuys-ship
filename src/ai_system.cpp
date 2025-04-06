@@ -44,12 +44,19 @@ void AISystem::step(float elapsed_ms) {
             float length = dot(direction, direction);
             int r_squared = (spawner.range * GRID_CELL_WIDTH_PX) *
                     (spawner.range * GRID_CELL_WIDTH_PX);
-            int ship_range = (GRID_CELL_WIDTH_PX * 3) * (GRID_CELL_WIDTH_PX * 3);
-            // check if ship is within the range AND spawner is off cooldown
-            // don't respawn enemies if there is an existing enemy too close to the spawner (prevents enemy stacking)
-            // don't respawn if too close to ship
+
+            // (shipRadius_x)^2 + (shipRadius_y)^2
+            int ship_range = pow((ship_motion.scale.x / 2), 2) + pow((ship_motion.scale.y / 2), 2);
+
+            // check if:
+            // - ship is far enough away from ship
+            // - within the spawner's range
+            // - spawner is off cooldown
+           
             if (ship_range <= length && length <= r_squared && spawner.cooldown_ms <= 0) {
                 bool should_spawn = true;
+                // don't respawn enemies if there is an existing enemy
+                // too close to the spawner
                 for (Entity enemy_entity : registry.enemies.entities) {
                     if (registry.motions.has(enemy_entity) &&
                         distance(registry.motions.get(enemy_entity).position,

@@ -18,8 +18,23 @@ NextLevelScene::NextLevelScene() {
 void NextLevelScene::Init() {
     // Create the UI Title Screen.
     auto play_btn = std::make_shared<bnuui::PlayButton>(vec2(WINDOW_WIDTH_PX/2, 0.65*WINDOW_HEIGHT_PX), vec2(350, 100), 0.0f);
+
+    auto bg_water = std::make_shared<bnuui::Box>(
+        vec2(WINDOW_WIDTH_PX / 2, WINDOW_HEIGHT_PX / 2), vec2(WINDOW_WIDTH_PX * 1.25f, WINDOW_HEIGHT_PX), 0.0f);
+    bg_water->texture = TEXTURE_ASSET_ID::WATER_BACKGROUND;
+
     auto bg = std::make_shared<bnuui::Box>(vec2(WINDOW_WIDTH_PX/2, WINDOW_HEIGHT_PX/2), vec2(WINDOW_WIDTH_PX*1.25f, WINDOW_HEIGHT_PX), 0.0f);
-    bg->texture = TEXTURE_ASSET_ID::NEXT_LEVEL_BG;
+    std::string nextLevelName = SceneManager::getInstance().getNewLevelSceneName();
+    bg->setOnUpdate([nextLevelName](bnuui::Element& e, float dt) {
+        std::cout << "next level: " << nextLevelName << std::endl;
+        if (nextLevelName == "Level 1") e.texture = TEXTURE_ASSET_ID::LEVEL01_BACKGROUND;
+        else if (nextLevelName == "Level 2") e.texture = TEXTURE_ASSET_ID::LEVEL02_BACKGROUND;
+        else if (nextLevelName == "Level 3") e.texture = TEXTURE_ASSET_ID::LEVEL03_BACKGROUND;
+        else if (nextLevelName == "Level 4")
+            e.texture = TEXTURE_ASSET_ID::LEVEL04_BACKGROUND;
+        else
+            e.texture = TEXTURE_ASSET_ID::NEXT_LEVEL_BG;
+    });
     play_btn->setOnClick([](bnuui::Element& e) {
         std::string nextLevelName = SceneManager::getInstance().getNewLevelSceneName();
         SceneManager::getInstance().switchScene(nextLevelName);

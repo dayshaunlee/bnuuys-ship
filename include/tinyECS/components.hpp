@@ -18,7 +18,11 @@ struct Motion {
 struct Collision {
     // Note, the first object is stored in the ECS container.entities
     Entity other;  // the second object involved in the collision
-    Collision(Entity& other) { this->other = other; };
+    vec2 normal;
+    Collision(Entity& other, vec2 normal = {0.0, 0.0}) {
+        this->other = other;
+        this->normal = normal;
+    }
 };
 
 // Sets the brightness of the screen
@@ -175,17 +179,14 @@ enum class TEXTURE_ASSET_ID {
 
     // Simple Cannon
     SIMPLE_CANNON01 = RAFT + 1,
-    SIMPLE_CANNON02 = SIMPLE_CANNON01 + 1,
-    SIMPLE_CANNON03 = SIMPLE_CANNON02 + 1,
-    SIMPLE_CANNON04 = SIMPLE_CANNON03 + 1,
-    SIMPLE_CANNON05 = SIMPLE_CANNON04 + 1,
-    SIMPLE_CANNON06 = SIMPLE_CANNON05 + 1,
+    SIMPLE_CANNON01_SHADED = SIMPLE_CANNON01 + 1,
 
     // Bubble Cannon
-    BUBBLE_CANNON = SIMPLE_CANNON06 + 1,
+    BUBBLE_CANNON = SIMPLE_CANNON01_SHADED + 1,
+    BUBBLE_CANNON_SHADED = BUBBLE_CANNON + 1,
 
     // Projectiles
-    BULLET_GREEN = BUBBLE_CANNON + 1,
+    BULLET_GREEN = BUBBLE_CANNON_SHADED + 1,
     BULLET_BLUE = BULLET_GREEN + 1,
     BULLET_RED = BULLET_BLUE + 1,
 
@@ -225,15 +226,14 @@ enum class TEXTURE_ASSET_ID {
     CONTINUE_BUTTON_CLICKED = CONTINUE_BUTTON_NORMAL + 1,
 
     LASER_WEAPON0 = CONTINUE_BUTTON_CLICKED + 1,
-    LASER_BEAM = LASER_WEAPON0 + 1,
+    LASER_WEAPON0_SHADED = LASER_WEAPON0 + 1,
+    LASER_BEAM = LASER_WEAPON0_SHADED + 1,
 
     BUNNY_NPC_FACE = LASER_BEAM + 1,
 
     BUNNY_INDICATOR = BUNNY_NPC_FACE + 1,
-    
-    HEAL = BUNNY_INDICATOR + 1,
 
-    CUTSCENE_1 = HEAL + 1,
+    CUTSCENE_1 = BUNNY_INDICATOR + 1,
     CUTSCENE_2 = CUTSCENE_1 + 1,
     CUTSCENE_3 = CUTSCENE_2 + 1,
     CUTSCENE_4 = CUTSCENE_3 + 1,
@@ -256,7 +256,12 @@ enum class TEXTURE_ASSET_ID {
     HEALING_MODULE_TEXT = BUBBLE_CANNON_TEXT + 1,
     LASER_MODULE_TEXT = HEALING_MODULE_TEXT + 1,
 
-    TEXTURE_COUNT = LASER_MODULE_TEXT + 1
+    HEAL_MODULE = LASER_MODULE_TEXT + 1,
+    HEAL_MODULE_SHADED = HEAL_MODULE + 1,
+
+    STEERING_WHEEL = HEAL_MODULE_SHADED + 1,
+    
+    TEXTURE_COUNT = STEERING_WHEEL + 1
 };
 
 const int texture_count = (int) TEXTURE_ASSET_ID::TEXTURE_COUNT;
@@ -293,7 +298,8 @@ enum class GEOMETRY_BUFFER_ID {
     SCREEN_TRIANGLE = DEBUG_LINE + 1,
     LASER_SQUARE = SCREEN_TRIANGLE + 1,
     UI_SQUARE = LASER_SQUARE + 1,
-    GEOMETRY_COUNT = UI_SQUARE + 1
+    HIGHLIGHT_SQUARE = UI_SQUARE + 1,
+    GEOMETRY_COUNT = HIGHLIGHT_SQUARE + 1
 };
 const int geometry_count = (int) GEOMETRY_BUFFER_ID::GEOMETRY_COUNT;
 
@@ -383,13 +389,13 @@ inline TEXTURE_ASSET_ID getTextureFromModuleType(MODULE_TYPES module) {
     case MODULE_TYPES::HELPER_BUNNY :
         return TEXTURE_ASSET_ID::BUNNY_NPC_IDLE_UP0;
     case MODULE_TYPES::STEERING_WHEEL :
-        return TEXTURE_ASSET_ID::SQUARE_3_CLICKED;
+        return TEXTURE_ASSET_ID::STEERING_WHEEL;
     case MODULE_TYPES::LASER_WEAPON :
         return TEXTURE_ASSET_ID::LASER_WEAPON0;
     case MODULE_TYPES::BUBBLE_MOD :
         return TEXTURE_ASSET_ID::BUBBLE_BULLET;
     case MODULE_TYPES::HEAL:
-        return TEXTURE_ASSET_ID::HEAL;
+        return TEXTURE_ASSET_ID::HEAL_MODULE;
     default:
         std::cout << "This is not a valid module" << std::endl;
         return TEXTURE_ASSET_ID::WATER_BACKGROUND; 
