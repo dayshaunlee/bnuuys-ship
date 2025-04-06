@@ -2,8 +2,10 @@
 #include "common.hpp"
 #include "sceneManager/scene.hpp"
 #include "sceneManager/scene_manager.hpp"
+#include "scenes/cutscene.hpp"
 #include "scenes/death_scene.hpp"
 #include "scenes/next_level_scene.hpp"
+#include "scenes/victory_scene.hpp"
 #include "scenes/level_01.hpp"
 #include "scenes/level_02.hpp"
 #include "scenes/level_03.hpp"
@@ -69,17 +71,22 @@ int main() {
     Scene* ui_editor = new EditorUI();
     Scene* death = new DeathScene();
     Scene* levelTransition = new NextLevelScene();
+    Scene* cutscene = new IntroCutscene();
+    Scene* victory = new VictoryScene();
 
     scene_manager.registerScene(mm);
     scene_manager.registerScene(ui_editor);
     scene_manager.registerScene(death);
     scene_manager.registerScene(levelTransition);
+    scene_manager.registerScene(victory);
 
     scene_manager.registerScene(tutorial);
     scene_manager.registerScene(l1);
     scene_manager.registerScene(l2);
     scene_manager.registerScene(l3);
     scene_manager.registerScene(l4);
+
+    scene_manager.registerScene(cutscene);
 
     scene_manager.switchScene("Main Menu");
 

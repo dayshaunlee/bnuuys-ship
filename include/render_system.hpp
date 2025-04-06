@@ -223,7 +223,26 @@ class RenderSystem {
 
         textures_path("bunny/bunny_indicator.png"),
 
-        // Heal
+        // For cutscenes
+        textures_path("cutscenes/c1.png"),
+        textures_path("cutscenes/c2.png"),
+        textures_path("cutscenes/c3.png"),
+        textures_path("cutscenes/c4.png"),
+
+
+        // home indicator
+        textures_path("bunny/home_indicator.png"),
+        textures_path("background/game_victory_bg.png"),
+        textures_path("ui/books/book_icon.png"),
+        textures_path("ui/books/book.png"),
+        textures_path("texts/moduletype.png"),
+        textures_path("texts/moduledescription.png"),
+        textures_path("texts/simpleCannonText.png"),
+        textures_path("texts/itemDescIntro.png"),
+        textures_path("texts/bubbleBuffText.png"), 
+        textures_path("texts/bubbleCannonText.png"),
+        textures_path("texts/healingModuleText.png"),
+        textures_path("texts/laserModuleText.png"),
         textures_path("ship_modules/healing_module.png"),
         textures_path("ship_modules/healing_module_shaded.png"),
 
@@ -272,6 +291,7 @@ class RenderSystem {
 
     // this is used to check that if redendering Gacha UI we don't render player on top
     static bool isRenderingGacha;
+    static bool isRenderingBook;
 
     // for checking if player motion exists to avoid segmentation fault
     static bool isInGame;

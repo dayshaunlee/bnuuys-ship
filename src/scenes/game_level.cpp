@@ -114,9 +114,9 @@ void GameLevel::Init() {
     createDisaster({300, 100}, DISASTER_TYPE::WHIRLPOOL);*/
 
     registry.players.components[0].health = 100.0f;
-    InitializeUI();
 
     LevelInit();
+    InitializeUI();
 
     std::cout << "Num of ships: " << registry.ships.components.size() << std::endl;
 
@@ -137,8 +137,9 @@ bool isOffscreen(const glm::vec2& A, const glm::vec2& center) {
     return (A.x < left || A.x > right || A.y < top || A.y > bottom);
 }
 
+
 void GameLevel::InitializeTrackingUI() {
-    auto tracking_ui = std::make_shared<bnuui::Box>(vec2(496, 96), vec2(35, 35), 0.0f);
+    auto tracking_ui = std::make_shared<bnuui::Box>(vec2(496, 96), vec2(45, 45), 0.0f);
     tracking_ui->texture = TEXTURE_ASSET_ID::BUNNY_INDICATOR;
 
     tracking_ui->setOnUpdate([](bnuui::Element& e, float dt) {
@@ -161,8 +162,9 @@ void GameLevel::InitializeTrackingUI() {
             }
         }
         if (smallest_dist == std::numeric_limits<float>::max()) {
-            e.visible = false;
-            return;
+            // e.visible = false;
+            e.texture = TEXTURE_ASSET_ID::HOME_INDICATOR;
+            shortest_bunny_pos = vec2(WINDOW_WIDTH_PX / 2, WINDOW_HEIGHT_PX / 2);
         }
 
         vec2 direction = glm::normalize(shortest_bunny_pos - ship_pos);
@@ -204,6 +206,130 @@ void GameLevel::InitializeTrackingUI() {
         }
     });
     scene_ui.insert(tracking_ui);
+}
+
+
+
+void GameLevel::InitializeBookUI(){
+    auto book_icon = std::make_shared<bnuui::Box>(vec2(WINDOW_WIDTH_PX-180, 95), vec2(100, 100), 0.0f);
+    book_icon->texture = TEXTURE_ASSET_ID::BOOK_ICON;
+
+    auto book = std::make_shared<bnuui::Book>(vec2(WINDOW_WIDTH_PX/2, WINDOW_HEIGHT_PX/2 + 50), vec2(730, 730), 0.0f);
+    book->visible = false;
+
+    vec3 textColour = vec3(115.f/255.f, 75.f/255.f, 50.f/255.f);
+    vec2 itemBasePos = vec2(WINDOW_WIDTH_PX/2 -210, WINDOW_HEIGHT_PX/2 - 55);
+    vec2 itemBoxSize = vec2{60,60};
+    vec2 itemIconSize = vec2{50,50};
+    vec2 itemSpaceX = vec2{70,0};
+    vec2 itemSpaceY = vec2{0,70};
+
+    auto moduletype_text = std::make_shared<bnuui::Box>(vec2(WINDOW_WIDTH_PX/2-130,WINDOW_HEIGHT_PX/2 -65), vec2(450, 250), 0.0f);
+    moduletype_text->texture = TEXTURE_ASSET_ID::MODULETYPE_TEXT;
+
+    auto moduledesc_text = std::make_shared<bnuui::Box>(vec2(WINDOW_WIDTH_PX/2+150,WINDOW_HEIGHT_PX/2 -69), vec2(400, 250), 0.0f);
+    moduledesc_text->texture = TEXTURE_ASSET_ID::MODULEDESCRIPTION_TEXT;
+    
+
+    auto module_iconBox1 = std::make_shared<bnuui::Box>(itemBasePos, itemBoxSize, 0.0f);
+    auto module_icon1 = std::make_shared<bnuui::Box>(itemBasePos, itemIconSize, 0.0f); 
+    module_iconBox1->children.push_back(module_icon1);
+    module_icon1->texture = TEXTURE_ASSET_ID::SIMPLE_CANNON01;
+    module_icon1->visible = false;
+
+    auto module_iconBox2 = std::make_shared<bnuui::Box>(itemBasePos + itemSpaceX, itemBoxSize, 0.0f);
+    auto module_icon2 = std::make_shared<bnuui::Box>(itemBasePos + itemSpaceX, itemIconSize, 0.0f); 
+    module_iconBox2->children.push_back(module_icon2);
+    module_icon2->texture = TEXTURE_ASSET_ID::BUBBLE_CANNON;
+    module_icon2->visible = false;
+
+    auto module_iconBox3 = std::make_shared<bnuui::Box>(itemBasePos + 2.f*itemSpaceX, itemBoxSize, 0.0f);
+    auto module_icon3 = std::make_shared<bnuui::Box>(itemBasePos + 2.f*itemSpaceX, itemIconSize, 0.0f); 
+    module_iconBox3->children.push_back(module_icon3);
+    module_icon3->texture = TEXTURE_ASSET_ID::LASER_WEAPON0;
+    module_icon3->visible = false;
+
+    auto module_iconBox4 = std::make_shared<bnuui::Box>(itemBasePos + itemSpaceY, itemBoxSize, 0.0f);
+    auto module_icon4 = std::make_shared<bnuui::Box>(itemBasePos + itemSpaceY, itemIconSize, 0.0f);
+    module_iconBox4->children.push_back(module_icon4);
+    module_icon4->texture = TEXTURE_ASSET_ID::HEAL;
+    module_icon4->visible = false;
+
+    auto module_iconBox5 = std::make_shared<bnuui::Box>(itemBasePos + itemSpaceY + itemSpaceX, itemBoxSize, 0.0f);
+    auto module_icon5 = std::make_shared<bnuui::Box>(itemBasePos + itemSpaceY + itemSpaceX, itemIconSize*0.8f, 0.0f);
+    module_iconBox5->children.push_back(module_icon4);
+    module_icon5->texture = TEXTURE_ASSET_ID::BUBBLE_BULLET;
+    module_icon5->visible = false;
+
+    auto itemDesc = std::make_shared<bnuui::Box>(vec2(WINDOW_WIDTH_PX/2 + 20, WINDOW_HEIGHT_PX/2 + 80), vec2(800, 500), 0.0f);
+    itemDesc->texture = TEXTURE_ASSET_ID::DESC_INTRO_TEXT;
+
+    book_icon->setOnClick([book, module_icon1, module_icon2, module_icon3, module_icon4, module_icon5](bnuui::Element& e) {
+        if(!RenderSystem::isRenderingGacha){
+            RenderSystem::isRenderingBook = !RenderSystem::isRenderingBook;
+            book->visible = !book->visible;
+            module_icon1->visible = !module_icon1->visible;
+            module_icon2->visible = !module_icon2->visible;
+            module_icon3->visible = !module_icon3->visible;
+            module_icon4->visible = !module_icon4->visible;
+            module_icon5->visible = !module_icon5->visible;
+        }
+    });
+
+
+    module_icon1->setOnClick([&, book, itemDesc](bnuui::Element& e) {
+        if(book->visible){
+            itemDesc->texture = TEXTURE_ASSET_ID::SIMPLE_CANNON_TEXT;
+            itemDesc->visible = true;
+        }
+    });
+
+    module_icon2->setOnClick([&, book, itemDesc](bnuui::Element& e) {
+        if(book->visible){
+            itemDesc->texture = TEXTURE_ASSET_ID::BUBBLE_CANNON_TEXT;
+            itemDesc->visible = true;
+        }
+    });
+
+    module_icon3->setOnClick([&, book, itemDesc](bnuui::Element& e) {
+        if(book->visible){
+            itemDesc->texture = TEXTURE_ASSET_ID::LASER_MODULE_TEXT;
+            itemDesc->visible = true;
+        }
+    });
+
+    module_icon4->setOnClick([&, book, itemDesc](bnuui::Element& e) {
+        if(book->visible){
+            itemDesc->texture = TEXTURE_ASSET_ID::HEALING_MODULE_TEXT;
+            itemDesc->visible = true;
+        }
+    });
+
+    module_icon5->setOnClick([&, book, itemDesc](bnuui::Element& e) {
+        if(book->visible){
+            itemDesc->texture = TEXTURE_ASSET_ID::BUBBLE_BUFF_TEXT;
+            itemDesc->visible = true;
+        }
+    });
+
+
+    book->children.push_back(moduletype_text);
+    book->children.push_back(moduledesc_text);
+    book->children.push_back(module_iconBox1);
+    book->children.push_back(module_iconBox2);
+    book->children.push_back(module_iconBox3);
+    book->children.push_back(module_iconBox4);
+    book->children.push_back(module_iconBox5);
+    book->children.push_back(itemDesc);
+
+
+    scene_ui.insert(book_icon);
+    scene_ui.insert(book);
+    scene_ui.insert(module_icon1);
+    scene_ui.insert(module_icon2);
+    scene_ui.insert(module_icon3);
+    scene_ui.insert(module_icon4);
+    scene_ui.insert(module_icon5);
 }
 
 void GameLevel::InitializeBunnySavingUI() {
@@ -271,6 +397,9 @@ void GameLevel::InitializeUI() {
     scene_ui.insert(player_status);
     scene_ui.insert(progress_bar);
     scene_ui.insert(tile_cursor);
+
+    InitializeBookUI();
+
 }
 
 void GameLevel::Exit() {
@@ -508,6 +637,9 @@ void GameLevel::HandleInput(int key, int action, int mod) {
 
     // Build Mode.
     if ((action == GLFW_RELEASE) && (key == GLFW_KEY_B)) {
+        if(RenderSystem::isRenderingBook){
+            return;
+        }
         if (player_comp.player_state == BUILDING) {
             inventory_system.CloseInventory();
             player_comp.player_state = IDLE;
@@ -540,7 +672,7 @@ void GameLevel::HandleInput(int key, int action, int mod) {
             default:
                 return;
         }
-    } else if (player_comp.player_state != BUILDING) {
+    } else if (player_comp.player_state != BUILDING && !RenderSystem::isRenderingBook) {
         HandlePlayerMovement(key, action, mod);
     }
 
@@ -1008,7 +1140,7 @@ void GameLevel::RemoveStation(vec2 tile_pos, MODULE_TYPES module){
 
 
 void GameLevel::Update(float dt) {
-    if(!RenderSystem::isRenderingGacha && registry.players.components[0].player_state != BUILDING){
+    if(!RenderSystem::isRenderingGacha && registry.players.components[0].player_state != BUILDING && !RenderSystem::isRenderingBook){
         CameraSystem::GetInstance()->update(dt);
         ai_system.step(dt);
         physics_system.step(dt);
@@ -1076,7 +1208,7 @@ void GameLevel::Update(float dt) {
 
     UpdateDropoffProgressBar();
 
-    scene_ui.update(dt);
 
     LevelUpdate(dt);
+    scene_ui.update(dt);
 }

@@ -18,7 +18,9 @@
 #include "gacha_system.hpp"
 
 bool RenderSystem::isRenderingGacha = false;
+bool RenderSystem::isRenderingBook = false;
 bool RenderSystem::isInGame = false;
+
 void RenderSystem::drawGridLine(Entity entity, const mat3& projection) {
     GridLine& gridLine = registry.gridLines.get(entity);
 
@@ -322,7 +324,7 @@ void RenderSystem::drawUIElement(bnuui::Element& element, const mat3& projection
         if (child->getText() == "")
             drawUIElement(*child, projection);
         else 
-            renderText(child->getText(), child->position.x, WINDOW_HEIGHT_PX - child->position.y, 1.0f, vec3(0,0,0), UI_Matrix);
+            renderText(child->getText(), child->position.x, WINDOW_HEIGHT_PX - child->position.y, child->getFontSize(), child->color, UI_Matrix);
     }
 }
 
@@ -477,7 +479,7 @@ void RenderSystem::draw() {
         std::vector<std::shared_ptr<bnuui::Element>> elems = scene_ui.getElems();
         for (std::shared_ptr<bnuui::Element> elem : elems) {
             if (elem->getText() != "") {
-                renderText(elem->getText(), elem->position.x, WINDOW_HEIGHT_PX - elem->position.y, 1.0f, vec3(0,0,0), UI_Matrix);
+                renderText(elem->getText(), elem->position.x, WINDOW_HEIGHT_PX - elem->position.y, elem->getFontSize(), elem->color, UI_Matrix);
             } else {
                 drawUIElement(*elem, projection_2D);
             }
@@ -486,7 +488,7 @@ void RenderSystem::draw() {
   
     // if there is no gacha ui displayed
     // std::cout << "Gacha rendering? " << isRenderingGacha<< std::endl; 
-    if(!isRenderingGacha){
+    if(!isRenderingGacha && !isRenderingBook){
         // Render Player.
         for (Entity entity : registry.players.entities) {
             if (registry.motions.has(entity) && registry.renderRequests.has(entity))
@@ -578,8 +580,8 @@ void RenderSystem::renderText(std::string text, float x, float y, float scale, c
         // render glyph texture over quad
 
         glBindTexture(GL_TEXTURE_2D, ch.TextureID);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 
         /*std::cout << "binding texture: " << ch.character << " = " << ch.TextureID << std::endl;*/
 
