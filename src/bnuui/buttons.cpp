@@ -205,6 +205,35 @@ void ContinueButton::doUpdate(float dt) {
     }
 }
 
+
+Book::Book(vec2 pos, vec2 scale, float rot) {
+    this->position = pos;
+    this->scale = scale;
+    this->rotation = rot;
+
+    this->offset = {0, 0};
+    this->color = {1, 1, 1};
+
+    this->texture = TEXTURE_ASSET_ID::BOOK;
+    this->effect = EFFECT_ASSET_ID::TEXTURED;
+    this->geometry = GEOMETRY_BUFFER_ID::SPRITE;
+    this->visible = true;
+}
+
+void Book::doUpdate(float dt) {
+    if (this->hovering && this->onHover) {
+        this->onHover(*this);
+    }
+
+    if (this->active && this->onActive) {
+        this->onActive(*this);
+    }
+
+    if (this->onUpdate) {
+        this->onUpdate(*this, dt);
+    }
+}
+
 Box::Box(vec2 pos, vec2 scale, float rot) {
     this->position = pos;
     this->scale = scale;
@@ -437,6 +466,21 @@ TextLabel::TextLabel(vec2 pos, float font_size, const std::string& text) {
 
     this->offset = {0, 0};
     this->color = {0,0,0};
+
+    this->visible = true;
+}
+
+TextLabel::TextLabel(vec2 pos, float font_size, vec3 color, const std::string& text) {
+    this->position = pos;
+    this->rotation = 0.0f;
+    this->text = text;
+    this->font_size = font_size;
+    this->color = color;
+
+    this->scale = {0,0};    // When I have time to implement the Map
+    std::cout << this->scale.x << ' ' << this->scale.y << '\n';
+
+    this->offset = {0, 0};
 
     this->visible = true;
 }

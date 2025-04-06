@@ -20,6 +20,9 @@
 #include "gacha_system.hpp"
 
 bool RenderSystem::isRenderingGacha = false;
+bool RenderSystem::isRenderingBook = false;
+bool RenderSystem::isInGame = false;
+
 void RenderSystem::drawGridLine(Entity entity, const mat3& projection) {
     GridLine& gridLine = registry.gridLines.get(entity);
 
@@ -543,7 +546,7 @@ void RenderSystem::draw() {
   
     // if there is no gacha ui displayed
     // std::cout << "Gacha rendering? " << isRenderingGacha<< std::endl; 
-    if(!isRenderingGacha){
+    if(!isRenderingGacha && !isRenderingBook){
         // Render Player.
         for (Entity entity : registry.players.entities) {
             if (registry.motions.has(entity) && registry.renderRequests.has(entity))
@@ -554,6 +557,17 @@ void RenderSystem::draw() {
     // draw framebuffer to screen
     // adding "vignette" effect when applied
     drawToScreen();
+
+    if (isInGame && !isRenderingGacha) {
+        Player& player = registry.players.components[0];
+        if (player.player_state == STATIONING) {
+            vec2& player_position = registry.motions.get(registry.players.entities[0]).position;
+            int player_tile_x = (int) (player_position.x / GRID_CELL_WIDTH_PX);
+            int player_tile_y = (int) (player_position.y / GRID_CELL_HEIGHT_PX);
+            vec2 highlight_position = TileToVector2(player_tile_x, player_tile_y);
+            drawSquareOutline(highlight_position, {56.f, 56.f}, vec3(0.f, 255.f, 0.f), projection_2D);
+        }
+    }
 
 
     // flicker-free display with a double buffer
@@ -643,3 +657,46 @@ void RenderSystem::renderText(std::string text, float x, float y, float scale, c
     glBindVertexArray(m_VAO);
     glBindTexture(GL_TEXTURE_2D, 0);
 }
+
+void RenderSystem::drawSquareOutline(vec2 position, vec2 size, vec3 color, const mat3& projection) {
+    glUseProgram(effects[(GLuint)EFFECT_ASSET_ID::EGG]); // or a dedicated square shader
+    gl_has_errors();
+
+    // Use a simple colored quad geometry (reuse EGG or add a new one)
+    GLuint vbo = vertex_buffers[(GLuint)GEOMETRY_BUFFER_ID::HIGHLIGHT_SQUARE];
+    GLuint ibo = index_buffers[(GLuint)GEOMETRY_BUFFER_ID::HIGHLIGHT_SQUARE];
+
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
+    gl_has_errors();
+
+    GLint in_position_loc = glGetAttribLocation(effects[(GLuint)EFFECT_ASSET_ID::EGG], "in_position");
+    GLint in_color_loc = glGetAttribLocation(effects[(GLuint)EFFECT_ASSET_ID::EGG], "in_color");
+    glEnableVertexAttribArray(in_position_loc);
+    glVertexAttribPointer(in_position_loc, 3, GL_FLOAT, GL_FALSE, sizeof(ColoredVertex), (void*)0);
+    glEnableVertexAttribArray(in_color_loc);
+    glVertexAttribPointer(in_color_loc, 3, GL_FLOAT, GL_FALSE, sizeof(ColoredVertex), (void*)sizeof(vec3));
+    gl_has_errors();
+
+    // Set uniforms
+    GLint color_uloc = glGetUniformLocation(effects[(GLuint)EFFECT_ASSET_ID::EGG], "fcolor");
+    glUniform3fv(color_uloc, 1, (float*)&color);
+
+    Transform transform;
+    transform.translate(position);
+    transform.scale(size);
+
+    GLuint transform_loc = glGetUniformLocation(effects[(GLuint)EFFECT_ASSET_ID::EGG], "transform");
+    glUniformMatrix3fv(transform_loc, 1, GL_FALSE, (float*)&transform.mat);
+
+    GLuint projection_loc = glGetUniformLocation(effects[(GLuint)EFFECT_ASSET_ID::EGG], "projection");
+    glUniformMatrix3fv(projection_loc, 1, GL_FALSE, (float*)&projection);
+
+    // Draw
+    GLint size_bytes = 0;
+    glGetBufferParameteriv(GL_ELEMENT_ARRAY_BUFFER, GL_BUFFER_SIZE, &size_bytes);
+    GLsizei num_indices = size_bytes / sizeof(uint16_t);
+
+    glDrawElements(GL_TRIANGLES, num_indices, GL_UNSIGNED_SHORT, nullptr);
+}
+

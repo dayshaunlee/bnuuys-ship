@@ -39,6 +39,13 @@ class ContinueButton : public Element {
         void doUpdate(float dt) override;
     };
 
+class Book : public Element {
+    public:
+        Book(vec2 pos, vec2 scale, float rot);
+        ~Book() = default;
+        void doUpdate(float dt) override;
+    };
+
 class Box : public Element {
 public:
     Box(vec2 pos, vec2 scale, float rot);
@@ -91,6 +98,7 @@ public:
 class TextLabel : public Element {
 public:
     TextLabel(vec2 pos, float font_size, const std::string& text);
+    TextLabel(vec2 pos, float font_size, vec3 color, const std::string& text);
     ~TextLabel() = default;
     void doUpdate(float dt) override;
     void setText(const std::string& text);

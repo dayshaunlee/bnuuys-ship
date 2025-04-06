@@ -459,6 +459,72 @@ void RenderSystem::initializeGlGeometryBuffers() {
     meshes[UISquare_geom_index].vertices = UISquare_vertices;
     meshes[UISquare_geom_index].vertex_indices = UISquare_indices;
     bindVBOandIBO(GEOMETRY_BUFFER_ID::UI_SQUARE, UISquare_vertices, UISquare_indices);
+
+    ///////////////////////////////////////////////////////
+    // Square Geom for highlighting.
+    std::vector<ColoredVertex> highlightSquare_vertices;
+    std::vector<uint16_t> highlightSquare_indices;
+
+    constexpr float highlightSquare_depth = 0.0f;
+    constexpr float squareSize = 0.5f;
+    constexpr float thickness = 0.05f;
+
+
+    // Define the four corners of the square (centered at origin)
+    // highlightSquare_vertices = {
+    //     {{-0.5f, -0.5f, UISquare_depth}, {1.f, 0.f, 0.f}},
+    //     {{ 0.5f, -0.5f, UISquare_depth}, {0.f, 1.f, 0.f}},
+    //     {{ 0.5f,  0.5f, UISquare_depth}, {0.f, 0.f, 1.f}},
+    //     {{-0.5f,  0.5f, UISquare_depth}, {1.f, 1.f, 0.f}},
+    // };
+
+    // Define the vertices for Square 1 top
+    highlightSquare_vertices.push_back({{-squareSize, -squareSize, highlightSquare_depth}, {1.0f, 1.0f, 1.0f}});
+    highlightSquare_vertices.push_back({{ squareSize, -squareSize, highlightSquare_depth}, {1.0f, 1.0f, 1.0f}});
+    highlightSquare_vertices.push_back({{ squareSize, -squareSize + thickness, highlightSquare_depth}, {1.0f, 1.0f, 1.0f}});
+    highlightSquare_vertices.push_back({{-squareSize, -squareSize + thickness, highlightSquare_depth}, {1.0f, 1.0f, 1.0f}});
+
+    // // Define the vertices for Square 2 bottom
+    highlightSquare_vertices.push_back({{-squareSize, squareSize, highlightSquare_depth}, {1.0f, 1.0f, 1.0f}});
+    highlightSquare_vertices.push_back({{squareSize, squareSize, highlightSquare_depth}, {1.0f, 1.0f, 1.0f}});
+    highlightSquare_vertices.push_back({{squareSize, squareSize - thickness, highlightSquare_depth}, {1.0f, 1.0f, 1.0f}});
+    highlightSquare_vertices.push_back({{-squareSize, squareSize - thickness, highlightSquare_depth}, {1.0f, 1.0f, 1.0f}});
+
+    // // Define the vertices for Square 3 left
+    highlightSquare_vertices.push_back({{-squareSize, -squareSize, highlightSquare_depth}, {1.0f, 1.0f, 1.0f}});
+    highlightSquare_vertices.push_back({{-squareSize + thickness, -squareSize, highlightSquare_depth}, {1.0f, 1.0f, 1.0f}});
+    highlightSquare_vertices.push_back({{-squareSize + thickness, squareSize, highlightSquare_depth}, {1.0f, 1.0f, 1.0f}});
+    highlightSquare_vertices.push_back({{-squareSize, squareSize, highlightSquare_depth}, {1.0f, 1.0f, 1.0f}});
+
+    // // Define the vertices for Square 4 right
+    highlightSquare_vertices.push_back({{squareSize, -squareSize, highlightSquare_depth}, {1.0f, 1.0f, 1.0f}});
+    highlightSquare_vertices.push_back({{squareSize - thickness, -squareSize, highlightSquare_depth}, {1.0f, 1.0f, 1.0f}});
+    highlightSquare_vertices.push_back({{squareSize - thickness, squareSize, highlightSquare_depth}, {1.0f, 1.0f, 1.0f}});
+    highlightSquare_vertices.push_back({{squareSize, squareSize, highlightSquare_depth}, {1.0f, 1.0f, 1.0f}});
+
+    // Define two triangles forming the square
+    // highlightSquare_indices = {0, 1, 2, 2, 3, 0};
+
+    // Define indices for Square 1
+    highlightSquare_indices.push_back(0); highlightSquare_indices.push_back(1); highlightSquare_indices.push_back(2);
+    highlightSquare_indices.push_back(2); highlightSquare_indices.push_back(3); highlightSquare_indices.push_back(0);
+
+    // // Define indices for Square 2
+    highlightSquare_indices.push_back(4); highlightSquare_indices.push_back(5); highlightSquare_indices.push_back(6);
+    highlightSquare_indices.push_back(6); highlightSquare_indices.push_back(7); highlightSquare_indices.push_back(4);
+
+    // // Define indices for Square 3
+    highlightSquare_indices.push_back(8); highlightSquare_indices.push_back(9); highlightSquare_indices.push_back(10);
+    highlightSquare_indices.push_back(10); highlightSquare_indices.push_back(11); highlightSquare_indices.push_back(8);
+
+    // // Define indices for Square 4
+    highlightSquare_indices.push_back(12); highlightSquare_indices.push_back(13); highlightSquare_indices.push_back(14);
+    highlightSquare_indices.push_back(14); highlightSquare_indices.push_back(15); highlightSquare_indices.push_back(12);
+
+    int highlightSquare_geom_index = (int) GEOMETRY_BUFFER_ID::HIGHLIGHT_SQUARE;
+    meshes[highlightSquare_geom_index].vertices = highlightSquare_vertices;
+    meshes[highlightSquare_geom_index].vertex_indices = highlightSquare_indices;
+    bindVBOandIBO(GEOMETRY_BUFFER_ID::HIGHLIGHT_SQUARE, highlightSquare_vertices, highlightSquare_indices);
 }
 
 RenderSystem::~RenderSystem() {

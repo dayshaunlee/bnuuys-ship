@@ -6,6 +6,11 @@
 #include "camera_system.hpp"
 #include "tinyECS/registry.hpp"
 #include "world_init.hpp"
+#include "../ext/earcut/earcut.hpp"
+
+using Coord = double;
+using N = uint32_t;
+using Point = std::array<Coord, 2>;
 
 // #include "camera_system.hpp"
 
@@ -124,18 +129,43 @@ bool polyPoly(std::vector<tson::Vector2i> p1, std::vector<tson::Vector2i> p2) {
 bool polyPolyInside(std::vector<tson::Vector2i> p1, std::vector<tson::Vector2i> p2) { // only true if one polygon is completely in the other
     // go through each of the vertices, plus the next
     // vertex in the list
-    // check if the 2nd polygon is INSIDE the first
+    // check if the 1st polygon is INSIDE the second
     bool collision = true;
 
     // works by checking if ALL the points of p2 are INSIDE p1
-    for (tson::Vector2i p : p2) {
-        if (!polyPoint(p1, p.x, p.y)) collision = false;
+    for (tson::Vector2i p : p1) {
+        if (!polyPoint(p2, p.x, p.y)) collision = false;
     }
     return collision;
 }
 
 // Collision using "axis-aligned" rectangular bounding boxes
-bool collidesAABB(const Motion& motion1, const Motion& motion2) {
+bool polyAABB(const std::vector<vec2> p1, const std::vector<vec2> p2) {
+    // get bounding box of p1
+    float minX1 = p1[0].x, maxX1 = p1[0].x;
+    float minY1 = p1[0].y, maxY1 = p1[0].y;
+
+    for (const auto& v : p1) {
+        minX1 = std::min(minX1, v.x);
+        maxX1 = std::max(maxX1, v.x);
+        minY1 = std::min(minY1, v.y);
+        maxY1 = std::max(maxY1, v.y);
+    }
+
+    // bounding box of p2
+    float minX2 = p2[0].x, maxX2 = p2[0].x;
+    float minY2 = p2[0].y, maxY2 = p2[0].y;
+
+    for (const auto& v : p2) {
+        minX2 = std::min(minX2, v.x);
+        maxX2 = std::max(maxX2, v.x);
+        minY2 = std::min(minY2, v.y);
+        maxY2 = std::max(maxY2, v.y);
+    }
+    return (maxX1 >= minX2 && minX1 <= maxX2) && (maxY1 >= minY2 && minY1 <= maxY2);
+}
+
+bool collidesAABBMot(const Motion& motion1, const Motion& motion2) {
     vec2 half_size1 = get_bounding_box(motion1) / 2.f;
     vec2 half_size2 = get_bounding_box(motion2) / 2.f;
 
@@ -150,6 +180,120 @@ bool collidesAABB(const Motion& motion1, const Motion& motion2) {
         return false;
     }
 
+    return true;
+}
+
+void projectPolygon(const std::vector<vec2>& poly, vec2 axis, float& min, float& max) {
+    min = max = dot(poly[0], axis);
+    for (size_t i = 1; i < poly.size(); i++) {
+        float proj = dot(poly[i], axis);
+        if (proj < min) min = proj;
+        if (proj > max) max = proj;
+    }
+}
+
+bool collidesSAT(const std::vector<vec2>& p1, const std::vector<vec2>& p2, vec2& axis, float& overlap) {
+    float minOverlap = std::numeric_limits<float>::max();
+    vec2 smallestAxis = {0, 0};
+
+    // compute centroids ("center of gravity")
+    vec2 centroid1 = {0, 0}, centroid2 = {0, 0};
+    for (const auto& v : p1) centroid1 += v;
+    for (const auto& v : p2) centroid2 += v;
+    centroid1 /= static_cast<float>(p1.size());
+    centroid2 /= static_cast<float>(p2.size());
+
+    vec2 displacement = centroid2 - centroid1;
+
+    for (const auto& poly : {p1, p2}) {
+        for (size_t i = 0; i < poly.size(); i++) {
+            size_t next = (i + 1) % poly.size();
+            vec2 edge = poly[next] - poly[i];
+            vec2 normal = {-edge.y, edge.x};
+
+            normal = normalize(normal);
+
+            float minA, maxA, minB, maxB;
+            projectPolygon(p1, normal, minA, maxA);
+            projectPolygon(p2, normal, minB, maxB);
+
+            // check for overlap of two objects
+            float overlapAmount = std::min(maxA, maxB) - std::max(minA, minB);
+            if (overlapAmount <= 0) {
+                // separating axis found, no collision
+                return false;
+            }
+
+            if (overlapAmount < minOverlap) {
+                minOverlap = overlapAmount;
+                smallestAxis = normal;
+            }
+        }
+    }
+
+    // to make sure MTV is pointing same way as the way ship is moving
+    if (dot(displacement, smallestAxis) < 0) {
+        smallestAxis = -smallestAxis;
+    }
+
+    // no separating axis found
+    axis = smallestAxis;
+    overlap = minOverlap;
+
+    return true;
+}
+
+
+bool polyPolyMTV(const std::vector<tson::Vector2i>& poly1, const std::vector<tson::Vector2i>& poly2, vec2& mtv) {
+    // convert polygons to use vec2 for easier math
+    std::vector<vec2> p1, p2;
+    for (const auto& v : poly1) {
+        p1.push_back(vec2(static_cast<float>(v.x), static_cast<float>(v.y)));
+    }
+    for (const auto& v : poly2) {
+        p2.push_back(vec2(static_cast<float>(v.x), static_cast<float>(v.y)));
+    }
+
+    // earclip island polygon into convex triangles
+    std::vector<Point> p2Points;
+    for (const auto& v : p2) {
+        p2Points.push_back(Point{(float) v.x, (float) v.y});
+    }
+    std::vector<std::vector<Point>> p2Vec;  // vec2 doesn't work with earcut library, so converting to array
+    p2Vec.push_back(p2Points);
+
+    // an ordered list of indices of Points for the ear-clipped triangles (so every 3 indices is one triangle)
+    std::vector<unsigned int> indices = mapbox::earcut<unsigned int>(p2Vec);
+
+    float minOverlap = std::numeric_limits<float>::max();
+    vec2 smallestAxis = {0, 0};
+
+    for (size_t i = 0; i < indices.size(); i += 3) {
+        std::vector<vec2> triangle;
+        for (size_t j = 0; j < 3; ++j) {
+            unsigned int index = indices[i + j];
+            vec2 triangleVertex = vec2(p2Points[index][0], p2Points[index][1]);
+            triangle.push_back(triangleVertex);
+        }
+
+        // do SAT and update axis/overlap for MTV calculation
+        vec2 axis;
+        float overlap;
+        if (polyAABB(p1, triangle)) {
+            if (collidesSAT(p1, triangle, axis, overlap)) {
+                if (overlap < minOverlap) {
+                    minOverlap = overlap;
+                    smallestAxis = axis;
+                }
+            }
+        }
+    }
+
+    if (minOverlap == std::numeric_limits<float>::max()) {
+        return false;
+    }
+
+    mtv = smallestAxis * minOverlap;
     return true;
 }
 
@@ -197,54 +341,30 @@ bool collidesSphericalShip(const Entity e1, const Entity e2) {
 }
 
 // Brian's Additional Feedback: I added the Camera Offset, but it might not be the EXACT outputs.
-// Polygon - Polygon collision
-// TODO Dayshaun: this function is mega scuffed and has repeating code WILL FIX SOON TM
-bool collidesPoly(const Entity e1, const Entity e2) {
-    // discard if the bounding boxes do not collide
-    Motion& e1_mot = registry.motions.get(e1);
-    Motion& e2_mot = registry.motions.get(e2);
-    std::vector<tson::Vector2i> islandPolygon;
-    std::vector<tson::Vector2i> basePolygon;
-    std::vector<tson::Vector2i> shipPolygon;
-    if (registry.islands.has(e1)) {  // e1 is the Island, e2 is the Ship
-        islandPolygon = registry.islands.get(e1).polygon;
-        shipPolygon = get_poly_from_motion(e2_mot);
-        for (auto& p : islandPolygon) {  // account for camera affecting position
-            p.x += e1_mot.position.x + CameraSystem::GetInstance()->position.x;
-            p.y += e1_mot.position.y + CameraSystem::GetInstance()->position.y;
-        }
-        if (!collidesAABB(registry.motions.get(e1), registry.motions.get(e2))) return false;
-        return polyPoly(islandPolygon, shipPolygon);
-    } else if (registry.islands.has(e2)) {  // e2 is the Island, e1 is the Ship
-        islandPolygon = registry.islands.get(e2).polygon;
-        shipPolygon = get_poly_from_motion(e1_mot);
-        for (auto& p : islandPolygon) {  // account for camera affecting position
-            p.x += e2_mot.position.x + CameraSystem::GetInstance()->position.x;
-            p.y += e2_mot.position.y + CameraSystem::GetInstance()->position.y;
-        }
-        if (!collidesAABB(registry.motions.get(e2), registry.motions.get(e1))) return false;
-        return polyPoly(islandPolygon, shipPolygon);
-    } else if (registry.base.has(e1)) {  // e1 is the Base, e2 is the Ship
-        basePolygon = registry.base.get(e1).polygon;
-        shipPolygon = get_poly_from_motion(e2_mot);
-        for (auto& p : basePolygon) {  // account for camera affecting position
-            p.x += e1_mot.position.x + CameraSystem::GetInstance()->position.x;
-            p.y += e1_mot.position.y + CameraSystem::GetInstance()->position.y;
-        }
-        if (!collidesAABB(registry.motions.get(e1), registry.motions.get(e2))) return false;
-        return polyPolyInside(basePolygon, shipPolygon);
-    } else {  // e2 is the Base, e1 is the Ship
-        basePolygon = registry.base.get(e2).polygon;
-        shipPolygon = get_poly_from_motion(e1_mot);
-        for (auto& p : basePolygon) {  // account for camera affecting position
-            p.x += e2_mot.position.x + CameraSystem::GetInstance()->position.x;
-            p.y += e2_mot.position.y + CameraSystem::GetInstance()->position.y;
-        }
-        if (!collidesAABB(registry.motions.get(e2), registry.motions.get(e1))) return false;
-        return polyPolyInside(basePolygon, shipPolygon);
+bool shipCollides(const std::vector<tson::Vector2i>& entityPolygon, Entity entity, Entity ship, bool checkInside, vec2& mtv) {
+    Motion& entityMot = registry.motions.get(entity);
+    Motion& shipMot = registry.motions.get(ship);
+
+    std::vector<tson::Vector2i> adjustedPolygon = entityPolygon;
+    vec2 cameraPos = CameraSystem::GetInstance()->position;
+    for (auto& p : adjustedPolygon) {
+        p.x += entityMot.position.x + cameraPos.x;
+        p.y += entityMot.position.y + cameraPos.y;
     }
-    // should never reach
-    return false;
+
+    if (!collidesAABBMot(entityMot, shipMot)) return false;
+    return checkInside ? polyPolyInside(get_poly_from_motion(shipMot), adjustedPolygon)
+                       : polyPolyMTV(get_poly_from_motion(shipMot), adjustedPolygon, mtv);
+}
+
+// Polygon - Polygon collision
+bool collidesPoly(const Entity e1, const Entity e2, vec2& mtv) {
+    if (registry.islands.has(e1)) return shipCollides(registry.islands.get(e1).polygon, e1, e2, false, mtv);
+    if (registry.islands.has(e2)) return shipCollides(registry.islands.get(e2).polygon, e2, e1, false, mtv);
+    if (registry.base.has(e1)) return shipCollides(registry.base.get(e1).polygon, e1, e2, true, mtv);
+    if (registry.base.has(e2)) return shipCollides(registry.base.get(e2).polygon, e2, e1, true, mtv);
+
+    return false;  // should never reach
 }
 
 std::vector<tson::Vector2i> get_poly_from_node_pos(ivec2 node_pos) {
@@ -404,17 +524,19 @@ void PhysicsSystem::step(float elapsed_ms) {
         for (uint j = i + 1; j < motion_container.components.size(); j++) {
             Entity entity_j = motion_container.entities[j];
             Motion& motion_j = motion_container.components[j];
-            if ((registry.islands.has(entity_i) || registry.islands.has(entity_j)) &&
-                (registry.ships.has(entity_i) || registry.ships.has(entity_j))) {
+            vec2 mtv = {0.0, 0.0};
+            if (registry.islands.has(entity_i) || registry.islands.has(entity_j)) {
                 // Poly collision only for islands.
-                if (collidesPoly(entity_i, entity_j)) {
-                    registry.collisions.emplace_with_duplicates(entity_i, entity_j);
+                if ((registry.ships.has(entity_i) || registry.ships.has(entity_j))
+                        && collidesPoly(entity_i, entity_j, mtv)) {
+                    assert(mtv != vec2(0, 0));
+                    registry.collisions.emplace_with_duplicates(entity_i, entity_j, mtv);
                 }
             } else if ((registry.base.has(entity_i) || registry.base.has(entity_j)) &&
                        (registry.ships.has(entity_i) || registry.ships.has(entity_j))) {
                 // Poly collision for base
-                if (collidesPoly(entity_i, entity_j)) {
-                    registry.collisions.emplace_with_duplicates(entity_i, entity_j);
+                if (collidesPoly(entity_i, entity_j, mtv)) {
+                    registry.collisions.emplace_with_duplicates(entity_i, entity_j, mtv);
                     if (!base.ship_in_base) base.ship_in_base = true;
                     else base.drop_off_timer += elapsed_ms;
                 } else {
