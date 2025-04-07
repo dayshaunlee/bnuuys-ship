@@ -333,6 +333,9 @@ void GameLevel::InitializeBookUI(){
     scene_ui.insert(module_icon3);
     scene_ui.insert(module_icon4);
     scene_ui.insert(module_icon5);
+
+    this->book = book;
+    this->book_icon = book_icon;
 }
 
 void GameLevel::InitializeBunnySavingUI() {

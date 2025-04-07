@@ -593,23 +593,23 @@ void RenderSystem::draw() {
     highlight_count = 0;
     // draw all entities with a render request to the frame buffer
     for (Entity entity : registry.renderRequests.entities) {
-        // filter to entities that have a motion component
-        if (registry.motions.has(entity)) {
-            float rad = registry.renderRequests.get(entity).highlight_radius;
+        if (registry.spotlights.has(entity)) {
+            float diagonal = sqrt(WINDOW_WIDTH_PX * WINDOW_WIDTH_PX + WINDOW_HEIGHT_PX * WINDOW_HEIGHT_PX);
+            float rad = registry.spotlights.get(entity).radius / diagonal;
             if (rad != 0) {
-                vec2 pos = registry.motions.get(entity).position;
-                //vec2 pos_ship = registry.motions.get(entity).position - CameraSystem::GetInstance()->position - vec2(
-                //                                                            WINDOW_WIDTH_PX / 2, WINDOW_HEIGHT_PX / 2);
+                vec2 pos = registry.spotlights.get(entity).position;
                 if (registry.backgroundObjects.has(entity)) {
                     pos += vec2((CameraSystem::GetInstance()->position.x) * WINDOW_WIDTH_PX / WINDOW_HEIGHT_PX,
                                 CameraSystem::GetInstance()->position.y);
-                    
                 }
                 pos = pos / vec2(WINDOW_WIDTH_PX, WINDOW_HEIGHT_PX) - vec2(0.5, 0.5);
                 if (registry.backgroundObjects.has(entity)) pos.x -= rad;
                 highlight_centers[highlight_count] = vec3(pos.x, pos.y, rad);
                 highlight_count += 1;
             }
+        }
+        // filter to entities that have a motion component
+        if (registry.motions.has(entity)) {
             // SKIP PLAYER TO RENDER THEM LAST.
             if (registry.players.has(entity)) continue;
 
@@ -642,7 +642,7 @@ void RenderSystem::draw() {
             drawTexturedMesh(entity, projection_2D);
         }
     }
-    
+
     // Brian: Add draw UI components here.
     SceneManager& sm = SceneManager::getInstance();
     Scene* s = sm.getCurrentScene();
@@ -650,8 +650,35 @@ void RenderSystem::draw() {
         bnuui::SceneUI scene_ui = s->getUIElems();
         std::vector<std::shared_ptr<bnuui::Element>> elems = scene_ui.getElems();
         for (std::shared_ptr<bnuui::Element> elem : elems) {
+            if (elem->over_overlay) continue; // skip the ones above overlay
             if (elem->getText() != "") {
                 renderText(elem->getText(), elem->position.x, WINDOW_HEIGHT_PX - elem->position.y, elem->getFontSize(), elem->color, UI_Matrix);
+            } else {
+                drawUIElement(*elem, projection_2D);
+            }
+        }
+    }
+
+    if (registry.overlays.components.size() > 0) {
+        Entity overlay_entity = registry.overlays.entities[0];
+        if (registry.renderRequests.has(overlay_entity)) {
+            drawOverlay(overlay_entity, projection_2D);
+        }
+    }
+
+    // Dayshaun: draw the UI elements over the shaded overlay
+    if (s) {
+        bnuui::SceneUI scene_ui = s->getUIElems();
+        std::vector<std::shared_ptr<bnuui::Element>> elems = scene_ui.getElems();
+        for (std::shared_ptr<bnuui::Element> elem : elems) {
+            if (!elem->over_overlay) continue; // skip the ones under overlay
+            if (elem->getText() != "") {
+                renderText(elem->getText(),
+                           elem->position.x,
+                           WINDOW_HEIGHT_PX - elem->position.y,
+                           elem->getFontSize(),
+                           elem->color,
+                           UI_Matrix);
             } else {
                 drawUIElement(*elem, projection_2D);
             }
@@ -668,12 +695,6 @@ void RenderSystem::draw() {
         }
     }
 
-    if (registry.overlays.components.size() > 0) {
-        Entity overlay_entity = registry.overlays.entities[0];
-        if (registry.renderRequests.has(overlay_entity)) {
-            drawOverlay(overlay_entity, projection_2D);
-        }
-    }
 
     // draw framebuffer to screen
     // adding "vignette" effect when applied

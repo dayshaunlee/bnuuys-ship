@@ -290,7 +290,7 @@ void LongBox::doUpdate(float dt) {
     }
 }
 
-PlayerStatus::PlayerStatus(vec2 pos, vec2 scale, float rot, float& val, float& max_val): max_health(&max_val), curr_health(&val) {
+PlayerStatus::PlayerStatus(vec2 pos, vec2 scale, float rot, float& val, float& max_val, bool on_top): max_health(&max_val), curr_health(&val) {
     this->position = pos;
     this->scale = scale;
     this->rotation = rot;
@@ -302,6 +302,7 @@ PlayerStatus::PlayerStatus(vec2 pos, vec2 scale, float rot, float& val, float& m
     this->effect = EFFECT_ASSET_ID::TEXTURED;
     this->geometry = GEOMETRY_BUFFER_ID::SPRITE;
     this->visible = true;
+    this->over_overlay = on_top;
 }
 
 inline bool isNeutralUIFace(TEXTURE_ASSET_ID anim) {
@@ -455,7 +456,7 @@ Cursor::Cursor(vec2 pos, vec2 scale, float rot) {
 void Cursor::doUpdate(float dt) {
 }
 
-TextLabel::TextLabel(vec2 pos, float font_size, const std::string& text) {
+TextLabel::TextLabel(vec2 pos, float font_size, const std::string& text, bool on_top) {
     this->position = pos;
     this->rotation = 0.0f;
     this->text = text;
@@ -468,6 +469,7 @@ TextLabel::TextLabel(vec2 pos, float font_size, const std::string& text) {
     this->color = {0,0,0};
 
     this->visible = true;
+    this->over_overlay = on_top;
 }
 
 TextLabel::TextLabel(vec2 pos, float font_size, vec3 color, const std::string& text) {
@@ -503,7 +505,7 @@ void TextLabel::setText(const std::string& text) {
     this->text = text;
 }
 
-DialogueBox::DialogueBox(vec2 pos, vec2 scale, float rot) {
+DialogueBox::DialogueBox(vec2 pos, vec2 scale, float rot, bool on_top) {
     this->position = pos;
     this->scale = scale;
     this->rotation = rot;
@@ -515,6 +517,7 @@ DialogueBox::DialogueBox(vec2 pos, vec2 scale, float rot) {
     this->effect = EFFECT_ASSET_ID::TEXTURED;
     this->geometry = GEOMETRY_BUFFER_ID::SPRITE;
     this->visible = true;
+    this->over_overlay = on_top;
 }
 
 void DialogueBox::doUpdate(float dt) {

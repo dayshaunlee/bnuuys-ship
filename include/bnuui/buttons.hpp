@@ -66,7 +66,7 @@ private:
     float* curr_health;
     float time_ms;
 public:
-    PlayerStatus(vec2 pos, vec2 scale, float rot, float& val, float& max_val);
+    PlayerStatus(vec2 pos, vec2 scale, float rot, float& val, float& max_val, bool on_top = false);
     ~PlayerStatus() = default;
     void doUpdate(float dt) override;
 };
@@ -97,7 +97,7 @@ public:
 
 class TextLabel : public Element {
 public:
-    TextLabel(vec2 pos, float font_size, const std::string& text);
+    TextLabel(vec2 pos, float font_size, const std::string& text, bool on_top = false);
     TextLabel(vec2 pos, float font_size, vec3 color, const std::string& text);
     ~TextLabel() = default;
     void doUpdate(float dt) override;
@@ -106,7 +106,7 @@ public:
 
 class DialogueBox : public Element {
     public:
-        DialogueBox(vec2 pos, vec2 scale, float rot);
+        DialogueBox(vec2 pos, vec2 scale, float rot, bool on_top = false);
         ~DialogueBox() = default;
         void doUpdate(float dt) override;
     };

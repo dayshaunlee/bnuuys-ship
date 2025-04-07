@@ -665,7 +665,7 @@ Entity createShip() {
     RenderLayer& render_layer = registry.renderLayers.emplace(entity);
     render_layer.layer = 2;
     registry.renderRequests.insert(
-        entity, {TEXTURE_ASSET_ID::RAFT, EFFECT_ASSET_ID::TEXTURED, GEOMETRY_BUFFER_ID::SPRITE, 0.05});
+        entity, {TEXTURE_ASSET_ID::RAFT, EFFECT_ASSET_ID::TEXTURED, GEOMETRY_BUFFER_ID::SPRITE});
 
     Ship& ship = registry.ships.emplace(entity);
     ship.health = SHIP_BASE_HEALTH;

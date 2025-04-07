@@ -71,6 +71,11 @@ struct Overlay {
     bool visible = false;
 };
 
+struct Spotlight {
+    vec2 position = {0.0, 0.0};
+    float radius = 0.0;
+};
+
 // Single Vertex Buffer element for non-textured meshes (coloured.vs.glsl & chicken.vs.glsl)
 struct ColoredVertex {
     vec3 position;

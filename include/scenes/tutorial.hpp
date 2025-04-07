@@ -17,6 +17,23 @@ private:
     void LevelHandleMouseClick(int button, int action, int mods) override;
     void LevelUpdate(float dt) override;
 
+    enum TUTORIAL_PHASE {
+        WASD_KEYS,
+        SPACEBAR_KEY,
+        CANNON_SHOOT,
+        STERRING_PAD,
+        SAVE_BUNNY1,
+        BUILD_MODE,
+        AUTO_BUNNY,
+        SAVE_BUNNY2,
+        DROPOFF,
+        NEW_MODULE,
+        SAVE_BUNNY3,
+    };
+
+    vec2 tutorial_mouse_pos;
+    TUTORIAL_PHASE curr_tutorial_phase = WASD_KEYS;
+
 public:
     TutorialLevel(WorldSystem* worldsystem, std::string map_path, TEXTURE_ASSET_ID texture);
     ~TutorialLevel() override;
