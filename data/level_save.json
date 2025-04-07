@@ -1,14 +1,15 @@
 {
     "levelName": "Level 2",
     "playerName": "Player1",
-    "ship_health": 60.0,
+    "ship_health": 100.0,
     "ship_is_expanded": false,
     "ship_maxHealth": 100.0,
     "unused_modules": {
         "BUBBLE_MOD": 1,
         "HEAL": 1,
         "HELPER_BUNNY": 0,
-        "SIMPLE_CANNON": 0
+        "LASER_WEAPON": 1,
+        "SIMPLE_CANNON": 2
     },
     "used_modules": [
         [
@@ -88,7 +89,7 @@
             "EMPTY",
             "PLATFORM",
             "SIMPLE_CANNON",
-            "SIMPLE_CANNON",
+            "PLATFORM",
             "EMPTY",
             "EMPTY",
             "EMPTY",
@@ -105,7 +106,7 @@
             "EMPTY",
             "PLATFORM",
             "STEERING_WHEEL",
-            "SIMPLE_CANNON",
+            "PLATFORM",
             "EMPTY",
             "EMPTY",
             "EMPTY",
@@ -120,7 +121,7 @@
             "EMPTY",
             "EMPTY",
             "EMPTY",
-            "HEAL",
+            "PLATFORM",
             "PLATFORM",
             "PLATFORM",
             "EMPTY",

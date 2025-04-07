@@ -92,9 +92,17 @@ void clearGatchaUI(bnuui::SceneUI& scene_ui){
 
 void GachaSystem::handleOptionClick(MODULE_TYPES moduleChose){
     if(moduleChose == MODULE_TYPES::PLATFORM){
+        Entity sound_entity = Entity();
+        Sound& sound = registry.sounds.emplace(sound_entity);
+        sound.sound_type = SOUND_ASSET_ID::RAFT;
+        sound.volume = 10;
         expandShip();
         setDropRate(MODULE_TYPES::PLATFORM, 0);
     } else{
+        Entity sound_entity = Entity();
+        Sound& sound = registry.sounds.emplace(sound_entity);
+        sound.sound_type = SOUND_ASSET_ID::MODULE;
+        sound.volume = 10;
         registry.ships.components[0].available_modules[moduleChose]++;
     }
 }

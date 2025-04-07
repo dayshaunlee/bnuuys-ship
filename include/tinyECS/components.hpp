@@ -265,8 +265,12 @@ enum class TEXTURE_ASSET_ID {
     HEAL_MODULE_SHADED = HEAL_MODULE + 1,
 
     STEERING_WHEEL = HEAL_MODULE_SHADED + 1,
+    STEERING_WHEEL_TEXT = STEERING_WHEEL + 1,
+    BUNNY_INDICATOR_TEXT = STEERING_WHEEL_TEXT + 1,
+    HOME_INDICATOR_TEXT = BUNNY_INDICATOR_TEXT + 1,
+    SHIP_TEXT = HOME_INDICATOR_TEXT + 1, 
     
-    TEXTURE_COUNT = STEERING_WHEEL + 1
+    TEXTURE_COUNT = SHIP_TEXT + 1
 };
 
 const int texture_count = (int) TEXTURE_ASSET_ID::TEXTURE_COUNT;
@@ -292,6 +296,13 @@ enum class SOUND_ASSET_ID {
     PROJECTILE_JAIL_COLLISION,
     GAME_OVER,
     CUTSCENE_MUSIC,
+    BOOK,
+    BUBBLE,
+    CLICK,
+    LASER,
+    MODULE,
+    RAFT,
+    COW_BULLET,
     SOUND_COUNT
 };
 const int sound_count = (int) SOUND_ASSET_ID::SOUND_COUNT;
@@ -318,6 +329,7 @@ struct RenderRequest {
 struct Sound {
     SOUND_ASSET_ID sound_type = SOUND_ASSET_ID::ENEMY_INCOMING;
     bool is_repeating = false;
+    int volume = 0;
 };
 
 

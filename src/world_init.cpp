@@ -185,20 +185,6 @@ Entity createBunny(Entity entity) {
     registry.renderRequests.insert(
         entity, {TEXTURE_ASSET_ID::BUNNY_NPC_JAILED0, EFFECT_ASSET_ID::TEXTURED, GEOMETRY_BUFFER_ID::SPRITE});
 
-    ParticleEmitter pe;
-    pe.particles.resize(1000);
-    ParticleProps props;
-    props.ColorBegin = { 1, 1, 1, 1 };
-    props.ColorEnd = { 53 / 255.0f, 55 / 255.0f, 59 / 255.0f, 0.0f };
-	props.SizeBegin = 1.f, props.SizeVariation = 0.3f, props.SizeEnd = 0.0f;
-	props.LifeTime = 1.0f * 500.0f;
-	props.Velocity = { 50.0f, -150.0f };
-	props.VelocityVariation = { 13.0f, 100.0f };
-    props.Offset = { 0, 10.0f };
-    pe.props = props;
-    registry.particleEmitters.emplace(entity, pe);
-
-
     return entity;
 }
 
