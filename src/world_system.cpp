@@ -152,7 +152,7 @@ void WorldSystem::init(RenderSystem* renderer_arg) {
     // start playing background music indefinitely
     std::cout << "Starting music..." << std::endl;
     Mix_PlayMusic(background_music, -1);
-    Mix_VolumeMusic(10);
+    Mix_VolumeMusic(5);
 
     // Set all states to default
     restart_game();
@@ -423,7 +423,7 @@ void WorldSystem::handle_collisions() {
             Entity sound_entity = Entity();
             Sound& sound = registry.sounds.emplace(sound_entity);
             sound.sound_type = SOUND_ASSET_ID::ISLAND_SHIP_COLLISION;
-            sound.volume = 2;
+            sound.volume = 10;
             CameraSystem::GetInstance()->setToPreviousPosition(normal);
         }
 
@@ -509,7 +509,7 @@ void WorldSystem::handle_player_death(){
     Entity sound_entity2 = Entity();
     Sound& sound2 = registry.sounds.emplace(sound_entity2);
     sound2.sound_type = SOUND_ASSET_ID::BACKGROUND_MUSIC;
-    sound2.volume = 10;
+    sound2.volume = 5;
 }
 
 // on key callback
