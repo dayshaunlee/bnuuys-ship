@@ -153,8 +153,14 @@ void WorldSystem::init(RenderSystem* renderer_arg) {
 
     // start playing background music indefinitely
     std::cout << "Starting music..." << std::endl;
-    Mix_PlayMusic(background_music, -1);
-    Mix_VolumeMusic(5);
+
+    Entity sound_entity = Entity();
+    Sound& sound = registry.sounds.emplace(sound_entity);
+    sound.sound_type = SOUND_ASSET_ID::BACKGROUND_MUSIC;
+    sound.is_repeating = true;
+    sound.volume = 5;
+    /*Mix_PlayMusic(background_music, -1);
+    Mix_VolumeMusic(5);*/
 
     // Set all states to default
     restart_game();
@@ -219,10 +225,17 @@ void WorldSystem::handle_collisions() {
 
             enemy.health -= projectile.damage;
 
+            Entity sound_entity = Entity();
+            Sound& sound = registry.sounds.emplace(sound_entity);
+            sound.volume = 50;
+
             switch (projectile.mod_type) {
                 case NONE:
+                    sound.sound_type = SOUND_ASSET_ID::PROJECTILE_ENEMY_COLLISION;
                     break;
                 case BUBBLE:
+                    sound.sound_type = SOUND_ASSET_ID::BUBBLE;
+
                     enemy.is_mod_affected = true;
                     enemy.mod_effect_duration = MODIFIER_EFFECT_DURATION;
                     enemy.speed *= BUBBLE_MOD_EFFECT_FACTOR;
@@ -232,18 +245,6 @@ void WorldSystem::handle_collisions() {
             if (enemy.health <= 0) registry.remove_all_components_of(e2);
             registry.remove_all_components_of(e1);
 
-            if (projectile.mod_type == BUBBLE) {
-                Entity sound_entity = Entity();
-                Sound& sound = registry.sounds.emplace(sound_entity);
-                sound.sound_type = SOUND_ASSET_ID::BUBBLE;
-                sound.volume = 80;
-            } else {
-                Entity sound_entity = Entity();
-                Sound& sound = registry.sounds.emplace(sound_entity);
-                sound.sound_type = SOUND_ASSET_ID::PROJECTILE_ENEMY_COLLISION;
-                sound.volume = 50;
-            }
-
             //Mix_PlayChannel(-1, projectile_enemy_collision, 0);
 
         } else if (registry.playerProjectiles.has(e2) && registry.enemies.has(e1)) {
@@ -252,26 +253,21 @@ void WorldSystem::handle_collisions() {
 
             enemy.health -= projectile.damage;
 
+            Entity sound_entity = Entity();
+            Sound& sound = registry.sounds.emplace(sound_entity);
+            sound.volume = 50;
+
             switch (projectile.mod_type) {
                 case NONE:
+                    sound.sound_type = SOUND_ASSET_ID::PROJECTILE_ENEMY_COLLISION;
                     break;
                 case BUBBLE:
+                    sound.sound_type = SOUND_ASSET_ID::BUBBLE;
+
                     enemy.is_mod_affected = true;
                     enemy.mod_effect_duration = MODIFIER_EFFECT_DURATION;
                     enemy.speed *= BUBBLE_MOD_EFFECT_FACTOR;
                     break;
-            }
-
-            if (projectile.mod_type == BUBBLE) {
-                Entity sound_entity = Entity();
-                Sound& sound = registry.sounds.emplace(sound_entity);
-                sound.sound_type = SOUND_ASSET_ID::BUBBLE;
-                sound.volume = 50;
-            } else {
-                Entity sound_entity = Entity();
-                Sound& sound = registry.sounds.emplace(sound_entity);
-                sound.sound_type = SOUND_ASSET_ID::PROJECTILE_ENEMY_COLLISION;
-                sound.volume = 50;
             }
 
             if (enemy.health <= 0) registry.remove_all_components_of(e1);
