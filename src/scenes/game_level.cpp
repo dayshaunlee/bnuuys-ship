@@ -257,14 +257,20 @@ void GameLevel::InitializeBookUI(){
 
     auto module_iconBox5 = std::make_shared<bnuui::Box>(itemBasePos + itemSpaceY + itemSpaceX, itemBoxSize, 0.0f);
     auto module_icon5 = std::make_shared<bnuui::Box>(itemBasePos + itemSpaceY + itemSpaceX, itemIconSize*0.8f, 0.0f);
-    module_iconBox5->children.push_back(module_icon4);
+    module_iconBox5->children.push_back(module_icon5);
     module_icon5->texture = TEXTURE_ASSET_ID::BUBBLE_BULLET;
     module_icon5->visible = false;
+
+    auto module_iconBox6 = std::make_shared<bnuui::Box>(itemBasePos + itemSpaceY + 2.f*itemSpaceX, itemBoxSize, 0.0f);
+    auto module_icon6 = std::make_shared<bnuui::Box>(itemBasePos + itemSpaceY + 2.f*itemSpaceX, itemIconSize*0.8f, 0.0f);
+    module_iconBox6->children.push_back(module_icon6);
+    module_icon6->texture = TEXTURE_ASSET_ID::STEERING_WHEEL;
+    module_icon6->visible = false;
 
     auto itemDesc = std::make_shared<bnuui::Box>(vec2(WINDOW_WIDTH_PX/2 + 20, WINDOW_HEIGHT_PX/2 + 80), vec2(800, 500), 0.0f);
     itemDesc->texture = TEXTURE_ASSET_ID::DESC_INTRO_TEXT;
 
-    book_icon->setOnClick([book, module_icon1, module_icon2, module_icon3, module_icon4, module_icon5](bnuui::Element& e) {
+    book_icon->setOnClick([book, module_icon1, module_icon2, module_icon3, module_icon4, module_icon5, module_icon6](bnuui::Element& e) {
         if(!RenderSystem::isRenderingGacha){
             RenderSystem::isRenderingBook = !RenderSystem::isRenderingBook;
             book->visible = !book->visible;
@@ -273,6 +279,7 @@ void GameLevel::InitializeBookUI(){
             module_icon3->visible = !module_icon3->visible;
             module_icon4->visible = !module_icon4->visible;
             module_icon5->visible = !module_icon5->visible;
+            module_icon6->visible = !module_icon6->visible;
         }
     });
 
@@ -312,6 +319,13 @@ void GameLevel::InitializeBookUI(){
         }
     });
 
+    module_icon6->setOnClick([&, book, itemDesc](bnuui::Element& e) {
+        if(book->visible){
+            itemDesc->texture = TEXTURE_ASSET_ID::STEERING_WHEEL_TEXT;
+            itemDesc->visible = true;
+        }
+    });
+
 
     book->children.push_back(moduletype_text);
     book->children.push_back(moduledesc_text);
@@ -320,6 +334,7 @@ void GameLevel::InitializeBookUI(){
     book->children.push_back(module_iconBox3);
     book->children.push_back(module_iconBox4);
     book->children.push_back(module_iconBox5);
+    book->children.push_back(module_iconBox6);
     book->children.push_back(itemDesc);
 
 
@@ -330,6 +345,7 @@ void GameLevel::InitializeBookUI(){
     scene_ui.insert(module_icon3);
     scene_ui.insert(module_icon4);
     scene_ui.insert(module_icon5);
+    scene_ui.insert(module_icon6);
 }
 
 void GameLevel::InitializeBunnySavingUI() {
