@@ -66,6 +66,8 @@ int getEnemyRange(ENEMY_TYPE type) {
 #include <camera_system.hpp>
 
 Mix_Chunk* projectile_shoot;
+Mix_Chunk* laser_shoot;
+Mix_Chunk* cow_shoot;
 
 Entity createPlayer(vec2 position) {
     Entity player;
@@ -335,6 +337,11 @@ Entity createEnemyProjectile(vec2 orig, vec2 dest) {
     proj.damage = 5;
     proj.alive_time_ms = PROJECTILE_LIFETIME;
 
+    if (cow_shoot == nullptr) {
+        cow_shoot = Mix_LoadWAV(audio_path("cow_bullet.wav").c_str());
+    }
+    Mix_PlayChannel(-1, cow_shoot, 0);
+
     return e;
 }
 
@@ -436,11 +443,11 @@ std::vector<Entity> createLaserBeam(vec2 orig, vec2 dest) {
         registry.renderRequests.insert(
             e, {TEXTURE_ASSET_ID::LASER_BEAM, EFFECT_ASSET_ID::TEXTURED, GEOMETRY_BUFFER_ID::SPRITE});
 
-        // TODO: Play sound for the laser beam
-        if (projectile_shoot == nullptr) {
-            // projectile_shoot = Mix_LoadWAV(audio_path("projectile_shoot.wav").c_str());
+        if (laser_shoot == nullptr) {
+            laser_shoot->volume = 50;
+            laser_shoot = Mix_LoadWAV(audio_path("laser.wav").c_str());
         }
-        // Mix_PlayChannel(-1, projectile_shoot, 0);
+        Mix_PlayChannel(-1, laser_shoot, 0);
     }
     return beams;
 }

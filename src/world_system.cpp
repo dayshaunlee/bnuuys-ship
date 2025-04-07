@@ -236,7 +236,7 @@ void WorldSystem::handle_collisions() {
                 Entity sound_entity = Entity();
                 Sound& sound = registry.sounds.emplace(sound_entity);
                 sound.sound_type = SOUND_ASSET_ID::BUBBLE;
-                sound.volume = 50;
+                sound.volume = 80;
             } else {
                 Entity sound_entity = Entity();
                 Sound& sound = registry.sounds.emplace(sound_entity);
@@ -289,28 +289,12 @@ void WorldSystem::handle_collisions() {
             enemy.health -= beam.damage;
 
             if (enemy.health <= 0) registry.remove_all_components_of(e2);
-            // registry.remove_all_components_of(e1);
-            // Play sound
-            // Mix_PlayChannel(-1, projectile_enemy_collision, 0);
-            Entity sound_entity = Entity();
-            Sound& sound = registry.sounds.emplace(sound_entity);
-            sound.sound_type = SOUND_ASSET_ID::LASER;
-            sound.volume = 50;
-
         } else if (registry.laserBeams.has(e2) && registry.enemies.has(e1)) {
             LaserBeam& beam = registry.laserBeams.get(e2);;
             Enemy& enemy = registry.enemies.get(e1);
 
             enemy.health -= beam.damage;
             if (enemy.health <= 0) registry.remove_all_components_of(e1);
-
-            // registry.remove_all_components_of(e2);
-            // Play sound
-            // Mix_PlayChannel(-1, projectile_enemy_collision, 0);
-            Entity sound_entity = Entity();
-            Sound& sound = registry.sounds.emplace(sound_entity);
-            sound.sound_type = SOUND_ASSET_ID::LASER;
-            sound.volume = 50;
         } 
 
 
@@ -357,11 +341,6 @@ void WorldSystem::handle_collisions() {
             Ship& ship = registry.ships.get(e2);
             ship.health -= projectile.damage;
             registry.remove_all_components_of(e1);
-            // Play sound
-            Entity sound_entity = Entity();
-            Sound& sound = registry.sounds.emplace(sound_entity);
-            sound.sound_type = SOUND_ASSET_ID::COW_BULLET;
-            sound.volume = 50;
             if (ship.health <= 0.0f) {
                 handle_player_death();
                 return;
@@ -371,11 +350,6 @@ void WorldSystem::handle_collisions() {
             Ship& ship = registry.ships.get(e1);
             ship.health -= projectile.damage;
             registry.remove_all_components_of(e2);
-            // Play sound
-            Entity sound_entity = Entity();
-            Sound& sound = registry.sounds.emplace(sound_entity);
-            sound.sound_type = SOUND_ASSET_ID::COW_BULLET;
-            sound.volume = 50;
             if (ship.health <= 0.0f) {
                 handle_player_death();
                 return;
@@ -426,7 +400,7 @@ void WorldSystem::handle_collisions() {
 
             static float last_collision_sound_time = 0.f;
             float current_time = (float) glfwGetTime();
-            if (current_time - last_collision_sound_time > 1.3f) {
+            if (current_time - last_collision_sound_time > 1.35f) {
                 Entity sound_entity = Entity();
                 Sound& sound = registry.sounds.emplace(sound_entity);
                 sound.sound_type = SOUND_ASSET_ID::ISLAND_SHIP_COLLISION;
