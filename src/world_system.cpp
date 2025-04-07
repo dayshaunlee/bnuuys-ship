@@ -118,8 +118,8 @@ bool WorldSystem::start_and_load_sounds() {
         return false;
     }
 
-    background_music = Mix_LoadMUS(audio_path("music.wav").c_str());
-    click = Mix_LoadWAV(audio_path("click.wav").c_str());
+    /*background_music = Mix_LoadMUS(audio_path("music.wav").c_str());
+    click = Mix_LoadWAV(audio_path("click.wav").c_str());*/
     /*enemy_incoming = Mix_LoadMUS(audio_path("enemy_incoming.wav").c_str());
     island_ship_collision = Mix_LoadWAV(audio_path("island-ship_collision.wav").c_str());
     enemy_ship_collision = Mix_LoadWAV(audio_path("ship-enemy_collision.wav").c_str());
@@ -529,7 +529,11 @@ void WorldSystem::on_mouse_button_pressed(int button, int action, int mods) {
     Scene* scene = SceneManager::getInstance().getCurrentScene();
     if (scene) {
         // Play sound
-        Mix_PlayChannel(-1, click, 0);
+        Entity sound_entity = Entity();
+        Sound& sound = registry.sounds.emplace(sound_entity);
+        sound.sound_type = SOUND_ASSET_ID::CLICK;
+        sound.volume = 80;
+        //Mix_PlayChannel(-1, click, 0);
         scene->HandleMouseClick(button, action, mods);
     }
 }
