@@ -543,6 +543,17 @@ void RenderSystem::draw() {
             }
         }
     }
+
+    if (isInGame && !isRenderingGacha && !isRenderingBook) {
+        Player& player = registry.players.components[0];
+        if (player.player_state == STATIONING) {
+            vec2& player_position = registry.motions.get(registry.players.entities[0]).position;
+            int player_tile_x = (int) (player_position.x / GRID_CELL_WIDTH_PX);
+            int player_tile_y = (int) (player_position.y / GRID_CELL_HEIGHT_PX);
+            vec2 highlight_position = TileToVector2(player_tile_x, player_tile_y);
+            drawSquareOutline(highlight_position, {56.f, 56.f}, vec3(0.f, 255.f, 0.f), projection_2D);
+        }
+    }
   
     // if there is no gacha ui displayed
     // std::cout << "Gacha rendering? " << isRenderingGacha<< std::endl; 
@@ -557,19 +568,7 @@ void RenderSystem::draw() {
     // draw framebuffer to screen
     // adding "vignette" effect when applied
     drawToScreen();
-
-    if (isInGame && !isRenderingGacha && !isRenderingBook) {
-        Player& player = registry.players.components[0];
-        if (player.player_state == STATIONING) {
-            vec2& player_position = registry.motions.get(registry.players.entities[0]).position;
-            int player_tile_x = (int) (player_position.x / GRID_CELL_WIDTH_PX);
-            int player_tile_y = (int) (player_position.y / GRID_CELL_HEIGHT_PX);
-            vec2 highlight_position = TileToVector2(player_tile_x, player_tile_y);
-            drawSquareOutline(highlight_position, {56.f, 56.f}, vec3(0.f, 255.f, 0.f), projection_2D);
-        }
-    }
-
-
+  
     // flicker-free display with a double buffer
     glfwSwapBuffers(window);
     gl_has_errors();
