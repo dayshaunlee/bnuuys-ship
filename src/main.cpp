@@ -49,7 +49,7 @@ int main() {
         return EXIT_FAILURE;
     }
 
-    if (!world_system.start_and_load_sounds()) std::cerr << "ERROR: Failed to start or load sounds." << std::endl;
+    //if (!world_system.start_and_load_sounds()) std::cerr << "ERROR: Failed to start or load sounds." << std::endl;
 
     // initialize the main systems
     renderer_system.init(window);

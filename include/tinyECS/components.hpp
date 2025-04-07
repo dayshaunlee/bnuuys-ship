@@ -316,6 +316,7 @@ enum class SOUND_ASSET_ID {
     MODULE,
     RAFT,
     COW_BULLET,
+    PROJECTILE_SHOOT,
     SOUND_COUNT
 };
 const int sound_count = (int) SOUND_ASSET_ID::SOUND_COUNT;
