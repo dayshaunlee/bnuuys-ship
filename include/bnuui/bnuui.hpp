@@ -36,6 +36,9 @@ public:
     bool hovering = false;
     bool active = false;
 
+    // Overlay
+    bool over_overlay = false;
+
     void setOnActive(std::function<void(Element&)> callback) {
         onActive = std::move(callback);
     }

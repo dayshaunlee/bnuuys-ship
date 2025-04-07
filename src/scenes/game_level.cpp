@@ -99,6 +99,8 @@ void GameLevel::Init() {
     renderPlayer(player);
 
     createCamera();
+    Entity overlay_entity = createOverlay(0.7);
+    Overlay& overlay = registry.overlays.get(overlay_entity);
 
     bunnies_to_win = 0;
     // bunny creation
@@ -113,9 +115,9 @@ void GameLevel::Init() {
     createDisaster({300, 100}, DISASTER_TYPE::WHIRLPOOL);*/
 
     registry.players.components[0].health = 100.0f;
-
-    LevelInit();
+    
     InitializeUI();
+    LevelInit();
 
     std::cout << "Num of ships: " << registry.ships.components.size() << std::endl;
 
@@ -165,7 +167,7 @@ void GameLevel::InitializePauseUI() {
 void GameLevel::InitializeTrackingUI() {
     auto tracking_ui = std::make_shared<bnuui::Box>(vec2(496, 96), vec2(45, 45), 0.0f);
     tracking_ui->texture = TEXTURE_ASSET_ID::BUNNY_INDICATOR;
-
+    
     tracking_ui->setOnUpdate([](bnuui::Element& e, float dt) {
         float smallest_dist = std::numeric_limits<float>::max();
         vec2 shortest_bunny_pos;
@@ -230,6 +232,7 @@ void GameLevel::InitializeTrackingUI() {
         }
     });
     scene_ui.insert(tracking_ui);
+    tracker_ui = tracking_ui;
 }
 
 
@@ -415,10 +418,16 @@ void GameLevel::InitializeBookUI(){
     scene_ui.insert(module_icon3);
     scene_ui.insert(module_icon4);
     scene_ui.insert(module_icon5);
+
+
+    this->book = book;
+    this->book_icon = book_icon;
+
     scene_ui.insert(module_icon6);
     scene_ui.insert(module_icon7);
     scene_ui.insert(module_icon8);
     scene_ui.insert(module_icon9);
+
 }
 
 void GameLevel::InitializeBunnySavingUI() {

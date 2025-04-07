@@ -64,6 +64,18 @@ struct GridLine {
     vec2 end_pos = {10, 10};  // default to diagonal line
 };
 
+struct Overlay {
+    float alpha = 0.7;
+    vec2 pos = {WINDOW_WIDTH_PX / 2, WINDOW_HEIGHT_PX / 2};
+    vec2 size = {WINDOW_WIDTH_PX, WINDOW_HEIGHT_PX};
+    bool visible = false;
+};
+
+struct Spotlight {
+    vec2 position = {0.0, 0.0};
+    float radius = 0.0;
+};
+
 // Single Vertex Buffer element for non-textured meshes (coloured.vs.glsl & chicken.vs.glsl)
 struct ColoredVertex {
     vec3 position;
@@ -84,7 +96,6 @@ struct Mesh {
     std::vector<ColoredVertex> vertices;
     std::vector<uint16_t> vertex_indices;
 };
-
 
 enum class TEXTURE_ASSET_ID {
     // Bunny player
@@ -287,7 +298,8 @@ enum class EFFECT_ASSET_ID {
     VIGNETTE = TEXTURED + 1,
     FONT = VIGNETTE + 1,
     PARTICLE = FONT + 1,
-    EFFECT_COUNT = PARTICLE + 1
+    ALPHA = PARTICLE + 1,
+    EFFECT_COUNT = ALPHA + 1
 };
 const int effect_count = (int) EFFECT_ASSET_ID::EFFECT_COUNT;
 
@@ -321,7 +333,8 @@ enum class GEOMETRY_BUFFER_ID {
     LASER_SQUARE = SCREEN_TRIANGLE + 1,
     UI_SQUARE = LASER_SQUARE + 1,
     HIGHLIGHT_SQUARE = UI_SQUARE + 1,
-    GEOMETRY_COUNT = HIGHLIGHT_SQUARE + 1
+    OVERLAY_SQUARE = HIGHLIGHT_SQUARE + 1,
+    GEOMETRY_COUNT = OVERLAY_SQUARE + 1
 };
 const int geometry_count = (int) GEOMETRY_BUFFER_ID::GEOMETRY_COUNT;
 
@@ -329,6 +342,7 @@ struct RenderRequest {
     TEXTURE_ASSET_ID used_texture = TEXTURE_ASSET_ID::TEXTURE_COUNT;
     EFFECT_ASSET_ID used_effect = EFFECT_ASSET_ID::EFFECT_COUNT;
     GEOMETRY_BUFFER_ID used_geometry = GEOMETRY_BUFFER_ID::GEOMETRY_COUNT;
+    float highlight_radius = 0.0;
 };
 
 struct Sound {

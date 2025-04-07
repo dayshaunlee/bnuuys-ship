@@ -40,6 +40,11 @@ private:
     int bunnies_to_win = 0;
     std::vector<Entity> base_corners;
     
+    // track attributes of these for tutorial
+    std::shared_ptr<bnuui::Element> tracker_ui;
+    std::shared_ptr<bnuui::Element> book;
+    std::shared_ptr<bnuui::Element> book_icon;
+    
     virtual void LevelInit() = 0;
     virtual void LevelUpdate() = 0;
     virtual void LevelExit() = 0;

@@ -53,6 +53,10 @@ class RenderSystem {
     GLuint m_InstanceTransformVBO;
     GLuint m_InstanceColorVBO;
 
+    // Overlay highlights
+    std::array<vec3, 5> highlight_centers;
+    int highlight_count = 0;
+
     // Make sure these paths remain in sync with the associated enumerators.
     // Associated id with .obj path
     const std::vector<std::pair<GEOMETRY_BUFFER_ID, std::string>> mesh_paths = {
@@ -99,7 +103,7 @@ class RenderSystem {
         textures_path("background/water_bg.png"),
         
         // island background
-        map_path("m2_tutorial.png"),
+        map_path("m4_tutorial.png"),
         map_path("m3_level1.png"),
         map_path("m3_level2.png"),
         map_path("m3_level3.png"),
@@ -285,6 +289,7 @@ class RenderSystem {
         shader_path("vignette"),
         shader_path("font"),
         shader_path("particle"),
+        shader_path("transparent"),
     };
 
     std::array<GLuint, geometry_count> vertex_buffers;
@@ -352,6 +357,8 @@ class RenderSystem {
   
     // draw highlight square for modules
     void drawSquareOutline(vec2 position, vec2 size, vec3 color, const mat3& projection);
+
+    void drawOverlay(Entity entity, const mat3& projection);
 
 
     // Window handle

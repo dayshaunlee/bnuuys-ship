@@ -28,6 +28,8 @@ int getEnemyHealth(ENEMY_TYPE type) {
             return ENEMY_TANK_HEALTH;
         case SHOOTER:
             return ENEMY_SHOOTER_HEALTH;
+        case DUMMY:
+            return ENEMY_BASE_HEALTH;
     }
     return 0;
 }
@@ -42,6 +44,8 @@ float getEnemySpeed(ENEMY_TYPE type) {
             return ENEMY_TANK_SPEED;
         case SHOOTER:
             return ENEMY_SHOOTER_SPEED;
+        case DUMMY:
+            return ENEMY_BASE_SPEED;
     }
     return 0;
 }
@@ -56,6 +60,9 @@ int getEnemyRange(ENEMY_TYPE type) {
             return ENEMY_TANK_RANGE;
         case SHOOTER:
             return ENEMY_SHOOTER_RANGE;
+        case DUMMY:
+            return ENEMY_BASE_RANGE;
+
     }
     return 0;
 }
@@ -161,6 +168,11 @@ Entity createEnemy(Entity entity) {
             registry.renderRequests.insert(
                 enemy,
                 {TEXTURE_ASSET_ID::COW0, EFFECT_ASSET_ID::TEXTURED, GEOMETRY_BUFFER_ID::SPRITE});
+            break;
+        case DUMMY:
+            motion.scale = {56, 56};
+            registry.renderRequests.insert(
+                enemy, {TEXTURE_ASSET_ID::BUNNY_FACE_ANGRY05, EFFECT_ASSET_ID::TEXTURED, GEOMETRY_BUFFER_ID::SPRITE});
             break;
     };
 
@@ -533,7 +545,6 @@ void initializeShipModules(Ship& ship) {
                         break;
                     }
                     case MODULE_TYPES::BUBBLE_MOD: {
-                        std::cout << "hihihi bubble" << std::endl;
                         vec2 bubbleGridPos = {j, i};
                         Entity bubble_cannon_entity = createCannon(bubbleGridPos);
                         tmp_entities[i][j] = bubble_cannon_entity;
@@ -699,6 +710,17 @@ Entity createGridLine(vec2 start_pos, vec2 end_pos) {
     registry.renderRequests.insert(
         entity, {TEXTURE_ASSET_ID::TEXTURE_COUNT, EFFECT_ASSET_ID::EGG, GEOMETRY_BUFFER_ID::DEBUG_LINE});
     registry.colors.insert(entity, vec3(0.8f, 0.8f, 0.8f));
+    return entity;
+}
+
+Entity createOverlay(float alpha, vec3 color) {
+    Entity entity = Entity();
+
+    Overlay& overlay = registry.overlays.emplace(entity);
+    overlay.alpha = alpha;
+    registry.renderRequests.insert(
+        entity, {TEXTURE_ASSET_ID::TEXTURE_COUNT, EFFECT_ASSET_ID::ALPHA, GEOMETRY_BUFFER_ID::OVERLAY_SQUARE});
+    registry.colors.insert(entity, color);
     return entity;
 }
 

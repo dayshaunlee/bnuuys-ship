@@ -45,7 +45,7 @@ inline std::string font_path(const std::string& name) {
     return data_path() + "/fonts/" + std::string(name);
 };
 
-enum ENEMY_TYPE { BASIC_GUNNER = 0, FLYER = 1, TANK = 2, SHOOTER = 3 };
+enum ENEMY_TYPE { BASIC_GUNNER = 0, FLYER = 1, TANK = 2, SHOOTER = 3, DUMMY = 4 };
 enum DISASTER_TYPE { TORNADO = 0, WHIRLPOOL = 1};
 enum MODIFIER_TYPE { NONE = 0, BUBBLE = 1 };
 
