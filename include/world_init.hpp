@@ -5,6 +5,7 @@
 #include "tinyECS/tiny_ecs.hpp"
 #include "render_system.hpp"
 #include "vector"
+#include <SDL_mixer.h>
 
 // Enemy helpers
 int getEnemyHealth(ENEMY_TYPE type);
@@ -33,6 +34,7 @@ Entity createShip();
 Entity expandShip();
 Entity createCamera();
 Entity createGridLine(vec2 start_pos, vec2 end_pos);
+Entity createOverlay(float alpha, vec3 color = vec3(0));
 
 std::vector<tson::Vector2i> get_poly_from_motion(const Motion& motion);
 std::vector<Entity> createBaseProgressLines(Entity base_entity);

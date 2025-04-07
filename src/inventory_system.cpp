@@ -23,6 +23,7 @@ void InventorySystem::CreateModuleUI(MODULE_TYPES type, float offset) {
     module->children.push_back(cursor);
     module->children.push_back(counter);
     module->texture = getTextureFromModuleType(type);
+    module->over_overlay = true;
     module->setOnClick([&, type](bnuui::Element& e) {
         if (*(this->selected_module) == type) {
             *(this->selected_module) = EMPTY;
@@ -49,7 +50,7 @@ void InventorySystem::CreateModuleUI(MODULE_TYPES type, float offset) {
 }
 
 void InventorySystem::OpenInventory() {
-    auto inventory_slots = std::make_shared<bnuui::LongBox>(vec2(420, 550), vec2(240, 72), 0.0f);
+    auto inventory_slots = std::make_shared<bnuui::LongBox>(vec2(420, 550), vec2(240, 72), 0.0f, true);
     scene_ui->InsertModuleInventory(inventory_slots);
 
     // Create all the UI components here.

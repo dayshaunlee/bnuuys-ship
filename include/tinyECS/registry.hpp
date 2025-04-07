@@ -13,6 +13,8 @@ class ECSRegistry {
     ComponentContainer<RenderRequest> renderRequests;
     ComponentContainer<RenderLayer> renderLayers;
     ComponentContainer<GridLine> gridLines;
+    ComponentContainer<Overlay> overlays;
+    ComponentContainer<Spotlight> spotlights;
     ComponentContainer<ScreenState> screenStates;
     ComponentContainer<vec3> colors;
 
@@ -62,6 +64,8 @@ class ECSRegistry {
         registry_list.push_back(&renderRequests);
         registry_list.push_back(&renderLayers);
         registry_list.push_back(&gridLines);
+        registry_list.push_back(&overlays);
+        registry_list.push_back(&spotlights);
         registry_list.push_back(&screenStates);
         registry_list.push_back(&colors);
 

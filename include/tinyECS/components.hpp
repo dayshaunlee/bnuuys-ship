@@ -64,6 +64,18 @@ struct GridLine {
     vec2 end_pos = {10, 10};  // default to diagonal line
 };
 
+struct Overlay {
+    float alpha = 0.7;
+    vec2 pos = {WINDOW_WIDTH_PX / 2, WINDOW_HEIGHT_PX / 2};
+    vec2 size = {WINDOW_WIDTH_PX, WINDOW_HEIGHT_PX};
+    bool visible = false;
+};
+
+struct Spotlight {
+    vec2 position = {0.0, 0.0};
+    float radius = 0.0;
+};
+
 // Single Vertex Buffer element for non-textured meshes (coloured.vs.glsl & chicken.vs.glsl)
 struct ColoredVertex {
     vec3 position;
@@ -84,7 +96,6 @@ struct Mesh {
     std::vector<ColoredVertex> vertices;
     std::vector<uint16_t> vertex_indices;
 };
-
 
 enum class TEXTURE_ASSET_ID {
     // Bunny player
@@ -237,8 +248,25 @@ enum class TEXTURE_ASSET_ID {
     CUTSCENE_2 = CUTSCENE_1 + 1,
     CUTSCENE_3 = CUTSCENE_2 + 1,
     CUTSCENE_4 = CUTSCENE_3 + 1,
+    CUTSCENE_BUNNY_VILLAGE = CUTSCENE_4 + 1,
+    CUTSCENE_COW_CAPTURE = CUTSCENE_BUNNY_VILLAGE + 1,
+    CUTSCENE_CRYING_BUNNY = CUTSCENE_COW_CAPTURE + 1,
+    CUTSCENE_MANY_BUNNY_CAGED = CUTSCENE_CRYING_BUNNY + 1,
+    CUTSCENE_BUNNY_ESCAPE = CUTSCENE_MANY_BUNNY_CAGED + 1,
+    CUTSCENE_BUNNY_BUILD = CUTSCENE_BUNNY_ESCAPE + 1,
+
+    END_CUTSCENE_HUG = CUTSCENE_BUNNY_BUILD + 1,
+    END_CUTSCENE_SAIL = END_CUTSCENE_HUG + 1,
+    END_CUTSCENE_VILLAGE = END_CUTSCENE_SAIL + 1,
+
+    TEXT_M1 = END_CUTSCENE_VILLAGE + 1,
+    TEXT_M2 = TEXT_M1 + 1,
+    TEXT_M3 = TEXT_M2 + 1,
+    TEXT_M4 = TEXT_M3 + 1,
+    TEXT_ASSETS = TEXT_M4 + 1,
+    TEXT_THANKS = TEXT_ASSETS + 1,
     
-    HOME_INDICATOR  = CUTSCENE_4 + 1,
+    HOME_INDICATOR  = TEXT_THANKS + 1,
 
     VICTORY_BG = HOME_INDICATOR + 1,
     
@@ -260,8 +288,15 @@ enum class TEXTURE_ASSET_ID {
     HEAL_MODULE_SHADED = HEAL_MODULE + 1,
 
     STEERING_WHEEL = HEAL_MODULE_SHADED + 1,
+    STEERING_WHEEL_TEXT = STEERING_WHEEL + 1,
+    BUNNY_INDICATOR_TEXT = STEERING_WHEEL_TEXT + 1,
+    HOME_INDICATOR_TEXT = BUNNY_INDICATOR_TEXT + 1,
+    SHIP_TEXT = HOME_INDICATOR_TEXT + 1, 
+
+    EXIT_BUTTON_NORMAL = SHIP_TEXT + 1,
+    EXIT_BUTTON_CLICKED = EXIT_BUTTON_NORMAL + 1,
     
-    TEXTURE_COUNT = STEERING_WHEEL + 1
+    TEXTURE_COUNT = EXIT_BUTTON_CLICKED + 1
 };
 
 const int texture_count = (int) TEXTURE_ASSET_ID::TEXTURE_COUNT;
@@ -274,7 +309,8 @@ enum class EFFECT_ASSET_ID {
     VIGNETTE = TEXTURED + 1,
     FONT = VIGNETTE + 1,
     PARTICLE = FONT + 1,
-    EFFECT_COUNT = PARTICLE + 1
+    ALPHA = PARTICLE + 1,
+    EFFECT_COUNT = ALPHA + 1
 };
 const int effect_count = (int) EFFECT_ASSET_ID::EFFECT_COUNT;
 
@@ -287,6 +323,15 @@ enum class SOUND_ASSET_ID {
     PROJECTILE_JAIL_COLLISION,
     GAME_OVER,
     CUTSCENE_MUSIC,
+    BOOK,
+    BUBBLE,
+    CLICK,
+    LASER,
+    MODULE,
+    RAFT,
+    COW_BULLET,
+    PROJECTILE_SHOOT,
+    END_MUSIC,
     SOUND_COUNT
 };
 const int sound_count = (int) SOUND_ASSET_ID::SOUND_COUNT;
@@ -300,7 +345,8 @@ enum class GEOMETRY_BUFFER_ID {
     LASER_SQUARE = SCREEN_TRIANGLE + 1,
     UI_SQUARE = LASER_SQUARE + 1,
     HIGHLIGHT_SQUARE = UI_SQUARE + 1,
-    GEOMETRY_COUNT = HIGHLIGHT_SQUARE + 1
+    OVERLAY_SQUARE = HIGHLIGHT_SQUARE + 1,
+    GEOMETRY_COUNT = OVERLAY_SQUARE + 1
 };
 const int geometry_count = (int) GEOMETRY_BUFFER_ID::GEOMETRY_COUNT;
 
@@ -308,11 +354,13 @@ struct RenderRequest {
     TEXTURE_ASSET_ID used_texture = TEXTURE_ASSET_ID::TEXTURE_COUNT;
     EFFECT_ASSET_ID used_effect = EFFECT_ASSET_ID::EFFECT_COUNT;
     GEOMETRY_BUFFER_ID used_geometry = GEOMETRY_BUFFER_ID::GEOMETRY_COUNT;
+    float highlight_radius = 0.0;
 };
 
 struct Sound {
     SOUND_ASSET_ID sound_type = SOUND_ASSET_ID::ENEMY_INCOMING;
     bool is_repeating = false;
+    int volume = 0;
 };
 
 

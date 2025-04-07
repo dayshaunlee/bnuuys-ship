@@ -40,7 +40,7 @@ bool SoundSystem::init() {
         sound_mix_chunk[i] = sound;
     }
 
-    Mix_Volume(-1, 10);
+    Mix_Volume(-1, 128);
 
     return true;
 }
@@ -59,10 +59,11 @@ void SoundSystem::play() {
     for (Entity entity : registry.sounds.entities) {
         Sound& sound = registry.sounds.get(entity);
         if (sound.is_repeating) {
-            Mix_PauseMusic();
             Mix_PlayMusic(sound_mix_repeating[(int)sound.sound_type], -1);
+            Mix_VolumeMusic(sound.volume);
         } else {
-            Mix_PlayChannel(-1, sound_mix_chunk[(int) sound.sound_type - sound_paths_repeating.size()], 0);
+            Mix_VolumeChunk(sound_mix_chunk[(int) sound.sound_type - sound_paths_repeating.size()], sound.volume);
+            Mix_PlayChannel((int) sound.sound_type % 8, sound_mix_chunk[(int) sound.sound_type - sound_paths_repeating.size()], 0);
             registry.remove_all_components_of(entity);
         }
     }

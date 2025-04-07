@@ -53,6 +53,10 @@ class RenderSystem {
     GLuint m_InstanceTransformVBO;
     GLuint m_InstanceColorVBO;
 
+    // Overlay highlights
+    std::array<vec3, 5> highlight_centers;
+    int highlight_count = 0;
+
     // Make sure these paths remain in sync with the associated enumerators.
     // Associated id with .obj path
     const std::vector<std::pair<GEOMETRY_BUFFER_ID, std::string>> mesh_paths = {
@@ -99,7 +103,7 @@ class RenderSystem {
         textures_path("background/water_bg.png"),
         
         // island background
-        map_path("m2_tutorial.png"),
+        map_path("m4_tutorial.png"),
         map_path("m3_level1.png"),
         map_path("m3_level2.png"),
         map_path("m3_level3.png"),
@@ -235,10 +239,30 @@ class RenderSystem {
         textures_path("cutscenes/c2.png"),
         textures_path("cutscenes/c3.png"),
         textures_path("cutscenes/c4.png"),
+        textures_path("cutscenes/bunny_village.png"),
+        textures_path("cutscenes/cow_capturing.png"),
+        textures_path("cutscenes/crying_bunny.png"),
+        textures_path("cutscenes/bunny_many_caged.png"),
+        textures_path("cutscenes/Bunny_Escape.png"),
+        textures_path("cutscenes/bunny_build.png"),
+
+        // End cutscenes,
+        textures_path("cutscenes/hugging.png"),
+        textures_path("cutscenes/Sailing.png"),
+        textures_path("cutscenes/FinalScene.png"),
+
+        textures_path("cutscenes/m1_credit.png"),
+        textures_path("cutscenes/m2_credit.png"),
+        textures_path("cutscenes/m3_credit.png"),
+        textures_path("cutscenes/m4_credit.png"),
+
+        textures_path("cutscenes/asset_credit.png"),
+        textures_path("cutscenes/end_credit.png"),
 
 
         // home indicator
         textures_path("bunny/home_indicator.png"),
+
         textures_path("background/game_victory_bg.png"),
         textures_path("ui/books/book_icon.png"),
         textures_path("ui/books/book.png"),
@@ -255,6 +279,17 @@ class RenderSystem {
 
         // Steering wheel
         textures_path("ship_modules/steering_wheel.png"),
+        textures_path("texts/steeringWheelText.png"),
+
+        // Indicator texts
+        textures_path("texts/bunnyIndicatorText.png"),
+        textures_path("texts/homeIndicatorText.png"),
+
+        // Ship text
+        textures_path("texts/shipText.png"),
+        
+        textures_path("ui/buttons/exit_neutral.png"),
+        textures_path("ui/buttons/exit_clicked.png"),
     };
 
     std::array<GLuint, effect_count> effects;
@@ -267,6 +302,7 @@ class RenderSystem {
         shader_path("vignette"),
         shader_path("font"),
         shader_path("particle"),
+        shader_path("transparent"),
     };
 
     std::array<GLuint, geometry_count> vertex_buffers;
@@ -302,6 +338,7 @@ class RenderSystem {
     // this is used to check that if redendering Gacha UI we don't render player on top
     static bool isRenderingGacha;
     static bool isRenderingBook;
+    static bool isPaused;
 
     // for checking if player motion exists to avoid segmentation fault
     static bool isInGame;
@@ -333,6 +370,8 @@ class RenderSystem {
   
     // draw highlight square for modules
     void drawSquareOutline(vec2 position, vec2 size, vec3 color, const mat3& projection);
+
+    void drawOverlay(Entity entity, const mat3& projection);
 
 
     // Window handle

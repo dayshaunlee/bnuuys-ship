@@ -88,6 +88,46 @@ void PlayButton::doUpdate(float dt) {
     }
 }
 
+ExitButton::ExitButton(vec2 pos, vec2 scale, float rot) {
+    // Decorate the square button.
+    this->position = pos;
+    this->scale = scale;
+    this->rotation = rot;
+
+    this->offset = {0, 0};
+    this->color = {1, 1, 1};
+
+    this->texture = TEXTURE_ASSET_ID::EXIT_BUTTON_NORMAL;
+    this->effect = EFFECT_ASSET_ID::TEXTURED;
+    this->geometry = GEOMETRY_BUFFER_ID::SPRITE;
+    this->visible = true;
+}
+
+// TODO: Update the Textures appropriately later.
+void ExitButton::doUpdate(float dt) {
+    // Check if it's being hovered/hot.
+    if (this->hovering && this->onHover) {
+        this->onHover(*this);
+    }
+
+    // Check if it's being clicked.
+    if (this->active) {
+        this->texture = TEXTURE_ASSET_ID::EXIT_BUTTON_CLICKED;
+        if (this->onActive) {
+            this->onActive(*this);
+        }
+    }
+
+    if (!this->hovering && !this->active) {
+        this->texture = TEXTURE_ASSET_ID::EXIT_BUTTON_NORMAL;
+    }
+
+    // Update if needed.
+    if (this->onUpdate) {
+        this->onUpdate(*this, dt);
+    }
+}
+
 RestartButton::RestartButton(vec2 pos, vec2 scale, float rot) {
     // Decorate the square button.
     this->position = pos;
@@ -262,7 +302,7 @@ void Box::doUpdate(float dt) {
     }
 }
 
-LongBox::LongBox(vec2 pos, vec2 scale, float rot) {
+LongBox::LongBox(vec2 pos, vec2 scale, float rot, bool on_top) {
     this->position = pos;
     this->scale = scale;
     this->rotation = rot;
@@ -274,6 +314,7 @@ LongBox::LongBox(vec2 pos, vec2 scale, float rot) {
     this->effect = EFFECT_ASSET_ID::TEXTURED;
     this->geometry = GEOMETRY_BUFFER_ID::SPRITE;
     this->visible = true;
+    this->over_overlay = on_top;
 }
 
 void LongBox::doUpdate(float dt) {
@@ -290,7 +331,7 @@ void LongBox::doUpdate(float dt) {
     }
 }
 
-PlayerStatus::PlayerStatus(vec2 pos, vec2 scale, float rot, float& val, float& max_val): max_health(&max_val), curr_health(&val) {
+PlayerStatus::PlayerStatus(vec2 pos, vec2 scale, float rot, float& val, float& max_val, bool on_top): max_health(&max_val), curr_health(&val) {
     this->position = pos;
     this->scale = scale;
     this->rotation = rot;
@@ -302,6 +343,7 @@ PlayerStatus::PlayerStatus(vec2 pos, vec2 scale, float rot, float& val, float& m
     this->effect = EFFECT_ASSET_ID::TEXTURED;
     this->geometry = GEOMETRY_BUFFER_ID::SPRITE;
     this->visible = true;
+    this->over_overlay = on_top;
 }
 
 inline bool isNeutralUIFace(TEXTURE_ASSET_ID anim) {
@@ -455,7 +497,7 @@ Cursor::Cursor(vec2 pos, vec2 scale, float rot) {
 void Cursor::doUpdate(float dt) {
 }
 
-TextLabel::TextLabel(vec2 pos, float font_size, const std::string& text) {
+TextLabel::TextLabel(vec2 pos, float font_size, const std::string& text, bool on_top) {
     this->position = pos;
     this->rotation = 0.0f;
     this->text = text;
@@ -468,6 +510,7 @@ TextLabel::TextLabel(vec2 pos, float font_size, const std::string& text) {
     this->color = {0,0,0};
 
     this->visible = true;
+    this->over_overlay = on_top;
 }
 
 TextLabel::TextLabel(vec2 pos, float font_size, vec3 color, const std::string& text) {
@@ -503,7 +546,7 @@ void TextLabel::setText(const std::string& text) {
     this->text = text;
 }
 
-DialogueBox::DialogueBox(vec2 pos, vec2 scale, float rot) {
+DialogueBox::DialogueBox(vec2 pos, vec2 scale, float rot, bool on_top) {
     this->position = pos;
     this->scale = scale;
     this->rotation = rot;
@@ -515,6 +558,7 @@ DialogueBox::DialogueBox(vec2 pos, vec2 scale, float rot) {
     this->effect = EFFECT_ASSET_ID::TEXTURED;
     this->geometry = GEOMETRY_BUFFER_ID::SPRITE;
     this->visible = true;
+    this->over_overlay = on_top;
 }
 
 void DialogueBox::doUpdate(float dt) {

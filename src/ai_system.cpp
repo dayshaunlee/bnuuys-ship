@@ -16,7 +16,12 @@ void AISystem::step(float elapsed_ms) {
 
         // A* enemy path finding
         for (const Entity& enemy_entity : registry.enemies.entities) {
-            if (registry.enemies.get(enemy_entity).type == ENEMY_TYPE::BASIC_GUNNER && !registry.walkingPaths.has(enemy_entity)) {
+            Enemy& enemy = registry.enemies.get(enemy_entity);
+            if (enemy.type == ENEMY_TYPE::BASIC_GUNNER && !registry.walkingPaths.has(enemy_entity)) {
+                vec2 direction = ship_position - registry.motions.get(enemy_entity).position;
+                float length = sqrt(direction.x * direction.x + direction.y * direction.y);
+                if (enemy.range * GRID_CELL_WIDTH_PX < length) continue;  // out of range
+
                 std::vector<ivec2> path;
                 if (find_path(path, enemy_entity, ship_entity)) {
                     WalkingPath& walkingPath = registry.walkingPaths.emplace(enemy_entity);

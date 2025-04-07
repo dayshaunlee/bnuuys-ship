@@ -15,7 +15,6 @@ CameraSystem* CameraSystem::GetInstance() {
 
 void CameraSystem::update(float deltaTime) {
     prev_pos = position;
-
     // std::cout << "x: " << vel.x << " y: "<< vel.y << std::endl;
     float step_seconds = deltaTime / 1000.f;
     // Apply friction when no input is detected

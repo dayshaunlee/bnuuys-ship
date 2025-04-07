@@ -28,6 +28,8 @@ int getEnemyHealth(ENEMY_TYPE type) {
             return ENEMY_TANK_HEALTH;
         case SHOOTER:
             return ENEMY_SHOOTER_HEALTH;
+        case DUMMY:
+            return ENEMY_BASE_HEALTH;
     }
     return 0;
 }
@@ -42,6 +44,8 @@ float getEnemySpeed(ENEMY_TYPE type) {
             return ENEMY_TANK_SPEED;
         case SHOOTER:
             return ENEMY_SHOOTER_SPEED;
+        case DUMMY:
+            return ENEMY_BASE_SPEED;
     }
     return 0;
 }
@@ -56,6 +60,9 @@ int getEnemyRange(ENEMY_TYPE type) {
             return ENEMY_TANK_RANGE;
         case SHOOTER:
             return ENEMY_SHOOTER_RANGE;
+        case DUMMY:
+            return ENEMY_BASE_RANGE;
+
     }
     return 0;
 }
@@ -65,7 +72,9 @@ int getEnemyRange(ENEMY_TYPE type) {
 #include <SDL_mixer.h>
 #include <camera_system.hpp>
 
-Mix_Chunk* projectile_shoot;
+//Mix_Chunk* projectile_shoot;
+//Mix_Chunk* laser_shoot;
+//Mix_Chunk* cow_shoot;
 
 Entity createPlayer(vec2 position) {
     Entity player;
@@ -160,6 +169,11 @@ Entity createEnemy(Entity entity) {
                 enemy,
                 {TEXTURE_ASSET_ID::COW0, EFFECT_ASSET_ID::TEXTURED, GEOMETRY_BUFFER_ID::SPRITE});
             break;
+        case DUMMY:
+            motion.scale = {56, 56};
+            registry.renderRequests.insert(
+                enemy, {TEXTURE_ASSET_ID::BUNNY_FACE_ANGRY05, EFFECT_ASSET_ID::TEXTURED, GEOMETRY_BUFFER_ID::SPRITE});
+            break;
     };
 
 
@@ -184,20 +198,6 @@ Entity createBunny(Entity entity) {
 
     registry.renderRequests.insert(
         entity, {TEXTURE_ASSET_ID::BUNNY_NPC_JAILED0, EFFECT_ASSET_ID::TEXTURED, GEOMETRY_BUFFER_ID::SPRITE});
-
-    ParticleEmitter pe;
-    pe.particles.resize(1000);
-    ParticleProps props;
-    props.ColorBegin = { 1, 1, 1, 1 };
-    props.ColorEnd = { 53 / 255.0f, 55 / 255.0f, 59 / 255.0f, 0.0f };
-	props.SizeBegin = 1.f, props.SizeVariation = 0.3f, props.SizeEnd = 0.0f;
-	props.LifeTime = 1.0f * 500.0f;
-	props.Velocity = { 50.0f, -150.0f };
-	props.VelocityVariation = { 13.0f, 100.0f };
-    props.Offset = { 0, 10.0f };
-    pe.props = props;
-    registry.particleEmitters.emplace(entity, pe);
-
 
     return entity;
 }
@@ -280,10 +280,14 @@ Entity createCannonProjectile(vec2 orig, vec2 dest) {
     registry.particleEmitters.emplace(e, pe);
 
     //Play sound
-    if (projectile_shoot == nullptr) {
+    Entity sound_entity = Entity();
+    Sound& sound = registry.sounds.emplace(sound_entity);
+    sound.sound_type = SOUND_ASSET_ID::PROJECTILE_SHOOT;
+    sound.volume = 50;
+    /*if (projectile_shoot == nullptr) {
         projectile_shoot = Mix_LoadWAV(audio_path("projectile_shoot.wav").c_str());
     }
-    Mix_PlayChannel(-1, projectile_shoot, 0);
+    Mix_PlayChannel(-1, projectile_shoot, 0);*/
 
     return e;
 }
@@ -323,10 +327,14 @@ Entity createModifiedCannonProjectile(vec2 orig, vec2 dest, CannonModifier cm) {
     registry.particleEmitters.emplace(e, pe);
 
     //Play sound
-    if (projectile_shoot == nullptr) {
+    Entity sound_entity = Entity();
+    Sound& sound = registry.sounds.emplace(sound_entity);
+    sound.sound_type = SOUND_ASSET_ID::PROJECTILE_SHOOT;
+    sound.volume = 50;
+    /*if (projectile_shoot == nullptr) {
         projectile_shoot = Mix_LoadWAV(audio_path("projectile_shoot.wav").c_str());
     }
-    Mix_PlayChannel(-1, projectile_shoot, 0);
+    Mix_PlayChannel(-1, projectile_shoot, 0);*/
 
     return e;
 }
@@ -340,14 +348,24 @@ Entity createEnemyProjectile(vec2 orig, vec2 dest) {
     m.scale = {GRID_CELL_WIDTH_PX / 2, GRID_CELL_HEIGHT_PX / 2};
     m.angle = degrees(atan2(dest.y - dest.x, dest.x - orig.x));
     vec2 velVec = dest - orig;
-    m.velocity = normalize(velVec) * 200.0f;
+    m.velocity = normalize(velVec) * ENEMY_PROJECTILE_SPEED;
 
     registry.renderRequests.insert(
         e, {TEXTURE_ASSET_ID::BULLET_GREEN, EFFECT_ASSET_ID::TEXTURED, GEOMETRY_BUFFER_ID::SPRITE});
     
     EnemyProjectile& proj = registry.enemyProjectiles.emplace(e);
     proj.damage = 5;
-    proj.alive_time_ms = PROJECTILE_LIFETIME;
+    proj.alive_time_ms = ENEMY_PROJECTILE_LIFETIME;
+
+    Entity sound_entity = Entity();
+    Sound& sound = registry.sounds.emplace(sound_entity);
+    sound.sound_type = SOUND_ASSET_ID::COW_BULLET;
+    sound.volume = 50;
+
+    /*if (cow_shoot == nullptr) {
+        cow_shoot = Mix_LoadWAV(audio_path("cow_bullet.wav").c_str());
+    }
+    Mix_PlayChannel(-1, cow_shoot, 0);*/
 
     return e;
 }
@@ -450,11 +468,23 @@ std::vector<Entity> createLaserBeam(vec2 orig, vec2 dest) {
         registry.renderRequests.insert(
             e, {TEXTURE_ASSET_ID::LASER_BEAM, EFFECT_ASSET_ID::TEXTURED, GEOMETRY_BUFFER_ID::SPRITE});
 
-        // TODO: Play sound for the laser beam
-        if (projectile_shoot == nullptr) {
-            // projectile_shoot = Mix_LoadWAV(audio_path("projectile_shoot.wav").c_str());
+        Entity sound_entity = Entity();
+        Sound& sound = registry.sounds.emplace(sound_entity);
+        sound.sound_type = SOUND_ASSET_ID::LASER;
+        sound.volume = 50;
+
+        /*if (laser_shoot == nullptr) {
+            laser_shoot = Mix_LoadWAV(audio_path("laser.wav").c_str());
+            if (laser_shoot == nullptr) {
+                laser_shoot = Mix_LoadWAV(audio_path("laser.wav").c_str());
+                if (laser_shoot != nullptr) {
+                    laser_shoot->volume = 50;
+                }
+            } else {
+                laser_shoot->volume = 50;
+            }
         }
-        // Mix_PlayChannel(-1, projectile_shoot, 0);
+        Mix_PlayChannel(-1, laser_shoot, 0);*/
     }
     return beams;
 }
@@ -515,7 +545,6 @@ void initializeShipModules(Ship& ship) {
                         break;
                     }
                     case MODULE_TYPES::BUBBLE_MOD: {
-                        std::cout << "hihihi bubble" << std::endl;
                         vec2 bubbleGridPos = {j, i};
                         Entity bubble_cannon_entity = createCannon(bubbleGridPos);
                         tmp_entities[i][j] = bubble_cannon_entity;
@@ -684,6 +713,17 @@ Entity createGridLine(vec2 start_pos, vec2 end_pos) {
     return entity;
 }
 
+Entity createOverlay(float alpha, vec3 color) {
+    Entity entity = Entity();
+
+    Overlay& overlay = registry.overlays.emplace(entity);
+    overlay.alpha = alpha;
+    registry.renderRequests.insert(
+        entity, {TEXTURE_ASSET_ID::TEXTURE_COUNT, EFFECT_ASSET_ID::ALPHA, GEOMETRY_BUFFER_ID::OVERLAY_SQUARE});
+    registry.colors.insert(entity, color);
+    return entity;
+}
+
 
 std::vector<tson::Vector2i> get_poly_from_motion(const Motion& motion) {
     std::vector<tson::Vector2i> polygon;
@@ -726,7 +766,7 @@ std::vector<Entity> createBaseProgressLines(Entity base_entity) {
         registry.backgroundObjects.emplace(entity);
         registry.renderRequests.insert(
             entity, {TEXTURE_ASSET_ID::TEXTURE_COUNT, EFFECT_ASSET_ID::EGG, GEOMETRY_BUFFER_ID::DEBUG_LINE});
-        registry.colors.insert(entity, vec3(0.8f, 0.0f, 0.8f)); // purple
+        registry.colors.insert(entity, vec3(87 / 255.f, 114 / 255.f, 151 / 255.f));  // purple
         out.push_back(entity);
     }
     return out;

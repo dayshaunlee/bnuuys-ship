@@ -126,7 +126,8 @@
                 "basic_gunner",
                 "flyer",
                 "tank",
-                "shooter"
+                "shooter",
+                "dummy"
             ],
             "valuesAsFlags": false
         },

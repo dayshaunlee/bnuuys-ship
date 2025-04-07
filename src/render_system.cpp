@@ -21,6 +21,7 @@
 
 bool RenderSystem::isRenderingGacha = false;
 bool RenderSystem::isRenderingBook = false;
+bool RenderSystem::isPaused = false;
 bool RenderSystem::isInGame = false;
 
 void RenderSystem::drawGridLine(Entity entity, const mat3& projection) {
@@ -83,6 +84,104 @@ void RenderSystem::drawGridLine(Entity entity, const mat3& projection) {
     // CK: std::cout << "line color: " << color.r << ", " << color.g << ", " << color.b << std::endl;
     glUniform3fv(color_uloc, 1, (float*) &color);
     gl_has_errors();
+
+    // Get number of indices from index buffer, which has elements uint16_t
+    GLint size = 0;
+    glGetBufferParameteriv(GL_ELEMENT_ARRAY_BUFFER, GL_BUFFER_SIZE, &size);
+    gl_has_errors();
+
+    GLsizei num_indices = size / sizeof(uint16_t);
+
+    GLint currProgram;
+    glGetIntegerv(GL_CURRENT_PROGRAM, &currProgram);
+    // Setting uniform values to the currently bound program
+    GLuint transform_loc = glGetUniformLocation(currProgram, "transform");
+    glUniformMatrix3fv(transform_loc, 1, GL_FALSE, (float*) &transform.mat);
+    gl_has_errors();
+
+    GLuint projection_loc = glGetUniformLocation(currProgram, "projection");
+    glUniformMatrix3fv(projection_loc, 1, GL_FALSE, (float*) &projection);
+    gl_has_errors();
+
+    // Drawing of num_indices/3 triangles specified in the index buffer
+    glDrawElements(GL_TRIANGLES, num_indices, GL_UNSIGNED_SHORT, nullptr);
+    gl_has_errors();
+}
+
+void RenderSystem::drawOverlay(Entity entity, const mat3& projection) {
+    Overlay& overlay = registry.overlays.get(entity);
+
+    // Transformation code, see Rendering and Transformation in the template
+    // specification for more info Incrementally updates transformation matrix,
+    // thus ORDER IS IMPORTANT
+    Transform transform;
+    transform.translate(overlay.pos);
+    transform.scale(overlay.size);
+
+    assert(registry.renderRequests.has(entity));
+    const RenderRequest& render_request = registry.renderRequests.get(entity);
+
+    const GLuint used_effect_enum = (GLuint) render_request.used_effect;
+    assert(used_effect_enum != (GLuint) EFFECT_ASSET_ID::EFFECT_COUNT);
+    const GLuint program = (GLuint) effects[used_effect_enum];
+
+    // setting shaders
+    glUseProgram(program);
+    gl_has_errors();
+
+    assert(render_request.used_geometry != GEOMETRY_BUFFER_ID::GEOMETRY_COUNT);
+    const GLuint vbo = vertex_buffers[(GLuint) render_request.used_geometry];
+    const GLuint ibo = index_buffers[(GLuint) render_request.used_geometry];
+
+    // Setting vertex and index buffers
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    gl_has_errors();
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
+    gl_has_errors();
+
+    if (render_request.used_effect == EFFECT_ASSET_ID::ALPHA) {
+        GLint in_position_loc = glGetAttribLocation(program, "in_position");
+        gl_has_errors();
+
+        GLint in_color_loc = glGetAttribLocation(program, "in_color");
+        gl_has_errors();
+
+        glEnableVertexAttribArray(in_position_loc);
+        glVertexAttribPointer(in_position_loc, 3, GL_FLOAT, GL_FALSE, sizeof(ColoredVertex), (void*) 0);
+        gl_has_errors();
+
+        glEnableVertexAttribArray(in_color_loc);
+        glVertexAttribPointer(in_color_loc, 3, GL_FLOAT, GL_FALSE, sizeof(ColoredVertex), (void*) sizeof(vec3));
+        gl_has_errors();
+    } else {
+        assert(false && "Type of render request not supported");
+    }
+
+    // Getting uniform locations for glUniform* calls
+    GLint color_uloc = glGetUniformLocation(program, "fcolor");
+    const vec3 color = registry.colors.has(entity) ? registry.colors.get(entity) : vec3(1);
+    // CK: std::cout << "line color: " << color.r << ", " << color.g << ", " << color.b << std::endl;
+    glUniform3fv(color_uloc, 1, (float*) &color);
+    gl_has_errors();
+
+    GLint alpha_uloc = glGetUniformLocation(program, "alpha");
+    glUniform1f(alpha_uloc, overlay.alpha);
+    gl_has_errors();
+
+    GLint visible_uloc = glGetUniformLocation(program, "visible");
+    glUniform1i(visible_uloc, overlay.visible);
+    gl_has_errors();
+
+    GLint hl_count_uloc = glGetUniformLocation(program, "num_centers");
+    glUniform1i(hl_count_uloc, highlight_count);
+    gl_has_errors();
+
+    GLint centers_uloc = glGetUniformLocation(program, "centers");
+    glUniform3fv(centers_uloc, 5, value_ptr(highlight_centers[0]));
+    gl_has_errors();
+
+
 
     // Get number of indices from index buffer, which has elements uint16_t
     GLint size = 0;
@@ -492,8 +591,24 @@ void RenderSystem::draw() {
             drawTexturedMesh(entity, projection_2D);
     }
 
+    highlight_count = 0;
     // draw all entities with a render request to the frame buffer
     for (Entity entity : registry.renderRequests.entities) {
+        if (registry.spotlights.has(entity)) {
+            float diagonal = sqrt(WINDOW_WIDTH_PX * WINDOW_WIDTH_PX + WINDOW_HEIGHT_PX * WINDOW_HEIGHT_PX);
+            float rad = registry.spotlights.get(entity).radius / diagonal;
+            if (rad != 0) {
+                vec2 pos = registry.spotlights.get(entity).position;
+                if (registry.backgroundObjects.has(entity)) {
+                    pos += vec2((CameraSystem::GetInstance()->position.x) * WINDOW_WIDTH_PX / WINDOW_HEIGHT_PX,
+                                CameraSystem::GetInstance()->position.y);
+                }
+                pos = pos / vec2(WINDOW_WIDTH_PX, WINDOW_HEIGHT_PX) - vec2(0.5, 0.5);
+                if (registry.backgroundObjects.has(entity)) pos.x -= rad;
+                highlight_centers[highlight_count] = vec3(pos.x, pos.y, rad);
+                highlight_count += 1;
+            }
+        }
         // filter to entities that have a motion component
         if (registry.motions.has(entity)) {
             // SKIP PLAYER TO RENDER THEM LAST.
@@ -528,16 +643,60 @@ void RenderSystem::draw() {
             drawTexturedMesh(entity, projection_2D);
         }
     }
-    
+
     // Brian: Add draw UI components here.
     SceneManager& sm = SceneManager::getInstance();
     Scene* s = sm.getCurrentScene();
     if (s) {
         bnuui::SceneUI scene_ui = s->getUIElems();
+        if (!isPaused) {
+            std::vector<std::shared_ptr<bnuui::Element>> elems = scene_ui.getElems();
+			for (std::shared_ptr<bnuui::Element> elem : elems) {
+        if (elem->over_overlay) continue; // skip the ones above overlay
+				if (elem->getText() != "") {
+					renderText(elem->getText(), elem->position.x, WINDOW_HEIGHT_PX - elem->position.y, elem->getFontSize(), elem->color, UI_Matrix);
+				} else {
+					drawUIElement(*elem, projection_2D);
+				}
+			}           
+        } else {
+            // Draw only the pause UI.
+            drawUIElement(*scene_ui.getPauseUI(), projection_2D);
+        }
+    }
+
+    if (isInGame && !isRenderingGacha && !isRenderingBook) {
+        Player& player = registry.players.components[0];
+        if (player.player_state == STATIONING) {
+            vec2& player_position = registry.motions.get(registry.players.entities[0]).position;
+            int player_tile_x = (int) (player_position.x / GRID_CELL_WIDTH_PX);
+            int player_tile_y = (int) (player_position.y / GRID_CELL_HEIGHT_PX);
+            vec2 highlight_position = TileToVector2(player_tile_x, player_tile_y);
+            drawSquareOutline(highlight_position, {56.f, 56.f}, 
+                vec3(190 / 255.f, 209 / 255.f, 237 / 255.f), projection_2D);
+        }
+    }
+
+    if (registry.overlays.components.size() > 0) {
+        Entity overlay_entity = registry.overlays.entities[0];
+        if (registry.renderRequests.has(overlay_entity)) {
+            drawOverlay(overlay_entity, projection_2D);
+        }
+    }
+
+    // Dayshaun: draw the UI elements over the shaded overlay
+    if (s) {
+        bnuui::SceneUI scene_ui = s->getUIElems();
         std::vector<std::shared_ptr<bnuui::Element>> elems = scene_ui.getElems();
         for (std::shared_ptr<bnuui::Element> elem : elems) {
+            if (!elem->over_overlay) continue; // skip the ones under overlay
             if (elem->getText() != "") {
-                renderText(elem->getText(), elem->position.x, WINDOW_HEIGHT_PX - elem->position.y, elem->getFontSize(), elem->color, UI_Matrix);
+                renderText(elem->getText(),
+                           elem->position.x,
+                           WINDOW_HEIGHT_PX - elem->position.y,
+                           elem->getFontSize(),
+                           elem->color,
+                           UI_Matrix);
             } else {
                 drawUIElement(*elem, projection_2D);
             }
@@ -554,6 +713,7 @@ void RenderSystem::draw() {
         }
     }
 
+
     // draw framebuffer to screen
     // adding "vignette" effect when applied
     drawToScreen();
@@ -568,8 +728,6 @@ void RenderSystem::draw() {
             drawSquareOutline(highlight_position, {56.f, 56.f}, vec3(0.f, 255.f, 0.f), projection_2D);
         }
     }
-
-
     // flicker-free display with a double buffer
     glfwSwapBuffers(window);
     gl_has_errors();
