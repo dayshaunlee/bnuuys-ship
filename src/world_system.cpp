@@ -16,6 +16,7 @@
 #include <ostream>
 #include <sstream>
 
+bool WorldSystem::isExitPressed = false;
 // create the world
 WorldSystem::WorldSystem() {
     // seeding rng with random device
@@ -160,6 +161,9 @@ void WorldSystem::init(RenderSystem* renderer_arg) {
 
 // Update our game world
 bool WorldSystem::step(float elapsed_ms_since_last_update) {
+    if(isExitPressed){
+        close_window();
+    }
     int current_width, current_height;
     glfwGetWindowSize(window, &current_width, &current_height);
     if (current_width != window_width_px || current_height != window_height_px) {

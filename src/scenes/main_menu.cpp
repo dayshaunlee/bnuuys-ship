@@ -9,6 +9,7 @@
 #include "sceneManager/scene_manager.hpp"
 #include "tinyECS/components.hpp"
 #include "saveload_system.hpp"
+#include "world_system.hpp"
 #include <filesystem>
 
 namespace fs = std::filesystem;
@@ -35,7 +36,7 @@ void MainMenuScene::Init() {
     });
 
     exit_btn->setOnClick([](bnuui::Element& e) {
-        // todo here
+        WorldSystem::isExitPressed = true;
     });
 
     scene_ui.insert(bg);
