@@ -240,6 +240,7 @@ class RenderSystem {
         textures_path("cutscenes/crying_bunny.png"),
         textures_path("cutscenes/bunny_many_caged.png"),
         textures_path("cutscenes/Bunny_Escape.png"),
+        textures_path("cutscenes/bunny_build.png"),
 
 
         // home indicator
