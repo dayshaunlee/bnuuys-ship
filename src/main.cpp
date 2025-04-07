@@ -88,7 +88,7 @@ int main() {
     scene_manager.registerScene(cutscene);
     scene_manager.registerScene(end_credits);
 
-    scene_manager.switchScene("EndCutscene");
+    scene_manager.switchScene("IntroCutscene");
 
     while (!world_system.is_over()) {
         glfwPollEvents();

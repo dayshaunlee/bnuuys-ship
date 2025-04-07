@@ -44,7 +44,7 @@ void Level04::LevelUpdate(float dt) {
     
     if(upgradesReceived == bunnies_to_win){
         SceneManager& sceneManager = SceneManager::getInstance();
-        sceneManager.switchScene("Victory Scene");
+        sceneManager.switchScene("EndCutscene");
         SaveLoadSystem& saveLoadSystem = SaveLoadSystem::getInstance();
         GameData gameData = saveLoadSystem.createGameData("Player1", "Level 4", registry.ships.components[0]);
         saveLoadSystem.saveGame(gameData, "level_save.json");
