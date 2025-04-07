@@ -58,6 +58,8 @@ class WorldSystem {
 
     int getFPScounter();
 
+    static bool isExitPressed;
+
    private:
     float mouse_pos_x = 0.0f;
     float mouse_pos_y = 0.0f;
