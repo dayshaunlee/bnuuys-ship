@@ -15,6 +15,7 @@ public:
 private:
     std::shared_ptr<bnuui::Box> cutscene_image;
     std::shared_ptr<bnuui::TextLabel> dialog;
+    std::shared_ptr<bnuui::TextLabel> disclaimer;
     std::vector<std::string> dialog_parts = {
         // Phase 1 [0-2] ~20 seconds.
         "A long time ago in an Island Far Far Away...",

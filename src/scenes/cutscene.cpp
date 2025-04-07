@@ -21,6 +21,10 @@ void IntroCutscene::Init() {
     black_bg->texture = TEXTURE_ASSET_ID::MAIN_MENU_BG; 
 
     dialog = std::make_shared<bnuui::TextLabel>(vec2(0,100), 1.5f, " ");
+
+    disclaimer = std::make_shared<bnuui::TextLabel>(vec2(0,100), 1, "Press (Space) to skip cutscene");
+    disclaimer->color = vec3(1,1,1);
+
     rendered_dialog_text = " ";
     dialog->color = vec3(1,1,1);
     cutscene_image->texture = TEXTURE_ASSET_ID::CUTSCENE_1;
@@ -33,6 +37,7 @@ void IntroCutscene::Init() {
     scene_ui.insert(black_bg);
     scene_ui.insert(cutscene_image);
     scene_ui.insert(dialog);
+    scene_ui.insert(disclaimer);
 
     Sound bg_music;
     bg_music.sound_type = SOUND_ASSET_ID::CUTSCENE_MUSIC;
@@ -100,12 +105,15 @@ void IntroCutscene::revealCharacters(float dt) {
 void IntroCutscene::checkDialogs(float dt) { 
     if (phase == 0) {
         dialog->position = vec2((float) WINDOW_WIDTH_PX/2 - 250.0f, WINDOW_HEIGHT_PX/2);
+        disclaimer->position = vec2((float) WINDOW_WIDTH_PX/2 - 125.0f, WINDOW_HEIGHT_PX-10);
         cutscene_image->visible = false;
     } else if (phase == 1) {
         cutscene_image->position = vec2(WINDOW_WIDTH_PX/2, WINDOW_HEIGHT_PX/2);
         cutscene_image->scale = vec2(WINDOW_WIDTH_PX, WINDOW_HEIGHT_PX+175.0f);
         dialog->position = vec2(200, WINDOW_HEIGHT_PX-25.0f);
         cutscene_image->visible = true;
+        disclaimer->visible = false;
+        disclaimer->setText(" ");
     } else if (phase == 2) {
         cutscene_image->texture = TEXTURE_ASSET_ID::CUTSCENE_BUNNY_VILLAGE;
         dialog->position = vec2(100, WINDOW_HEIGHT_PX-25.0f);
