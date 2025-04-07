@@ -242,6 +242,16 @@ class RenderSystem {
         textures_path("cutscenes/Bunny_Escape.png"),
         textures_path("cutscenes/bunny_build.png"),
 
+        // End cutscenes,
+        textures_path("cutscenes/hugging.png"),
+        textures_path("cutscenes/Sailing.png"),
+        textures_path("cutscenes/FinalScene.png"),
+
+        textures_path("cutscenes/m1_credit.png"),
+        textures_path("cutscenes/m2_credit.png"),
+        textures_path("cutscenes/m3_credit.png"),
+        textures_path("cutscenes/m4_credit.png"),
+
 
         // home indicator
         textures_path("bunny/home_indicator.png"),

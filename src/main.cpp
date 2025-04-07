@@ -1,10 +1,10 @@
 #include "camera_system.hpp"
 #include "common.hpp"
-#include "particle_system.hpp"
 #include "sceneManager/scene.hpp"
 #include "sceneManager/scene_manager.hpp"
 #include "scenes/cutscene.hpp"
 #include "scenes/death_scene.hpp"
+#include "scenes/end_cutscene.hpp"
 #include "scenes/next_level_scene.hpp"
 #include "scenes/victory_scene.hpp"
 #include "scenes/level_01.hpp"
@@ -13,7 +13,6 @@
 #include "scenes/level_04.hpp"
 #include "scenes/main_menu.hpp"
 #include "scenes/tutorial.hpp"
-#include "scenes/ui_editor.hpp"
 #include "tinyECS/components.hpp"
 #define GL3W_IMPLEMENTATION
 #include <gl3w.h>
@@ -69,11 +68,11 @@ int main() {
     Scene* l2 = new Level02(&world_system, "m3_level2.json", TEXTURE_ASSET_ID::LEVEL02_BACKGROUND);
     Scene* l3 = new Level03(&world_system, "m3_level3.json", TEXTURE_ASSET_ID::LEVEL03_BACKGROUND);
     Scene* l4 = new Level04(&world_system, "m3_level4.json", TEXTURE_ASSET_ID::LEVEL04_BACKGROUND);
-    Scene* ui_editor = new EditorUI();
     Scene* death = new DeathScene();
     Scene* levelTransition = new NextLevelScene();
     Scene* cutscene = new IntroCutscene();
     Scene* victory = new VictoryScene();
+    Scene* end_credits = new EndCutscene();
 
     scene_manager.registerScene(mm);
     scene_manager.registerScene(death);
@@ -87,8 +86,9 @@ int main() {
     scene_manager.registerScene(l4);
 
     scene_manager.registerScene(cutscene);
+    scene_manager.registerScene(end_credits);
 
-    scene_manager.switchScene("IntroCutscene");
+    scene_manager.switchScene("EndCutscene");
 
     while (!world_system.is_over()) {
         glfwPollEvents();
