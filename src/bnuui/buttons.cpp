@@ -88,6 +88,46 @@ void PlayButton::doUpdate(float dt) {
     }
 }
 
+ExitButton::ExitButton(vec2 pos, vec2 scale, float rot) {
+    // Decorate the square button.
+    this->position = pos;
+    this->scale = scale;
+    this->rotation = rot;
+
+    this->offset = {0, 0};
+    this->color = {1, 1, 1};
+
+    this->texture = TEXTURE_ASSET_ID::EXIT_BUTTON_NORMAL;
+    this->effect = EFFECT_ASSET_ID::TEXTURED;
+    this->geometry = GEOMETRY_BUFFER_ID::SPRITE;
+    this->visible = true;
+}
+
+// TODO: Update the Textures appropriately later.
+void ExitButton::doUpdate(float dt) {
+    // Check if it's being hovered/hot.
+    if (this->hovering && this->onHover) {
+        this->onHover(*this);
+    }
+
+    // Check if it's being clicked.
+    if (this->active) {
+        this->texture = TEXTURE_ASSET_ID::EXIT_BUTTON_CLICKED;
+        if (this->onActive) {
+            this->onActive(*this);
+        }
+    }
+
+    if (!this->hovering && !this->active) {
+        this->texture = TEXTURE_ASSET_ID::EXIT_BUTTON_NORMAL;
+    }
+
+    // Update if needed.
+    if (this->onUpdate) {
+        this->onUpdate(*this, dt);
+    }
+}
+
 RestartButton::RestartButton(vec2 pos, vec2 scale, float rot) {
     // Decorate the square button.
     this->position = pos;

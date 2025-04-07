@@ -268,7 +268,9 @@ class RenderSystem {
         textures_path("texts/homeIndicatorText.png"),
 
         // Ship text
-        textures_path("texts/shipText.png")
+        textures_path("texts/shipText.png"),
+        textures_path("ui/buttons/exit_neutral.png"),
+        textures_path("ui/buttons/exit_clicked.png"),
     };
 
     std::array<GLuint, effect_count> effects;

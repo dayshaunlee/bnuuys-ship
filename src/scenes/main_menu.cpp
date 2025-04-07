@@ -21,6 +21,7 @@ void MainMenuScene::Init() {
     // Create the UI Title Screen.
     auto play_btn = std::make_shared<bnuui::PlayButton>(vec2((WINDOW_WIDTH_PX/2) - 180, 0.8*WINDOW_HEIGHT_PX), vec2(300, 100), 0.0f);
     auto tutorial_btn = std::make_shared<bnuui::TutorialButton>(vec2((WINDOW_WIDTH_PX/2) + 180, 0.8*WINDOW_HEIGHT_PX), vec2(300, 100), 0.0f);
+    auto exit_btn = std::make_shared<bnuui::ExitButton>(vec2((WINDOW_WIDTH_PX/2) + 180, 0.8*WINDOW_HEIGHT_PX + 90), vec2(300, 100), 0.0f);
     auto bg = std::make_shared<bnuui::Box>(vec2((WINDOW_WIDTH_PX/2), WINDOW_HEIGHT_PX/2), vec2(WINDOW_WIDTH_PX*1.25f, WINDOW_HEIGHT_PX), 0.0f);
 
     bg->texture = TEXTURE_ASSET_ID::MAIN_MENU_BG;
@@ -33,9 +34,14 @@ void MainMenuScene::Init() {
         SceneManager::getInstance().switchScene("Level 1");
     });
 
+    exit_btn->setOnClick([](bnuui::Element& e) {
+        // todo here
+    });
+
     scene_ui.insert(bg);
     scene_ui.insert(play_btn);
     scene_ui.insert(tutorial_btn);
+    scene_ui.insert(exit_btn);
     // scene_ui.insert(txt);
 
     if (!std::filesystem::is_empty(data_path() + "/level_save.json")) {
