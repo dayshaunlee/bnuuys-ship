@@ -236,7 +236,7 @@ void GameLevel::InitializeTrackingUI() {
 
 
 void GameLevel::InitializeBookUI(){
-    auto book_icon = std::make_shared<bnuui::Box>(vec2(WINDOW_WIDTH_PX-180, 95), vec2(100, 100), 0.0f);
+    auto book_icon = std::make_shared<bnuui::Box>(vec2(WINDOW_WIDTH_PX-180+20, 95-20), vec2(100, 100), 0.0f);
     book_icon->texture = TEXTURE_ASSET_ID::BOOK_ICON;
 
     auto book = std::make_shared<bnuui::Book>(vec2(WINDOW_WIDTH_PX/2, WINDOW_HEIGHT_PX/2 + 50), vec2(730, 730), 0.0f);
@@ -282,39 +282,14 @@ void GameLevel::InitializeBookUI(){
 
     auto module_iconBox5 = std::make_shared<bnuui::Box>(itemBasePos + itemSpaceY + itemSpaceX, itemBoxSize, 0.0f);
     auto module_icon5 = std::make_shared<bnuui::Box>(itemBasePos + itemSpaceY + itemSpaceX, itemIconSize*0.8f, 0.0f);
-    module_iconBox5->children.push_back(module_icon5);
+    module_iconBox5->children.push_back(module_icon4);
     module_icon5->texture = TEXTURE_ASSET_ID::BUBBLE_BULLET;
     module_icon5->visible = false;
-
-    auto module_iconBox6 = std::make_shared<bnuui::Box>(itemBasePos + itemSpaceY + 2.f*itemSpaceX, itemBoxSize, 0.0f);
-    auto module_icon6 = std::make_shared<bnuui::Box>(itemBasePos + itemSpaceY + 2.f*itemSpaceX, itemIconSize*0.8f, 0.0f);
-    module_iconBox6->children.push_back(module_icon6);
-    module_icon6->texture = TEXTURE_ASSET_ID::STEERING_WHEEL;
-    module_icon6->visible = false;
-
-    auto module_iconBox7 = std::make_shared<bnuui::Box>(itemBasePos + 2.f*itemSpaceY, itemBoxSize, 0.0f);
-    auto module_icon7 = std::make_shared<bnuui::Box>(itemBasePos + 2.f*itemSpaceY, itemIconSize*0.8f, 0.0f);
-    module_iconBox7->children.push_back(module_icon7);
-    module_icon7->texture = TEXTURE_ASSET_ID::BUNNY_INDICATOR;
-    module_icon7->visible = false;
-
-    auto module_iconBox8 = std::make_shared<bnuui::Box>(itemBasePos + 2.f*itemSpaceY + itemSpaceX, itemBoxSize, 0.0f);
-    auto module_icon8 = std::make_shared<bnuui::Box>(itemBasePos + 2.f*itemSpaceY + itemSpaceX, itemIconSize*0.8f, 0.0f);
-    module_iconBox8->children.push_back(module_icon8);
-    module_icon8->texture = TEXTURE_ASSET_ID::HOME_INDICATOR;
-    module_icon8->visible = false;
-
-    auto module_iconBox9 = std::make_shared<bnuui::Box>(itemBasePos + 2.f*itemSpaceY + 2.f*itemSpaceX, itemBoxSize, 0.0f);
-    auto module_icon9 = std::make_shared<bnuui::Box>(itemBasePos + 2.f*itemSpaceY + 2.f*itemSpaceX, itemIconSize*0.8f, 0.0f);
-    module_iconBox9->children.push_back(module_icon9);
-    module_icon9->texture = TEXTURE_ASSET_ID::RAFT;
-    module_icon9->visible = false;
 
     auto itemDesc = std::make_shared<bnuui::Box>(vec2(WINDOW_WIDTH_PX/2 + 20, WINDOW_HEIGHT_PX/2 + 80), vec2(800, 500), 0.0f);
     itemDesc->texture = TEXTURE_ASSET_ID::DESC_INTRO_TEXT;
 
-    book_icon->setOnClick([book, module_icon1, module_icon2, module_icon3, module_icon4, module_icon5, 
-        module_icon6, module_icon7, module_icon8, module_icon9](bnuui::Element& e) {
+    book_icon->setOnClick([book, module_icon1, module_icon2, module_icon3, module_icon4, module_icon5](bnuui::Element& e) {
         if(!RenderSystem::isRenderingGacha){
             RenderSystem::isRenderingBook = !RenderSystem::isRenderingBook;
             book->visible = !book->visible;
@@ -323,10 +298,6 @@ void GameLevel::InitializeBookUI(){
             module_icon3->visible = !module_icon3->visible;
             module_icon4->visible = !module_icon4->visible;
             module_icon5->visible = !module_icon5->visible;
-            module_icon6->visible = !module_icon6->visible;
-            module_icon7->visible = !module_icon7->visible;
-            module_icon8->visible = !module_icon8->visible;
-            module_icon9->visible = !module_icon9->visible;
         }
     });
 
@@ -366,34 +337,6 @@ void GameLevel::InitializeBookUI(){
         }
     });
 
-    module_icon6->setOnClick([&, book, itemDesc](bnuui::Element& e) {
-        if(book->visible){
-            itemDesc->texture = TEXTURE_ASSET_ID::STEERING_WHEEL_TEXT;
-            itemDesc->visible = true;
-        }
-    });
-
-    module_icon7->setOnClick([&, book, itemDesc](bnuui::Element& e) {
-        if(book->visible){
-            itemDesc->texture = TEXTURE_ASSET_ID::BUNNY_INDICATOR_TEXT;
-            itemDesc->visible = true;
-        }
-    });
-
-    module_icon8->setOnClick([&, book, itemDesc](bnuui::Element& e) {
-        if(book->visible){
-            itemDesc->texture = TEXTURE_ASSET_ID::HOME_INDICATOR_TEXT;
-            itemDesc->visible = true;
-        }
-    });
-
-    module_icon9->setOnClick([&, book, itemDesc](bnuui::Element& e) {
-        if(book->visible){
-            itemDesc->texture = TEXTURE_ASSET_ID::SHIP_TEXT;
-            itemDesc->visible = true;
-        }
-    });
-
 
     book->children.push_back(moduletype_text);
     book->children.push_back(moduledesc_text);
@@ -402,10 +345,6 @@ void GameLevel::InitializeBookUI(){
     book->children.push_back(module_iconBox3);
     book->children.push_back(module_iconBox4);
     book->children.push_back(module_iconBox5);
-    book->children.push_back(module_iconBox6);
-    book->children.push_back(module_iconBox7);
-    book->children.push_back(module_iconBox8);
-    book->children.push_back(module_iconBox9);
     book->children.push_back(itemDesc);
 
 
@@ -416,27 +355,23 @@ void GameLevel::InitializeBookUI(){
     scene_ui.insert(module_icon3);
     scene_ui.insert(module_icon4);
     scene_ui.insert(module_icon5);
-    scene_ui.insert(module_icon6);
-    scene_ui.insert(module_icon7);
-    scene_ui.insert(module_icon8);
-    scene_ui.insert(module_icon9);
 }
 
 void GameLevel::InitializeBunnySavingUI() {
     // Create the Remaining Bunny UI.
-    auto bunny_ctr_box = std::make_shared<bnuui::Box>(vec2(WINDOW_WIDTH_PX-96, 96), vec2(60, 80), 0.0f);
-    auto bunny_icon = std::make_shared<bnuui::Box>(vec2(WINDOW_WIDTH_PX-96, 82.5f), vec2(30, 30), 0.0f);
+    auto bunny_ctr_box = std::make_shared<bnuui::Box>(vec2(WINDOW_WIDTH_PX-96+20, 96-20), vec2(60, 80), 0.0f);
+    auto bunny_icon = std::make_shared<bnuui::Box>(vec2(WINDOW_WIDTH_PX-96+20, 82.5f-20), vec2(30, 30), 0.0f);
     bunny_icon->texture = TEXTURE_ASSET_ID::BUNNY_NPC_FACE;
     bunny_ctr_box->children.push_back(bunny_icon);
 
-    auto ctr_text = std::make_shared<bnuui::TextLabel>(vec2(WINDOW_WIDTH_PX-108.0f,115), 1, "0/0");
+    auto ctr_text = std::make_shared<bnuui::TextLabel>(vec2(WINDOW_WIDTH_PX-108.0f+20,115-20), 1, "0/0");
     ctr_text->setOnUpdate([&](bnuui::Element& e, float dt) {  
         int free_bunny = registry.base.components[0].bunny_count;
         std::string s = std::to_string(free_bunny) + "/" + std::to_string(bunnies_to_win);
         static_cast<bnuui::TextLabel&>(e).setText(s);
     });
 
-    auto info_box = std::make_shared<bnuui::LongBox>(vec2(WINDOW_WIDTH_PX-170, 96*2), vec2(240, 72), 0.0f);
+    auto info_box = std::make_shared<bnuui::LongBox>(vec2(WINDOW_WIDTH_PX-170+20, 96*2-20), vec2(240, 72), 0.0f);
     info_box->setOnUpdate([bunny_ctr_box](bnuui::Element& e, float dt) {
         if (bunny_ctr_box->hovering) {
             e.visible = true;
@@ -445,20 +380,26 @@ void GameLevel::InitializeBunnySavingUI() {
         }
     });
 
-    auto bunnies_in_module = std::make_shared<bnuui::TextLabel>(vec2(WINDOW_WIDTH_PX-250.0f,185), 1, "OH NO");
+    auto bunnies_in_module = std::make_shared<bnuui::TextLabel>(vec2(WINDOW_WIDTH_PX-250.0f+20,185-20), 1, "OH NO");
     bunnies_in_module->setOnUpdate([](bnuui::Element& e, float dt) {
         int num = 0;
-        int n = 0;
         for (Bunny b : registry.bunnies.components) {
             if (b.on_module)
                 num++;
-            else if (b.on_ship)
-                n++;
         }
-        static_cast<bnuui::TextLabel&>(e).setText("Bunnies in module: " + std::to_string(num) + "/" +
-                                                  std::to_string(n));
+        static_cast<bnuui::TextLabel&>(e).setText("Bunnies On module: " + std::to_string(num));
+    });
+    auto bunnies_in_idle = std::make_shared<bnuui::TextLabel>(vec2(WINDOW_WIDTH_PX-250.0f+20,205-20), 1, "OH NO");
+    bunnies_in_idle->setOnUpdate([](bnuui::Element& e, float dt) {
+        int num = 0;
+        for (Bunny b : registry.bunnies.components) {
+            if (b.on_ship)
+                num++;
+        }
+        static_cast<bnuui::TextLabel&>(e).setText("Bunnies Idling: " + std::to_string(num));
     });
     info_box->children.push_back(bunnies_in_module);
+    info_box->children.push_back(bunnies_in_idle);
 
     scene_ui.insert(bunny_ctr_box);
     scene_ui.insert(ctr_text);
@@ -467,12 +408,12 @@ void GameLevel::InitializeBunnySavingUI() {
 
 void GameLevel::InitializeUI() {
     // Create Healthbar.
-    auto player_box = std::make_shared<bnuui::Box>(vec2(96, 96), vec2(96, 96), 0.0f);
+    auto player_box = std::make_shared<bnuui::Box>(vec2(96-20, 96-20), vec2(96, 96), 0.0f);
     auto player_status = std::make_shared<bnuui::PlayerStatus>(
-        vec2(96, 96), vec2(60, 60), 0.0f, registry.ships.components[0].health, registry.ships.components[0].maxHealth);
-    auto slider_bg = std::make_shared<bnuui::LongBox>(vec2(256, 96), vec2(240, 72), 0.0f);
+        vec2(96-20, 96-20), vec2(60, 60), 0.0f, registry.ships.components[0].health, registry.ships.components[0].maxHealth);
+    auto slider_bg = std::make_shared<bnuui::LongBox>(vec2(256-20, 96-20), vec2(240, 72), 0.0f);
     auto progress_bar = std::make_shared<bnuui::ProgressBar>(
-        vec2(256, 93), vec2(180, 24), 0.0f, registry.ships.components[0].health, registry.ships.components[0].maxHealth);
+        vec2(256-20, 93-20), vec2(180, 24), 0.0f, registry.ships.components[0].health, registry.ships.components[0].maxHealth);
     player_box->children.push_back(slider_bg);    
 
     // Create the tile cursor effect.
@@ -961,7 +902,7 @@ void GameLevel::HandleMouseClick(int button, int action, int mods) {
                     if (lw.timer_ms <= 0) {
                         vec2 laser_pos = registry.motions.get(laser_entity).position;
                         createLaserBeam(laser_pos, l1_mouse_pos);
-                        lw.timer_ms = SIMPLE_CANNON_COOLDOWN;
+                        lw.timer_ms = LASER_COOLDOWN;
                     }
                     return;
                 }

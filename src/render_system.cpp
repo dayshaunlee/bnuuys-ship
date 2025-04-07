@@ -557,7 +557,8 @@ void RenderSystem::draw() {
             int player_tile_x = (int) (player_position.x / GRID_CELL_WIDTH_PX);
             int player_tile_y = (int) (player_position.y / GRID_CELL_HEIGHT_PX);
             vec2 highlight_position = TileToVector2(player_tile_x, player_tile_y);
-            drawSquareOutline(highlight_position, {56.f, 56.f}, vec3(0.f, 255.f, 0.f), projection_2D);
+            drawSquareOutline(highlight_position, {56.f, 56.f}, 
+                vec3(190 / 255.f, 209 / 255.f, 237 / 255.f), projection_2D);
         }
     }
   
