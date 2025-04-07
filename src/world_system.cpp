@@ -426,7 +426,7 @@ void WorldSystem::handle_collisions() {
 
             static float last_collision_sound_time = 0.f;
             float current_time = (float) glfwGetTime();
-            if (current_time - last_collision_sound_time > 1.0f) {
+            if (current_time - last_collision_sound_time > 1.3f) {
                 Entity sound_entity = Entity();
                 Sound& sound = registry.sounds.emplace(sound_entity);
                 sound.sound_type = SOUND_ASSET_ID::ISLAND_SHIP_COLLISION;
