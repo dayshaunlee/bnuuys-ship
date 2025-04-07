@@ -117,15 +117,16 @@ void TutorialLevel::LevelInit() {
             for (Entity entity : registry.spotlights.entities) {
                 registry.spotlights.remove(entity);
             }
-            if (!RenderSystem::isRenderingGacha){
-                Overlay& overlay = registry.overlays.components[0];
+            Overlay& overlay = registry.overlays.components[0];
+            if (upgradesReceived == 2) {
                 overlay.visible = true;
                 if (!registry.spotlights.has(registry.players.entities[0])) {
                     vec2 pos = book_icon->position;
-                    registry.spotlights.insert(registry.players.entities[0], {pos + vec2(80.0, 0), 40.0});
+                    registry.spotlights.insert(registry.players.entities[0], {pos + vec2(90.0, 0), 40.0});
                 }
-                static_cast<bnuui::TextLabel&>(e).setText("OPEN BOOK TO SEE WHAT NEW MODULE DOES");
-            }
+            } else overlay.visible = false;
+            static_cast<bnuui::TextLabel&>(e).setText("OPEN BOOK TO SEE WHAT NEW MODULE DOES");
+   
         } else if (curr_tutorial_phase == SAVE_BUNNY3) {
             Overlay& overlay = registry.overlays.components[0];
             overlay.visible = false;
@@ -269,7 +270,7 @@ void TutorialLevel::LevelUpdate(float dt) {
             break;
         }
         case NEW_MODULE: {
-            if (upgradesReceived > 0 && this->book->visible) {
+            if (upgradesReceived == 2 && this->book->visible) {
                 curr_tutorial_phase = SAVE_BUNNY3;
                 dialogue_timer_ms = DIALOGUE_TIME_MS;
             }
