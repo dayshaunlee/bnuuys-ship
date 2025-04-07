@@ -28,7 +28,7 @@ void EndCutscene::Init() {
     scene_ui.insert(credit_text_image);
 
     Sound bg_music;
-    bg_music.sound_type = SOUND_ASSET_ID::CUTSCENE_MUSIC;
+    bg_music.sound_type = SOUND_ASSET_ID::END_MUSIC;
     bg_music.volume = 100;
     registry.sounds.insert(Entity(), bg_music);
 }
@@ -101,8 +101,10 @@ void EndCutscene::checkDialogs(float dt) {
         cutscene_image->scale = vec2(2*WINDOW_WIDTH_PX, 1.75*WINDOW_HEIGHT_PX);
         credit_text_image->scale = vec2{400,400};
         credit_text_image->position = vec2(WINDOW_WIDTH_PX/2, WINDOW_HEIGHT_PX/2);
+        credit_text_image->texture = TEXTURE_ASSET_ID::TEXT_ASSETS;
     } else if (phase == 5) {
-        std::cout << "phase 5\n";
+        credit_text_image->texture = TEXTURE_ASSET_ID::TEXT_THANKS;
+        credit_text_image->position = vec2(WINDOW_WIDTH_PX/2-20, WINDOW_HEIGHT_PX/2);
     }
     if (dialogue_timer_ms > 0) {
         dialogue_timer_ms -= dt;
@@ -115,6 +117,8 @@ void EndCutscene::checkDialogs(float dt) {
         dialogue_timer_ms = DIALOGUE_TIME_MS;
         if (phase == 4) {
             cutscene_image->position = vec2(WINDOW_WIDTH_PX/2, 100);
+        } else if (phase == 5) {
+            dialogue_timer_ms = 10000;
         }
     }
 }

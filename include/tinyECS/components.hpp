@@ -252,8 +252,10 @@ enum class TEXTURE_ASSET_ID {
     TEXT_M2 = TEXT_M1 + 1,
     TEXT_M3 = TEXT_M2 + 1,
     TEXT_M4 = TEXT_M3 + 1,
+    TEXT_ASSETS = TEXT_M4 + 1,
+    TEXT_THANKS = TEXT_ASSETS + 1,
     
-    HOME_INDICATOR  = TEXT_M4 + 1,
+    HOME_INDICATOR  = TEXT_THANKS + 1,
 
     VICTORY_BG = HOME_INDICATOR + 1,
     
@@ -317,6 +319,7 @@ enum class SOUND_ASSET_ID {
     RAFT,
     COW_BULLET,
     PROJECTILE_SHOOT,
+    END_MUSIC,
     SOUND_COUNT
 };
 const int sound_count = (int) SOUND_ASSET_ID::SOUND_COUNT;

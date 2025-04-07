@@ -252,6 +252,9 @@ class RenderSystem {
         textures_path("cutscenes/m3_credit.png"),
         textures_path("cutscenes/m4_credit.png"),
 
+        textures_path("cutscenes/asset_credit.png"),
+        textures_path("cutscenes/end_credit.png"),
+
 
         // home indicator
         textures_path("bunny/home_indicator.png"),
