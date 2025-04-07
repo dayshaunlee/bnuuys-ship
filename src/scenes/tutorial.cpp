@@ -103,6 +103,7 @@ void TutorialLevel::LevelInit() {
     scene_ui.insert(tutorial_dialogue);
     scene_ui.insert(dialogue_txt_first);
     scene_ui.insert(dialogue_txt_second);
+    
 }
 
 void TutorialLevel::LevelUpdate() {}
@@ -127,15 +128,18 @@ void TutorialLevel::LevelHandleMouseMove(vec2 pos) {}
 void TutorialLevel::LevelHandleMouseClick(int button, int action, int mods) {}
 
 void TutorialLevel::LevelUpdate(float dt) {
-    if (curr_tutorial_phase == WASD_KEYS || 
-        curr_tutorial_phase == SPACEBAR_KEY ||
-        curr_tutorial_phase == STERRING_PAD ||
-        curr_tutorial_phase == CANNON_SHOOT) {
-            for (Entity entity: registry.enemies.entities) {
-                Enemy& enemy = registry.enemies.get(entity);
-                enemy.speed = 0;
-            }
+    Overlay& overlay = registry.overlays.components[0];
+    overlay.visible = true;
+    for (Entity entity : registry.enemies.entities) {
+        Enemy& enemy = registry.enemies.get(entity);
+        if (enemy.range != 3) {
+            if (registry.walkingPaths.has(entity)) registry.walkingPaths.remove(entity);
+            enemy.range = 3;
         }
+        float diagonal = sqrt(WINDOW_WIDTH_PX * WINDOW_WIDTH_PX + WINDOW_HEIGHT_PX * WINDOW_HEIGHT_PX);
+        RenderRequest& RR = registry.renderRequests.get(entity);
+        RR.highlight_radius = 56 / diagonal;
+    }
 
     if (dialogue_timer_ms > 0) {
         dialogue_timer_ms -= dt;

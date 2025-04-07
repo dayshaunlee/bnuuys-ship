@@ -479,6 +479,7 @@ void PhysicsSystem::step(float elapsed_ms) {
 
                 if (enemy.range * GRID_CELL_WIDTH_PX < length) continue ; // ship not detected
 
+                if (enemy.type == ENEMY_TYPE::DUMMY) continue;
                 if (enemy.type == ENEMY_TYPE::SHOOTER && enemy.cooldown_ms <= 0) {
                     std::cout << entity.id() << "shoot" << std::endl;
                     createEnemyProjectile(enemy_position, ship_position);

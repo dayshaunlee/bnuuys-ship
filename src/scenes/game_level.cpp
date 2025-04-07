@@ -100,6 +100,8 @@ void GameLevel::Init() {
     renderPlayer(player);
 
     createCamera();
+    Entity overlay_entity = createOverlay(0.7);
+    Overlay& overlay = registry.overlays.get(overlay_entity);
 
     bunnies_to_win = 0;
     // bunny creation

@@ -460,6 +460,31 @@ void RenderSystem::initializeGlGeometryBuffers() {
     meshes[UISquare_geom_index].vertex_indices = UISquare_indices;
     bindVBOandIBO(GEOMETRY_BUFFER_ID::UI_SQUARE, UISquare_vertices, UISquare_indices);
 
+    
+    ///////////////////////////////////////////////////////
+    // Square Geom for Overlay.
+    std::vector<ColoredVertex> ASquare_vertices;
+    std::vector<uint16_t> ASquare_indices;
+
+    constexpr float ASquare_depth = 1.0f;  // always on top
+
+    // Define the four corners of the square (centered at origin)
+    ASquare_vertices = {
+        {{-0.5f, -0.5f, ASquare_depth}, {1.0f, 1.0f, 1.0f}},
+        {{0.5f, -0.5f, ASquare_depth}, {1.0f, 1.0f, 1.0f}},
+        {{0.5f, 0.5f, ASquare_depth}, {1.0f, 1.0f, 1.0f}},
+        {{-0.5f, 0.5f, ASquare_depth}, {1.0f, 1.0f, 1.0f}},
+    };
+
+    // Define two triangles forming the square
+    ASquare_indices = {0, 1, 3, 1, 2, 3};
+
+    int ASquare_geom_index = (int) GEOMETRY_BUFFER_ID::OVERLAY_SQUARE;
+    meshes[ASquare_geom_index].vertices = ASquare_vertices;
+    meshes[ASquare_geom_index].vertex_indices = ASquare_indices;
+    bindVBOandIBO(GEOMETRY_BUFFER_ID::OVERLAY_SQUARE, ASquare_vertices, ASquare_indices);
+
+
     ///////////////////////////////////////////////////////
     // Square Geom for highlighting.
     std::vector<ColoredVertex> highlightSquare_vertices;
