@@ -148,5 +148,5 @@ const float BUNNY_BASE_DROPOFF_TIME = 1000.0f;  // ship must be in base for 1 se
 
 const float DEFAULT_PARTICLE_TIME = 50.0f;
 
-const float SIMPLE_CANNON_AUTO_RANGE = 350.0f;
-const float LASER_AUTO_RANGE = 250.0f;
+const float SIMPLE_CANNON_AUTO_RANGE = 250.0f;
+const float LASER_AUTO_RANGE = 200.0f;
