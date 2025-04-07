@@ -35,7 +35,7 @@ void IntroCutscene::Init() {
 
     Sound bg_music;
     bg_music.sound_type = SOUND_ASSET_ID::CUTSCENE_MUSIC;
-    bg_music.volume = 80;
+    bg_music.volume = 100;
     registry.sounds.insert(Entity(), bg_music);
 
     curr_line = dialog_parts[0];

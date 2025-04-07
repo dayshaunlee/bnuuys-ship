@@ -119,7 +119,7 @@ bool WorldSystem::start_and_load_sounds() {
     }
 
     background_music = Mix_LoadMUS(audio_path("music.wav").c_str());
-    enemy_incoming = Mix_LoadMUS(audio_path("enemy_incoming.wav").c_str());
+    /*enemy_incoming = Mix_LoadMUS(audio_path("enemy_incoming.wav").c_str());
     island_ship_collision = Mix_LoadWAV(audio_path("island-ship_collision.wav").c_str());
     enemy_ship_collision = Mix_LoadWAV(audio_path("ship-enemy_collision.wav").c_str());
     projectile_enemy_collision = Mix_LoadWAV(audio_path("projectile-enemy_collision.wav").c_str());
@@ -141,7 +141,8 @@ bool WorldSystem::start_and_load_sounds() {
                 audio_path("projectile-jail_collision.wav").c_str(),
                 audio_path("game_over.wav").c_str());
         return false;
-    }
+    }*/
+    Mix_Volume(-1, 5);
 
     return true;
 }
@@ -234,12 +235,12 @@ void WorldSystem::handle_collisions() {
                 Entity sound_entity = Entity();
                 Sound& sound = registry.sounds.emplace(sound_entity);
                 sound.sound_type = SOUND_ASSET_ID::BUBBLE;
-                sound.volume = 10;
+                sound.volume = 50;
             } else {
                 Entity sound_entity = Entity();
                 Sound& sound = registry.sounds.emplace(sound_entity);
                 sound.sound_type = SOUND_ASSET_ID::PROJECTILE_ENEMY_COLLISION;
-                sound.volume = 10;
+                sound.volume = 50;
             }
 
             //Mix_PlayChannel(-1, projectile_enemy_collision, 0);
@@ -264,12 +265,12 @@ void WorldSystem::handle_collisions() {
                 Entity sound_entity = Entity();
                 Sound& sound = registry.sounds.emplace(sound_entity);
                 sound.sound_type = SOUND_ASSET_ID::BUBBLE;
-                sound.volume = 10;
+                sound.volume = 50;
             } else {
                 Entity sound_entity = Entity();
                 Sound& sound = registry.sounds.emplace(sound_entity);
                 sound.sound_type = SOUND_ASSET_ID::PROJECTILE_ENEMY_COLLISION;
-                sound.volume = 10;
+                sound.volume = 50;
             }
 
             if (enemy.health <= 0) registry.remove_all_components_of(e1);
@@ -293,7 +294,7 @@ void WorldSystem::handle_collisions() {
             Entity sound_entity = Entity();
             Sound& sound = registry.sounds.emplace(sound_entity);
             sound.sound_type = SOUND_ASSET_ID::LASER;
-            sound.volume = 10;
+            sound.volume = 50;
 
         } else if (registry.laserBeams.has(e2) && registry.enemies.has(e1)) {
             LaserBeam& beam = registry.laserBeams.get(e2);;
@@ -308,7 +309,7 @@ void WorldSystem::handle_collisions() {
             Entity sound_entity = Entity();
             Sound& sound = registry.sounds.emplace(sound_entity);
             sound.sound_type = SOUND_ASSET_ID::LASER;
-            sound.volume = 10;
+            sound.volume = 50;
         } 
 
 
@@ -324,6 +325,7 @@ void WorldSystem::handle_collisions() {
                 Entity sound_entity = Entity();
                 Sound& sound = registry.sounds.emplace(sound_entity);
                 sound.sound_type = SOUND_ASSET_ID::PROJECTILE_JAIL_COLLISION;
+                sound.volume = 80;
                 registry.motions.get(e2).scale = {28, 28};
                 registry.renderRequests.get(e2).used_texture = TEXTURE_ASSET_ID::BUNNY_NPC_IDLE_UP0;
                 bunny.is_jailed = false;
@@ -340,6 +342,7 @@ void WorldSystem::handle_collisions() {
                 Entity sound_entity = Entity();
                 Sound& sound = registry.sounds.emplace(sound_entity);
                 sound.sound_type = SOUND_ASSET_ID::PROJECTILE_JAIL_COLLISION;
+                sound.volume = 80;
                 registry.motions.get(e1).scale = {28, 28};
                 registry.renderRequests.get(e1).used_texture = TEXTURE_ASSET_ID::BUNNY_NPC_IDLE_UP0;
                 bunny.is_jailed = false;
@@ -357,7 +360,7 @@ void WorldSystem::handle_collisions() {
             Entity sound_entity = Entity();
             Sound& sound = registry.sounds.emplace(sound_entity);
             sound.sound_type = SOUND_ASSET_ID::COW_BULLET;
-            sound.volume = 10;
+            sound.volume = 50;
             if (ship.health <= 0.0f) {
                 handle_player_death();
                 return;
@@ -371,7 +374,7 @@ void WorldSystem::handle_collisions() {
             Entity sound_entity = Entity();
             Sound& sound = registry.sounds.emplace(sound_entity);
             sound.sound_type = SOUND_ASSET_ID::COW_BULLET;
-            sound.volume = 10;
+            sound.volume = 50;
             if (ship.health <= 0.0f) {
                 handle_player_death();
                 return;
@@ -387,7 +390,7 @@ void WorldSystem::handle_collisions() {
             Entity sound_entity = Entity();
             Sound& sound = registry.sounds.emplace(sound_entity);
             sound.sound_type = SOUND_ASSET_ID::ENEMY_SHIP_COLLISION;
-            sound.volume = 10;
+            sound.volume = 50;
 
             // When Player dies (ship health is <= 0)
             if(registry.ships.get(e2).health <= 0.0f){
@@ -403,7 +406,7 @@ void WorldSystem::handle_collisions() {
             Entity sound_entity = Entity();
             Sound& sound = registry.sounds.emplace(sound_entity);
             sound.sound_type = SOUND_ASSET_ID::ENEMY_SHIP_COLLISION;
-            sound.volume = 10;
+            sound.volume = 50;
 
             // When Player dies (ship health is <= 0)
             if(registry.ships.get(e1).health <= 0.0f){
@@ -423,7 +426,7 @@ void WorldSystem::handle_collisions() {
             Entity sound_entity = Entity();
             Sound& sound = registry.sounds.emplace(sound_entity);
             sound.sound_type = SOUND_ASSET_ID::ISLAND_SHIP_COLLISION;
-            sound.volume = 10;
+            sound.volume = 50;
             CameraSystem::GetInstance()->setToPreviousPosition(normal);
         }
 
@@ -444,7 +447,7 @@ void WorldSystem::handle_collisions() {
             Entity sound_entity = Entity();
             Sound& sound = registry.sounds.emplace(sound_entity);
             sound.sound_type = SOUND_ASSET_ID::ENEMY_SHIP_COLLISION;
-            sound.volume = 10;
+            sound.volume = 50;
 
             // When Player dies (ship health is <= 0)
             if(registry.ships.get(e2).health <= 0.0f){
@@ -459,7 +462,7 @@ void WorldSystem::handle_collisions() {
             Entity sound_entity = Entity();
             Sound& sound = registry.sounds.emplace(sound_entity);
             sound.sound_type = SOUND_ASSET_ID::ENEMY_SHIP_COLLISION;
-            sound.volume = 10;
+            sound.volume = 50;
 
             // When Player dies (ship health is <= 0)
             if(registry.ships.get(e1).health <= 0.0f){
@@ -509,6 +512,7 @@ void WorldSystem::handle_player_death(){
     Entity sound_entity2 = Entity();
     Sound& sound2 = registry.sounds.emplace(sound_entity2);
     sound2.sound_type = SOUND_ASSET_ID::BACKGROUND_MUSIC;
+    sound2.is_repeating = true;
     sound2.volume = 5;
 }
 

@@ -60,11 +60,10 @@ void SoundSystem::play() {
     for (Entity entity : registry.sounds.entities) {
         Sound& sound = registry.sounds.get(entity);
         if (sound.is_repeating) {
-            Mix_HaltMusic();
             Mix_PlayMusic(sound_mix_repeating[(int)sound.sound_type], -1);
             Mix_VolumeMusic(sound.volume);
         } else {
-            if (channel > 7) {
+            if (channel > 30) {
                 channel = 1;
             }
             Mix_PlayChannel(channel, sound_mix_chunk[(int) sound.sound_type - sound_paths_repeating.size()], 0);
