@@ -21,6 +21,7 @@
 
 bool RenderSystem::isRenderingGacha = false;
 bool RenderSystem::isRenderingBook = false;
+bool RenderSystem::isPaused = false;
 bool RenderSystem::isInGame = false;
 
 void RenderSystem::drawGridLine(Entity entity, const mat3& projection) {
@@ -648,14 +649,31 @@ void RenderSystem::draw() {
     Scene* s = sm.getCurrentScene();
     if (s) {
         bnuui::SceneUI scene_ui = s->getUIElems();
-        std::vector<std::shared_ptr<bnuui::Element>> elems = scene_ui.getElems();
-        for (std::shared_ptr<bnuui::Element> elem : elems) {
-            if (elem->over_overlay) continue; // skip the ones above overlay
-            if (elem->getText() != "") {
-                renderText(elem->getText(), elem->position.x, WINDOW_HEIGHT_PX - elem->position.y, elem->getFontSize(), elem->color, UI_Matrix);
-            } else {
-                drawUIElement(*elem, projection_2D);
-            }
+        if (!isPaused) {
+            std::vector<std::shared_ptr<bnuui::Element>> elems = scene_ui.getElems();
+			for (std::shared_ptr<bnuui::Element> elem : elems) {
+        if (elem->over_overlay) continue; // skip the ones above overlay
+				if (elem->getText() != "") {
+					renderText(elem->getText(), elem->position.x, WINDOW_HEIGHT_PX - elem->position.y, elem->getFontSize(), elem->color, UI_Matrix);
+				} else {
+					drawUIElement(*elem, projection_2D);
+				}
+			}           
+        } else {
+            // Draw only the pause UI.
+            drawUIElement(*scene_ui.getPauseUI(), projection_2D);
+        }
+    }
+
+    if (isInGame && !isRenderingGacha && !isRenderingBook) {
+        Player& player = registry.players.components[0];
+        if (player.player_state == STATIONING) {
+            vec2& player_position = registry.motions.get(registry.players.entities[0]).position;
+            int player_tile_x = (int) (player_position.x / GRID_CELL_WIDTH_PX);
+            int player_tile_y = (int) (player_position.y / GRID_CELL_HEIGHT_PX);
+            vec2 highlight_position = TileToVector2(player_tile_x, player_tile_y);
+            drawSquareOutline(highlight_position, {56.f, 56.f}, 
+                vec3(190 / 255.f, 209 / 255.f, 237 / 255.f), projection_2D);
         }
     }
 
@@ -710,7 +728,6 @@ void RenderSystem::draw() {
             drawSquareOutline(highlight_position, {56.f, 56.f}, vec3(0.f, 255.f, 0.f), projection_2D);
         }
     }
-
     // flicker-free display with a double buffer
     glfwSwapBuffers(window);
     gl_has_errors();

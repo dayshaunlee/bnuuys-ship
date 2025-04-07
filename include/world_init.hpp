@@ -5,6 +5,7 @@
 #include "tinyECS/tiny_ecs.hpp"
 #include "render_system.hpp"
 #include "vector"
+#include <SDL_mixer.h>
 
 // Enemy helpers
 int getEnemyHealth(ENEMY_TYPE type);

@@ -98,6 +98,7 @@ public:
     bool remove(int idx);
     int size();
     std::vector<std::shared_ptr<Element>> getElems();
+    std::shared_ptr<Element> getPauseUI();
 
     void update(float dt);
     void clear() {
@@ -121,6 +122,7 @@ public:
     void clearGacha() {
         gacha_ui_elems.clear();
     }
+    std::shared_ptr<Element> pause_ui;
 
 private: 
     std::vector<std::shared_ptr<Element>> ui_elems;

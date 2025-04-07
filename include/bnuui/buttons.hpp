@@ -32,6 +32,14 @@ class TutorialButton : public Element {
         void doUpdate(float dt) override;
     };
 
+
+class ExitButton : public Element {
+    public:
+        ExitButton(vec2 pos, vec2 scale, float rot);
+        ~ExitButton() = default;
+        void doUpdate(float dt) override;
+    };
+
 class ContinueButton : public Element {
     public:
         ContinueButton(vec2 pos, vec2 scale, float rot);

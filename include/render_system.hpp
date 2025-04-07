@@ -239,10 +239,17 @@ class RenderSystem {
         textures_path("cutscenes/c2.png"),
         textures_path("cutscenes/c3.png"),
         textures_path("cutscenes/c4.png"),
+        textures_path("cutscenes/bunny_village.png"),
+        textures_path("cutscenes/cow_capturing.png"),
+        textures_path("cutscenes/crying_bunny.png"),
+        textures_path("cutscenes/bunny_many_caged.png"),
+        textures_path("cutscenes/Bunny_Escape.png"),
+        textures_path("cutscenes/bunny_build.png"),
 
 
         // home indicator
         textures_path("bunny/home_indicator.png"),
+
         textures_path("background/game_victory_bg.png"),
         textures_path("ui/books/book_icon.png"),
         textures_path("ui/books/book.png"),
@@ -259,6 +266,17 @@ class RenderSystem {
 
         // Steering wheel
         textures_path("ship_modules/steering_wheel.png"),
+        textures_path("texts/steeringWheelText.png"),
+
+        // Indicator texts
+        textures_path("texts/bunnyIndicatorText.png"),
+        textures_path("texts/homeIndicatorText.png"),
+
+        // Ship text
+        textures_path("texts/shipText.png"),
+        
+        textures_path("ui/buttons/exit_neutral.png"),
+        textures_path("ui/buttons/exit_clicked.png"),
     };
 
     std::array<GLuint, effect_count> effects;
@@ -307,6 +325,7 @@ class RenderSystem {
     // this is used to check that if redendering Gacha UI we don't render player on top
     static bool isRenderingGacha;
     static bool isRenderingBook;
+    static bool isPaused;
 
     // for checking if player motion exists to avoid segmentation fault
     static bool isInGame;

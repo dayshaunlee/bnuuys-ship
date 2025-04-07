@@ -12,6 +12,7 @@
 #include "world_system.hpp"
 #include "render_system.hpp"
 #include "sound_system.hpp"
+#include "particle_system.hpp"
 
 // This class describes a parent class for Gameplay Levels.
 class GameLevel : public Scene {
@@ -20,7 +21,9 @@ private:
     void InitializeBunnySavingUI();
     void InitializeBookUI();
     void InitializeUI();
-protected:
+    void InitializePauseUI();
+
+   protected:
     AISystem ai_system;
     PhysicsSystem physics_system;
     AnimationSystem animation_system;
@@ -28,6 +31,7 @@ protected:
     InventorySystem inventory_system;
     WorldSystem* world_system;
     SoundSystem* sound_system;
+    ParticleSystem particle_system;
 
     void RemoveStation(vec2 tile_pos, MODULE_TYPES module);
     std::string level_path; // TODO: Make a mapping for level_path and the background.

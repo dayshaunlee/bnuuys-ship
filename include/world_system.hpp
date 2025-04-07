@@ -58,6 +58,8 @@ class WorldSystem {
 
     int getFPScounter();
 
+    static bool isExitPressed;
+
    private:
     float mouse_pos_x = 0.0f;
     float mouse_pos_y = 0.0f;
@@ -82,13 +84,14 @@ class WorldSystem {
     std::vector<Entity> grid_lines;
 
     // music references
-    Mix_Music* background_music;
-    Mix_Music* enemy_incoming;
+    /*Mix_Music* background_music;
+    Mix_Chunk* click;*/
+    /*Mix_Music* enemy_incoming;
     Mix_Chunk* island_ship_collision;
     Mix_Chunk* enemy_ship_collision;
     Mix_Chunk* projectile_jail_collision;
     Mix_Chunk* projectile_enemy_collision;
-    Mix_Chunk* game_over;
+    Mix_Chunk* game_over;*/
 
     // C++ random number generator
     std::default_random_engine rng;
