@@ -35,6 +35,8 @@ protected:
     TEXTURE_ASSET_ID texture;
     int bunnies_to_win = 0;
     std::vector<Entity> base_corners;
+
+    std::shared_ptr<bnuui::Element> tracker_ui;
     
     virtual void LevelInit() = 0;
     virtual void LevelUpdate() = 0;

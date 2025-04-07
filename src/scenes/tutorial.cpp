@@ -30,13 +30,16 @@ float x = 100.0f;
 enum TUTORIAL_PHASE {
     WASD_KEYS,
     SPACEBAR_KEY,
-    STERRING_PAD,
     CANNON_SHOOT,
-    ENEMIES_MOVE,
+    STERRING_PAD,
+    SAVE_BUNNY1,
+    BUILD_MODE,
+    AUTO_BUNNY,
+    SAVE_BUNNY2,
+    GOTO_BASE,
     ENEMIES_DAMAGE,
     SAVE_BUNNIES,
     GOTO_BASE,
-    BUILD_MODE,
 };
 
 vec2 tutorial_mouse_pos;

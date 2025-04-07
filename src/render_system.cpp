@@ -607,9 +607,6 @@ void RenderSystem::draw() {
                 }
                 pos = pos / vec2(WINDOW_WIDTH_PX, WINDOW_HEIGHT_PX) - vec2(0.5, 0.5);
                 if (registry.backgroundObjects.has(entity)) pos.x -= rad;
-                //std::cout << "pos ship: " << pos_ship.x << ", " << pos_ship.y << std::endl;
-                std::cout << "hl: " << pos.x << ", " << pos.y << ", " << rad << std::endl;
-
                 highlight_centers[highlight_count] = vec3(pos.x, pos.y, rad);
                 highlight_count += 1;
             }
