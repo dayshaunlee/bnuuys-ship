@@ -510,18 +510,20 @@ void WorldSystem::handle_player_death(){
     Sound& sound2 = registry.sounds.emplace(sound_entity2);
     sound2.sound_type = SOUND_ASSET_ID::BACKGROUND_MUSIC;
     sound2.volume = 5;
+    sound2.is_repeating = true;
 }
 
 // on key callback
 void WorldSystem::on_key(int key, int, int action, int mod) {
-    // exit game w/ ESC
-    if (action == GLFW_RELEASE && key == GLFW_KEY_ESCAPE) {
-        close_window();
-    }
-
     Scene* scene = SceneManager::getInstance().getCurrentScene();
     if (scene) {
         scene->HandleInput(key, action, mod);
+        if (scene->getName() == "Main Menu") {
+			// exit game w/ ESC
+			if (action == GLFW_RELEASE && key == GLFW_KEY_ESCAPE) {
+				close_window();
+			}
+        }
     }
 }
 

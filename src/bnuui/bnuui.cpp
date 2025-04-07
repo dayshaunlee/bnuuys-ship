@@ -84,4 +84,8 @@ std::vector<std::shared_ptr<Element>> SceneUI::getGachaElems() {
     return gacha_ui_elems;
 }
 
+std::shared_ptr<Element> SceneUI::getPauseUI() {
+    return pause_ui;
+}
+
 };  // namespace bnuui

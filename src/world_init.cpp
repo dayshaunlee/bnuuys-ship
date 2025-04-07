@@ -326,14 +326,14 @@ Entity createEnemyProjectile(vec2 orig, vec2 dest) {
     m.scale = {GRID_CELL_WIDTH_PX / 2, GRID_CELL_HEIGHT_PX / 2};
     m.angle = degrees(atan2(dest.y - dest.x, dest.x - orig.x));
     vec2 velVec = dest - orig;
-    m.velocity = normalize(velVec) * 200.0f;
+    m.velocity = normalize(velVec) * ENEMY_PROJECTILE_SPEED;
 
     registry.renderRequests.insert(
         e, {TEXTURE_ASSET_ID::BULLET_GREEN, EFFECT_ASSET_ID::TEXTURED, GEOMETRY_BUFFER_ID::SPRITE});
     
     EnemyProjectile& proj = registry.enemyProjectiles.emplace(e);
     proj.damage = 5;
-    proj.alive_time_ms = PROJECTILE_LIFETIME;
+    proj.alive_time_ms = ENEMY_PROJECTILE_LIFETIME;
 
     return e;
 }
@@ -712,7 +712,7 @@ std::vector<Entity> createBaseProgressLines(Entity base_entity) {
         registry.backgroundObjects.emplace(entity);
         registry.renderRequests.insert(
             entity, {TEXTURE_ASSET_ID::TEXTURE_COUNT, EFFECT_ASSET_ID::EGG, GEOMETRY_BUFFER_ID::DEBUG_LINE});
-        registry.colors.insert(entity, vec3(0.8f, 0.0f, 0.8f)); // purple
+        registry.colors.insert(entity, vec3(87 / 255.f, 114 / 255.f, 151 / 255.f));  // purple
         out.push_back(entity);
     }
     return out;

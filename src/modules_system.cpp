@@ -30,7 +30,7 @@ bool SearchForEnemy(AutoCannonContext& ctx) {
         Motion& enemy_motion = registry.motions.get(enemy_entity);
         vec2 enemy_pos = enemy_motion.position;
         float dist = glm::distance(enemy_pos, cannon_pos);
-        if (dist <= 200.0f && dist < smallest_dist) {
+        if (dist <= SIMPLE_CANNON_AUTO_RANGE && dist < smallest_dist) {
             smallest_dist = dist;
             ctx.enemy_entity = enemy_entity;
             ctx.enemy_pos = enemy_pos;
@@ -65,7 +65,7 @@ bool SearchForEnemy(AutoLaserContext& ctx) {
         vec2 enemy_pos = enemy_motion.position;
         float dist = glm::distance(enemy_pos, laser_pos);
 
-        if (dist <= 200.0f && dist < smallest_dist) {  // 300 range for lasers
+        if (dist <= LASER_AUTO_RANGE && dist < smallest_dist) {  // 300 range for lasers
             smallest_dist = dist;
             ctx.enemy_entity = enemy_entity;
             ctx.enemy_pos = enemy_pos;

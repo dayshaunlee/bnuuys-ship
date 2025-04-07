@@ -37,7 +37,6 @@ int main() {
     RenderSystem renderer_system;
     SoundSystem sound_system;
     AnimationSystem animation_system;
-    ParticleSystem particle_system;
     int frameCounter = 0;
     float msCounter = 0;
 
@@ -77,7 +76,6 @@ int main() {
     Scene* victory = new VictoryScene();
 
     scene_manager.registerScene(mm);
-    scene_manager.registerScene(ui_editor);
     scene_manager.registerScene(death);
     scene_manager.registerScene(levelTransition);
     scene_manager.registerScene(victory);
@@ -114,7 +112,6 @@ int main() {
         Scene* s = scene_manager.getCurrentScene();
         if (s != nullptr) s->Update(elapsed_ms);
         world_system.step(elapsed_ms);
-        particle_system.step(elapsed_ms);
         renderer_system.draw();
         sound_system.play();
         
@@ -126,7 +123,6 @@ int main() {
     delete (l2);
     delete (l3);
     delete (l4);
-    delete (ui_editor);
     delete (death);
     delete (levelTransition);
     delete (cutscene);

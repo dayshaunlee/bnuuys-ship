@@ -316,6 +316,7 @@ class RenderSystem {
     // this is used to check that if redendering Gacha UI we don't render player on top
     static bool isRenderingGacha;
     static bool isRenderingBook;
+    static bool isPaused;
 
     // for checking if player motion exists to avoid segmentation fault
     static bool isInGame;
