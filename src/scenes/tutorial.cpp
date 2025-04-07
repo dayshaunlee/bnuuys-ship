@@ -103,15 +103,15 @@ void TutorialLevel::LevelInit() {
                     overlay.visible = false;
             }
             
-            static_cast<bnuui::TextLabel&>(e).setText("SHOOT THE BUNNY");
+            static_cast<bnuui::TextLabel&>(e).setText("A BUNNY NEEDS YOUR HELP! DRIVE THERE AND SHOOT THE CAGE TO FREE IT.");
         } else if (curr_tutorial_phase == BUILD_MODE) {
-            static_cast<bnuui::TextLabel&>(e).setText("PRESS B TO OPEN BUILD MODE");
+            static_cast<bnuui::TextLabel&>(e).setText("PRESS B TO OPEN BUILD MODE. YOU CAN USE THIS TO REARRANGE YOUR STATIONS.");
         } else if (curr_tutorial_phase == AUTO_BUNNY) {
-            static_cast<bnuui::TextLabel&>(e).setText("PUT BUNNY ON CANNON. ADD OR REMOVE ANYTIME.");
+            static_cast<bnuui::TextLabel&>(e).setText("PUT BUNNY ON CANNON WITH LMB ON BUNNY IN INVENTORY. THEN LEFT CLICK THE");
         } else if (curr_tutorial_phase == SAVE_BUNNY2) {
-            static_cast<bnuui::TextLabel&>(e).setText("GO SAVE SECOND BUNNY");
+            static_cast<bnuui::TextLabel&>(e).setText("NOW TRY SAVING THE NEXT BUNNY WITH THE HELP OF YOUR NEW FRIEND.");
         } else if (curr_tutorial_phase == DROPOFF) {
-            static_cast<bnuui::TextLabel&>(e).setText("DROPOFF BUNNYS AT BASE. REMEMBER TO UNSTATION THEM.");
+            static_cast<bnuui::TextLabel&>(e).setText("LETS DROP OFF THE BUNNYS AT THE BASE. REMEMBER TO UNSTATION THEM!");
         } else if (curr_tutorial_phase == NEW_MODULE) {
             for (Entity entity : registry.spotlights.entities) {
                 registry.spotlights.remove(entity);
@@ -133,6 +133,8 @@ void TutorialLevel::LevelInit() {
     dialogue_txt_second->setOnUpdate([this](bnuui::Element& e, float dt) {
         if (curr_tutorial_phase == WASD_KEYS) {
             static_cast<bnuui::TextLabel&>(e).setText("You can call me Rbbit. First, try moving with WASD.");
+        } else if (curr_tutorial_phase == AUTO_BUNNY) {
+            static_cast<bnuui::TextLabel&>(e).setText(" CANNON TO HAVE IT HELP SHOOT. YOU CAN REMOVE MODULES WITH RMB.");
         } /*else if (curr_tutorial_phase == SPACEBAR_KEY) {
             static_cast<bnuui::TextLabel&>(e).setText("with/exit ship modules. ");
         } else if (curr_tutorial_phase == CANNON_SHOOT) {
