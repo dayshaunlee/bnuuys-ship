@@ -568,7 +568,7 @@ void RenderSystem::draw() {
     // draw framebuffer to screen
     // adding "vignette" effect when applied
     drawToScreen();
-
+  
     // flicker-free display with a double buffer
     glfwSwapBuffers(window);
     gl_has_errors();
