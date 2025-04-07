@@ -509,7 +509,7 @@ void WorldSystem::handle_player_death(){
     Entity sound_entity2 = Entity();
     Sound& sound2 = registry.sounds.emplace(sound_entity2);
     sound2.sound_type = SOUND_ASSET_ID::BACKGROUND_MUSIC;
-    sound2.volume = 10;
+    sound2.volume = 1;
 }
 
 // on key callback
