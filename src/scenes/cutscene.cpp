@@ -8,6 +8,7 @@
 #include "sceneManager/scene_manager.hpp"
 #include "tinyECS/components.hpp"
 #include "tinyECS/registry.hpp"
+#include <world_system.hpp>
 
 IntroCutscene::IntroCutscene() {
     this->name = "IntroCutscene";
@@ -42,7 +43,7 @@ void IntroCutscene::Init() {
 }
 
 void IntroCutscene::Exit() {
-
+    Mix_HaltChannel(-1);
 }
 
 void IntroCutscene::HandleInput(int key, int action, int mod) {
