@@ -8,6 +8,7 @@
 #include "sceneManager/scene_manager.hpp"
 #include "tinyECS/components.hpp"
 #include "tinyECS/registry.hpp"
+#include <world_system.hpp>
 
 IntroCutscene::IntroCutscene() {
     this->name = "IntroCutscene";
@@ -35,37 +36,19 @@ void IntroCutscene::Init() {
 
     Sound bg_music;
     bg_music.sound_type = SOUND_ASSET_ID::CUTSCENE_MUSIC;
-    bg_music.volume = 80;
+    bg_music.volume = 100;
     registry.sounds.insert(Entity(), bg_music);
 
     curr_line = dialog_parts[0];
 }
 
 void IntroCutscene::Exit() {
-
+    Mix_HaltChannel(-1);
 }
 
 void IntroCutscene::HandleInput(int key, int action, int mod) {
     if (key == GLFW_KEY_SPACE && action == GLFW_RELEASE) {
-        phase++; 
-        if (phase >= dialog_parts.size()) {
-            SceneManager::getInstance().switchScene("Main Menu");
-            return;
-        }
-        curr_line = dialog_parts[phase];
-        rendered_dialog_text = " ";
-        char_index = 0;
-        if (phase >= 3 && phase <= 5) {
-            dialogue_timer_ms = PHASE1_TIME;
-        } else if (phase >= 6 && phase <= 9) {
-            dialogue_timer_ms = PHASE2_TIME;
-        } else if (phase >= 10) {
-            dialogue_timer_ms = PHASE3_TIME;
-        } else {
-            dialogue_timer_ms = PHASE0_TIME;
-        }
-        cutscene_image->color = vec3(0,0,0);
-
+        SceneManager::getInstance().switchScene("Main Menu");
     }
 }
 
@@ -134,32 +117,35 @@ void IntroCutscene::checkDialogs(float dt) {
         cutscene_image->position = vec2(WINDOW_WIDTH_PX/2, WINDOW_HEIGHT_PX/2);
         cutscene_image->scale = vec2(WINDOW_WIDTH_PX, WINDOW_HEIGHT_PX+175.0f);
         cutscene_image->texture = TEXTURE_ASSET_ID::CUTSCENE_2;
-        dialog->position = vec2(100, WINDOW_HEIGHT_PX-25.0f);
+        dialog->position = vec2(150, WINDOW_HEIGHT_PX-25.0f);
         cutscene_image->visible = true;
     } else if (phase == 5) {
         cutscene_image->texture = TEXTURE_ASSET_ID::CUTSCENE_COW_CAPTURE;
         cutscene_image->scale = vec2(WINDOW_WIDTH_PX, WINDOW_HEIGHT_PX);
     } else if (phase == 6) {
         cutscene_image->texture = TEXTURE_ASSET_ID::CUTSCENE_CRYING_BUNNY;
+        dialog->position = vec2(200, WINDOW_HEIGHT_PX-25.0f);
     } else if (phase == 7) {
         cutscene_image->texture = TEXTURE_ASSET_ID::CUTSCENE_MANY_BUNNY_CAGED;
+        dialog->position = vec2(100, WINDOW_HEIGHT_PX-25.0f);
     } else if (phase == 8) {
-        dialog->position = vec2((float) WINDOW_WIDTH_PX/2 - 250.0f, WINDOW_HEIGHT_PX/2);
+        dialog->position = vec2((float) WINDOW_WIDTH_PX/2 - 100.0f, WINDOW_HEIGHT_PX/2);
         cutscene_image->visible = false;
     } else if (phase == 9) {
         cutscene_image->texture = TEXTURE_ASSET_ID::CUTSCENE_3;
         cutscene_image->scale = vec2(WINDOW_WIDTH_PX, WINDOW_HEIGHT_PX+185.0f);
         cutscene_image->visible = true;
-        dialog->position = vec2(100, WINDOW_HEIGHT_PX-25.0f);
-    } 
-    else if (phase == 10) {
+        dialog->position = vec2(225, WINDOW_HEIGHT_PX-25.0f);
+    } else if (phase == 10) {
         cutscene_image->scale = vec2(WINDOW_WIDTH_PX, WINDOW_HEIGHT_PX);
         cutscene_image->texture = TEXTURE_ASSET_ID::CUTSCENE_BUNNY_ESCAPE;
+        dialog->position = vec2(225, WINDOW_HEIGHT_PX-25.0f);
+    } else if (phase == 11) {
+        cutscene_image->texture = TEXTURE_ASSET_ID::CUTSCENE_BUNNY_BUILD;
     } else if (phase == 12) {
         cutscene_image->texture = TEXTURE_ASSET_ID::CUTSCENE_4;
-        cutscene_image->scale = vec2(WINDOW_WIDTH_PX, WINDOW_HEIGHT_PX+350.0f);
-    }
-    else if (phase == 13) {
+        cutscene_image->scale = vec2(WINDOW_WIDTH_PX, WINDOW_HEIGHT_PX+500.0f);
+    } else if (phase == 13) {
         dialog->position = vec2((float) WINDOW_WIDTH_PX/2 - 150.0f, WINDOW_HEIGHT_PX/2);
         cutscene_image->visible = false;
     }
