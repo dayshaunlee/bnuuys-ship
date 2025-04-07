@@ -46,7 +46,11 @@ void IntroCutscene::Exit() {
 
 void IntroCutscene::HandleInput(int key, int action, int mod) {
     if (key == GLFW_KEY_SPACE && action == GLFW_RELEASE) {
-        phase++;
+        phase++; 
+        if (phase >= dialog_parts.size()) {
+            SceneManager::getInstance().switchScene("Main Menu");
+            return;
+        }
         curr_line = dialog_parts[phase];
         rendered_dialog_text = " ";
         char_index = 0;
@@ -167,6 +171,10 @@ void IntroCutscene::checkDialogs(float dt) {
         dialogue_timer_ms -= dt;
     } else {
         phase++;
+        if (phase >= dialog_parts.size()) {
+            SceneManager::getInstance().switchScene("Main Menu");
+            return;
+        }
         curr_line = dialog_parts[phase];
         rendered_dialog_text = " ";
         char_index = 0;
