@@ -292,6 +292,13 @@ enum class SOUND_ASSET_ID {
     PROJECTILE_JAIL_COLLISION,
     GAME_OVER,
     CUTSCENE_MUSIC,
+    BOOK,
+    BUBBLE,
+    CLICK,
+    LASER,
+    MODULE,
+    RAFT,
+    COW_BULLET,
     SOUND_COUNT
 };
 const int sound_count = (int) SOUND_ASSET_ID::SOUND_COUNT;
@@ -318,6 +325,7 @@ struct RenderRequest {
 struct Sound {
     SOUND_ASSET_ID sound_type = SOUND_ASSET_ID::ENEMY_INCOMING;
     bool is_repeating = false;
+    int volume = 0;
 };
 
 
