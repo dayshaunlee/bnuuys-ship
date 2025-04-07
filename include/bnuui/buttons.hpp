@@ -55,7 +55,7 @@ public:
 
 class LongBox : public Element {
 public:
-    LongBox(vec2 pos, vec2 scale, float rot);
+    LongBox(vec2 pos, vec2 scale, float rot, bool on_top = false);
     ~LongBox() = default;
     void doUpdate(float dt) override;
 };

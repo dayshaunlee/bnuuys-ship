@@ -262,7 +262,7 @@ void Box::doUpdate(float dt) {
     }
 }
 
-LongBox::LongBox(vec2 pos, vec2 scale, float rot) {
+LongBox::LongBox(vec2 pos, vec2 scale, float rot, bool on_top) {
     this->position = pos;
     this->scale = scale;
     this->rotation = rot;
@@ -274,6 +274,7 @@ LongBox::LongBox(vec2 pos, vec2 scale, float rot) {
     this->effect = EFFECT_ASSET_ID::TEXTURED;
     this->geometry = GEOMETRY_BUFFER_ID::SPRITE;
     this->visible = true;
+    this->over_overlay = on_top;
 }
 
 void LongBox::doUpdate(float dt) {
