@@ -76,7 +76,6 @@ int main() {
     Scene* victory = new VictoryScene();
 
     scene_manager.registerScene(mm);
-    scene_manager.registerScene(ui_editor);
     scene_manager.registerScene(death);
     scene_manager.registerScene(levelTransition);
     scene_manager.registerScene(victory);
@@ -124,7 +123,6 @@ int main() {
     delete (l2);
     delete (l3);
     delete (l4);
-    delete (ui_editor);
     delete (death);
     delete (levelTransition);
     delete (cutscene);

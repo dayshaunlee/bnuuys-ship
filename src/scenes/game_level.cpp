@@ -37,8 +37,6 @@ std::deque<int> keyOrder;
 std::set<int> activeShipKeys;
 std::deque<int> keyShipOrder;
 
-
-
 GameLevel::GameLevel(WorldSystem* worldsystem) : inventory_system(scene_ui, curr_selected) {
     this->world_system = worldsystem;
 }
@@ -139,24 +137,25 @@ bool isOffscreen(const glm::vec2& A, const glm::vec2& center) {
 }
 
 void GameLevel::InitializePauseUI() {
-    scene_ui.pause_ui = std::make_shared<bnuui::LongBox>(
-        vec2(WINDOW_WIDTH_PX / 4, WINDOW_HEIGHT_PX / 2), vec2(200, 400), 0.0f);
+    scene_ui.pause_ui = std::make_shared<bnuui::Box>(
+        vec2(WINDOW_WIDTH_PX / 4, WINDOW_HEIGHT_PX / 2), vec2(200, 200), 0.0f);
 
     auto continue_btn = std::make_shared<bnuui::LongBox>(
-        vec2(WINDOW_WIDTH_PX / 4, 200), vec2(150, 50), 0.0f);
+        vec2(WINDOW_WIDTH_PX / 4, 280), vec2(150, 50), 0.0f);
     continue_btn->setOnClick([](bnuui::Element& e) { RenderSystem::isPaused = false;
     });
-    auto continue_text = std::make_shared<bnuui::TextLabel>(vec2(WINDOW_WIDTH_PX / 4 - 50.f, 200), 1, "Resume");
+    auto continue_text = std::make_shared<bnuui::TextLabel>(vec2(WINDOW_WIDTH_PX / 4 - 50.f, 284), 1, "Resume");
+    continue_text->color = vec3(91.f/255.f, 58.f/255.f, 37.f/255.f);
     continue_btn->children.push_back(continue_text);
 
-
     auto mm_btn = std::make_shared<bnuui::LongBox>(
-        vec2(WINDOW_WIDTH_PX / 4, 300), vec2(150, 50), 0.0f);
+        vec2(WINDOW_WIDTH_PX / 4, 330), vec2(150, 50), 0.0f);
     mm_btn ->setOnClick([](bnuui::Element& e) { 
         RenderSystem::isPaused = false;
         SceneManager::getInstance().switchScene("Main Menu");
     });
-    auto mm_text = std::make_shared<bnuui::TextLabel>(vec2(WINDOW_WIDTH_PX / 4 - 50.f, 300), 1, "Main Menu");
+    auto mm_text = std::make_shared<bnuui::TextLabel>(vec2(WINDOW_WIDTH_PX / 4 - 50.f, 334), 1, "Main Menu");
+    mm_text->color = vec3(91.f/255.f, 58.f/255.f, 37.f/255.f);
     mm_btn->children.push_back(mm_text);
 
     scene_ui.pause_ui->children.push_back(continue_btn);
