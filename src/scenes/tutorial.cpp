@@ -28,6 +28,7 @@ TutorialLevel::~TutorialLevel() {}
 float x = 100.0f;
 
 void TutorialLevel::LevelInit() {
+    curr_tutorial_phase = WASD_KEYS;
     /*if (!registry.spotlights.has(registry.ships.entities[0]))
         registry.spotlights.insert(registry.ships.entities[0], {{registry.motions.get(registry.ships.entities[0]).position}, 20.0});*/
     // Initialize Tutorial UI.
@@ -36,12 +37,12 @@ void TutorialLevel::LevelInit() {
     //auto player_box = std::make_shared<bnuui::Box>(vec2(765, 540), vec2(96, 96), 0.0f);
     // Create the press tutorial dialogue.
     auto tutorial_dialogue = std::make_shared<bnuui::DialogueBox>(
-        vec2(420, 530), vec2(630, 96), 0.0f, true
+        vec2(420, 500), vec2(630, 96), 0.0f, true
     );
 
     // freetype doesnt support \n, probably should use a helper ;-;
-    auto dialogue_txt_first = std::make_shared<bnuui::TextLabel>(vec2(160, 520), 1.0f, ":3", true);
-    auto dialogue_txt_second = std::make_shared<bnuui::TextLabel>(vec2(160, 540), 1.0f, " ", true);
+    auto dialogue_txt_first = std::make_shared<bnuui::TextLabel>(vec2(155, 490), 1.0f, ":3", true);
+    auto dialogue_txt_second = std::make_shared<bnuui::TextLabel>(vec2(155, 510), 1.0f, " ", true);
 
     dialogue_txt_first->setOnUpdate([this](bnuui::Element& e, float dt) {
         if (curr_tutorial_phase == WASD_KEYS) {
@@ -117,12 +118,15 @@ void TutorialLevel::LevelInit() {
                 registry.spotlights.remove(entity);
             }
             Overlay& overlay = registry.overlays.components[0];
-            overlay.visible = true;
-            if (!registry.spotlights.has(registry.players.entities[0])) {
-                vec2 pos = book_icon->position;
-                registry.spotlights.insert(registry.players.entities[0], {pos + vec2(80.0, 0), 40.0});
-            }
+            if (upgradesReceived == 2) {
+                overlay.visible = true;
+                if (!registry.spotlights.has(registry.players.entities[0])) {
+                    vec2 pos = book_icon->position;
+                    registry.spotlights.insert(registry.players.entities[0], {pos + vec2(90.0, 0), 40.0});
+                }
+            } else overlay.visible = false;
             static_cast<bnuui::TextLabel&>(e).setText("OPEN BOOK TO SEE WHAT NEW MODULE DOES");
+   
         } else if (curr_tutorial_phase == SAVE_BUNNY3) {
             Overlay& overlay = registry.overlays.components[0];
             overlay.visible = false;
@@ -132,7 +136,7 @@ void TutorialLevel::LevelInit() {
 
     dialogue_txt_second->setOnUpdate([this](bnuui::Element& e, float dt) {
         if (curr_tutorial_phase == WASD_KEYS) {
-            static_cast<bnuui::TextLabel&>(e).setText("You can call me Rbbit. First, try moving with WASD.");
+            static_cast<bnuui::TextLabel&>(e).setText("You can call me Rabbit. First, try moving with WASD.");
         } else if (curr_tutorial_phase == AUTO_BUNNY) {
             static_cast<bnuui::TextLabel&>(e).setText(" CANNON TO HAVE IT HELP SHOOT. YOU CAN REMOVE MODULES WITH RMB.");
         } /*else if (curr_tutorial_phase == SPACEBAR_KEY) {
@@ -266,7 +270,7 @@ void TutorialLevel::LevelUpdate(float dt) {
             break;
         }
         case NEW_MODULE: {
-            if (upgradesReceived > 0 && this->book->visible) {
+            if (upgradesReceived == 2 && this->book->visible) {
                 curr_tutorial_phase = SAVE_BUNNY3;
                 dialogue_timer_ms = DIALOGUE_TIME_MS;
             }
