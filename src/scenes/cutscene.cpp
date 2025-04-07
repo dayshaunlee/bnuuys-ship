@@ -45,6 +45,23 @@ void IntroCutscene::Exit() {
 }
 
 void IntroCutscene::HandleInput(int key, int action, int mod) {
+    if (key == GLFW_KEY_SPACE && action == GLFW_RELEASE) {
+        phase++;
+        curr_line = dialog_parts[phase];
+        rendered_dialog_text = " ";
+        char_index = 0;
+        if (phase >= 3 && phase <= 5) {
+            dialogue_timer_ms = PHASE1_TIME;
+        } else if (phase >= 6 && phase <= 9) {
+            dialogue_timer_ms = PHASE2_TIME;
+        } else if (phase >= 10) {
+            dialogue_timer_ms = PHASE3_TIME;
+        } else {
+            dialogue_timer_ms = PHASE0_TIME;
+        }
+        cutscene_image->color = vec3(0,0,0);
+
+    }
 }
 
 void IntroCutscene::HandleMouseMove(vec2 pos) {
@@ -97,12 +114,47 @@ void IntroCutscene::checkDialogs(float dt) {
         dialog->position = vec2((float) WINDOW_WIDTH_PX/2 - 250.0f, WINDOW_HEIGHT_PX/2);
         cutscene_image->visible = false;
     } else if (phase == 1) {
-        cutscene_image->position = vec2(WINDOW_WIDTH_PX*0.65, WINDOW_HEIGHT_PX/2);
+        cutscene_image->position = vec2(WINDOW_WIDTH_PX/2, WINDOW_HEIGHT_PX/2);
+        cutscene_image->scale = vec2(WINDOW_WIDTH_PX, WINDOW_HEIGHT_PX+175.0f);
         dialog->position = vec2(200, WINDOW_HEIGHT_PX-25.0f);
         cutscene_image->visible = true;
-    } else if (false) {
-
-    } else if (phase == 13) {
+    } else if (phase == 2) {
+        cutscene_image->texture = TEXTURE_ASSET_ID::CUTSCENE_BUNNY_VILLAGE;
+        dialog->position = vec2(100, WINDOW_HEIGHT_PX-25.0f);
+        cutscene_image->scale = vec2(WINDOW_WIDTH_PX, WINDOW_HEIGHT_PX);
+    } else if (phase == 3) {
+        dialog->position = vec2((float) WINDOW_WIDTH_PX/2 - 150.0f, WINDOW_HEIGHT_PX/2);
+        cutscene_image->visible = false;
+    } else if (phase == 4) {
+        cutscene_image->position = vec2(WINDOW_WIDTH_PX/2, WINDOW_HEIGHT_PX/2);
+        cutscene_image->scale = vec2(WINDOW_WIDTH_PX, WINDOW_HEIGHT_PX+175.0f);
+        cutscene_image->texture = TEXTURE_ASSET_ID::CUTSCENE_2;
+        dialog->position = vec2(100, WINDOW_HEIGHT_PX-25.0f);
+        cutscene_image->visible = true;
+    } else if (phase == 5) {
+        cutscene_image->texture = TEXTURE_ASSET_ID::CUTSCENE_COW_CAPTURE;
+        cutscene_image->scale = vec2(WINDOW_WIDTH_PX, WINDOW_HEIGHT_PX);
+    } else if (phase == 6) {
+        cutscene_image->texture = TEXTURE_ASSET_ID::CUTSCENE_CRYING_BUNNY;
+    } else if (phase == 7) {
+        cutscene_image->texture = TEXTURE_ASSET_ID::CUTSCENE_MANY_BUNNY_CAGED;
+    } else if (phase == 8) {
+        dialog->position = vec2((float) WINDOW_WIDTH_PX/2 - 250.0f, WINDOW_HEIGHT_PX/2);
+        cutscene_image->visible = false;
+    } else if (phase == 9) {
+        cutscene_image->texture = TEXTURE_ASSET_ID::CUTSCENE_3;
+        cutscene_image->scale = vec2(WINDOW_WIDTH_PX, WINDOW_HEIGHT_PX+185.0f);
+        cutscene_image->visible = true;
+        dialog->position = vec2(100, WINDOW_HEIGHT_PX-25.0f);
+    } 
+    else if (phase == 10) {
+        cutscene_image->scale = vec2(WINDOW_WIDTH_PX, WINDOW_HEIGHT_PX);
+        cutscene_image->texture = TEXTURE_ASSET_ID::CUTSCENE_BUNNY_ESCAPE;
+    } else if (phase == 12) {
+        cutscene_image->texture = TEXTURE_ASSET_ID::CUTSCENE_4;
+        cutscene_image->scale = vec2(WINDOW_WIDTH_PX, WINDOW_HEIGHT_PX+350.0f);
+    }
+    else if (phase == 13) {
         dialog->position = vec2((float) WINDOW_WIDTH_PX/2 - 150.0f, WINDOW_HEIGHT_PX/2);
         cutscene_image->visible = false;
     }
@@ -127,9 +179,7 @@ void IntroCutscene::checkDialogs(float dt) {
         } else {
             dialogue_timer_ms = PHASE0_TIME;
         }
-        if (phase == 1 || phase == 3 || phase == 6 || phase == 10) {
-            cutscene_image->color = vec3(0,0,0);
-        }
+        cutscene_image->color = vec3(0,0,0);
     }
 }
 
@@ -137,7 +187,7 @@ void IntroCutscene::undarkenImage(float dt) {
     static float dark_timer = 0;
     dark_timer += dt;
 
-    if (dark_timer >= CHAR_TIME_MS) {
+    if (dark_timer >= CHAR_TIME_MS/2) {
         dark_timer = 0;
         cutscene_image->color += (vec3(1,1,1) - cutscene_image->color) * 0.0025f * dt; 
         cutscene_image->color = glm::clamp(cutscene_image->color, vec3(0,0,0), vec3(1,1,1));
@@ -149,4 +199,8 @@ void IntroCutscene::Update(float dt) {
     checkDialogs(dt);
     revealCharacters(dt);
     undarkenImage(dt);
+
+    if (phase >= dialog_parts.size()) {
+        SceneManager::getInstance().switchScene("Main Menu"); 
+    }
 }

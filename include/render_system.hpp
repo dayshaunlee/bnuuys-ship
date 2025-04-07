@@ -235,6 +235,11 @@ class RenderSystem {
         textures_path("cutscenes/c2.png"),
         textures_path("cutscenes/c3.png"),
         textures_path("cutscenes/c4.png"),
+        textures_path("cutscenes/bunny_village.png"),
+        textures_path("cutscenes/cow_capturing.png"),
+        textures_path("cutscenes/crying_bunny.png"),
+        textures_path("cutscenes/bunny_many_caged.png"),
+        textures_path("cutscenes/Bunny_Escape.png"),
 
 
         // home indicator
