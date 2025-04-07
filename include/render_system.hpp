@@ -244,6 +244,7 @@ class RenderSystem {
 
         // home indicator
         textures_path("bunny/home_indicator.png"),
+
         textures_path("background/game_victory_bg.png"),
         textures_path("ui/books/book_icon.png"),
         textures_path("ui/books/book.png"),
@@ -260,6 +261,14 @@ class RenderSystem {
 
         // Steering wheel
         textures_path("ship_modules/steering_wheel.png"),
+        textures_path("texts/steeringWheelText.png"),
+
+        // Indicator texts
+        textures_path("texts/bunnyIndicatorText.png"),
+        textures_path("texts/homeIndicatorText.png"),
+
+        // Ship text
+        textures_path("texts/shipText.png")
     };
 
     std::array<GLuint, effect_count> effects;

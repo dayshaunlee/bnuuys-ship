@@ -257,14 +257,39 @@ void GameLevel::InitializeBookUI(){
 
     auto module_iconBox5 = std::make_shared<bnuui::Box>(itemBasePos + itemSpaceY + itemSpaceX, itemBoxSize, 0.0f);
     auto module_icon5 = std::make_shared<bnuui::Box>(itemBasePos + itemSpaceY + itemSpaceX, itemIconSize*0.8f, 0.0f);
-    module_iconBox5->children.push_back(module_icon4);
+    module_iconBox5->children.push_back(module_icon5);
     module_icon5->texture = TEXTURE_ASSET_ID::BUBBLE_BULLET;
     module_icon5->visible = false;
+
+    auto module_iconBox6 = std::make_shared<bnuui::Box>(itemBasePos + itemSpaceY + 2.f*itemSpaceX, itemBoxSize, 0.0f);
+    auto module_icon6 = std::make_shared<bnuui::Box>(itemBasePos + itemSpaceY + 2.f*itemSpaceX, itemIconSize*0.8f, 0.0f);
+    module_iconBox6->children.push_back(module_icon6);
+    module_icon6->texture = TEXTURE_ASSET_ID::STEERING_WHEEL;
+    module_icon6->visible = false;
+
+    auto module_iconBox7 = std::make_shared<bnuui::Box>(itemBasePos + 2.f*itemSpaceY, itemBoxSize, 0.0f);
+    auto module_icon7 = std::make_shared<bnuui::Box>(itemBasePos + 2.f*itemSpaceY, itemIconSize*0.8f, 0.0f);
+    module_iconBox7->children.push_back(module_icon7);
+    module_icon7->texture = TEXTURE_ASSET_ID::BUNNY_INDICATOR;
+    module_icon7->visible = false;
+
+    auto module_iconBox8 = std::make_shared<bnuui::Box>(itemBasePos + 2.f*itemSpaceY + itemSpaceX, itemBoxSize, 0.0f);
+    auto module_icon8 = std::make_shared<bnuui::Box>(itemBasePos + 2.f*itemSpaceY + itemSpaceX, itemIconSize*0.8f, 0.0f);
+    module_iconBox8->children.push_back(module_icon8);
+    module_icon8->texture = TEXTURE_ASSET_ID::HOME_INDICATOR;
+    module_icon8->visible = false;
+
+    auto module_iconBox9 = std::make_shared<bnuui::Box>(itemBasePos + 2.f*itemSpaceY + 2.f*itemSpaceX, itemBoxSize, 0.0f);
+    auto module_icon9 = std::make_shared<bnuui::Box>(itemBasePos + 2.f*itemSpaceY + 2.f*itemSpaceX, itemIconSize*0.8f, 0.0f);
+    module_iconBox9->children.push_back(module_icon9);
+    module_icon9->texture = TEXTURE_ASSET_ID::RAFT;
+    module_icon9->visible = false;
 
     auto itemDesc = std::make_shared<bnuui::Box>(vec2(WINDOW_WIDTH_PX/2 + 20, WINDOW_HEIGHT_PX/2 + 80), vec2(800, 500), 0.0f);
     itemDesc->texture = TEXTURE_ASSET_ID::DESC_INTRO_TEXT;
 
-    book_icon->setOnClick([book, module_icon1, module_icon2, module_icon3, module_icon4, module_icon5](bnuui::Element& e) {
+    book_icon->setOnClick([book, module_icon1, module_icon2, module_icon3, module_icon4, module_icon5, 
+        module_icon6, module_icon7, module_icon8, module_icon9](bnuui::Element& e) {
         if(!RenderSystem::isRenderingGacha){
             RenderSystem::isRenderingBook = !RenderSystem::isRenderingBook;
             book->visible = !book->visible;
@@ -273,6 +298,10 @@ void GameLevel::InitializeBookUI(){
             module_icon3->visible = !module_icon3->visible;
             module_icon4->visible = !module_icon4->visible;
             module_icon5->visible = !module_icon5->visible;
+            module_icon6->visible = !module_icon6->visible;
+            module_icon7->visible = !module_icon7->visible;
+            module_icon8->visible = !module_icon8->visible;
+            module_icon9->visible = !module_icon9->visible;
         }
     });
 
@@ -312,6 +341,34 @@ void GameLevel::InitializeBookUI(){
         }
     });
 
+    module_icon6->setOnClick([&, book, itemDesc](bnuui::Element& e) {
+        if(book->visible){
+            itemDesc->texture = TEXTURE_ASSET_ID::STEERING_WHEEL_TEXT;
+            itemDesc->visible = true;
+        }
+    });
+
+    module_icon7->setOnClick([&, book, itemDesc](bnuui::Element& e) {
+        if(book->visible){
+            itemDesc->texture = TEXTURE_ASSET_ID::BUNNY_INDICATOR_TEXT;
+            itemDesc->visible = true;
+        }
+    });
+
+    module_icon8->setOnClick([&, book, itemDesc](bnuui::Element& e) {
+        if(book->visible){
+            itemDesc->texture = TEXTURE_ASSET_ID::HOME_INDICATOR_TEXT;
+            itemDesc->visible = true;
+        }
+    });
+
+    module_icon9->setOnClick([&, book, itemDesc](bnuui::Element& e) {
+        if(book->visible){
+            itemDesc->texture = TEXTURE_ASSET_ID::SHIP_TEXT;
+            itemDesc->visible = true;
+        }
+    });
+
 
     book->children.push_back(moduletype_text);
     book->children.push_back(moduledesc_text);
@@ -320,6 +377,10 @@ void GameLevel::InitializeBookUI(){
     book->children.push_back(module_iconBox3);
     book->children.push_back(module_iconBox4);
     book->children.push_back(module_iconBox5);
+    book->children.push_back(module_iconBox6);
+    book->children.push_back(module_iconBox7);
+    book->children.push_back(module_iconBox8);
+    book->children.push_back(module_iconBox9);
     book->children.push_back(itemDesc);
 
 
@@ -330,6 +391,10 @@ void GameLevel::InitializeBookUI(){
     scene_ui.insert(module_icon3);
     scene_ui.insert(module_icon4);
     scene_ui.insert(module_icon5);
+    scene_ui.insert(module_icon6);
+    scene_ui.insert(module_icon7);
+    scene_ui.insert(module_icon8);
+    scene_ui.insert(module_icon9);
 }
 
 void GameLevel::InitializeBunnySavingUI() {
