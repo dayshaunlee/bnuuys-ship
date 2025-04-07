@@ -444,8 +444,15 @@ std::vector<Entity> createLaserBeam(vec2 orig, vec2 dest) {
             e, {TEXTURE_ASSET_ID::LASER_BEAM, EFFECT_ASSET_ID::TEXTURED, GEOMETRY_BUFFER_ID::SPRITE});
 
         if (laser_shoot == nullptr) {
-            laser_shoot->volume = 50;
             laser_shoot = Mix_LoadWAV(audio_path("laser.wav").c_str());
+            if (laser_shoot == nullptr) {
+                laser_shoot = Mix_LoadWAV(audio_path("laser.wav").c_str());
+                if (laser_shoot != nullptr) {
+                    laser_shoot->volume = 50;
+                }
+            } else {
+                laser_shoot->volume = 50;
+            }
         }
         Mix_PlayChannel(-1, laser_shoot, 0);
     }
