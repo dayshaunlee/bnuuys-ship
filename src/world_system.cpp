@@ -423,11 +423,17 @@ void WorldSystem::handle_collisions() {
             collisions_to_remove.push_back(e1);
             collisions_to_remove.push_back(e2);
             vec2 normal = registry.collisions.get(e1).normal;
-            // Play sound
-            Entity sound_entity = Entity();
-            Sound& sound = registry.sounds.emplace(sound_entity);
-            sound.sound_type = SOUND_ASSET_ID::ISLAND_SHIP_COLLISION;
-            sound.volume = 50;
+
+            static float last_collision_sound_time = 0.f;
+            float current_time = (float) glfwGetTime();
+            if (current_time - last_collision_sound_time > 1.0f) {
+                Entity sound_entity = Entity();
+                Sound& sound = registry.sounds.emplace(sound_entity);
+                sound.sound_type = SOUND_ASSET_ID::ISLAND_SHIP_COLLISION;
+                sound.volume = 50;
+
+                last_collision_sound_time = current_time;
+            }
             CameraSystem::GetInstance()->setToPreviousPosition(normal);
         }
 
