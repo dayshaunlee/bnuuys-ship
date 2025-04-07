@@ -270,6 +270,7 @@ class RenderSystem {
 
         // Ship text
         textures_path("texts/shipText.png"),
+        
         textures_path("ui/buttons/exit_neutral.png"),
         textures_path("ui/buttons/exit_clicked.png"),
     };
