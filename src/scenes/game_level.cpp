@@ -20,6 +20,7 @@
 #include "bnuui/buttons.hpp"
 #include "map_init.hpp"
 #include "saveload_system.hpp"
+#include <sceneManager/scene_manager.hpp>
 
 /*
  *   Place 'local' scene vars here just so it's easy to manage.
@@ -137,6 +138,30 @@ bool isOffscreen(const glm::vec2& A, const glm::vec2& center) {
     return (A.x < left || A.x > right || A.y < top || A.y > bottom);
 }
 
+void GameLevel::InitializePauseUI() {
+    scene_ui.pause_ui = std::make_shared<bnuui::LongBox>(
+        vec2(WINDOW_WIDTH_PX / 4, WINDOW_HEIGHT_PX / 2), vec2(200, 400), 0.0f);
+
+    auto continue_btn = std::make_shared<bnuui::LongBox>(
+        vec2(WINDOW_WIDTH_PX / 4, 200), vec2(150, 50), 0.0f);
+    continue_btn->setOnClick([](bnuui::Element& e) { RenderSystem::isPaused = false;
+    });
+    auto continue_text = std::make_shared<bnuui::TextLabel>(vec2(WINDOW_WIDTH_PX / 4 - 50.f, 200), 1, "Resume");
+    continue_btn->children.push_back(continue_text);
+
+
+    auto mm_btn = std::make_shared<bnuui::LongBox>(
+        vec2(WINDOW_WIDTH_PX / 4, 300), vec2(150, 50), 0.0f);
+    mm_btn ->setOnClick([](bnuui::Element& e) { 
+        RenderSystem::isPaused = false;
+        SceneManager::getInstance().switchScene("Main Menu");
+    });
+    auto mm_text = std::make_shared<bnuui::TextLabel>(vec2(WINDOW_WIDTH_PX / 4 - 50.f, 300), 1, "Main Menu");
+    mm_btn->children.push_back(mm_text);
+
+    scene_ui.pause_ui->children.push_back(continue_btn);
+    scene_ui.pause_ui->children.push_back(mm_btn);
+}
 
 void GameLevel::InitializeTrackingUI() {
     auto tracking_ui = std::make_shared<bnuui::Box>(vec2(496, 96), vec2(45, 45), 0.0f);
@@ -399,7 +424,7 @@ void GameLevel::InitializeUI() {
     scene_ui.insert(tile_cursor);
 
     InitializeBookUI();
-
+    InitializePauseUI();
 }
 
 void GameLevel::Exit() {
@@ -619,6 +644,12 @@ void HandlePlayerStationing(vec2 tile_pos) {
 }
 
 void GameLevel::HandleInput(int key, int action, int mod) {
+    // exit game w/ ESC
+    if (action == GLFW_RELEASE && key == GLFW_KEY_ESCAPE) {
+        RenderSystem::isPaused = !RenderSystem::isPaused;       
+    }
+    if (RenderSystem::isPaused) return;
+
     Entity player = registry.players.entities[0];
 
     glm::vec2 playerPos = registry.motions.get(player).position;
@@ -681,6 +712,20 @@ void GameLevel::HandleInput(int key, int action, int mod) {
 
 void GameLevel::HandleMouseMove(vec2 pos) {
     l1_mouse_pos = pos;
+    
+    // Check if paused
+    if (RenderSystem::isPaused) {
+        std::vector<std::shared_ptr<bnuui::Element>> pause_elems = scene_ui.getPauseUI()->children;
+        for (std::shared_ptr<bnuui::Element> ui_elem : pause_elems) {
+            if (ui_elem->isPointColliding(pos)) {
+                ui_elem->hovering = true;
+            } else {
+                ui_elem->hovering = false;
+            }
+        }
+        return;
+    }
+
     // Check if hovering over any UI components.
     std::vector<std::shared_ptr<bnuui::Element>> ui_elems = scene_ui.getElems();
     for (std::shared_ptr<bnuui::Element> ui_elem : ui_elems) {
@@ -781,6 +826,26 @@ void unStationBunny(vec2 tile_pos) {
 }
 
 void GameLevel::HandleMouseClick(int button, int action, int mods) {
+    if (RenderSystem::isPaused) {
+        std::vector<std::shared_ptr<bnuui::Element>> ui_elems = scene_ui.getPauseUI()->children;
+        if (action == GLFW_PRESS && button == GLFW_MOUSE_BUTTON_1) {
+            for (std::shared_ptr<bnuui::Element> ui_elem : ui_elems) {
+                if (ui_elem->hovering) {
+                    ui_elem->active = true;
+                } else {
+                    ui_elem->active = false;
+                }
+            }
+        } else if (action == GLFW_RELEASE) {
+            for (std::shared_ptr<bnuui::Element> ui_elem : ui_elems) {
+                if (ui_elem->active) {
+                    ui_elem->clickButton();
+                }
+                ui_elem->active = false;
+            }
+        } 
+        return;
+    }
     // Check if hovering over any UI components.
     std::vector<std::shared_ptr<bnuui::Element>> ui_elems = scene_ui.getElems();
     if (action == GLFW_PRESS && button == GLFW_MOUSE_BUTTON_1) {
@@ -1140,12 +1205,16 @@ void GameLevel::RemoveStation(vec2 tile_pos, MODULE_TYPES module){
 
 
 void GameLevel::Update(float dt) {
-    if(!RenderSystem::isRenderingGacha && registry.players.components[0].player_state != BUILDING && !RenderSystem::isRenderingBook){
+    if(!RenderSystem::isRenderingGacha && 
+        registry.players.components[0].player_state != BUILDING && 
+        !RenderSystem::isRenderingBook &&
+        !RenderSystem::isPaused){
         CameraSystem::GetInstance()->update(dt);
         ai_system.step(dt);
         physics_system.step(dt);
         animation_system.step(dt);
         module_system.step(dt);
+        particle_system.step(dt);
         HandleCameraMovement();
 
         world_system->handle_collisions();

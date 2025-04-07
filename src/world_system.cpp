@@ -464,14 +464,15 @@ void WorldSystem::handle_player_death(){
 
 // on key callback
 void WorldSystem::on_key(int key, int, int action, int mod) {
-    // exit game w/ ESC
-    if (action == GLFW_RELEASE && key == GLFW_KEY_ESCAPE) {
-        close_window();
-    }
-
     Scene* scene = SceneManager::getInstance().getCurrentScene();
     if (scene) {
         scene->HandleInput(key, action, mod);
+        if (scene->getName() == "Main Menu") {
+			// exit game w/ ESC
+			if (action == GLFW_RELEASE && key == GLFW_KEY_ESCAPE) {
+				close_window();
+			}
+        }
     }
 }
 

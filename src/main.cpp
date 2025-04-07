@@ -37,7 +37,6 @@ int main() {
     RenderSystem renderer_system;
     SoundSystem sound_system;
     AnimationSystem animation_system;
-    ParticleSystem particle_system;
     int frameCounter = 0;
     float msCounter = 0;
 
@@ -114,7 +113,6 @@ int main() {
         Scene* s = scene_manager.getCurrentScene();
         if (s != nullptr) s->Update(elapsed_ms);
         world_system.step(elapsed_ms);
-        particle_system.step(elapsed_ms);
         renderer_system.draw();
         sound_system.play();
         

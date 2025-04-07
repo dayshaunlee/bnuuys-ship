@@ -21,6 +21,7 @@
 
 bool RenderSystem::isRenderingGacha = false;
 bool RenderSystem::isRenderingBook = false;
+bool RenderSystem::isPaused = false;
 bool RenderSystem::isInGame = false;
 
 void RenderSystem::drawGridLine(Entity entity, const mat3& projection) {
@@ -534,13 +535,18 @@ void RenderSystem::draw() {
     Scene* s = sm.getCurrentScene();
     if (s) {
         bnuui::SceneUI scene_ui = s->getUIElems();
-        std::vector<std::shared_ptr<bnuui::Element>> elems = scene_ui.getElems();
-        for (std::shared_ptr<bnuui::Element> elem : elems) {
-            if (elem->getText() != "") {
-                renderText(elem->getText(), elem->position.x, WINDOW_HEIGHT_PX - elem->position.y, elem->getFontSize(), elem->color, UI_Matrix);
-            } else {
-                drawUIElement(*elem, projection_2D);
-            }
+        if (!isPaused) {
+            std::vector<std::shared_ptr<bnuui::Element>> elems = scene_ui.getElems();
+			for (std::shared_ptr<bnuui::Element> elem : elems) {
+				if (elem->getText() != "") {
+					renderText(elem->getText(), elem->position.x, WINDOW_HEIGHT_PX - elem->position.y, elem->getFontSize(), elem->color, UI_Matrix);
+				} else {
+					drawUIElement(*elem, projection_2D);
+				}
+			}           
+        } else {
+            // Draw only the pause UI.
+            drawUIElement(*scene_ui.getPauseUI(), projection_2D);
         }
     }
 
