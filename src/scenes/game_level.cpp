@@ -755,7 +755,7 @@ void GameLevel::HandleInput(int key, int action, int mod) {
 
 
     // Build Mode.
-    if ((action == GLFW_RELEASE) && (key == GLFW_KEY_B)) {
+    if ((action == GLFW_RELEASE) && (key == GLFW_KEY_E)) {
         if(RenderSystem::isRenderingBook){
             return;
         }
