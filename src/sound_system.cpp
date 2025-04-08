@@ -59,12 +59,13 @@ void SoundSystem::play() {
     for (Entity entity : registry.sounds.entities) {
         Sound& sound = registry.sounds.get(entity);
         if (sound.is_repeating) {
-            Mix_PlayMusic(sound_mix_repeating[(int)sound.sound_type], -1);
             Mix_VolumeMusic(sound.volume);
+            Mix_PlayMusic(sound_mix_repeating[(int) sound.sound_type], -1);
         } else {
             Mix_VolumeChunk(sound_mix_chunk[(int) sound.sound_type - sound_paths_repeating.size()], sound.volume);
-            Mix_PlayChannel((int) sound.sound_type % 8, sound_mix_chunk[(int) sound.sound_type - sound_paths_repeating.size()], 0);
-            registry.remove_all_components_of(entity);
+            Mix_PlayChannel(
+                (int) sound.sound_type % 8, sound_mix_chunk[(int) sound.sound_type - sound_paths_repeating.size()], 0);
         }
+        registry.remove_all_components_of(entity);
     }
 }
