@@ -20,7 +20,10 @@ Level04::Level04(WorldSystem* world_system, std::string map_filename, TEXTURE_AS
 Level04::~Level04() {
 }
 
-void Level04::LevelInit() {}
+void Level04::LevelInit() {
+    // unlock the base
+    registry.base.components[0].locked = false;
+}
 
 void Level04::LevelUpdate() {}
 
