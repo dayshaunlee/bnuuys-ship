@@ -27,10 +27,11 @@ TutorialLevel::~TutorialLevel() {}
 
 float x = 100.0f;
 
+bool spawned_dummy = false;
 void TutorialLevel::LevelInit() {
+    spawned_dummy = false;
+    bunnies_to_win = 3;
     curr_tutorial_phase = WASD_KEYS;
-    /*if (!registry.spotlights.has(registry.ships.entities[0]))
-        registry.spotlights.insert(registry.ships.entities[0], {{registry.motions.get(registry.ships.entities[0]).position}, 20.0});*/
     // Initialize Tutorial UI.
     auto tutorial_talk = std::make_shared<bnuui::PlayerStatus>(
         vec2(765, 540), vec2(-120, 120), 0.0f, x, x, true);
@@ -44,65 +45,20 @@ void TutorialLevel::LevelInit() {
     auto dialogue_txt_first = std::make_shared<bnuui::TextLabel>(vec2(150, 490), 1.0f, ":3", true);
     auto dialogue_txt_second = std::make_shared<bnuui::TextLabel>(vec2(150, 510), 1.0f, " ", true);
 
+    // lock the base
+    registry.base.components[0].locked = true;
+
     dialogue_txt_first->setOnUpdate([this](bnuui::Element& e, float dt) {
         if (curr_tutorial_phase == WASD_KEYS) {
             static_cast<bnuui::TextLabel&>(e).setText(
                 "Hi Bnuuy! I'm your inner voice here to help you explore the sea.");
         } else if (curr_tutorial_phase == SPACEBAR_KEY) {
-            for (Entity entity : registry.spotlights.entities) {
-                registry.spotlights.remove(entity);
-            }
-            Overlay& overlay = registry.overlays.components[0];
-            overlay.visible = true;
-            if (!registry.spotlights.has(registry.players.entities[0])) {
-                vec2 pos = registry.motions.get(registry.ships.entities[0]).position - vec2(0, GRID_CELL_HEIGHT_PX);
-                registry.spotlights.insert(registry.players.entities[0], {pos + vec2(5.0, 0), 20.0});
-            }
             static_cast<bnuui::TextLabel&>(e).setText("Stand on top of CANNON AND PRESS SPACE TO USE.");
         } else if (curr_tutorial_phase == CANNON_SHOOT) {
-            for (Entity entity : registry.spotlights.entities) {
-                registry.spotlights.remove(entity);
-            }
-            if (!registry.spotlights.has(registry.players.entities[0])) {
-                vec2 pos = registry.motions.get(registry.ships.entities[0]).position - vec2(0, GRID_CELL_HEIGHT_PX);
-                registry.spotlights.insert(registry.players.entities[0], {pos + vec2(5.0, 0), 20.0});
-            }
-            for (Entity enemy : registry.enemies.entities) {
-                if (!registry.spotlights.has(enemy) && registry.enemies.get(enemy).type == DUMMY)
-                    registry.spotlights.insert(enemy, {registry.motions.get(enemy).position - vec2(30.0, 0), 30.0});
-            }
-            Overlay& overlay = registry.overlays.components[0];
-            overlay.visible = true;
             static_cast<bnuui::TextLabel&>(e).setText("Try using the cannon. LEFT CLICK TO SHOOT.");
         } else if (curr_tutorial_phase == STERRING_PAD) {
-            for (Entity entity : registry.spotlights.entities) {
-                registry.spotlights.remove(entity);
-            }
-            Overlay& overlay = registry.overlays.components[0];
-            overlay.visible = true;
-            if (!registry.spotlights.has(registry.players.entities[0])) {
-                vec2 pos = registry.motions.get(registry.ships.entities[0]).position;
-                registry.spotlights.insert(registry.players.entities[0], {pos + vec2(5.0, 0), 20.0});
-            }
             static_cast<bnuui::TextLabel&>(e).setText("Press Space again to unstation. Move to the steering wheel and use");
         } else if (curr_tutorial_phase == SAVE_BUNNY1) {
-            for (Entity entity : registry.spotlights.entities) {
-                registry.spotlights.remove(entity);
-            }
-            Overlay& overlay = registry.overlays.components[0];
-            if (CameraSystem::GetInstance()->position.x > -250) {
-                overlay.visible = true;
-                if (!registry.spotlights.has(registry.players.entities[0])) {
-                    vec2 pos = tracker_ui->position;
-                    registry.spotlights.insert(registry.players.entities[0], {pos + vec2(140.0, 0), 15.0});
-                } else if (registry.spotlights.has(registry.players.entities[0])) {
-                    registry.spotlights.remove(registry.players.entities[0]);
-                }
-            }
-            else {
-                overlay.visible = false;
-            }
-
             static_cast<bnuui::TextLabel&>(e).setText("A BUNNY NEEDS YOUR HELP! DRIVE THERE AND SHOOT THE CAGE TO FREE IT.");
         } else if (curr_tutorial_phase == BUILD_MODE) {
             static_cast<bnuui::TextLabel&>(e).setText("Once a bunny is freed, you can hire them and enable auto-shoot.");
@@ -113,22 +69,9 @@ void TutorialLevel::LevelInit() {
         } else if (curr_tutorial_phase == DROPOFF) {
             static_cast<bnuui::TextLabel&>(e).setText("LETS DROP OFF THE BUNNYS AT THE BASE. REMEMBER TO UNASSIGN THEM!");
         } else if (curr_tutorial_phase == NEW_MODULE) {
-            for (Entity entity : registry.spotlights.entities) {
-                registry.spotlights.remove(entity);
-            }
-            Overlay& overlay = registry.overlays.components[0];
-            if (upgradesReceived == 2) {
-                overlay.visible = true;
-                if (!registry.spotlights.has(registry.players.entities[0])) {
-                    vec2 pos = book_icon->position;
-                    registry.spotlights.insert(registry.players.entities[0], {pos + vec2(90.0, 0), 40.0});
-                }
-            } else overlay.visible = false;
             static_cast<bnuui::TextLabel&>(e).setText("OPEN BOOK TO SEE WHAT NEW MODULE DOES");
           
         } else if (curr_tutorial_phase == SAVE_BUNNY3) {
-            Overlay& overlay = registry.overlays.components[0];
-            overlay.visible = false;
             static_cast<bnuui::TextLabel&>(e).setText("DROPPING OFF BUNNIES AT BASE WILL UNLOCK MORE WEAPONS.");
         } else if (curr_tutorial_phase == SAVE_BUNNY4) {
             static_cast<bnuui::TextLabel&>(e).setText("NOW, GO SAVE THE REST OF THE BUNNIES.");
@@ -151,23 +94,10 @@ void TutorialLevel::LevelInit() {
         } else if (curr_tutorial_phase == DROPOFF) {
             static_cast<bnuui::TextLabel&>(e).setText("PRESS E and RIGHT CLICK ON THE CANNON TO UNASSIGN THE BUNNY.");
         } else if (curr_tutorial_phase == SAVE_BUNNY3) {
-            static_cast<bnuui::TextLabel&>(e).setText("IN INVENTORY, YOU CAN SELECT MODULE AND BUILD IT ON SHIP.");
+            static_cast<bnuui::TextLabel&>(e).setText("PRESS E AND BUILD SOME OF YOUR NEW STATIONS.");
         } else if (curr_tutorial_phase == NEW_MODULE) {
             static_cast<bnuui::TextLabel&>(e).setText("LEFT CLICK TO OPEN AND CLOSE THE BOOK.");
         }
-        /*else if (curr_tutorial_phase == SPACEBAR_KEY) {
-            static_cast<bnuui::TextLabel&>(e).setText("with/exit ship modules. ");
-        } else if (curr_tutorial_phase == CANNON_SHOOT) {
-            static_cast<bnuui::TextLabel&>(e).setText("Use left click to shoot. Try shooting at the dummy bunny.");
-        } else if (curr_tutorial_phase == ENEMIES_MOVE) {
-            static_cast<bnuui::TextLabel&>(e).setText("KILL THEM!!");
-        } else if (curr_tutorial_phase == ENEMIES_DAMAGE) {
-            static_cast<bnuui::TextLabel&>(e).setText("ship’s health. Be careful.");
-        } else if (curr_tutorial_phase == SAVE_BUNNIES) {
-            static_cast<bnuui::TextLabel&>(e).setText("jailed bunnies on islands.");
-        } else if (curr_tutorial_phase == GOTO_BASE) {
-            static_cast<bnuui::TextLabel&>(e).setText("highlighted area.");
-        } */
         else {
             static_cast<bnuui::TextLabel&>(e).setText(" ");
         }
@@ -203,8 +133,25 @@ void TutorialLevel::LevelHandleMouseMove(vec2 pos) {}
 void TutorialLevel::LevelHandleMouseClick(int button, int action, int mods) {}
 
 void TutorialLevel::LevelUpdate(float dt) {
+    float scaling_factor_x = GRID_CELL_WIDTH_PX / (float) 16;
+    float scaling_factor_y = GRID_CELL_HEIGHT_PX / (float) 16;
+    vec2 offset =
+        vec2((WINDOW_WIDTH_PX / 2) - (144 * scaling_factor_x), (WINDOW_HEIGHT_PX / 2) - (328 * scaling_factor_y));
+    Overlay& overlay = registry.overlays.components[0];
     switch (curr_tutorial_phase) {
         case SPACEBAR_KEY: {
+            for (Entity entity : registry.spotlights.entities) {
+                registry.spotlights.remove(entity);
+            }
+            if (RenderSystem::isPaused) {
+                overlay.visible = false;
+            } else {
+                overlay.visible = true;
+            }
+            if (!registry.spotlights.has(registry.players.entities[0])) {
+                vec2 pos = registry.motions.get(registry.ships.entities[0]).position - vec2(0, GRID_CELL_HEIGHT_PX);
+                registry.spotlights.insert(registry.players.entities[0], {pos + vec2(5.0, 0), 20.0});
+            }
             if (registry.players.components[0].player_state == PLAYERSTATE::STATIONING) {
                 curr_tutorial_phase = CANNON_SHOOT;
                 dialogue_timer_ms = DIALOGUE_TIME_MS;
@@ -212,6 +159,33 @@ void TutorialLevel::LevelUpdate(float dt) {
             break;
         }
         case CANNON_SHOOT: {
+            if (registry.enemies.components.size() == 0 && !spawned_dummy) {
+                Entity entity = Entity();
+                EnemySpawner& ene = registry.enemySpawners.emplace(entity);
+                ene.type = DUMMY;
+                ene.home_island = 0;
+                Motion& mot = registry.motions.emplace(entity);
+                mot.position = {103 * scaling_factor_x + offset.x, 312 * scaling_factor_y + offset.y};
+                createEnemy(entity);
+                spawned_dummy = true;
+                registry.remove_all_components_of(entity);
+            }
+            for (Entity entity : registry.spotlights.entities) {
+                registry.spotlights.remove(entity);
+            }
+            if (!registry.spotlights.has(registry.players.entities[0])) {
+                vec2 pos = registry.motions.get(registry.ships.entities[0]).position - vec2(0, GRID_CELL_HEIGHT_PX);
+                registry.spotlights.insert(registry.players.entities[0], {pos + vec2(5.0, 0), 20.0});
+            }
+            for (Entity enemy : registry.enemies.entities) {
+                if (!registry.spotlights.has(enemy) && registry.enemies.get(enemy).type == DUMMY)
+                    registry.spotlights.insert(enemy, {registry.motions.get(enemy).position - vec2(30.0, 0), 30.0});
+            }
+            if (RenderSystem::isPaused) {
+                overlay.visible = false;
+            } else {
+                overlay.visible = true;
+            }
             bool dummy_dead = true;
             for (Entity entity : registry.enemies.entities) {
                 Enemy& enemy = registry.enemies.get(entity);
@@ -224,6 +198,25 @@ void TutorialLevel::LevelUpdate(float dt) {
             break;
         }
         case STERRING_PAD: {
+            if (registry.bunnies.components.size() == 0) {
+                Entity entity = Entity();
+                Bunny& bun = registry.bunnies.emplace(entity);
+                Motion& mot = registry.motions.emplace(entity);
+                mot.position = {344 * scaling_factor_x + offset.x, 344 * scaling_factor_y + offset.y};
+                createBunny(entity);
+            }
+            for (Entity entity : registry.spotlights.entities) {
+                registry.spotlights.remove(entity);
+            }
+            if (RenderSystem::isPaused) {
+                overlay.visible = false;
+            } else {
+                overlay.visible = true;
+            }
+            if (!registry.spotlights.has(registry.players.entities[0])) {
+                vec2 pos = registry.motions.get(registry.ships.entities[0]).position;
+                registry.spotlights.insert(registry.players.entities[0], {pos + vec2(5.0, 0), 25.0});
+            }
             if (CameraSystem::GetInstance()->position.x != 0 || CameraSystem::GetInstance()->position.y != 0) {
                 curr_tutorial_phase = SAVE_BUNNY1;
                 dialogue_timer_ms = DIALOGUE_TIME_MS;
@@ -231,6 +224,26 @@ void TutorialLevel::LevelUpdate(float dt) {
             break;
         }
         case SAVE_BUNNY1: {
+            for (Entity entity : registry.spotlights.entities) {
+                registry.spotlights.remove(entity);
+            }
+            Overlay& overlay = registry.overlays.components[0];
+            assert(registry.bunnies.components.size() > 0);
+            if (tracker_off_screen && CameraSystem::GetInstance()->position.y < 320 && registry.bunnies.components[0].is_jailed) {
+                if (RenderSystem::isPaused) {
+                    overlay.visible = false;
+                } else {
+                    overlay.visible = true;
+                }
+                if (!registry.spotlights.has(registry.players.entities[0])) {
+                    vec2 pos = tracker_ui->position;
+                    registry.spotlights.insert(registry.players.entities[0], {pos + vec2(140.0, 0), 25.0});
+                } else if (registry.spotlights.has(registry.players.entities[0])) {
+                    registry.spotlights.remove(registry.players.entities[0]);
+                }
+            } else {
+                overlay.visible = false;
+            }
             for (Entity entity : registry.bunnies.entities) {
                 if (registry.bunnies.get(entity).on_ship) {
                     curr_tutorial_phase = BUILD_MODE;
@@ -241,6 +254,10 @@ void TutorialLevel::LevelUpdate(float dt) {
             break;
         }
         case BUILD_MODE: {
+            for (Entity entity : registry.spotlights.entities) {
+                registry.spotlights.remove(entity);
+            }
+            overlay.visible = false;
             Player& player_comp = registry.players.get(registry.players.entities[0]);
             if (player_comp.player_state == BUILDING) {
                 curr_tutorial_phase = AUTO_BUNNY;
@@ -259,6 +276,23 @@ void TutorialLevel::LevelUpdate(float dt) {
             break;
         }
         case SAVE_BUNNY2: {
+            registry.base.components[0].locked = false;
+            if (registry.bunnies.components.size() == 1) {
+                Entity entity = Entity();
+                Bunny& bun = registry.bunnies.emplace(entity);
+                Motion& mot = registry.motions.emplace(entity);
+                mot.position = {344 * scaling_factor_x + offset.x, 168 * scaling_factor_y + offset.y};
+                createBunny(entity);
+
+                Entity spawner_entity = Entity();
+                EnemySpawner& ene = registry.enemySpawners.emplace(spawner_entity);
+                ene.type = BASIC_GUNNER;
+                ene.home_island = 0;
+                Motion& spawner_mot = registry.motions.emplace(spawner_entity);
+                spawner_mot.position = {320 * scaling_factor_x + offset.x, 192 * scaling_factor_y + offset.y};
+                createEnemy(spawner_entity);
+                registry.remove_all_components_of(spawner_entity);
+            }
             // TODO CREATE ENEMIES HERE
             int bunnys_on_ship = 0;
             for (Entity entity : registry.bunnies.entities) {
@@ -281,6 +315,22 @@ void TutorialLevel::LevelUpdate(float dt) {
             break;
         }
         case NEW_MODULE: {
+            for (Entity entity : registry.spotlights.entities) {
+                registry.spotlights.remove(entity);
+            }
+            Overlay& overlay = registry.overlays.components[0];
+            if (upgradesReceived == 2) {
+                if (RenderSystem::isPaused) {
+                    overlay.visible = false;
+                } else {
+                    overlay.visible = true;
+                }
+                if (!registry.spotlights.has(registry.players.entities[0])) {
+                    vec2 pos = book_icon->position;
+                    registry.spotlights.insert(registry.players.entities[0], {pos + vec2(90.0, 0), 40.0});
+                }
+            } else
+                overlay.visible = false;
             if (this->book->visible) {
                 curr_tutorial_phase = SAVE_BUNNY3;
                 dialogue_timer_ms = DIALOGUE_TIME_MS;
@@ -288,9 +338,10 @@ void TutorialLevel::LevelUpdate(float dt) {
             break;
         }
         case SAVE_BUNNY3: {
-            if (registry.ships.components[0].available_modules[SIMPLE_CANNON] == 0 && 
-                registry.ships.components[0].available_modules[LASER_WEAPON] == 0 && 
-                registry.ships.components[0].available_modules[HEAL] == 0 && 
+            overlay.visible = false;
+            if (registry.ships.components[0].available_modules[SIMPLE_CANNON] == 0 &&
+                registry.ships.components[0].available_modules[LASER_WEAPON] == 0 &&
+                registry.ships.components[0].available_modules[HEAL] == 0 &&
                 registry.ships.components[0].available_modules[BUBBLE_MOD] <= 1) {
                 curr_tutorial_phase = SAVE_BUNNY4;
                 dialogue_timer_ms = DIALOGUE_TIME_MS;
@@ -298,6 +349,24 @@ void TutorialLevel::LevelUpdate(float dt) {
             break;
         }
         case SAVE_BUNNY4: {
+            if (registry.bunnies.components.size() == 0 && registry.base.components[0].bunny_count == 2) {
+                Entity entity = Entity();
+                Bunny& bun = registry.bunnies.emplace(entity);
+                Motion& mot = registry.motions.emplace(entity);
+                mot.position = {112 * scaling_factor_x + offset.x, 64 * scaling_factor_y + offset.y};
+                createBunny(entity);
+
+                Entity spawner_entity = Entity();
+                EnemySpawner& ene = registry.enemySpawners.emplace(spawner_entity);
+                ene.type = BASIC_GUNNER;
+                ene.home_island = 0;
+                Motion& spawner_mot = registry.motions.emplace(spawner_entity);
+                spawner_mot.position = {160 * scaling_factor_x + offset.x, 64 * scaling_factor_y + offset.y};
+                createEnemy(spawner_entity);
+                spawner_mot.position.y = 96 * scaling_factor_y + offset.y;
+                createEnemy(spawner_entity);
+                registry.remove_all_components_of(spawner_entity);
+            }
             if (upgradesReceived == bunnies_to_win) {
                 SceneManager& sceneManager = SceneManager::getInstance();
                 sceneManager.setNextLevelScence("Level 1");

@@ -41,6 +41,7 @@ struct Base {
     float drop_off_timer = 0.0; // keep track of how long the ship is inside the base
     bool ship_in_base = false;
     int bunny_count = 0;
+    bool locked = false; // for tutorial: when true, dropoff will not work
 };
 
 // Data structure for toggling debug mode
