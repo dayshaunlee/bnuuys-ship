@@ -90,7 +90,6 @@ void TutorialLevel::LevelInit() {
                 registry.spotlights.remove(entity);
             }
             Overlay& overlay = registry.overlays.components[0];
-            std::cout << CameraSystem::GetInstance()->position.x << std::endl;
             if (CameraSystem::GetInstance()->position.x > -250) {
                 overlay.visible = true;
                 if (!registry.spotlights.has(registry.players.entities[0])) {
@@ -101,9 +100,9 @@ void TutorialLevel::LevelInit() {
                 }
             }
             else {
-                    overlay.visible = false;
+                overlay.visible = false;
             }
-            
+
             static_cast<bnuui::TextLabel&>(e).setText("A BUNNY NEEDS YOUR HELP! DRIVE THERE AND SHOOT THE CAGE TO FREE IT.");
         } else if (curr_tutorial_phase == BUILD_MODE) {
             static_cast<bnuui::TextLabel&>(e).setText("Once a bunny is freed, you can hire them and enable auto-shoot.");
@@ -117,15 +116,16 @@ void TutorialLevel::LevelInit() {
             for (Entity entity : registry.spotlights.entities) {
                 registry.spotlights.remove(entity);
             }
-            if (!RenderSystem::isRenderingGacha){
-                Overlay& overlay = registry.overlays.components[0];
+            Overlay& overlay = registry.overlays.components[0];
+            if (upgradesReceived == 2) {
                 overlay.visible = true;
                 if (!registry.spotlights.has(registry.players.entities[0])) {
                     vec2 pos = book_icon->position;
-                    registry.spotlights.insert(registry.players.entities[0], {pos + vec2(80.0, 0), 40.0});
+                    registry.spotlights.insert(registry.players.entities[0], {pos + vec2(90.0, 0), 40.0});
                 }
-                static_cast<bnuui::TextLabel&>(e).setText("OPEN BOOK TO SEE WHAT NEW MODULE DOES.");
-            }
+            } else overlay.visible = false;
+            static_cast<bnuui::TextLabel&>(e).setText("OPEN BOOK TO SEE WHAT NEW MODULE DOES");
+          
         } else if (curr_tutorial_phase == SAVE_BUNNY3) {
             Overlay& overlay = registry.overlays.components[0];
             overlay.visible = false;
@@ -178,7 +178,7 @@ void TutorialLevel::LevelInit() {
     scene_ui.insert(dialogue_txt_first);
     scene_ui.insert(dialogue_txt_second);
     scene_ui.insert(tutorial_talk);
-    
+
 }
 
 void TutorialLevel::LevelUpdate() {}
@@ -191,7 +191,7 @@ void TutorialLevel::LevelHandleInput(int key, int action, int mod) {
         return;
     } else */if (curr_tutorial_phase == WASD_KEYS) {
         if (action == GLFW_PRESS && 
-        (key == MOVE_UP_BUTTON || key == MOVE_DOWN_BUTTON || key == MOVE_LEFT_BUTTON || key == MOVE_RIGHT_BUTTON)) { 
+            (key == MOVE_UP_BUTTON || key == MOVE_DOWN_BUTTON || key == MOVE_LEFT_BUTTON || key == MOVE_RIGHT_BUTTON)) { 
             curr_tutorial_phase = SPACEBAR_KEY;
             dialogue_timer_ms = DIALOGUE_TIME_MS;
         }
@@ -203,7 +203,6 @@ void TutorialLevel::LevelHandleMouseMove(vec2 pos) {}
 void TutorialLevel::LevelHandleMouseClick(int button, int action, int mods) {}
 
 void TutorialLevel::LevelUpdate(float dt) {
-
     switch (curr_tutorial_phase) {
         case SPACEBAR_KEY: {
             if (registry.players.components[0].player_state == PLAYERSTATE::STATIONING) {
@@ -282,7 +281,7 @@ void TutorialLevel::LevelUpdate(float dt) {
             break;
         }
         case NEW_MODULE: {
-            if (upgradesReceived > 0 && this->book->visible) {
+            if (this->book->visible) {
                 curr_tutorial_phase = SAVE_BUNNY3;
                 dialogue_timer_ms = DIALOGUE_TIME_MS;
             }
@@ -302,7 +301,7 @@ void TutorialLevel::LevelUpdate(float dt) {
             if (upgradesReceived == bunnies_to_win) {
                 SceneManager& sceneManager = SceneManager::getInstance();
                 sceneManager.setNextLevelScence("Level 1");
-                std::cout << "Switching to next level scene.." << std::endl;
+                std::cout << "Switching to next level scene.." << std::endl;  
                 sceneManager.switchScene("Next Level Scene");
 
                 // tutorial upgrades will not carry over to actual levels
@@ -329,5 +328,5 @@ void TutorialLevel::LevelUpdate(float dt) {
             // std::cout << this->gacha_called << std::endl;
         }
     }
-    
+
 }

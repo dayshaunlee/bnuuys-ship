@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.11" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="44" height="44" tilewidth="16" tileheight="16" infinite="0" nextlayerid="11" nextobjectid="430">
+<map version="1.11" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="44" height="44" tilewidth="16" tileheight="16" infinite="0" nextlayerid="11" nextobjectid="455">
  <editorsettings>
   <export target="m3_level4.json" format="json"/>
  </editorsettings>
@@ -125,7 +125,7 @@
 275,66,0,0,0,0,66,66,229,66,66,229,66,66,229,66,66,229,66,66,229,66,66,229,66,66,229,66,66,229,66,66,229,66,66,229,66,66,0,66,66,0,0,275,
 274,66,66,66,0,0,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,0,66,66,66,66,274,
 275,66,66,66,0,0,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,0,66,66,0,66,274,
-274,66,0,66,0,0,66,66,229,66,66,229,66,66,229,66,66,228,66,66,229,66,66,229,66,66,229,66,66,229,66,66,229,66,66,229,66,66,0,66,66,0,0,274,
+274,66,0,66,0,0,66,66,229,66,66,229,66,66,229,66,66,229,66,66,229,66,66,229,66,66,229,66,66,229,66,66,229,66,66,229,66,66,0,66,66,0,0,274,
 274,66,0,66,0,0,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,0,0,66,0,0,275,
 275,66,0,66,0,0,66,66,66,66,66,66,66,66,66,66,156,157,158,0,0,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,66,0,0,0,0,0,274,
 275,66,0,66,0,0,66,66,229,66,66,229,66,66,229,66,167,168,169,0,0,66,66,66,66,66,229,66,66,229,66,66,229,66,66,229,66,66,0,0,0,0,0,275,
@@ -646,6 +646,114 @@
   <object id="429" name="flyer" type="enemy" x="496" y="400">
    <properties>
     <property name="enemy_type_enum" type="int" propertytype="enemy_type_enum" value="1"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="430" type="bunny" x="280" y="567">
+   <point/>
+  </object>
+  <object id="431" type="bunny" x="424" y="567">
+   <point/>
+  </object>
+  <object id="433" type="bunny" x="232" y="278">
+   <point/>
+  </object>
+  <object id="434" type="bunny" x="424" y="278">
+   <point/>
+  </object>
+  <object id="435" type="bunny" x="136" y="327">
+   <point/>
+  </object>
+  <object id="436" type="bunny" x="568" y="326">
+   <point/>
+  </object>
+  <object id="437" type="bunny" x="328" y="182">
+   <point/>
+  </object>
+  <object id="438" type="bunny" x="376" y="182">
+   <point/>
+  </object>
+  <object id="440" name="shooter" type="enemy" x="232" y="470">
+   <properties>
+    <property name="enemy_type_enum" type="int" propertytype="enemy_type_enum" value="3"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="442" name="shooter" type="enemy" x="232" y="518">
+   <properties>
+    <property name="enemy_type_enum" type="int" propertytype="enemy_type_enum" value="3"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="443" name="shooter" type="enemy" x="472" y="469">
+   <properties>
+    <property name="enemy_type_enum" type="int" propertytype="enemy_type_enum" value="3"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="444" name="shooter" type="enemy" x="472" y="518">
+   <properties>
+    <property name="enemy_type_enum" type="int" propertytype="enemy_type_enum" value="3"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="445" name="shooter" type="enemy" x="184" y="566">
+   <properties>
+    <property name="enemy_type_enum" type="int" propertytype="enemy_type_enum" value="3"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="446" name="shooter" type="enemy" x="136" y="518">
+   <properties>
+    <property name="enemy_type_enum" type="int" propertytype="enemy_type_enum" value="3"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="447" name="shooter" type="enemy" x="520" y="566">
+   <properties>
+    <property name="enemy_type_enum" type="int" propertytype="enemy_type_enum" value="3"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="448" name="shooter" type="enemy" x="568" y="518">
+   <properties>
+    <property name="enemy_type_enum" type="int" propertytype="enemy_type_enum" value="3"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="449" name="shooter" type="enemy" x="568" y="182">
+   <properties>
+    <property name="enemy_type_enum" type="int" propertytype="enemy_type_enum" value="3"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="450" name="shooter" type="enemy" x="520" y="134">
+   <properties>
+    <property name="enemy_type_enum" type="int" propertytype="enemy_type_enum" value="3"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="451" name="shooter" type="enemy" x="184" y="135">
+   <properties>
+    <property name="enemy_type_enum" type="int" propertytype="enemy_type_enum" value="3"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="452" name="shooter" type="enemy" x="136" y="182">
+   <properties>
+    <property name="enemy_type_enum" type="int" propertytype="enemy_type_enum" value="3"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="453" name="shooter" type="enemy" x="184" y="326">
+   <properties>
+    <property name="enemy_type_enum" type="int" propertytype="enemy_type_enum" value="3"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="454" name="shooter" type="enemy" x="520" y="326">
+   <properties>
+    <property name="enemy_type_enum" type="int" propertytype="enemy_type_enum" value="3"/>
    </properties>
    <point/>
   </object>

@@ -2,6 +2,8 @@
 #include "camera_system.hpp"
 #include <iostream>
 
+#include "common.hpp"
+#include "tinyECS/registry.hpp"
 #include "world_init.hpp"
 #include "pathing.hpp"
 #include "physics_system.hpp"
@@ -20,7 +22,10 @@ void AISystem::step(float elapsed_ms) {
             if (enemy.type == ENEMY_TYPE::BASIC_GUNNER && !registry.walkingPaths.has(enemy_entity)) {
                 vec2 direction = ship_position - registry.motions.get(enemy_entity).position;
                 float length = sqrt(direction.x * direction.x + direction.y * direction.y);
-                if (enemy.range * GRID_CELL_WIDTH_PX < length) continue;  // out of range
+                if (enemy.range * GRID_CELL_WIDTH_PX < length) {  // out of range
+                    registry.motions.get(enemy_entity).velocity = vec2(0);
+                    continue;
+                }
 
                 std::vector<ivec2> path;
                 if (find_path(path, enemy_entity, ship_entity)) {
@@ -67,6 +72,10 @@ void AISystem::step(float elapsed_ms) {
                         distance(registry.motions.get(enemy_entity).position,
                                  spawner_position) <=
                             sqrt(GRID_CELL_WIDTH_PX)) {
+                        should_spawn = false;
+                        break;
+                    }
+                    if (registry.enemies.get(enemy_entity).type == ENEMY_TYPE::DUMMY) {
                         should_spawn = false;
                         break;
                     }

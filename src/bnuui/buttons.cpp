@@ -504,7 +504,6 @@ TextLabel::TextLabel(vec2 pos, float font_size, const std::string& text, bool on
     this->font_size = font_size;
 
     this->scale = {0,0};    // When I have time to implement the Map
-    std::cout << this->scale.x << ' ' << this->scale.y << '\n';
 
     this->offset = {0, 0};
     this->color = {0,0,0};
