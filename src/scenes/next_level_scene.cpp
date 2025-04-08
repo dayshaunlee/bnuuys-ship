@@ -24,6 +24,7 @@ void NextLevelScene::Init() {
     bg_water->texture = TEXTURE_ASSET_ID::WATER_BACKGROUND;
 
     auto bg = std::make_shared<bnuui::Box>(vec2(WINDOW_WIDTH_PX/2, WINDOW_HEIGHT_PX/2), vec2(WINDOW_WIDTH_PX*1.25f, WINDOW_HEIGHT_PX), 0.0f);
+    auto text = std::make_shared<bnuui::TextLabel>(vec2(WINDOW_WIDTH_PX/2, WINDOW_HEIGHT_PX/2), 1.0f, ":3", true);
     std::string nextLevelName = SceneManager::getInstance().getNewLevelSceneName();
     bg->setOnUpdate([nextLevelName](bnuui::Element& e, float dt) {
         std::cout << "next level: " << nextLevelName << std::endl;
@@ -51,6 +52,7 @@ void NextLevelScene::Init() {
     });
 
     scene_ui.insert(bg);
+    scene_ui.insert(bg_water);
     scene_ui.insert(play_btn);
 }
 
