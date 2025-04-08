@@ -27,7 +27,9 @@ TutorialLevel::~TutorialLevel() {}
 
 float x = 100.0f;
 
+bool spawned_dummy = false;
 void TutorialLevel::LevelInit() {
+    spawned_dummy = false;
     bunnies_to_win = 3;
     curr_tutorial_phase = WASD_KEYS;
     // Initialize Tutorial UI.
@@ -130,7 +132,6 @@ void TutorialLevel::LevelHandleMouseMove(vec2 pos) {}
 
 void TutorialLevel::LevelHandleMouseClick(int button, int action, int mods) {}
 
-bool spawned_dummy = false;
 void TutorialLevel::LevelUpdate(float dt) {
     float scaling_factor_x = GRID_CELL_WIDTH_PX / (float) 16;
     float scaling_factor_y = GRID_CELL_HEIGHT_PX / (float) 16;
@@ -227,7 +228,8 @@ void TutorialLevel::LevelUpdate(float dt) {
                 registry.spotlights.remove(entity);
             }
             Overlay& overlay = registry.overlays.components[0];
-            if (tracker_off_screen && CameraSystem::GetInstance()->position.y < 320) {
+            assert(registry.bunnies.components.size() > 0);
+            if (tracker_off_screen && CameraSystem::GetInstance()->position.y < 320 && registry.bunnies.components[0].is_jailed) {
                 if (RenderSystem::isPaused) {
                     overlay.visible = false;
                 } else {
@@ -336,6 +338,17 @@ void TutorialLevel::LevelUpdate(float dt) {
             break;
         }
         case SAVE_BUNNY3: {
+            overlay.visible = false;
+            if (registry.ships.components[0].available_modules[SIMPLE_CANNON] == 0 &&
+                registry.ships.components[0].available_modules[LASER_WEAPON] == 0 &&
+                registry.ships.components[0].available_modules[HEAL] == 0 &&
+                registry.ships.components[0].available_modules[BUBBLE_MOD] <= 1) {
+                curr_tutorial_phase = SAVE_BUNNY4;
+                dialogue_timer_ms = DIALOGUE_TIME_MS;
+            }
+            break;
+        }
+        case SAVE_BUNNY4: {
             if (registry.bunnies.components.size() == 0 && registry.base.components[0].bunny_count == 2) {
                 Entity entity = Entity();
                 Bunny& bun = registry.bunnies.emplace(entity);
@@ -354,17 +367,6 @@ void TutorialLevel::LevelUpdate(float dt) {
                 createEnemy(spawner_entity);
                 registry.remove_all_components_of(spawner_entity);
             }
-            overlay.visible = false;
-            if (registry.ships.components[0].available_modules[SIMPLE_CANNON] == 0 &&
-                registry.ships.components[0].available_modules[LASER_WEAPON] == 0 &&
-                registry.ships.components[0].available_modules[HEAL] == 0 &&
-                registry.ships.components[0].available_modules[BUBBLE_MOD] <= 1) {
-                curr_tutorial_phase = SAVE_BUNNY4;
-                dialogue_timer_ms = DIALOGUE_TIME_MS;
-            }
-            break;
-        }
-        case SAVE_BUNNY4: {
             if (upgradesReceived == bunnies_to_win) {
                 SceneManager& sceneManager = SceneManager::getInstance();
                 sceneManager.setNextLevelScence("Level 1");
