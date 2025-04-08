@@ -146,6 +146,11 @@ void NextLevelScene::HandleMouseClick(int button, int action, int mods) {
             ui_elem->active = false;
         }
     }
+    // Play sound
+    Entity sound_entity = Entity();
+    Sound& sound = registry.sounds.emplace(sound_entity);
+    sound.sound_type = SOUND_ASSET_ID::CLICK;
+    sound.volume = 30;
 }
 
 void NextLevelScene::Update(float dt) {

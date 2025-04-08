@@ -334,6 +334,12 @@ void GameLevel::InitializeBookUI(){
             module_icon7->visible = !module_icon7->visible;
             module_icon8->visible = !module_icon8->visible;
             module_icon9->visible = !module_icon9->visible;
+
+            // Play sound
+            Entity sound_entity = Entity();
+            Sound& sound = registry.sounds.emplace(sound_entity);
+            sound.sound_type = SOUND_ASSET_ID::BOOK;
+            sound.volume = 50;
         }
     });
 
