@@ -312,7 +312,7 @@ void WorldSystem::handle_collisions() {
                 Entity sound_entity = Entity();
                 Sound& sound = registry.sounds.emplace(sound_entity);
                 sound.sound_type = SOUND_ASSET_ID::PROJECTILE_JAIL_COLLISION;
-                sound.volume = 50;
+                sound.volume = 20;
                 registry.motions.get(e2).scale = {28, 28};
                 registry.renderRequests.get(e2).used_texture = TEXTURE_ASSET_ID::BUNNY_NPC_IDLE_UP0;
                 bunny.is_jailed = false;
@@ -329,7 +329,7 @@ void WorldSystem::handle_collisions() {
                 Entity sound_entity = Entity();
                 Sound& sound = registry.sounds.emplace(sound_entity);
                 sound.sound_type = SOUND_ASSET_ID::PROJECTILE_JAIL_COLLISION;
-                sound.volume = 50;
+                sound.volume = 20;
                 registry.motions.get(e1).scale = {28, 28};
                 registry.renderRequests.get(e1).used_texture = TEXTURE_ASSET_ID::BUNNY_NPC_IDLE_UP0;
                 bunny.is_jailed = false;
