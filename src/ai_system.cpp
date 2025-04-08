@@ -20,7 +20,10 @@ void AISystem::step(float elapsed_ms) {
             if (enemy.type == ENEMY_TYPE::BASIC_GUNNER && !registry.walkingPaths.has(enemy_entity)) {
                 vec2 direction = ship_position - registry.motions.get(enemy_entity).position;
                 float length = sqrt(direction.x * direction.x + direction.y * direction.y);
-                if (enemy.range * GRID_CELL_WIDTH_PX < length) continue;  // out of range
+                if (enemy.range * GRID_CELL_WIDTH_PX < length) {  // out of range
+                    registry.motions.get(enemy_entity).velocity = vec2(0);
+                    continue;
+                }
 
                 std::vector<ivec2> path;
                 if (find_path(path, enemy_entity, ship_entity)) {
