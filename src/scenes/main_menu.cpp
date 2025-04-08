@@ -32,6 +32,9 @@ void MainMenuScene::Init() {
     });
 
     play_btn->setOnClick([](bnuui::Element& e) {
+        SaveLoadSystem& saveLoadSystem = SaveLoadSystem::getInstance();
+        saveLoadSystem.hasLoadedData = false;
+
         SceneManager::getInstance().switchScene("Level 1");
     });
 
