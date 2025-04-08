@@ -27,13 +27,23 @@ void NextLevelScene::Init() {
     std::string nextLevelName = SceneManager::getInstance().getNewLevelSceneName();
     bg->setOnUpdate([nextLevelName](bnuui::Element& e, float dt) {
         std::cout << "next level: " << nextLevelName << std::endl;
-        if (nextLevelName == "Level 1") e.texture = TEXTURE_ASSET_ID::LEVEL01_BACKGROUND;
-        else if (nextLevelName == "Level 2") e.texture = TEXTURE_ASSET_ID::LEVEL02_BACKGROUND;
-        else if (nextLevelName == "Level 3") e.texture = TEXTURE_ASSET_ID::LEVEL03_BACKGROUND;
-        else if (nextLevelName == "Level 4")
+        if (nextLevelName == "Level 1") {
+            e.texture = TEXTURE_ASSET_ID::LEVEL01_BACKGROUND;
+            e.scale = vec2(36 / 30 * WINDOW_HEIGHT_PX * 1.25, WINDOW_HEIGHT_PX);
+        } else if (nextLevelName == "Level 2") {
+            e.texture = TEXTURE_ASSET_ID::LEVEL02_BACKGROUND;
+            e.scale = vec2(50 / 30 * WINDOW_HEIGHT_PX * 1.25, WINDOW_HEIGHT_PX);
+        } else if (nextLevelName == "Level 3") {
+            e.texture = TEXTURE_ASSET_ID::LEVEL03_BACKGROUND;
+            e.scale = vec2(28 / 60 * WINDOW_HEIGHT_PX * 1.25, WINDOW_HEIGHT_PX);
+        } else if (nextLevelName == "Level 4") {
             e.texture = TEXTURE_ASSET_ID::LEVEL04_BACKGROUND;
-        else
+            e.scale = vec2(44 / 44 * WINDOW_HEIGHT_PX * 1.25, WINDOW_HEIGHT_PX);
+        }
+        else {
             e.texture = TEXTURE_ASSET_ID::NEXT_LEVEL_BG;
+            vec2(WINDOW_WIDTH_PX * 1.25f, WINDOW_HEIGHT_PX);
+        }
     });
     play_btn->setOnClick([](bnuui::Element& e) {
         std::string nextLevelName = SceneManager::getInstance().getNewLevelSceneName();
