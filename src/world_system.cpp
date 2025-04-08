@@ -159,7 +159,7 @@ void WorldSystem::init(RenderSystem* renderer_arg) {
     Sound& sound = registry.sounds.emplace(sound_entity);
     sound.sound_type = SOUND_ASSET_ID::BACKGROUND_MUSIC;
     sound.is_repeating = true;
-    sound.volume = 5;
+    sound.volume = 20;
     /*Mix_PlayMusic(background_music, -1);
     Mix_VolumeMusic(5);*/
 
@@ -231,14 +231,15 @@ void WorldSystem::handle_collisions() {
 
             Entity sound_entity = Entity();
             Sound& sound = registry.sounds.emplace(sound_entity);
-            sound.volume = 50;
 
             switch (projectile.mod_type) {
                 case NONE:
                     sound.sound_type = SOUND_ASSET_ID::PROJECTILE_ENEMY_COLLISION;
+                    sound.volume = 5;
                     break;
                 case BUBBLE:
                     sound.sound_type = SOUND_ASSET_ID::BUBBLE;
+                    sound.volume = 30;
 
                     enemy.is_mod_affected = true;
                     enemy.mod_effect_duration = MODIFIER_EFFECT_DURATION;
@@ -259,14 +260,15 @@ void WorldSystem::handle_collisions() {
 
             Entity sound_entity = Entity();
             Sound& sound = registry.sounds.emplace(sound_entity);
-            sound.volume = 50;
 
             switch (projectile.mod_type) {
                 case NONE:
                     sound.sound_type = SOUND_ASSET_ID::PROJECTILE_ENEMY_COLLISION;
+                    sound.volume = 5;
                     break;
                 case BUBBLE:
                     sound.sound_type = SOUND_ASSET_ID::BUBBLE;
+                    sound.volume = 30;
 
                     enemy.is_mod_affected = true;
                     enemy.mod_effect_duration = MODIFIER_EFFECT_DURATION;
@@ -310,7 +312,7 @@ void WorldSystem::handle_collisions() {
                 Entity sound_entity = Entity();
                 Sound& sound = registry.sounds.emplace(sound_entity);
                 sound.sound_type = SOUND_ASSET_ID::PROJECTILE_JAIL_COLLISION;
-                sound.volume = 80;
+                sound.volume = 20;
                 registry.motions.get(e2).scale = {28, 28};
                 registry.renderRequests.get(e2).used_texture = TEXTURE_ASSET_ID::BUNNY_NPC_IDLE_UP0;
                 bunny.is_jailed = false;
@@ -327,7 +329,7 @@ void WorldSystem::handle_collisions() {
                 Entity sound_entity = Entity();
                 Sound& sound = registry.sounds.emplace(sound_entity);
                 sound.sound_type = SOUND_ASSET_ID::PROJECTILE_JAIL_COLLISION;
-                sound.volume = 80;
+                sound.volume = 20;
                 registry.motions.get(e1).scale = {28, 28};
                 registry.renderRequests.get(e1).used_texture = TEXTURE_ASSET_ID::BUNNY_NPC_IDLE_UP0;
                 bunny.is_jailed = false;
@@ -345,6 +347,10 @@ void WorldSystem::handle_collisions() {
                 handle_player_death();
                 return;
             }
+            Entity sound_entity = Entity();
+            Sound& sound = registry.sounds.emplace(sound_entity);
+            sound.sound_type = SOUND_ASSET_ID::COW_BULLET;
+            sound.volume = 30;
         } else if (registry.enemyProjectiles.has(e2) && registry.ships.has(e1)) {
             EnemyProjectile& projectile = registry.enemyProjectiles.get(e2);
             Ship& ship = registry.ships.get(e1);
@@ -354,6 +360,10 @@ void WorldSystem::handle_collisions() {
                 handle_player_death();
                 return;
             }
+            Entity sound_entity = Entity();
+            Sound& sound = registry.sounds.emplace(sound_entity);
+            sound.sound_type = SOUND_ASSET_ID::COW_BULLET;
+            sound.volume = 30;
         }
 
         // Enemy - Ship collision
@@ -365,7 +375,7 @@ void WorldSystem::handle_collisions() {
             Entity sound_entity = Entity();
             Sound& sound = registry.sounds.emplace(sound_entity);
             sound.sound_type = SOUND_ASSET_ID::ENEMY_SHIP_COLLISION;
-            sound.volume = 50;
+            sound.volume = 10;
 
             // When Player dies (ship health is <= 0)
             if(registry.ships.get(e2).health <= 0.0f){
@@ -381,7 +391,7 @@ void WorldSystem::handle_collisions() {
             Entity sound_entity = Entity();
             Sound& sound = registry.sounds.emplace(sound_entity);
             sound.sound_type = SOUND_ASSET_ID::ENEMY_SHIP_COLLISION;
-            sound.volume = 50;
+            sound.volume = 10;
 
             // When Player dies (ship health is <= 0)
             if(registry.ships.get(e1).health <= 0.0f){
@@ -404,7 +414,7 @@ void WorldSystem::handle_collisions() {
                 Entity sound_entity = Entity();
                 Sound& sound = registry.sounds.emplace(sound_entity);
                 sound.sound_type = SOUND_ASSET_ID::ISLAND_SHIP_COLLISION;
-                sound.volume = 50;
+                sound.volume = 20;
 
                 last_collision_sound_time = current_time;
             }
@@ -428,7 +438,7 @@ void WorldSystem::handle_collisions() {
             Entity sound_entity = Entity();
             Sound& sound = registry.sounds.emplace(sound_entity);
             sound.sound_type = SOUND_ASSET_ID::ENEMY_SHIP_COLLISION;
-            sound.volume = 50;
+            sound.volume = 10;
 
             // When Player dies (ship health is <= 0)
             if(registry.ships.get(e2).health <= 0.0f){
@@ -443,7 +453,7 @@ void WorldSystem::handle_collisions() {
             Entity sound_entity = Entity();
             Sound& sound = registry.sounds.emplace(sound_entity);
             sound.sound_type = SOUND_ASSET_ID::ENEMY_SHIP_COLLISION;
-            sound.volume = 50;
+            sound.volume = 10;
 
             // When Player dies (ship health is <= 0)
             if(registry.ships.get(e1).health <= 0.0f){
@@ -534,11 +544,6 @@ void WorldSystem::on_mouse_button_pressed(int button, int action, int mods) {
     // on button press
     Scene* scene = SceneManager::getInstance().getCurrentScene();
     if (scene) {
-        // Play sound
-        Entity sound_entity = Entity();
-        Sound& sound = registry.sounds.emplace(sound_entity);
-        sound.sound_type = SOUND_ASSET_ID::CLICK;
-        sound.volume = 80;
         //Mix_PlayChannel(-1, click, 0);
         scene->HandleMouseClick(button, action, mods);
     }

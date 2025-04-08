@@ -91,6 +91,12 @@ void clearGatchaUI(bnuui::SceneUI& scene_ui){
 }
 
 void GachaSystem::handleOptionClick(MODULE_TYPES moduleChose){
+    // Play sound
+    Entity sound_entity = Entity();
+    Sound& sound = registry.sounds.emplace(sound_entity);
+    sound.sound_type = SOUND_ASSET_ID::CLICK;
+    sound.volume = 30;
+
     if(moduleChose == MODULE_TYPES::PLATFORM){
         Entity sound_entity = Entity();
         Sound& sound = registry.sounds.emplace(sound_entity);

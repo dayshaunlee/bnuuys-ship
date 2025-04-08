@@ -20,7 +20,7 @@ TutorialLevel::TutorialLevel(WorldSystem* world_system, std::string map_filename
     this->level_path = map_filename;
     this->texture = texture;
     GachaSystem::getInstance().setLevelPool(
-        0, {MODULE_TYPES::SIMPLE_CANNON});
+        0, {MODULE_TYPES::SIMPLE_CANNON, MODULE_TYPES::LASER_WEAPON, MODULE_TYPES::HEAL, MODULE_TYPES::BUBBLE_MOD});
 }
 
 TutorialLevel::~TutorialLevel() {}
@@ -40,8 +40,8 @@ void TutorialLevel::LevelInit() {
     );
 
     // freetype doesnt support \n, probably should use a helper ;-;
-    auto dialogue_txt_first = std::make_shared<bnuui::TextLabel>(vec2(155, 490), 1.0f, ":3", true);
-    auto dialogue_txt_second = std::make_shared<bnuui::TextLabel>(vec2(155, 510), 1.0f, " ", true);
+    auto dialogue_txt_first = std::make_shared<bnuui::TextLabel>(vec2(150, 490), 1.0f, ":3", true);
+    auto dialogue_txt_second = std::make_shared<bnuui::TextLabel>(vec2(150, 510), 1.0f, " ", true);
 
     // lock the base
     registry.base.components[0].locked = true;
@@ -78,7 +78,7 @@ void TutorialLevel::LevelInit() {
                 vec2 pos = registry.motions.get(registry.ships.entities[0]).position - vec2(0, GRID_CELL_HEIGHT_PX);
                 registry.spotlights.insert(registry.players.entities[0], {pos + vec2(5.0, 0), 20.0});
             }
-            static_cast<bnuui::TextLabel&>(e).setText("GO TO CANNON AND PRESS SPACEBAR");
+            static_cast<bnuui::TextLabel&>(e).setText("Stand on top of CANNON AND PRESS SPACE TO USE.");
         } else if (curr_tutorial_phase == CANNON_SHOOT) {
             if (registry.enemies.components.size() == 0) {
                 Entity entity = Entity();
@@ -106,7 +106,7 @@ void TutorialLevel::LevelInit() {
             } else {
                 overlay.visible = true;
             }
-            static_cast<bnuui::TextLabel&>(e).setText("Try using the cannon. SHOOT DUMMY.");
+            static_cast<bnuui::TextLabel&>(e).setText("Try using the cannon. LEFT CLICK TO SHOOT.");
         } else if (curr_tutorial_phase == STERRING_PAD) {
             for (Entity entity : registry.spotlights.entities) {
                 registry.spotlights.remove(entity);
@@ -120,7 +120,7 @@ void TutorialLevel::LevelInit() {
                 vec2 pos = registry.motions.get(registry.ships.entities[0]).position;
                 registry.spotlights.insert(registry.players.entities[0], {pos + vec2(5.0, 0), 25.0});
             }
-            static_cast<bnuui::TextLabel&>(e).setText("Try using the steering pad. MOVE TO BUNNY INDICATOR.");
+            static_cast<bnuui::TextLabel&>(e).setText("Press Space again to unstation. Move to the steering wheel and use");
         } else if (curr_tutorial_phase == SAVE_BUNNY1) {
             for (Entity entity : registry.spotlights.entities) {
                 registry.spotlights.remove(entity);
@@ -148,9 +148,9 @@ void TutorialLevel::LevelInit() {
                 registry.spotlights.remove(entity);
             }
             overlay.visible = false;
-            static_cast<bnuui::TextLabel&>(e).setText("PRESS B TO OPEN BUILD MODE. YOU CAN USE THIS TO REARRANGE YOUR STATIONS.");
+            static_cast<bnuui::TextLabel&>(e).setText("Once a bunny is freed, you can hire them and enable auto-shoot.");
         } else if (curr_tutorial_phase == AUTO_BUNNY) {
-            static_cast<bnuui::TextLabel&>(e).setText("PUT BUNNY ON CANNON WITH LMB ON BUNNY IN INVENTORY. THEN LEFT CLICK THE");
+            static_cast<bnuui::TextLabel&>(e).setText("IN INVENTORY, LEFT CLICK THE BUNNY ICON, THEN LEFT CLICK ON");
         } else if (curr_tutorial_phase == SAVE_BUNNY2) {
             if (registry.bunnies.components.size() == 1) {
                 Entity entity = Entity();
@@ -168,11 +168,9 @@ void TutorialLevel::LevelInit() {
                 createEnemy(spawner_entity);
                 registry.remove_all_components_of(spawner_entity);
             }
-
-            static_cast<bnuui::TextLabel&>(e).setText("NOW TRY SAVING THE NEXT BUNNY WITH THE HELP OF YOUR NEW FRIEND.");
+            static_cast<bnuui::TextLabel&>(e).setText("Press E again to exit build mode/inventory.");
         } else if (curr_tutorial_phase == DROPOFF) {
-            registry.base.components[0].locked = false;
-            static_cast<bnuui::TextLabel&>(e).setText("LETS DROP OFF THE BUNNYS AT THE BASE. REMEMBER TO UNSTATION THEM!");
+            static_cast<bnuui::TextLabel&>(e).setText("LETS DROP OFF THE BUNNYS AT THE BASE. REMEMBER TO UNASSIGN THEM!");
         } else if (curr_tutorial_phase == NEW_MODULE) {
             for (Entity entity : registry.spotlights.entities) {
                 registry.spotlights.remove(entity);
@@ -190,7 +188,7 @@ void TutorialLevel::LevelInit() {
                 }
             } else overlay.visible = false;
             static_cast<bnuui::TextLabel&>(e).setText("OPEN BOOK TO SEE WHAT NEW MODULE DOES");
-
+          
         } else if (curr_tutorial_phase == SAVE_BUNNY3) {
             if (registry.bunnies.components.size() == 0 && registry.base.components[0].bunny_count == 2) {
                 Entity entity = Entity();
@@ -212,7 +210,9 @@ void TutorialLevel::LevelInit() {
             }
             Overlay& overlay = registry.overlays.components[0];
             overlay.visible = false;
-            static_cast<bnuui::TextLabel&>(e).setText("GO SAVE THE REST OF THE BUNNIES");
+            static_cast<bnuui::TextLabel&>(e).setText("DROPPING OFF BUNNIES AT BASE WILL UNLOCK MORE WEAPONS.");
+        } else if (curr_tutorial_phase == SAVE_BUNNY4) {
+            static_cast<bnuui::TextLabel&>(e).setText("NOW, GO SAVE THE REST OF THE BUNNIES.");
         } 
     });
 
@@ -220,13 +220,26 @@ void TutorialLevel::LevelInit() {
         if (curr_tutorial_phase == WASD_KEYS) {
             static_cast<bnuui::TextLabel&>(e).setText("You can call me Rabbit. First, try moving with WASD.");
         } else if (curr_tutorial_phase == AUTO_BUNNY) {
-            static_cast<bnuui::TextLabel&>(e).setText(" CANNON TO HAVE IT HELP SHOOT. YOU CAN REMOVE MODULES WITH RMB.");
-        } /*else if (curr_tutorial_phase == SPACEBAR_KEY) {
+            static_cast<bnuui::TextLabel&>(e).setText("THE CANNON TO ASSIGN. THIS WILL ENABLE AUTO-SHOOTING.");
+        } else if (curr_tutorial_phase == BUILD_MODE) {
+            static_cast<bnuui::TextLabel&>(e).setText("PRESS E TO OPEN BUILD MODE/INVENTORY.");
+        } else if (curr_tutorial_phase == STERRING_PAD) {
+            static_cast<bnuui::TextLabel&>(e).setText("it (press space). USE WASD AND MOVE TOWARDS THE BUNNY INDICATOR.");
+        } else if (curr_tutorial_phase == CANNON_SHOOT) {
+            static_cast<bnuui::TextLabel&>(e).setText("Try shooting at the dummy bunny.");
+        } else if (curr_tutorial_phase == SAVE_BUNNY2) {
+            static_cast<bnuui::TextLabel&>(e).setText("NOW TRY SAVING THE NEXT BUNNY WITH THE HELP OF YOUR NEW FRIEND.");
+        } else if (curr_tutorial_phase == DROPOFF) {
+            static_cast<bnuui::TextLabel&>(e).setText("PRESS E and RIGHT CLICK ON THE CANNON TO UNASSIGN THE BUNNY.");
+        } else if (curr_tutorial_phase == SAVE_BUNNY3) {
+            static_cast<bnuui::TextLabel&>(e).setText("IN INVENTORY, YOU CAN SELECT MODULE AND BUILD IT ON SHIP.");
+        } else if (curr_tutorial_phase == NEW_MODULE) {
+            static_cast<bnuui::TextLabel&>(e).setText("LEFT CLICK TO OPEN AND CLOSE THE BOOK.");
+        }
+        /*else if (curr_tutorial_phase == SPACEBAR_KEY) {
             static_cast<bnuui::TextLabel&>(e).setText("with/exit ship modules. ");
         } else if (curr_tutorial_phase == CANNON_SHOOT) {
-            static_cast<bnuui::TextLabel&>(e).setText("Use left click to shoot.");
-        } else if (curr_tutorial_phase == STERRING_PAD) {
-            static_cast<bnuui::TextLabel&>(e).setText("to move the ship.");
+            static_cast<bnuui::TextLabel&>(e).setText("Use left click to shoot. Try shooting at the dummy bunny.");
         } else if (curr_tutorial_phase == ENEMIES_MOVE) {
             static_cast<bnuui::TextLabel&>(e).setText("KILL THEM!!");
         } else if (curr_tutorial_phase == ENEMIES_DAMAGE) {
@@ -235,8 +248,6 @@ void TutorialLevel::LevelInit() {
             static_cast<bnuui::TextLabel&>(e).setText("jailed bunnies on islands.");
         } else if (curr_tutorial_phase == GOTO_BASE) {
             static_cast<bnuui::TextLabel&>(e).setText("highlighted area.");
-        } else if (curr_tutorial_phase == BUILD_MODE) {
-            static_cast<bnuui::TextLabel&>(e).setText("build mode.");
         } */
         else {
             static_cast<bnuui::TextLabel&>(e).setText(" ");
@@ -358,6 +369,16 @@ void TutorialLevel::LevelUpdate(float dt) {
             break;
         }
         case SAVE_BUNNY3: {
+            if (registry.ships.components[0].available_modules[SIMPLE_CANNON] == 0 && 
+                registry.ships.components[0].available_modules[LASER_WEAPON] == 0 && 
+                registry.ships.components[0].available_modules[HEAL] == 0 && 
+                registry.ships.components[0].available_modules[BUBBLE_MOD] <= 1) {
+                curr_tutorial_phase = SAVE_BUNNY4;
+                dialogue_timer_ms = DIALOGUE_TIME_MS;
+            }
+            break;
+        }
+        case SAVE_BUNNY4: {
             if (upgradesReceived == bunnies_to_win) {
                 SceneManager& sceneManager = SceneManager::getInstance();
                 sceneManager.setNextLevelScence("Level 1");

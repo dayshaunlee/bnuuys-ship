@@ -29,7 +29,7 @@ void EndCutscene::Init() {
 
     Sound bg_music;
     bg_music.sound_type = SOUND_ASSET_ID::END_MUSIC;
-    bg_music.volume = 100;
+    bg_music.volume = 15;
     registry.sounds.insert(Entity(), bg_music);
 }
 

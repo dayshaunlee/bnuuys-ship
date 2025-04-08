@@ -29,6 +29,7 @@ private:
         DROPOFF,
         NEW_MODULE,
         SAVE_BUNNY3,
+        SAVE_BUNNY4,
     };
 
     vec2 tutorial_mouse_pos;

@@ -13,6 +13,7 @@
 #include "bnuui/bnuui.hpp"
 #include "camera_system.hpp"
 #include "common.hpp"
+#include "gacha_system.hpp"
 #include "inventory_system.hpp"
 #include "tinyECS/components.hpp"
 #include "tinyECS/registry.hpp"
@@ -79,6 +80,7 @@ void GameLevel::Init() {
     base_corners = createBaseProgressLines(registry.base.entities[0]);
     Ship& ship = registry.ships.components[0];
     ship.health = ship.maxHealth;
+
     if (SaveLoadSystem::getInstance().hasLoadedData) {
         GameData gd = SaveLoadSystem::getInstance().loadedGameData;
         ship.health = gd.ship_health;
@@ -93,6 +95,7 @@ void GameLevel::Init() {
         Motion& shipMotion = registry.motions.get(registry.ships.entities[0]);
         shipMotion.scale.x = GRID_CELL_WIDTH_PX * 5;
         shipMotion.scale.y = GRID_CELL_HEIGHT_PX * 5;
+        GachaSystem::getInstance().setDropRate(MODULE_TYPES::PLATFORM, 0);
     }
 
     // render player
@@ -335,6 +338,12 @@ void GameLevel::InitializeBookUI(){
             module_icon7->visible = !module_icon7->visible;
             module_icon8->visible = !module_icon8->visible;
             module_icon9->visible = !module_icon9->visible;
+
+            // Play sound
+            Entity sound_entity = Entity();
+            Sound& sound = registry.sounds.emplace(sound_entity);
+            sound.sound_type = SOUND_ASSET_ID::BOOK;
+            sound.volume = 50;
         }
     });
 
@@ -756,7 +765,7 @@ void GameLevel::HandleInput(int key, int action, int mod) {
 
 
     // Build Mode.
-    if ((action == GLFW_RELEASE) && (key == GLFW_KEY_B)) {
+    if ((action == GLFW_RELEASE) && (key == GLFW_KEY_E)) {
         if(RenderSystem::isRenderingBook){
             return;
         }
