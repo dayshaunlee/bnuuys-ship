@@ -2,6 +2,8 @@
 #include "camera_system.hpp"
 #include <iostream>
 
+#include "common.hpp"
+#include "tinyECS/registry.hpp"
 #include "world_init.hpp"
 #include "pathing.hpp"
 #include "physics_system.hpp"
@@ -70,6 +72,10 @@ void AISystem::step(float elapsed_ms) {
                         distance(registry.motions.get(enemy_entity).position,
                                  spawner_position) <=
                             sqrt(GRID_CELL_WIDTH_PX)) {
+                        should_spawn = false;
+                        break;
+                    }
+                    if (registry.enemies.get(enemy_entity).type == ENEMY_TYPE::DUMMY) {
                         should_spawn = false;
                         break;
                     }

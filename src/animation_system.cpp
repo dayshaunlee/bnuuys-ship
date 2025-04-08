@@ -301,7 +301,6 @@ void HandleEnemyAnimation(float elapsed_ms) {
                 texture = TEXTURE_ASSET_ID::COW2;
             }
         } else if (enemy.type == ENEMY_TYPE::DUMMY) {
-            std::cout << "here" << std::endl;
             continue;
         }
 
