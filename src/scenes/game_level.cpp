@@ -122,6 +122,9 @@ void GameLevel::Init() {
     std::cout << "Num of ships: " << registry.ships.components.size() << std::endl;
 
     RenderSystem::isInGame = true;
+    RenderSystem::isPaused = false;
+    RenderSystem::isRenderingBook = false;
+    RenderSystem::isRenderingGacha = false;
 }
 
 bool isOffscreen(const glm::vec2& A, const glm::vec2& center) {
@@ -508,6 +511,10 @@ void GameLevel::InitializeUI() {
 
 void GameLevel::Exit() {
     RenderSystem::isInGame = false;
+    RenderSystem::isPaused = false;
+    RenderSystem::isRenderingBook = false;
+    RenderSystem::isRenderingGacha = false;
+
     scene_ui.clear();
     CameraSystem* cs = CameraSystem::GetInstance();
     cs->position = {0.0f, 0.0f};
@@ -725,7 +732,7 @@ void HandlePlayerStationing(vec2 tile_pos) {
 void GameLevel::HandleInput(int key, int action, int mod) {
     // exit game w/ ESC
     if (action == GLFW_RELEASE && key == GLFW_KEY_ESCAPE) {
-        RenderSystem::isPaused = !RenderSystem::isPaused;       
+        RenderSystem::isPaused = !RenderSystem::isPaused;
     }
     if (RenderSystem::isPaused) return;
 
