@@ -258,6 +258,7 @@ class RenderSystem {
 
         textures_path("cutscenes/asset_credit.png"),
         textures_path("cutscenes/end_credit.png"),
+        textures_path("cutscenes/plain_title.png"),
 
 
         // home indicator

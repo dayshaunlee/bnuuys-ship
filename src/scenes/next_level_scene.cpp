@@ -23,22 +23,25 @@ void NextLevelScene::Init() {
         vec2(WINDOW_WIDTH_PX / 2, WINDOW_HEIGHT_PX / 2), vec2(WINDOW_WIDTH_PX * 1.25f, WINDOW_HEIGHT_PX), 0.0f);
     bg_water->texture = TEXTURE_ASSET_ID::WATER_BACKGROUND;
 
-    auto bg = std::make_shared<bnuui::Box>(vec2(WINDOW_WIDTH_PX/2, WINDOW_HEIGHT_PX/2), vec2(WINDOW_WIDTH_PX*1.25f, WINDOW_HEIGHT_PX), 0.0f);
+    auto bg = std::make_shared<bnuui::Box>(vec2(WINDOW_WIDTH_PX/2, WINDOW_HEIGHT_PX/2), vec2(WINDOW_WIDTH_PX*2, WINDOW_HEIGHT_PX), 0.0f);
     std::string nextLevelName = SceneManager::getInstance().getNewLevelSceneName();
+    auto text = std::make_shared<bnuui::TextLabel>(vec2(WINDOW_WIDTH_PX/2-122.5f, WINDOW_HEIGHT_PX/2), 5.0f, nextLevelName, true);
+    text->color = vec3{115.f/255.f, 75.f/255.f, 50.f/255.f};
+
     bg->setOnUpdate([nextLevelName](bnuui::Element& e, float dt) {
         std::cout << "next level: " << nextLevelName << std::endl;
         if (nextLevelName == "Level 1") {
             e.texture = TEXTURE_ASSET_ID::LEVEL01_BACKGROUND;
-            e.scale = vec2(36 / 30 * WINDOW_HEIGHT_PX * 1.25, WINDOW_HEIGHT_PX);
+            e.scale = vec2(36.f / 30.f * WINDOW_HEIGHT_PX, WINDOW_HEIGHT_PX);
         } else if (nextLevelName == "Level 2") {
             e.texture = TEXTURE_ASSET_ID::LEVEL02_BACKGROUND;
-            e.scale = vec2(50 / 30 * WINDOW_HEIGHT_PX * 1.25, WINDOW_HEIGHT_PX);
+            e.scale = vec2(50.f / 30.f * WINDOW_HEIGHT_PX, WINDOW_HEIGHT_PX);
         } else if (nextLevelName == "Level 3") {
             e.texture = TEXTURE_ASSET_ID::LEVEL03_BACKGROUND;
-            e.scale = vec2(28 / 60 * WINDOW_HEIGHT_PX * 1.25, WINDOW_HEIGHT_PX);
+            e.scale = vec2(28.f / 60.f * WINDOW_HEIGHT_PX, WINDOW_HEIGHT_PX);
         } else if (nextLevelName == "Level 4") {
             e.texture = TEXTURE_ASSET_ID::LEVEL04_BACKGROUND;
-            e.scale = vec2(44 / 44 * WINDOW_HEIGHT_PX * 1.25, WINDOW_HEIGHT_PX);
+            e.scale = vec2(44.f / 44.f * WINDOW_HEIGHT_PX, WINDOW_HEIGHT_PX);
         }
         else {
             e.texture = TEXTURE_ASSET_ID::NEXT_LEVEL_BG;
@@ -50,8 +53,10 @@ void NextLevelScene::Init() {
         SceneManager::getInstance().switchScene(nextLevelName);
     });
 
+    scene_ui.insert(bg_water);
     scene_ui.insert(bg);
     scene_ui.insert(play_btn);
+    scene_ui.insert(text);
 }
 
 void NextLevelScene::Exit() {

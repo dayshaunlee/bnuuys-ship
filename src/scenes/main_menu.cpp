@@ -20,12 +20,19 @@ MainMenuScene::MainMenuScene() {
 
 void MainMenuScene::Init() {
     // Create the UI Title Screen.
-    auto play_btn = std::make_shared<bnuui::PlayButton>(vec2((WINDOW_WIDTH_PX/2) - 180, 0.8*WINDOW_HEIGHT_PX), vec2(300, 100), 0.0f);
-    auto tutorial_btn = std::make_shared<bnuui::TutorialButton>(vec2((WINDOW_WIDTH_PX/2) + 180, 0.8*WINDOW_HEIGHT_PX), vec2(300, 100), 0.0f);
-    auto exit_btn = std::make_shared<bnuui::ExitButton>(vec2((WINDOW_WIDTH_PX/2) + 180, 0.8*WINDOW_HEIGHT_PX + 90), vec2(300, 100), 0.0f);
+    auto play_btn = std::make_shared<bnuui::PlayButton>(vec2((WINDOW_WIDTH_PX/2) - 15, WINDOW_HEIGHT_PX/2 + 80+55), vec2(220, 75), 0.0f);
+    auto tutorial_btn = std::make_shared<bnuui::TutorialButton>(vec2((WINDOW_WIDTH_PX/2) - 15, WINDOW_HEIGHT_PX/2 + 135+55), vec2(150, 50), 0.0f);
+    auto exit_btn = std::make_shared<bnuui::ExitButton>(vec2((WINDOW_WIDTH_PX/2) - 15, WINDOW_HEIGHT_PX/2 + 180+55), vec2(120, 45), 0.0f);
     auto bg = std::make_shared<bnuui::Box>(vec2((WINDOW_WIDTH_PX/2), WINDOW_HEIGHT_PX/2), vec2(WINDOW_WIDTH_PX*1.25f, WINDOW_HEIGHT_PX), 0.0f);
 
-    bg->texture = TEXTURE_ASSET_ID::MAIN_MENU_BG;
+    auto title = std::make_shared<bnuui::Box>(vec2((WINDOW_WIDTH_PX/2), WINDOW_HEIGHT_PX/2), vec2(WINDOW_WIDTH_PX*1.25f, WINDOW_HEIGHT_PX), 0.0f);
+    title->texture = TEXTURE_ASSET_ID::TEXT_TITLE;
+    title->position = vec2(WINDOW_WIDTH_PX/2-20, WINDOW_HEIGHT_PX/2);
+    title->scale = vec2{400,400};
+
+    bg->scale = vec2(2*WINDOW_WIDTH_PX, 1.75*WINDOW_HEIGHT_PX);
+    bg->texture = TEXTURE_ASSET_ID::END_CUTSCENE_VILLAGE;
+    bg->position = vec2(WINDOW_WIDTH_PX/2, WINDOW_HEIGHT_PX-100.f);
 
     tutorial_btn->setOnClick([](bnuui::Element& e) {
         SceneManager::getInstance().switchScene("Tutorial Level");
@@ -43,10 +50,10 @@ void MainMenuScene::Init() {
     scene_ui.insert(play_btn);
     scene_ui.insert(tutorial_btn);
     scene_ui.insert(exit_btn);
-    // scene_ui.insert(txt);
+    scene_ui.insert(title);
 
     if (!std::filesystem::is_empty(data_path() + "/level_save.json")) {
-        auto continue_btn = std::make_shared<bnuui::ContinueButton>(vec2((WINDOW_WIDTH_PX/2) - 180, 0.8*WINDOW_HEIGHT_PX + 90), vec2(300, 100), 0.0f);
+        auto continue_btn = std::make_shared<bnuui::ContinueButton>(vec2((WINDOW_WIDTH_PX/2) - 15, WINDOW_HEIGHT_PX/2 + 80), vec2(200, 50), 0.0f);
         continue_btn->setOnClick([](bnuui::Element& e) {
             SaveLoadSystem& saveLoadSystem = SaveLoadSystem::getInstance();
             GameData gameData;
