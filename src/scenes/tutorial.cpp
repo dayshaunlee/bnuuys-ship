@@ -101,9 +101,9 @@ void TutorialLevel::LevelInit() {
                 }
             }
             else {
-                    overlay.visible = false;
+                overlay.visible = false;
             }
-            
+
             static_cast<bnuui::TextLabel&>(e).setText("A BUNNY NEEDS YOUR HELP! DRIVE THERE AND SHOOT THE CAGE TO FREE IT.");
         } else if (curr_tutorial_phase == BUILD_MODE) {
             static_cast<bnuui::TextLabel&>(e).setText("PRESS B TO OPEN BUILD MODE. YOU CAN USE THIS TO REARRANGE YOUR STATIONS.");
@@ -126,7 +126,7 @@ void TutorialLevel::LevelInit() {
                 }
             } else overlay.visible = false;
             static_cast<bnuui::TextLabel&>(e).setText("OPEN BOOK TO SEE WHAT NEW MODULE DOES");
-   
+
         } else if (curr_tutorial_phase == SAVE_BUNNY3) {
             Overlay& overlay = registry.overlays.components[0];
             overlay.visible = false;
@@ -166,7 +166,7 @@ void TutorialLevel::LevelInit() {
     scene_ui.insert(dialogue_txt_first);
     scene_ui.insert(dialogue_txt_second);
     scene_ui.insert(tutorial_talk);
-    
+
 }
 
 void TutorialLevel::LevelUpdate() {}
@@ -179,7 +179,7 @@ void TutorialLevel::LevelHandleInput(int key, int action, int mod) {
         return;
     } else */if (curr_tutorial_phase == WASD_KEYS) {
         if (action == GLFW_PRESS && 
-        (key == MOVE_UP_BUTTON || key == MOVE_DOWN_BUTTON || key == MOVE_LEFT_BUTTON || key == MOVE_RIGHT_BUTTON)) { 
+            (key == MOVE_UP_BUTTON || key == MOVE_DOWN_BUTTON || key == MOVE_LEFT_BUTTON || key == MOVE_RIGHT_BUTTON)) { 
             curr_tutorial_phase = SPACEBAR_KEY;
             dialogue_timer_ms = DIALOGUE_TIME_MS;
         }
@@ -307,5 +307,5 @@ void TutorialLevel::LevelUpdate(float dt) {
             // std::cout << this->gacha_called << std::endl;
         }
     }
-    
+
 }

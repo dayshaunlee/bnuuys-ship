@@ -725,7 +725,7 @@ void HandlePlayerStationing(vec2 tile_pos) {
 void GameLevel::HandleInput(int key, int action, int mod) {
     // exit game w/ ESC
     if (action == GLFW_RELEASE && key == GLFW_KEY_ESCAPE) {
-        RenderSystem::isPaused = !RenderSystem::isPaused;       
+        RenderSystem::isPaused = !RenderSystem::isPaused;
     }
     if (RenderSystem::isPaused) return;
 

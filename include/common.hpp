@@ -92,7 +92,7 @@ const float ENEMY_TANK_RANGE = 10;
 
 const int ENEMY_SHOOTER_HEALTH = 25;
 const float ENEMY_SHOOTER_SPEED = 0;
-const float ENEMY_SHOOTER_RANGE = 6.0f;
+const float ENEMY_SHOOTER_RANGE = 5.0f;
 const float ENEMY_PROJECTILE_SPEED = 100.0f;
 
 const float ENEMY_PROJECTILE_COOLDOWN = 2000.0f;
@@ -138,15 +138,15 @@ const float ENEMY_PROJECTILE_LIFETIME = 3000.0f;
 const float MODIFIER_EFFECT_DURATION = SIMPLE_CANNON_COOLDOWN;
 
 const float LASER_LIFETIME = 200.0f;
-const int LASER_LENGTH_IN_NUM = 3; // This is how many 50 pixles laser beam we render to stack
+const int   LASER_LENGTH_IN_NUM = 3; // This is how many 50 pixles laser beam we render to stack
 const float LASER_COOLDOWN = 5000.0f;   // 5 second
 
 const float HEAL_COOLDOWN = 10000.0f;  // 10 second
-const float HEAL_AMOUNT = 10.0f;
+const float HEAL_AMOUNT = 25.0f;
 
 const float BUNNY_BASE_DROPOFF_TIME = 1000.0f;  // ship must be in base for 1 second before the bunnies get dropped off
 
 const float DEFAULT_PARTICLE_TIME = 50.0f;
 
-const float SIMPLE_CANNON_AUTO_RANGE = 250.0f;
-const float LASER_AUTO_RANGE = 200.0f;
+const float SIMPLE_CANNON_AUTO_RANGE = 350.0f;
+const float LASER_AUTO_RANGE = 250.0f;
