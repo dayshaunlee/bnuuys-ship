@@ -229,7 +229,7 @@ void HandleBunnyAnimation(float elapsed_ms) {
 
         // set bunny flags if it should start moving to the base from the ship
         if (!bunny.is_jailed && bunny.on_ship && !bunny.moving_to_base &&
-            base.drop_off_timer >= BUNNY_BASE_DROPOFF_TIME) {
+            base.drop_off_timer >= BUNNY_BASE_DROPOFF_TIME && !base.locked) {
             // the bunny should not be a background object while its on the ship before it started moving
             assert(!registry.backgroundObjects.has(entity));
             registry.backgroundObjects.emplace(entity);

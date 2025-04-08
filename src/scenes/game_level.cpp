@@ -171,7 +171,7 @@ void GameLevel::InitializeTrackingUI() {
     auto tracking_ui = std::make_shared<bnuui::Box>(vec2(496, 96), vec2(45, 45), 0.0f);
     tracking_ui->texture = TEXTURE_ASSET_ID::BUNNY_INDICATOR;
     
-    tracking_ui->setOnUpdate([](bnuui::Element& e, float dt) {
+    tracking_ui->setOnUpdate([this](bnuui::Element& e, float dt) {
         float smallest_dist = std::numeric_limits<float>::max();
         vec2 shortest_bunny_pos;
 
@@ -194,12 +194,14 @@ void GameLevel::InitializeTrackingUI() {
             // e.visible = false;
             e.texture = TEXTURE_ASSET_ID::HOME_INDICATOR;
             shortest_bunny_pos = vec2(WINDOW_WIDTH_PX / 2, WINDOW_HEIGHT_PX / 2);
+        } else {
+            e.texture = TEXTURE_ASSET_ID::BUNNY_INDICATOR;
         }
 
         vec2 direction = glm::normalize(shortest_bunny_pos - ship_pos);
 
         if (isOffscreen(shortest_bunny_pos, ship_pos)) {
-
+            tracker_off_screen = true;
             vec2 ui_padding = vec2(30, 30);
 
             // Find the edge of the screen where the UI should be positioned
@@ -231,6 +233,7 @@ void GameLevel::InitializeTrackingUI() {
             // Apply final UI position
             e.position = clamped_pos;// Offset for better UI positioning
         } else {
+            tracker_off_screen = false;
             e.position = shortest_bunny_pos + CameraSystem::GetInstance()->position + vec2(15, -15);
         }
     });
@@ -1221,6 +1224,13 @@ void GameLevel::HandleMouseClick(int button, int action, int mods) {
     setting end_pos to (0, 0) effectively makes it invisible
 */
 void GameLevel::UpdateDropoffProgressBar() {
+    int bunnies_on_ship = 0;
+    for (Bunny b : registry.bunnies.components) {
+        if (b.on_module || b.on_ship) bunnies_on_ship++;
+    }
+    if (bunnies_on_ship == 0 || registry.base.components[0].locked) {
+        return;
+    }
     assert(registry.base.entities.size() == 1 && base_corners.size() == 4);
     Entity& base_entity = registry.base.entities[0];
     Motion& base_motion = registry.motions.get(base_entity);

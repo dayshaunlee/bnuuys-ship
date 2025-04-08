@@ -163,38 +163,5 @@
   <object id="124" type="player" x="144" y="328">
    <point/>
   </object>
-  <object id="129" type="bunny" x="344" y="344">
-   <point/>
-  </object>
-  <object id="130" name="dummy" type="enemy" x="103" y="312">
-   <properties>
-    <property name="enemy_type_enum" type="int" propertytype="enemy_type_enum" value="4"/>
-   </properties>
-   <point/>
-  </object>
-  <object id="132" type="bunny" x="344" y="168">
-   <point/>
-  </object>
-  <object id="134" name="basic_gunner" type="enemy" x="320" y="192">
-   <properties>
-    <property name="enemy_type_enum" type="int" propertytype="enemy_type_enum" value="0"/>
-   </properties>
-   <point/>
-  </object>
-  <object id="137" type="bunny" x="112" y="64">
-   <point/>
-  </object>
-  <object id="138" name="basic_gunner" type="enemy" x="160" y="64">
-   <properties>
-    <property name="enemy_type_enum" type="int" propertytype="enemy_type_enum" value="0"/>
-   </properties>
-   <point/>
-  </object>
-  <object id="139" name="basic_gunner" type="enemy" x="160" y="96">
-   <properties>
-    <property name="enemy_type_enum" type="int" propertytype="enemy_type_enum" value="0"/>
-   </properties>
-   <point/>
-  </object>
  </objectgroup>
 </map>

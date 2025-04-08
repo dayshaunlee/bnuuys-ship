@@ -665,6 +665,13 @@ void RenderSystem::draw() {
         }
     }
 
+    if (registry.overlays.components.size() > 0) {
+        Entity overlay_entity = registry.overlays.entities[0];
+        if (registry.renderRequests.has(overlay_entity)) {
+            drawOverlay(overlay_entity, projection_2D);
+        }
+    }
+
     if (isInGame && !isRenderingGacha && !isRenderingBook) {
         Player& player = registry.players.components[0];
         if (player.player_state == STATIONING) {
@@ -674,13 +681,6 @@ void RenderSystem::draw() {
             vec2 highlight_position = TileToVector2(player_tile_x, player_tile_y);
             drawSquareOutline(highlight_position, {56.f, 56.f}, 
                 vec3(190 / 255.f, 209 / 255.f, 237 / 255.f), projection_2D);
-        }
-    }
-
-    if (registry.overlays.components.size() > 0) {
-        Entity overlay_entity = registry.overlays.entities[0];
-        if (registry.renderRequests.has(overlay_entity)) {
-            drawOverlay(overlay_entity, projection_2D);
         }
     }
 

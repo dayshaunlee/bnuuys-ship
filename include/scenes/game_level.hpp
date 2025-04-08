@@ -44,6 +44,7 @@ private:
     std::shared_ptr<bnuui::Element> tracker_ui;
     std::shared_ptr<bnuui::Element> book;
     std::shared_ptr<bnuui::Element> book_icon;
+    bool tracker_off_screen = true;
     
     virtual void LevelInit() = 0;
     virtual void LevelUpdate() = 0;
