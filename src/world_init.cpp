@@ -357,11 +357,6 @@ Entity createEnemyProjectile(vec2 orig, vec2 dest) {
     proj.damage = 5;
     proj.alive_time_ms = ENEMY_PROJECTILE_LIFETIME;
 
-    Entity sound_entity = Entity();
-    Sound& sound = registry.sounds.emplace(sound_entity);
-    sound.sound_type = SOUND_ASSET_ID::COW_BULLET;
-    sound.volume = 50;
-
     /*if (cow_shoot == nullptr) {
         cow_shoot = Mix_LoadWAV(audio_path("cow_bullet.wav").c_str());
     }

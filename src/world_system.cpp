@@ -347,6 +347,10 @@ void WorldSystem::handle_collisions() {
                 handle_player_death();
                 return;
             }
+            Entity sound_entity = Entity();
+            Sound& sound = registry.sounds.emplace(sound_entity);
+            sound.sound_type = SOUND_ASSET_ID::COW_BULLET;
+            sound.volume = 30;
         } else if (registry.enemyProjectiles.has(e2) && registry.ships.has(e1)) {
             EnemyProjectile& projectile = registry.enemyProjectiles.get(e2);
             Ship& ship = registry.ships.get(e1);
@@ -356,6 +360,10 @@ void WorldSystem::handle_collisions() {
                 handle_player_death();
                 return;
             }
+            Entity sound_entity = Entity();
+            Sound& sound = registry.sounds.emplace(sound_entity);
+            sound.sound_type = SOUND_ASSET_ID::COW_BULLET;
+            sound.volume = 30;
         }
 
         // Enemy - Ship collision
