@@ -13,6 +13,7 @@
 #include "bnuui/bnuui.hpp"
 #include "camera_system.hpp"
 #include "common.hpp"
+#include "gacha_system.hpp"
 #include "inventory_system.hpp"
 #include "tinyECS/components.hpp"
 #include "tinyECS/registry.hpp"
@@ -93,6 +94,7 @@ void GameLevel::Init() {
         Motion& shipMotion = registry.motions.get(registry.ships.entities[0]);
         shipMotion.scale.x = GRID_CELL_WIDTH_PX * 5;
         shipMotion.scale.y = GRID_CELL_HEIGHT_PX * 5;
+        GachaSystem::getInstance().setDropRate(MODULE_TYPES::PLATFORM, 0);
     }
 
     // render player
