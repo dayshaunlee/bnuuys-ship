@@ -471,7 +471,7 @@ std::vector<Entity> createLaserBeam(vec2 orig, vec2 dest) {
         Entity sound_entity = Entity();
         Sound& sound = registry.sounds.emplace(sound_entity);
         sound.sound_type = SOUND_ASSET_ID::LASER;
-        sound.volume = 50;
+        sound.volume = 20;
 
         /*if (laser_shoot == nullptr) {
             laser_shoot = Mix_LoadWAV(audio_path("laser.wav").c_str());
