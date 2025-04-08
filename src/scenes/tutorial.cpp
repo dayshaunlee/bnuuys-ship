@@ -90,7 +90,6 @@ void TutorialLevel::LevelInit() {
                 registry.spotlights.remove(entity);
             }
             Overlay& overlay = registry.overlays.components[0];
-            std::cout << CameraSystem::GetInstance()->position.x << std::endl;
             if (CameraSystem::GetInstance()->position.x > -250) {
                 overlay.visible = true;
                 if (!registry.spotlights.has(registry.players.entities[0])) {
@@ -191,7 +190,6 @@ void TutorialLevel::LevelHandleMouseMove(vec2 pos) {}
 void TutorialLevel::LevelHandleMouseClick(int button, int action, int mods) {}
 
 void TutorialLevel::LevelUpdate(float dt) {
-
     switch (curr_tutorial_phase) {
         case SPACEBAR_KEY: {
             if (registry.players.components[0].player_state == PLAYERSTATE::STATIONING) {
@@ -270,7 +268,7 @@ void TutorialLevel::LevelUpdate(float dt) {
             break;
         }
         case NEW_MODULE: {
-            if (upgradesReceived == 2 && this->book->visible) {
+            if (this->book->visible) {
                 curr_tutorial_phase = SAVE_BUNNY3;
                 dialogue_timer_ms = DIALOGUE_TIME_MS;
             }
