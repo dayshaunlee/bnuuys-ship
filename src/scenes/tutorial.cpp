@@ -280,7 +280,7 @@ void TutorialLevel::LevelUpdate(float dt) {
             if (upgradesReceived == bunnies_to_win) {
                 SceneManager& sceneManager = SceneManager::getInstance();
                 sceneManager.setNextLevelScence("Level 1");
-                std::cout << "Switching to next level scene.." << std::endl;
+                std::cout << "Switching to next level scene.." << std::endl;  
                 sceneManager.switchScene("Next Level Scene");
 
                 // tutorial upgrades will not carry over to actual levels
