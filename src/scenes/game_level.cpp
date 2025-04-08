@@ -1235,7 +1235,7 @@ void GameLevel::HandleMouseClick(int button, int action, int mods) {
 void GameLevel::UpdateDropoffProgressBar() {
     int bunnies_on_ship = 0;
     for (Bunny b : registry.bunnies.components) {
-        if (b.on_module || b.on_ship) bunnies_on_ship++;
+        if (b.on_ship) bunnies_on_ship++;
     }
     if (bunnies_on_ship == 0 || registry.base.components[0].locked) {
         return;
