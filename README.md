@@ -58,3 +58,17 @@ We have wide variety of game sprites that have the same art styles (pixel style)
 Camera view throughout the gameplay. Things other than player, UI, ship, and modules, stays in background as ship moves
 https://github.students.cs.ubc.ca/CPSC427-2024W-T2/team-05/blob/81a604e2f7559eb355d66da1a2fa2dbfb267c682/include/camera_system.hpp#L1-L25
 
+
+# M4
+
+## Creative Components
+
+### Particle System
+Used instanced rendering to create a particle system.
+https://github.students.cs.ubc.ca/CPSC427-2024W-T2/team-05/blob/9b195048f8675efecc95745cde8ed1713e665f1b/src/render_system.cpp#L477-L478
+
+### Game Balancing
+We balanced our game more based on user feedback from prior milestones.
+
+### Story Element
+We added a story element through our intro cutscenes and end credits cutscene.
