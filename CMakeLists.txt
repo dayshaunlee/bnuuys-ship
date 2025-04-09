@@ -25,9 +25,6 @@ endif()
 
 # Create executable target
 
-# Generate the shader folder location to the header
-configure_file("${CMAKE_CURRENT_SOURCE_DIR}/ext/project_path.hpp.in" "${CMAKE_CURRENT_SOURCE_DIR}/ext/project_path.hpp")
-
 include_directories(include)
 # You can switch to use the file GLOB for simplicity but at your own risk
 file(GLOB_RECURSE SOURCE_FILES src/*.cpp src/*.hpp)
@@ -164,6 +161,19 @@ if (NOT GLFW_FOUND OR NOT SDL2_FOUND)
         message(FATAL_ERROR "Can't find SDL." )
     endif()
 endif()
+
+# copy data and shaders to build folder
+add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    "${CMAKE_SOURCE_DIR}/data"
+    "$<TARGET_FILE_DIR:${PROJECT_NAME}>/data"
+)
+
+add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    "${CMAKE_SOURCE_DIR}/shaders"
+    "$<TARGET_FILE_DIR:${PROJECT_NAME}>/shaders"
+)
 
 target_include_directories(${PROJECT_NAME} PUBLIC ${GLFW_INCLUDE_DIRS})
 target_include_directories(${PROJECT_NAME} PUBLIC ${SDL2_INCLUDE_DIRS})

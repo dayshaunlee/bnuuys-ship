@@ -31,6 +31,8 @@ using Clock = std::chrono::high_resolution_clock;
 
 // Entry point
 int main() {
+    std::cout << "Working dir: " << std::filesystem::current_path() << "\n";
+
     // global systems
     WorldSystem world_system;
     RenderSystem renderer_system;
