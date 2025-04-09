@@ -1,5 +1,11 @@
-﻿################################################################################
-# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
-################################################################################
+# Ignore build directories
+/build/
+/out/
 
-/.vs
+/.cache/
+**/.DS_Store
+
+.vs/
+.vscode/
+/data/maps/bnunny_savers.tiled-session
+/data/level_save.json
