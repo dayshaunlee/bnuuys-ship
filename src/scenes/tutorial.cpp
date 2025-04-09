@@ -276,7 +276,6 @@ void TutorialLevel::LevelUpdate(float dt) {
             break;
         }
         case SAVE_BUNNY2: {
-            registry.base.components[0].locked = false;
             if (registry.bunnies.components.size() == 1) {
                 Entity entity = Entity();
                 Bunny& bun = registry.bunnies.emplace(entity);
@@ -308,6 +307,7 @@ void TutorialLevel::LevelUpdate(float dt) {
         }
 
         case DROPOFF: {
+            registry.base.components[0].locked = false;
             if (registry.base.components[0].bunny_count >= 2) {
                 curr_tutorial_phase = NEW_MODULE;
                 dialogue_timer_ms = DIALOGUE_TIME_MS;
