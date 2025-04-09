@@ -1237,9 +1237,7 @@ void GameLevel::UpdateDropoffProgressBar() {
     for (Bunny b : registry.bunnies.components) {
         if (b.on_ship) bunnies_on_ship++;
     }
-    if (bunnies_on_ship == 0 || registry.base.components[0].locked) {
-        return;
-    }
+    
     assert(registry.base.entities.size() == 1 && base_corners.size() == 4);
     Entity& base_entity = registry.base.entities[0];
     Motion& base_motion = registry.motions.get(base_entity);
