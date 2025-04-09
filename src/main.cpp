@@ -117,15 +117,17 @@ int main() {
         
     }
 
-    delete (mm);
-    delete (tutorial);
-    delete (l1);
-    delete (l2);
-    delete (l3);
-    delete (l4);
-    delete (death);
-    delete (levelTransition);
-    delete (cutscene);
+    delete mm;
+    delete tutorial;
+    delete l1;
+    delete l2;
+    delete l3;
+    delete l4;
+    delete death;
+    delete levelTransition;
+    delete cutscene;
+    delete victory;
+    delete end_credits;
     delete (CameraSystem::GetInstance());
 
     return EXIT_SUCCESS;
